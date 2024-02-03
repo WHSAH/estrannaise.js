@@ -24,9 +24,9 @@ function getTDEs(tableId) {
     let esters = [];
     for (let i = 1; i < doseTable.rows.length; i++) {
         let row = doseTable.rows[i];
-        let time = row.cells[0].querySelector('input').value;
-        let dose = row.cells[1].querySelector('input').value;
-        let ester = row.cells[2].querySelector('select').value
+        let time = row.cells[2].querySelector('input').value;
+        let dose = row.cells[3].querySelector('input').value;
+        let ester = row.cells[4].querySelector('select').value
         if (isFinite(time) && isFinite(dose) && dose > 0) {
             times.push(time);
             doses.push(dose);
@@ -70,6 +70,9 @@ function plotCurves() {
             let randx = Math.random() * (xmax - xmin) + xmin;
             let randidx = Math.floor(Math.random() * mcmcSamplesPK3C[ssEsters[i]].length);
             let y = e2SteadyState3C(randx, ssDoses[i], ssEveries[i], ...mcmcSamplesPK3C[ssEsters[i]][randidx]);
+            if (y > 2000) {
+                console.log(randidx)
+            }
             ssUncertaintyCloud.push({ Time: randx, E2: y });
         }
         marks.push(Plot.dot(ssUncertaintyCloud, { x: "Time", y: "E2", r: 1, fill: colorBabyBlue(), fillOpacity: 0.5 }));
@@ -83,6 +86,8 @@ function plotCurves() {
     // let troughCurve = fillCurve(t => e2ssTrough3C(3, 4, ...PKParams["IMEV"]), 0, 50, 300)
 
     let e2curve = Plot.plot({
+        width: 710,
+        // height: 500,
         x: { label: "time (days)" },
         y: { label: "e₂ (pg/ml)" },
         marks: [

@@ -1,11 +1,9 @@
-
 :root {
     --baby-blue: rgb(161, 203, 246);
     --baby-pink: rgb(219, 186, 230);
     /* --baby-pink: rgb(234, 174, 185); */
     --background-grey: #2a2a2a;
-    --input-grey: #343434;
-    --button-grey: #686868;
+    --standout-grey: #343434;
 }
 
 
@@ -25,7 +23,8 @@ body {
 input.flat-input {
     border: none;
     outline: none;
-    background-color: var(--input-grey);  /* Light gray */
+    background-color: var(--standout-grey);
+    /* Light gray */
     color: var(--baby-pink);
     padding: 4px;
     font-size: 12px;
@@ -39,7 +38,8 @@ input.flat-input {
 select.dropdown-ester {
     border: none;
     outline: none;
-    background-color: var(--input-grey);  /* Light gray */
+    background-color: var(--standout-grey);
+    /* Light gray */
     color: var(--baby-pink);
     padding-top: 4px;
     padding-bottom: 4px;
@@ -51,43 +51,42 @@ select.dropdown-ester {
     border-radius: 4px;
 
     /* width: 73px; */
-    width: 6em;
+    /* width: 6em; */
 }
 
 button.flat-button {
     border: none;
     outline: none;
-    background-color: var(--input-grey);  /* Light gray */
+    background-color: var(--standout-grey);
+    /* Light gray */
     padding: 4px;
     padding-left: 10px;
     padding-right: 10px;
     font-size: 12px;
-    /* margin-top: 4px; */
     text-align: center;
     font-family: monospace;
     color: var(--baby-blue);
     border-radius: 4px;
-
 }
 
 button.delete-button {
     padding: 4px;
     padding-left: 10px;
     padding-right: 10px;
-    transform: translate(0px, -0.5px);
+    transform: translate(0px, 0px);
     border: none;
 }
 
 #multidose-plot {
     width: 100%;
     height: 70%;
-    margin: 3em;
+    /* margin: 3em; */
     padding: 0;
     background-color: var(--background-grey);
 }
 
 #dose-table {
-    margin-left: 5.5em;
+    /* margin-left: 5.5em; */
     width: 1%;
     white-space: nowrap;
     /* display: flex;
@@ -96,17 +95,16 @@ button.delete-button {
     text-align: left; */
 }
 
-#multidose-bottom-button{
-    margin-left: 5.72em;
-}
 
 #dose-section, #steadystate-section {
     /* display: flex;
     flex-direction: column;
     align-items: flex-start;
     width: 45%; */
-    flex: 1 1 0px; /* This will make the divs flexible, sharing the available space */
-    margin: 0 10px; /* Add some margin between the tables */
+    flex: 1 1 0px;
+    /* This will make the divs flexible, sharing the available space */
+    margin: 0 10px;
+    /* Add some margin between the tables */
 
 }
 
@@ -142,13 +140,31 @@ header {
     flex-direction: column;
     align-items: flex-start;
     text-align: left;
-    display: inline-block; 
-    margin-top: 5em; 
-    font-size: 9px; 
-    margin-left: 8.72em;
+    display: inline-block;
+    margin-top: 5em;
+    font-size: 9px;
+    /* margin-left: 8.72em; */
 }
 
 #copy-xmr {
     cursor: copy;
     transition: background-color 0.1s;
+}
+
+.hidden-checkbox {
+    display: none;
+}
+
+.custom-checkbox {
+    display: inline-block;
+    width: 1.72em;
+    height: 1.72em;
+    background-color: var(--standout-grey);
+    cursor: pointer;
+    border-radius: 4px;
+    transform: translate(0px, 2px);
+}
+
+.custom-checkbox.checked {
+    background-color: var(--baby-pink)
 }

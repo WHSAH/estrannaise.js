@@ -13,13 +13,13 @@
 <body>
 
     <script src="lib/loggamma.js"></script>
-    <script src="lib/helpers.js"></script>
-    <script src="lib/models.js"></script>
     <script src="lib/d3.min.js"></script>
     <script src="lib/plot.min.js"></script>
     <script src="lib/papaparse.min.js"></script>
     <script src="data/tfs_chainsamples.js"></script>
-    <script src="estrannaise.js"></script>
+    <script src="src/models.js"></script>
+    <script src="src/helpers.js"></script>
+    <script src="src/estrannaise.js"></script>
 
     <div id="container">
 
@@ -28,7 +28,7 @@
                 <img src="img/favicon-96x96.png" alt="Estrannaise" style="flex: 0 0 auto;">
                 <div>
                     <h1>estrannaise.js</h1>
-                    <h2>estradiol pharmacokinetics playground </h2>
+                    <h2>estradiol pharmacokinetics playground</h2>
                 </div>
             </div>
         </header>
@@ -36,7 +36,6 @@
         <div id="multidose-plot">
             
         </div>
-
         <div class="sections-container">
 
             <div id="dose-section">
@@ -44,16 +43,18 @@
                     <caption style="text-align: left; margin: 0.3em; font-weight: bold;">multi-dose curve</caption>
                     <thead>
                         <tr>
-                            <th style="text-align: left;">time (days)</th>
-                            <th style="text-align: left;">dose (mg)</th>
-                            <th style="text-align: left;">ester</th>
+                            <th style="text-align: center;">v</th>
+                            <th style="text-align: center;">u</th>
+                            <th style="text-align: center;">time (days)</th>
+                            <th style="text-align: center;">dose (mg)</th>
+                            <th style="text-align: center;">ester</th>
                             <th></th>
                         </tr>
                     </thead>
                     <tbody>
                     </tbody>
                 </table>
-                <span style="font-weight: normal; font-size: 9px; margin-left: 8.72em;">drag-n-drop csv on table to import</span>
+                <span style="font-weight: normal; font-size: 9px;">drag-n-drop csv on table to import</span>
                 <div id="multidose-bottom-button" style="margin-top: 1em;">
                     <button id="add-dose-button" class="flat-button">add</button>
                     <button id="delete-all-doses-button" class="flat-button">clear</button>
@@ -69,9 +70,11 @@
                     <caption style="text-align: left; margin: 0.25em; font-weight: bold;">steady-states</caption>
                     <thead>
                         <tr>
-                            <th style="text-align: left;">every (days)</th>
-                            <th style="text-align: left;">dose (mg)</th>
-                            <th style="text-align: left;">ester</th>
+                            <th style="text-align: center;">v</th>
+                            <th style="text-align: center;">u</th>
+                            <th style="text-align: center;">every (days)</th>
+                            <th style="text-align: center;">dose (mg)</th>
+                            <th style="text-align: center;">ester</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -92,7 +95,7 @@
         <!-- someone tell me why github pages don't render <footer> correctly? -->
         <div id="footer">
             <p>MIT license (c) 2024 alix</p>
-            <p>with help encouragements and entertainment from emily Torble Lea Annie Izzy Meringue photino</p>
+            <p>with help encouragements and entertainment from emily Torble Lea Annie Izzy Meringue photino<br>...and let's be honest for a second, github copilot too</p>
             <br>
             <p>xmr tip jar</p>
             <p><span id="copy-xmr">85pzJGdG6PF9XtH7hAPd5g54yxFkcTCfkednKYPyAUjBZJYrao3qgBF4ftHg4hkKXqgvohjiJgxn7NHMPaCBse7AAFQe4B6</span>

@@ -163,15 +163,45 @@ function addTDERow(id, stationary = false) {
     let table = document.getElementById(id);
     let row = table.insertRow(-1);
 
-    let timeCell = row.insertCell(0)
+    let visibilityCell = row.insertCell(0);
+    let visibilityCheckbox = document.createElement('input');
+    visibilityCheckbox.type = 'checkbox';
+    visibilityCheckbox.className = 'hidden-checkbox';
+    visibilityCell.appendChild(visibilityCheckbox);
+
+    let visibilityCustomCheckbox = document.createElement('div');
+    visibilityCustomCheckbox.className = 'custom-checkbox';
+    visibilityCustomCheckbox.onclick = function() {
+        visibilityCheckbox.checked = !visibilityCheckbox.checked;
+        this.className = visibilityCheckbox.checked ? 'custom-checkbox checked' : 'custom-checkbox';
+    };
+    visibilityCell.appendChild(visibilityCustomCheckbox);
+
+    let uncertaintyCell = row.insertCell(1);
+    let uncertaintyCheckbox = document.createElement('input');
+    uncertaintyCheckbox.type = 'checkbox';
+    uncertaintyCheckbox.className = 'hidden-checkbox';
+    uncertaintyCell.appendChild(uncertaintyCheckbox);
+
+    let uncertaintyCustomCheckbox = document.createElement('div');
+    uncertaintyCustomCheckbox.className = 'custom-checkbox';
+    uncertaintyCustomCheckbox.onclick = function() {
+        uncertaintyCheckbox.checked = !uncertaintyCheckbox.checked;
+        this.className = uncertaintyCheckbox.checked ? 'custom-checkbox checked' : 'custom-checkbox';
+    };
+    uncertaintyCell.appendChild(uncertaintyCustomCheckbox);
+
+
+
+    let timeCell = row.insertCell(2)
     timeCell.innerHTML = '<input type="text" class="flat-input time-cell" oninput="refresh()">';
     // timeCell.addClassName = "time-cell";
 
-    let doseCell = row.insertCell(1)
+    let doseCell = row.insertCell(3)
     doseCell.innerHTML = '<input type="text" class="flat-input dose-cell" oninput="refresh()">';
     // doseCell.addClassName = "dose-cell";
 
-    let esterSelector = row.insertCell(2).innerHTML =
+    let esterSelector = row.insertCell(4).innerHTML =
         '<select class="dropdown-ester" onchange="refresh()"> \
             <option value="EV IM">EV IM</option> \
             <option value="EEn IM">EEn IM</option> \
@@ -180,7 +210,7 @@ function addTDERow(id, stationary = false) {
             <option value="EUn IM">EUn IM</option> \
             </select>';
 
-    let deleteCell = row.insertCell(3);
+    let deleteCell = row.insertCell(5);
     deleteCell.innerHTML = '<button class="flat-button delete-button">-</button>';
     deleteCell.querySelector('.delete-button').addEventListener('click', function () {
         this.parentNode.parentNode.remove();
