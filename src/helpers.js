@@ -153,9 +153,9 @@ function exportCSV() {
     let table = document.getElementById('dose-table');
     let rows = Array.from(table.rows);
     let data = [['time (days)', 'dose (mg)', 'ester']].concat(rows.slice(1).map(row => {
-        let timeValue = row.cells[0].querySelector('input').value;
-        let doseValue = row.cells[1].querySelector('input').value;
-        let esterValue = row.cells[2].querySelector('select').value;
+        let timeValue = row.cells[2].querySelector('input').value;
+        let doseValue = row.cells[3].querySelector('input').value;
+        let esterValue = row.cells[4].querySelector('select').value;
         return [timeValue, doseValue, esterValue];
     }));
     console.log(data)
@@ -273,7 +273,7 @@ function deleteAllRows(id) {
 
 function attachDragnDrop() {
 
-    let doseTable = document.getElementById('dose-table');
+    let doseTable = document.getElementById('dragndrop-zone');
     doseTable.addEventListener('dragenter', function (event) {
         doseTable.classList.add('overlay');
     });

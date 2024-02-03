@@ -129,7 +129,7 @@ button.delete-button {
     align-items: flex-start;
 }
 
-#dose-table.overlay {
+#dragndrop-zone.overlay {
     background-color: var(--baby-pink);
 }
 
