@@ -195,6 +195,10 @@ function addTDERow(id, time = null, dose = null, ester = null, stationary = fals
     // -----------------------------------------
     // Add visibility and uncertainty checkboxes
     let visibilityCell = row.insertCell(0);
+    visibilityCell.className = 'visibility-cell';
+    visibilityCell.width = '1.7em';
+    visibilityCell.height = '1.7em';
+
     if (id == 'steadystate-table' || ((id == 'dose-table') && (table.rows.length == 2))) {
         let visibilityCheckbox = document.createElement('input');
         visibilityCheckbox.type = 'checkbox';
@@ -212,6 +216,10 @@ function addTDERow(id, time = null, dose = null, ester = null, stationary = fals
         visibilityCell.appendChild(visibilityCustomCheckbox);
     }
     let uncertaintyCell = row.insertCell(1);
+    uncertaintyCell.className = 'uncertainty-cell';
+    uncertaintyCell.width = '1.7em';
+    uncertaintyCell.height = '1.7em';
+
     if (id == 'steadystate-table' || ((id == 'dose-table') && (table.rows.length == 2))) {
 
         let uncertaintyCheckbox = document.createElement('input');

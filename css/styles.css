@@ -162,15 +162,26 @@ header {
 }
 
 .custom-checkbox {
+    margin: auto;
     display: inline-block;
-    width: 1.72em;
-    height: 1.72em;
+    width: 1.5em;
+    height: 1.5em;
     background-color: var(--standout-grey);
     cursor: pointer;
     border-radius: 4px;
-    transform: translate(0px, 0.12em);
+    transform: translate(0px, 0.15em);
 }
 
 .custom-checkbox.checked-style {
     background-color: var(--baby-pink)
+}
+
+.visibility-cell .uncertainty-cell {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.custom-checkbox {
+    margin: auto;
 }

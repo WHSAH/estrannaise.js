@@ -73,7 +73,7 @@ function plotCurves() {
         width: 828,
         // height: 500,
         x: { label: "time (days)" },
-        y: { domain: [0, 1.3 * e2max], label: "e₂ (pg/ml)" },
+        y: { domain: [0, 1.25 * e2max], label: "e₂ (pg/ml)" },
         marks: [
             Plot.gridX({ stroke: "grey" }),
             Plot.gridY({ stroke: "grey" }),
