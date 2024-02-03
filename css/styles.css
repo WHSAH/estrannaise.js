@@ -1,0 +1,133 @@
+
+:root {
+    --baby-blue: rgb(161, 203, 246);
+    --baby-pink: rgb(219, 186, 230);
+    --background-grey: #2a2a2a;
+    --input-grey: #343434;
+    --button-grey: #686868;
+}
+
+
+body {
+    background-color: var(--background-grey);
+    color: var(--baby-blue);
+    font-family: monospace;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* .time-cell .dose-cell {
+    width: 40px;
+} */
+
+input.flat-input {
+    border: none;
+    outline: none;
+    background-color: var(--input-grey);  /* Light gray */
+    color: var(--baby-pink);
+    padding: 4px;
+    font-size: 12px;
+    margin: 0px;
+    text-align: center;
+    font-family: monospace;
+    width: 100px;
+}
+
+select.dropdown-ester {
+    border: none;
+    outline: none;
+    background-color: var(--input-grey);  /* Light gray */
+    color: var(--baby-pink);
+    padding-top: 4px;
+    padding-bottom: 4px;
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: 12px;
+    text-align: left;
+    font-family: monospace;
+    /* width: px; */
+}
+
+button.flat-button {
+    border: none;
+    outline: none;
+    background-color: var(--input-grey);  /* Light gray */
+    padding: 4px;
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: 12px;
+    /* margin-top: 4px; */
+    text-align: center;
+    font-family: monospace;
+    color: var(--baby-blue);
+}
+
+button.delete-button {
+    padding: 4px;
+    padding-left: 10px;
+    padding-right: 10px;
+    transform: translate(0px, -0.5px);
+    border: none;
+}
+
+#e2d3-plot {
+    width: 100%;
+    height: 70%;
+    margin: 3em;
+    padding: 0;
+    background-color: var(--background-grey);
+}
+
+#dose-table {
+    margin-left: 5.5em;
+    width: 1%;
+    white-space: nowrap;
+    /* display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left; */
+}
+
+#bottom-button{
+    margin-left: 5.72em;
+}
+
+#dose-section {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+/* .plot-label {
+    text-shadow: none !important;
+    -webkit-text-stroke: none !important;
+} */
+
+#container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+#dose-table.overlay {
+    background-color: var(--baby-pink);
+}
+
+header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+}
+
+#footer {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+    display: inline-block; 
+    margin-top: 5em; 
+    font-size: 9px; 
+    margin-left: 8.72em;
+}
