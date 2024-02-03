@@ -70,6 +70,12 @@ function getMonospaceWidth() {
 }
 
 
+function numberToDayHour(number, precision = 0) {
+    let days = Math.floor(number);
+    let hours = (Math.round((number - days) * 24)).toFixed(precision);
+    return `${days}d ${hours}h`;
+}
+
 function convertCustomCSSVarToRGBA(varName, alpha = 1.0) {
     let rootStyle = getComputedStyle(document.documentElement);
     let color = rootStyle.getPropertyValue(varName)
