@@ -104,11 +104,11 @@ function refresh() {
 window.onload = function () {
 
     // Create a default dose
-    addTDERow('dose-table');
+    addTDERow('dose-table', false);
     document.getElementById('dose-table').rows[1].cells[0].querySelector('input').value = 0;
     document.getElementById('dose-table').rows[1].cells[1].querySelector('input').value = 3;
 
-    addTDERow('steadystate-table');
+    addTDERow('steadystate-table', false);
 
     attachDragnDrop();
 
