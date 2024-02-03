@@ -45,9 +45,6 @@ function plotCurves() {
                 let randx = Math.random() * (xmax - xmin) + xmin;
                 let randidx = Math.floor(Math.random() * mcmcSamplesPK3C[ssEsters[i]].length);
                 let y = e2SteadyState3C(randx, ssDoses[i], ssEveries[i], ...mcmcSamplesPK3C[ssEsters[i]][randidx]);
-                if (y > 2000) {
-                    console.log(randidx)
-                }
                 ssUncertaintyCloud.push({ Time: randx, E2: y });
             }
             marks.push(Plot.dot(ssUncertaintyCloud, { x: "Time", y: "E2", r: 1, fill: colorBabyBlue(), fillOpacity: 0.5 }));

@@ -158,7 +158,6 @@ function exportCSV() {
         let esterValue = row.cells[4].querySelector('select').value;
         return [timeValue, doseValue, esterValue];
     }));
-    console.log(data)
     let csvContent = Papa.unparse(data);
 
     let downloadLink = document.createElement('a');
