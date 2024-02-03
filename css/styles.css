@@ -32,6 +32,7 @@ input.flat-input {
     text-align: center;
     font-family: monospace;
     width: 100px;
+    border-radius: 4px;
 }
 
 select.dropdown-ester {
@@ -46,6 +47,8 @@ select.dropdown-ester {
     font-size: 12px;
     text-align: left;
     font-family: monospace;
+    border-radius: 4px;
+
     /* width: px; */
 }
 
@@ -61,6 +64,8 @@ button.flat-button {
     text-align: center;
     font-family: monospace;
     color: var(--baby-blue);
+    border-radius: 4px;
+
 }
 
 button.delete-button {
@@ -130,4 +135,8 @@ header {
     margin-top: 5em; 
     font-size: 9px; 
     margin-left: 8.72em;
+}
+
+#copy-text {
+    cursor: copy;
 }

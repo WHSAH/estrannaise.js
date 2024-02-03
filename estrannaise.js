@@ -78,33 +78,27 @@ function refresh() {
 }
 
 window.onload = function () {
+    
+    // Create a default dose
     addRow();
     document.getElementById('dose-table').rows[1].cells[0].querySelector('input').value = 0;
     document.getElementById('dose-table').rows[1].cells[1].querySelector('input').value = 3;
-    refresh();
-    window.onresize = refresh;
-
-    let doseTable = document.getElementById('dose-table');
-
-    doseTable.addEventListener('dragenter', function(event) {
-        doseTable.classList.add('overlay');
-    });
-    doseTable.addEventListener('dragleave', function(event) {
-        if(event.relatedTarget === null || !doseTable.contains(event.relatedTarget)) {
-            doseTable.classList.remove('overlay');
-        }
-    });
-    doseTable.addEventListener('dragover', function(event) {
-        event.preventDefault();
-    });
-    doseTable.addEventListener('drop', function(event) {
-        event.preventDefault();
-        doseTable.classList.remove('overlay');
     
-        let files = event.dataTransfer.files;
-
-        loadCSV(files)
-
+    attachDragnDrop();
+    
+    document.getElementById('open-file-dialog').addEventListener('click', function() {
+        document.getElementById('csv-file').click();
+    });
+    
+    document.getElementById('csv-file').addEventListener('change', function(e) {
+        loadCSV(e.target.files);
     });
 
+    document.getElementById('copy-xmr').addEventListener('click', function() {
+        navigator.clipboard.writeText(this.innerText);
+    });
+
+    window.onresize = refresh;
+    
+    refresh();
 }
