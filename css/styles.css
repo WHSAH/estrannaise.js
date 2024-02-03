@@ -140,6 +140,7 @@ header {
     text-align: left;
 }
 
+/* fake footer because github pages is weird */
 #footer {
     display: flex;
     flex-direction: column;
@@ -148,7 +149,7 @@ header {
     display: inline-block;
     margin-top: 5em;
     font-size: 9px;
-    /* margin-left: 8.72em; */
+    padding-left: 1.25em;
 }
 
 #copy-xmr {
