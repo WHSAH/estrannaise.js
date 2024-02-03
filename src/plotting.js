@@ -14,10 +14,18 @@ function plotCurves() {
 
     let xmin = Math.min(0, ...mdTimes);
     let xmax = Math.max(31, 1.618 * Math.max(...mdTimes));
+    
+    // track the max e2 across all multi-dose curves
+    // to set the y-axis limit. uncertainty clouds ignored.
+    let e2max = 0;
 
     if (mdTimes.length > 0) {
 
         if (document.getElementById('dose-table').rows[1].cells[1].querySelector('input[type="checkbox"]').checked) {
+
+            let testmdcurve = fillCurve(t => e2MultiDoseEster3C(t, mdDoses, mdTimes, mdEsters), xmin, xmax, NB_LINE_POINTS);
+            e2max = Math.max(e2max, ...testmdcurve.map(p => p.E2));
+
             let mdUncertaintyCloud = [];
             for (let i = 0; i < NB_CLOUD_POINTS; i++) {
                 let randx = Math.random() * (xmax - xmin) + xmin;
@@ -29,7 +37,7 @@ function plotCurves() {
 
         if (document.getElementById('dose-table').rows[1].cells[0].querySelector('input[type="checkbox"]').checked) {
             let multiDoseEstersCurve = fillCurve(t => e2MultiDoseEster3C(t, mdDoses, mdTimes, mdEsters), xmin, xmax, NB_LINE_POINTS);
-
+            e2max = Math.max(e2max, ...multiDoseEstersCurve.map(p => p.E2));
             marks.push(Plot.line(multiDoseEstersCurve, { x: "Time", y: "E2", strokeWidth: 3, stroke: colorBabyPink() }))
             marks.push(Plot.tip(multiDoseEstersCurve, Plot.pointerX({ x: "Time", y: "E2", fill: colorBackground(), stroke: colorBabyPink() })))
         }
@@ -47,11 +55,16 @@ function plotCurves() {
                 let y = e2SteadyState3C(randx, ssDoses[i], ssEveries[i], ...mcmcSamplesPK3C[ssEsters[i]][randidx]);
                 ssUncertaintyCloud.push({ Time: randx, E2: y });
             }
+
+            let testsscurve = fillCurve(t => e2SteadyState3C(t, ssDoses[i], ssEveries[i], ...PK3CParams[ssEsters[i]]), xmin, xmax, NB_LINE_POINTS);
+            e2max = Math.max(e2max, ...testsscurve.map(p => p.E2));
+
             marks.push(Plot.dot(ssUncertaintyCloud, { x: "Time", y: "E2", r: 1, fill: colorBabyBlue(), fillOpacity: 0.5 }));
         }
 
         if (document.getElementById('steadystate-table').rows[1 + i].cells[0].querySelector('input[type="checkbox"]').checked) {
             let ssEsterCurve = fillCurve(t => e2SteadyState3C(t, ssDoses[i], ssEveries[i], ...PK3CParams[ssEsters[i]]), xmin, xmax, NB_LINE_POINTS);
+            e2max = Math.max(e2max, ...ssEsterCurve.map(p => p.E2));
             marks.push(Plot.line(ssEsterCurve, { x: "Time", y: "E2", strokeWidth: 3, stroke: colorBabyPink() }))
         }
     }
@@ -60,7 +73,7 @@ function plotCurves() {
         width: 828,
         // height: 500,
         x: { label: "time (days)" },
-        y: { label: "e₂ (pg/ml)" },
+        y: { domain: [0, 1.3 * e2max], label: "e₂ (pg/ml)" },
         marks: [
             Plot.gridX({ stroke: "grey" }),
             Plot.gridY({ stroke: "grey" }),
