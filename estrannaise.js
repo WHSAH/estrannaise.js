@@ -1,4 +1,4 @@
-const NB_CLOUD_POINTS = 3000;
+const NB_CLOUD_POINTS = 4000;
 
 function fillCurveFlat(func, xmin, xmax, nbsteps) {
     for (let i = xmin; i <= xmax; i += (xmax - xmin) / (nbsteps - 1)) {
@@ -16,15 +16,11 @@ function fillCurve(func, xmin, xmax, nbsteps) {
     return curve;
 }
 
-
-function plotCurves() {
-
-    let doseTable = document.getElementById('dose-table');
-
+function getTDEs(tableId) {
+    let doseTable = document.getElementById(tableId);
     let times = [];
     let doses = [];
     let esters = [];
-
     for (let i = 1; i < doseTable.rows.length; i++) {
         let row = doseTable.rows[i];
         let time = row.cells[0].querySelector('input').value;
@@ -36,18 +32,51 @@ function plotCurves() {
             esters.push(ester);
         }
     };
+    return [times, doses, esters];
+}
 
-    let xmin = Math.min(...times);
-    let xmax = Math.max(31, 1.618 * Math.max(...times));
 
-    let multiDoseEstersCurve = fillCurve(t => e2MultiDoseEster3C(t, doses, times, esters), xmin, xmax, 1000);
+function plotCurves() {
 
-    let uncertaintyCloud = [];
-    for (let i = 0; i < NB_CLOUD_POINTS; i++) {
-        let randx = Math.random() * (xmax - xmin) + xmin;
-        let y = e2MultiDoseEster3C(randx, doses, times, esters, true);
-        uncertaintyCloud.push({ Time: randx, E2: y });
+    let marks = [];
+
+    let [mdTimes, mdDoses, mdEsters] = getTDEs('dose-table');
+
+    let xmin = Math.min(0, ...mdTimes);
+    let xmax = Math.max(31, 1.618 * Math.max(...mdTimes));
+
+    if (mdTimes.length > 0) {
+        let multiDoseEstersCurve = fillCurve(t => e2MultiDoseEster3C(t, mdDoses, mdTimes, mdEsters), xmin, xmax, 1000);
+
+        let mdUncertaintyCloud = [];
+        for (let i = 0; i < NB_CLOUD_POINTS; i++) {
+            let randx = Math.random() * (xmax - xmin) + xmin;
+            let y = e2MultiDoseEster3C(randx, mdDoses, mdTimes, mdEsters, true);
+            mdUncertaintyCloud.push({ Time: randx, E2: y });
+        }
+        marks.push(Plot.dot(mdUncertaintyCloud, { x: "Time", y: "E2", r: 1, fill: colorBabyBlue(), fillOpacity: 1.0 }))
+        marks.push(Plot.line(multiDoseEstersCurve, { x: "Time", y: "E2", strokeWidth: 3, stroke: colorBabyPink() }))
+        marks.push(Plot.tip(multiDoseEstersCurve, Plot.pointerX({ x: "Time", y: "E2", fill: colorBackground(), stroke: colorBabyPink() })))
     }
+
+
+
+    let [ssEveries, ssDoses, ssEsters] = getTDEs('steadystate-table');
+
+    for (let i = 0; i < ssEveries.length; i++) {
+        let ssEsterCurve = fillCurve(t => e2SteadyState3C(t, ssDoses[i], ssEveries[i], ...PK3CParams[ssEsters[i]]), xmin, xmax, 1000);
+        marks.push(Plot.line(ssEsterCurve, { x: "Time", y: "E2", strokeWidth: 3, stroke: colorBabyPink() }))
+
+        let ssUncertaintyCloud = [];
+        for (let j = 0; j < NB_CLOUD_POINTS; j++) {
+            let randx = Math.random() * (xmax - xmin) + xmin;
+            let randidx = Math.floor(Math.random() * mcmcSamplesPK3C[ssEsters[i]].length);
+            let y = e2SteadyState3C(randx, ssDoses[i], ssEveries[i], ...mcmcSamplesPK3C[ssEsters[i]][randidx]);
+            ssUncertaintyCloud.push({ Time: randx, E2: y });
+        }
+        marks.push(Plot.dot(ssUncertaintyCloud, { x: "Time", y: "E2", r: 1, fill: colorBabyBlue(), fillOpacity: 1.0 }));
+    }
+
 
     // let repeatedCurve = fillCurve(t => e2RepeatedDose3C(t, 3, 4, 8, ...PKParams["IMEV"]), 0, 50, 300);
     // let steadyStateCurve = fillCurve(t => e2SteadyState3C(t, 3, 4, ...PKParams["IMEV"]), 0, 50, 300)
@@ -58,17 +87,13 @@ function plotCurves() {
         x: { label: "time (days)" },
         y: { label: "e₂ (pg/ml)" },
         marks: [
-            Plot.gridX({stroke: "grey"}),
-            Plot.gridY({stroke: "grey"}),
+            Plot.gridX({ stroke: "grey" }),
+            Plot.gridY({ stroke: "grey" }),
             Plot.ruleX([0]),
             Plot.ruleY([0]),
-            Plot.dot(uncertaintyCloud, { x: "Time", y: "E2", r: 1, fill: colorBabyBlue(), fillOpacity: 1.0}),
-            Plot.line(multiDoseEstersCurve, { x: "Time", y: "E2", strokeWidth: 3, stroke: colorBabyPink() }),
-            Plot.tip(multiDoseEstersCurve, Plot.pointerX({x: "Time", y: "E2", fill: colorBackground(), stroke: colorBabyPink()})),
-
-        ]
+        ].concat(marks)
     })
-    let div = document.getElementById("e2d3-plot");
+    let div = document.getElementById("multidose-plot");
     div.innerHTML = "";
     div.append(e2curve);
 }
@@ -78,27 +103,52 @@ function refresh() {
 }
 
 window.onload = function () {
-    
+
     // Create a default dose
-    addRow();
+    addTDERow('dose-table');
     document.getElementById('dose-table').rows[1].cells[0].querySelector('input').value = 0;
     document.getElementById('dose-table').rows[1].cells[1].querySelector('input').value = 3;
-    
+
+    addTDERow('steadystate-table');
+
     attachDragnDrop();
-    
-    document.getElementById('open-file-dialog').addEventListener('click', function() {
+
+    //--------------------------------
+    // multi-dose table button events
+    document.getElementById('add-dose-button').addEventListener('click', function () {
+        addTDERow('dose-table');
+    });
+    document.getElementById('delete-all-doses-button').addEventListener('click', function () {
+        deleteAllRows('dose-table');
+        addTDERow('dose-table');
+    });
+    document.getElementById('save-csv-button').addEventListener('click', function () {
+        exportCSV();
+    });
+    document.getElementById('import-csv-dialog').addEventListener('click', function () {
         document.getElementById('csv-file').click();
     });
-    
-    document.getElementById('csv-file').addEventListener('change', function(e) {
+    document.getElementById('csv-file').addEventListener('change', function (e) {
         loadCSV(e.target.files);
     });
+    //--------------------------------
 
-    document.getElementById('copy-xmr').addEventListener('click', function() {
+
+    //--------------------------------
+    // steady-state table button events
+    document.getElementById('add-steadystate-button').addEventListener('click', function () {
+        addTDERow('steadystate-table');
+    });
+    document.getElementById('delete-all-steadystates-button').addEventListener('click', function () {
+        deleteAllRows('steadystate-table');
+        addTDERow('steadystate-table');
+    });
+    //--------------------------------
+
+    document.getElementById('copy-xmr').addEventListener('click', function () {
         navigator.clipboard.writeText(this.innerText);
+        changeBackgroundColor('copy-xmr', colorBabyPink(), colorBackground(), 200);
     });
 
-    window.onresize = refresh;
-    
     refresh();
 }

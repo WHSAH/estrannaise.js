@@ -11,7 +11,7 @@
 </head>
 
 <body>
-    
+
     <script src="lib/loggamma.js"></script>
     <script src="lib/helpers.js"></script>
     <script src="lib/models.js"></script>
@@ -28,45 +28,75 @@
                 <img src="img/favicon-96x96.png" alt="Estrannaise" style="flex: 0 0 auto;">
                 <div>
                     <h1>estrannaise.js</h1>
-                    <h2>estradiol pharmacokinetics playground v0.1</h2>
+                    <h2>estradiol pharmacokinetics playground </h2>
                 </div>
             </div>
         </header>
 
-        <div id="e2d3-plot">
-            <!-- <pre class="mono" style="margin: 0; white-space: pre" id="chart"></pre> -->
+        <div id="multidose-plot">
+            
         </div>
 
-        <div id="dose-section">
-            <table id="dose-table">
-                <caption style="text-align: center; margin: 1em; font-weight: bold;">multi-dose curve<br><span style="font-weight: normal; font-size: 9px;">drag-n-drop csv on table to import</span></caption>
-                <thead>
-                    <tr>
-                        <th>time (days)</th>
-                        <th>dose (mg)</th>
-                        <th>ester</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
+        <div class="sections-container">
 
-            <div id="bottom-button" style="margin-top: 1em;">
-                <button onclick="addRow()" id="add-row-button" class="flat-button">dose +</button>
-                <button onclick="deleteAllRows()" id="delete-all-row-botton" class="flat-button">delete all</button>
-                <input type="file" id="csv-file" accept=".csv" style="display: none;">
-                <button id="open-file-dialog" class="flat-button">import csv</button>
-                <button onclick="exportCSV()" id="savecsv-button" class="flat-button">export csv</button>
+            <div id="dose-section">
+                <table id="dose-table">
+                    <caption style="text-align: left; margin: 0.3em; font-weight: bold;">multi-dose curve</caption>
+                    <thead>
+                        <tr>
+                            <th style="text-align: left;">time (days)</th>
+                            <th style="text-align: left;">dose (mg)</th>
+                            <th style="text-align: left;">ester</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+                <span style="font-weight: normal; font-size: 9px; margin-left: 8.72em;">drag-n-drop csv on table to import</span>
+                <div id="multidose-bottom-button" style="margin-top: 1em;">
+                    <button id="add-dose-button" class="flat-button">add</button>
+                    <button id="delete-all-doses-button" class="flat-button">clear</button>
+                    <input type="file" id="csv-file" accept=".csv" style="display: none;">
+                    <button id="import-csv-dialog" class="flat-button">import csv</button>
+                    <button id="save-csv-button" class="flat-button">export csv</button>
+                </div>
+            </div> <!-- dose-section -->
+
+
+            <div id="steadystate-section">
+                <table id="steadystate-table">
+                    <caption style="text-align: left; margin: 0.25em; font-weight: bold;">steady-states</caption>
+                    <thead>
+                        <tr>
+                            <th style="text-align: left;">every (days)</th>
+                            <th style="text-align: left;">dose (mg)</th>
+                            <th style="text-align: left;">ester</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                   </tbody>
+                </table>
+                <span style="font-weight: normal; font-size: 9px;">&nbsp;</span>
+                <div id="bottom-button" style="margin-top: 1em;">
+                    <button id="add-steadystate-button" class="flat-button">add</button>
+                    <button id="delete-all-steadystates-button" class="flat-button">clear</button>
+                </div>
+
+
             </div>
-        </div>
 
-        
-        <!-- someone tell me why github pages doesn't like why I use a <footer> -->
-        <div id="footer"> 
+        </div> <!-- tables-container -->
+
+        <!-- someone tell me why github pages don't render <footer> correctly? -->
+        <div id="footer">
             <p>MIT license (c) 2024 alix</p>
             <p>with help encouragements and entertainment from emily Torble Lea Annie Izzy Meringue photino</p>
-            <p>buy me a coffee (click xmr address to copy) <span id="copy-xmr">85pzJGdG6PF9XtH7hAPd5g54yxFkcTCfkednKYPyAUjBZJYrao3qgBF4ftHg4hkKXqgvohjiJgxn7NHMPaCBse7AAFQe4B6</span></p>
+            <br>
+            <p>xmr tip jar</p>
+            <p><span id="copy-xmr">85pzJGdG6PF9XtH7hAPd5g54yxFkcTCfkednKYPyAUjBZJYrao3qgBF4ftHg4hkKXqgvohjiJgxn7NHMPaCBse7AAFQe4B6</span>
+            </p>
         </div>
     </div>
 

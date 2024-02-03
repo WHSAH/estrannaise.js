@@ -2,6 +2,7 @@
 :root {
     --baby-blue: rgb(161, 203, 246);
     --baby-pink: rgb(219, 186, 230);
+    /* --baby-pink: rgb(234, 174, 185); */
     --background-grey: #2a2a2a;
     --input-grey: #343434;
     --button-grey: #686868;
@@ -49,7 +50,8 @@ select.dropdown-ester {
     font-family: monospace;
     border-radius: 4px;
 
-    /* width: px; */
+    /* width: 73px; */
+    width: 6em;
 }
 
 button.flat-button {
@@ -76,7 +78,7 @@ button.delete-button {
     border: none;
 }
 
-#e2d3-plot {
+#multidose-plot {
     width: 100%;
     height: 70%;
     margin: 3em;
@@ -94,14 +96,23 @@ button.delete-button {
     text-align: left; */
 }
 
-#bottom-button{
+#multidose-bottom-button{
     margin-left: 5.72em;
 }
 
-#dose-section {
-    display: flex;
+#dose-section, #steadystate-section {
+    /* display: flex;
     flex-direction: column;
     align-items: flex-start;
+    width: 45%; */
+    flex: 1 1 0px; /* This will make the divs flexible, sharing the available space */
+    margin: 0 10px; /* Add some margin between the tables */
+
+}
+
+.sections-container {
+    display: flex;
+    justify-content: space-between;
 }
 
 /* .plot-label {
@@ -137,6 +148,7 @@ header {
     margin-left: 8.72em;
 }
 
-#copy-text {
+#copy-xmr {
     cursor: copy;
+    transition: background-color 0.1s;
 }
