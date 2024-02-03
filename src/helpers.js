@@ -129,7 +129,7 @@ function loadCSV(files) {
                             let ester = findIntersecting(esterList, csvrow[2].replace(/\s/g, '').replace(/im/gi, ''));
 
                             if (ester && (isFinite(csvrow[0]) || isValidDate(csvrow[0])) && isFinite(csvrow[1])) {
-                                addTDERow('dose-table', csvrow[0],  parseFloat(csvrow[1]), ester)
+                                addTDERow('dose-table', csvrow[0], parseFloat(csvrow[1]), ester)
                                 // let timeCell = row.cells[0];
                                 // let doseCell = row.cells[1];
                                 // let esterSelector = row.cells[2];
@@ -170,6 +170,24 @@ function exportCSV() {
     document.body.removeChild(downloadLink);
 }
 
+function getTDEs(tableId) {
+    let doseTable = document.getElementById(tableId);
+    let times = [];
+    let doses = [];
+    let esters = [];
+    for (let i = 1; i < doseTable.rows.length; i++) {
+        let row = doseTable.rows[i];
+        let time = row.cells[2].querySelector('input').value;
+        let dose = row.cells[3].querySelector('input').value;
+        let ester = row.cells[4].querySelector('select').value
+        if (isFinite(time) && isFinite(dose) && dose > 0) {
+            times.push(time);
+            doses.push(dose);
+            esters.push(ester);
+        }
+    };
+    return [times, doses, esters];
+}
 
 function addTDERow(id, time = null, dose = null, ester = null, stationary = false) {
     let table = document.getElementById(id);
@@ -271,7 +289,7 @@ function deleteAllRows(id) {
     refresh();
 }
 
-function attachDragnDrop() {
+function attachDragnDropImport() {
 
     let doseTable = document.getElementById('dragndrop-zone');
     doseTable.addEventListener('dragenter', function (event) {
@@ -304,4 +322,40 @@ function changeBackgroundColor(elementId, color1, color2, delay = 100) {
     setTimeout(function () {
         element.style.backgroundColor = color2;
     }, delay);
+}
+
+function attachMultidoseButtonsEvents() {
+    document.getElementById('add-dose-button').addEventListener('click', function () {
+        addTDERow('dose-table');
+    });
+    document.getElementById('delete-all-doses-button').addEventListener('click', function () {
+        deleteAllRows('dose-table');
+        addTDERow('dose-table');
+    });
+    document.getElementById('save-csv-button').addEventListener('click', function () {
+        exportCSV();
+    });
+    document.getElementById('import-csv-dialog').addEventListener('click', function () {
+        document.getElementById('csv-file').click();
+    });
+    document.getElementById('csv-file').addEventListener('change', function (e) {
+        loadCSV(e.target.files);
+    });
+}
+
+function attachSteadyStateButtonsEvents() {
+    document.getElementById('add-steadystate-button').addEventListener('click', function () {
+        addTDERow('steadystate-table');
+    });
+    document.getElementById('delete-all-steadystates-button').addEventListener('click', function () {
+        deleteAllRows('steadystate-table');
+        addTDERow('steadystate-table');
+    });
+}
+
+function tipJarEvent() {
+    document.getElementById('copy-xmr').addEventListener('click', function () {
+        navigator.clipboard.writeText(this.innerText);
+        changeBackgroundColor('copy-xmr', colorBabyPink(), colorBackground(), 150);
+    });
 }
