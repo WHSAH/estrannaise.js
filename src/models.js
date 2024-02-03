@@ -3,14 +3,6 @@ function lngamma(x) { return ieee754gamma.lngamma(x) }
 
 const esterList = ["EV IM", "EEn IM", "EC IM", "EUn IM", "EB IM"];
 
-const PK3CParams = {
-    "EV IM": [95.0, 1.55, 17.2, 0.21],
-    "EEn IM": [61.71, 0.50, 4.43, 0.108],
-    "EC IM": [56.77, 0.98, 1.67, 0.15],
-    "EB IM": [383.56, 7.35, 21.79, 0.63],
-    "EUn IM": [246.49, 0.0364, 5.70, 2.01]
-}
-
 function e2SingleDose3C(t, dose, d, k1, k2, k3) {
     return t < 0 ? 0 : dose * d * k1 * k2 * (Math.exp(-k1 * t) / (k1 - k2) / (k1 - k3) - Math.exp(-k2 * t) / (k1 - k2) / (k2 - k3) + Math.exp(-k3 * t) / (k1 - k3) / (k2 - k3));
 }

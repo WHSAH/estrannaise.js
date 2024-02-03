@@ -69,21 +69,43 @@ function getMonospaceWidth() {
 
 }
 
-function colorBabyBlue(alpha = 1.0) {
-    return `rgba(161, 203, 246, ${alpha})`
+
+function convertCustomCSSVarToRGBA(varName, alpha = 1.0) {
+    let rootStyle = getComputedStyle(document.documentElement);
+    let color = rootStyle.getPropertyValue(varName)
+    let rgb = '';
+    if (color.startsWith('#')) {
+        rgb = color
+        let r = parseInt(rgb.slice(1, 3), 16);
+        let g = parseInt(rgb.slice(3, 5), 16);
+        let b = parseInt(rgb.slice(5, 7), 16);
+        rgb = `${r}, ${g}, ${b}`;
+    } else {
+        rgb = color.substring(4, color.length - 1);
+    }
+    return `rgba(${rgb}, ${alpha})`
 }
 
-function colorBabyPink(alpha = 1.0) {
-    return `rgba(219, 186, 230, ${alpha})`
-}
+function colorBabyBlue(alpha = 1.0) { return convertCustomCSSVarToRGBA('--baby-blue', alpha) }
+function colorBabyPink(alpha = 1.0) { return convertCustomCSSVarToRGBA('--baby-pink', alpha) }
+function colorBackground(alpha = 1.0) { return convertCustomCSSVarToRGBA('--background-grey', alpha) }
+function colorButton(alpha = 1.0) { return convertCustomCSSVarToRGBA('--button-grey', alpha) }
 
-function colorBackground(alpha = 1.0) {
-    return `rgba(42, 42, 42, ${alpha})`
-}
+// function colorBabyPink(alpha = 1.0) {
+//     let babyPink = rootStyle.getPropertyValue('--baby-pink').substring(4, color.length - 1);
+//     return `rgba(${babyPink}, ${alpha})`
+// }
 
-function colorButton(alpha = 1.0) {
-    return `rgba(52, 52, 52, ${alpha})`
-}
+// function colorBackground(alpha = 1.0) {
+//     let background = rootStyle.getPropertyValue('--background').substring(4, color.length - 1);
+//     return `rgba(${background}, ${alpha})`
+// }
+
+// function colorButton(alpha = 1.0) {
+//     return `rgba(52, 52, 52, ${alpha})`
+// }
+
+
 
 function unitStep(x) {
     if (x < 0) {
@@ -91,16 +113,6 @@ function unitStep(x) {
     } else if (x >= 0) {
         return 1;
     }
-}
-
-function lngamma(x) { return ieee754gamma.lngamma(x) }
-
-function colorBabyBlue(alpha = 1.0) {
-    return `rgba(161, 203, 246, ${alpha})`
-}
-
-function colorBabyPink(alpha = 1.0) {
-    return `rgba(219, 186, 230, ${alpha})`
 }
 
 function loadCSV(files) {
@@ -117,14 +129,14 @@ function loadCSV(files) {
                             let ester = findIntersecting(esterList, csvrow[2].replace(/\s/g, '').replace(/im/gi, ''));
 
                             if (ester && (isFinite(csvrow[0]) || isValidDate(csvrow[0])) && isFinite(csvrow[1])) {
-                                let row = addTDERow('dose-table')
-                                let timeCell = row.cells[0];
-                                let doseCell = row.cells[1];
-                                let esterSelector = row.cells[2];
+                                addTDERow('dose-table', csvrow[0],  parseFloat(csvrow[1]), ester)
+                                // let timeCell = row.cells[0];
+                                // let doseCell = row.cells[1];
+                                // let esterSelector = row.cells[2];
 
-                                timeCell.querySelector('input').value = csvrow[0];
-                                doseCell.querySelector('input').value = parseFloat(csvrow[1]);
-                                esterSelector.querySelector('select').value = ester;
+                                // timeCell.querySelector('input').value = csvrow[0];
+                                // doseCell.querySelector('input').value = parseFloat(csvrow[1]);
+                                // esterSelector.querySelector('select').value = ester;
                             }
                         }
                     });
@@ -159,56 +171,83 @@ function exportCSV() {
 }
 
 
-function addTDERow(id, stationary = false) {
+function addTDERow(id, time = null, dose = null, ester = null, stationary = false) {
     let table = document.getElementById(id);
     let row = table.insertRow(-1);
 
+    // -----------------------------------------
+    // Add visibility and uncertainty checkboxes
     let visibilityCell = row.insertCell(0);
-    let visibilityCheckbox = document.createElement('input');
-    visibilityCheckbox.type = 'checkbox';
-    visibilityCheckbox.className = 'hidden-checkbox';
-    visibilityCell.appendChild(visibilityCheckbox);
+    if (id == 'steadystate-table' || ((id == 'dose-table') && (table.rows.length == 2))) {
+        let visibilityCheckbox = document.createElement('input');
+        visibilityCheckbox.type = 'checkbox';
+        visibilityCheckbox.className = 'hidden-checkbox checked-style';
+        visibilityCheckbox.checked = true;
+        visibilityCell.appendChild(visibilityCheckbox);
 
-    let visibilityCustomCheckbox = document.createElement('div');
-    visibilityCustomCheckbox.className = 'custom-checkbox';
-    visibilityCustomCheckbox.onclick = function() {
-        visibilityCheckbox.checked = !visibilityCheckbox.checked;
-        this.className = visibilityCheckbox.checked ? 'custom-checkbox checked' : 'custom-checkbox';
-    };
-    visibilityCell.appendChild(visibilityCustomCheckbox);
-
+        let visibilityCustomCheckbox = document.createElement('div');
+        visibilityCustomCheckbox.className = 'custom-checkbox checked-style';
+        visibilityCustomCheckbox.onclick = function () {
+            visibilityCheckbox.checked = !visibilityCheckbox.checked;
+            this.className = visibilityCheckbox.checked ? 'custom-checkbox checked-style' : 'custom-checkbox';
+            refresh()
+        };
+        visibilityCell.appendChild(visibilityCustomCheckbox);
+    }
     let uncertaintyCell = row.insertCell(1);
-    let uncertaintyCheckbox = document.createElement('input');
-    uncertaintyCheckbox.type = 'checkbox';
-    uncertaintyCheckbox.className = 'hidden-checkbox';
-    uncertaintyCell.appendChild(uncertaintyCheckbox);
+    if (id == 'steadystate-table' || ((id == 'dose-table') && (table.rows.length == 2))) {
 
-    let uncertaintyCustomCheckbox = document.createElement('div');
-    uncertaintyCustomCheckbox.className = 'custom-checkbox';
-    uncertaintyCustomCheckbox.onclick = function() {
-        uncertaintyCheckbox.checked = !uncertaintyCheckbox.checked;
-        this.className = uncertaintyCheckbox.checked ? 'custom-checkbox checked' : 'custom-checkbox';
-    };
-    uncertaintyCell.appendChild(uncertaintyCustomCheckbox);
+        let uncertaintyCheckbox = document.createElement('input');
+        uncertaintyCheckbox.type = 'checkbox';
+        uncertaintyCheckbox.className = 'hidden-checkbox checked-style';
+        uncertaintyCheckbox.checked = true;
+        uncertaintyCell.appendChild(uncertaintyCheckbox);
 
+        let uncertaintyCustomCheckbox = document.createElement('div');
+        uncertaintyCustomCheckbox.className = 'custom-checkbox checked-style';
+        uncertaintyCustomCheckbox.onclick = function () {
+            uncertaintyCheckbox.checked = !uncertaintyCheckbox.checked;
+            this.className = uncertaintyCheckbox.checked ? 'custom-checkbox checked-style' : 'custom-checkbox';
+            refresh()
+        };
+        uncertaintyCell.appendChild(uncertaintyCustomCheckbox);
+    }
+
+    // -----------------------------------------
 
 
     let timeCell = row.insertCell(2)
-    timeCell.innerHTML = '<input type="text" class="flat-input time-cell" oninput="refresh()">';
+    timeCell.innerHTML = '<input type="text" class="flat-input time-cell">';
+    if (time !== null) {
+        timeCell.querySelector('input').value = time;
+    }
+    timeCell.querySelector('input').addEventListener('input', refresh);
+
     // timeCell.addClassName = "time-cell";
 
+
     let doseCell = row.insertCell(3)
-    doseCell.innerHTML = '<input type="text" class="flat-input dose-cell" oninput="refresh()">';
+    doseCell.innerHTML = '<input type="text" class="flat-input dose-cell">';
+    if (dose !== null) {
+        doseCell.querySelector('input').value = dose;
+    }
+    doseCell.querySelector('input').addEventListener('input', refresh);
+
     // doseCell.addClassName = "dose-cell";
 
-    let esterSelector = row.insertCell(4).innerHTML =
-        '<select class="dropdown-ester" onchange="refresh()"> \
+    let esterCell = row.insertCell(4)
+    esterCell.innerHTML =
+        '<select class="dropdown-ester"> \
             <option value="EV IM">EV IM</option> \
             <option value="EEn IM">EEn IM</option> \
             <option value="EC IM">EC IM</option> \
             <option value="EB IM">EB IM</option> \
             <option value="EUn IM">EUn IM</option> \
             </select>';
+    if (ester !== null) {
+        esterCell.querySelector('select').value = ester;
+    }
+    esterCell.querySelector('select').addEventListener('change', refresh);
 
     let deleteCell = row.insertCell(5);
     deleteCell.innerHTML = '<button class="flat-button delete-button">-</button>';
@@ -220,7 +259,7 @@ function addTDERow(id, stationary = false) {
     if (stationary) {
         document.getElementById('add-dose-button').scrollIntoView();
     }
-    
+
     return row;
 }
 

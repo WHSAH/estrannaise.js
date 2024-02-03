@@ -47,46 +47,51 @@ function plotCurves() {
     let xmax = Math.max(31, 1.618 * Math.max(...mdTimes));
 
     if (mdTimes.length > 0) {
-        let multiDoseEstersCurve = fillCurve(t => e2MultiDoseEster3C(t, mdDoses, mdTimes, mdEsters), xmin, xmax, NB_LINE_POINTS);
 
-        let mdUncertaintyCloud = [];
-        for (let i = 0; i < NB_CLOUD_POINTS; i++) {
-            let randx = Math.random() * (xmax - xmin) + xmin;
-            let y = e2MultiDoseEster3C(randx, mdDoses, mdTimes, mdEsters, true);
-            mdUncertaintyCloud.push({ Time: randx, E2: y });
+        if (document.getElementById('dose-table').rows[1].cells[1].querySelector('input[type="checkbox"]').checked) {
+            let mdUncertaintyCloud = [];
+            for (let i = 0; i < NB_CLOUD_POINTS; i++) {
+                let randx = Math.random() * (xmax - xmin) + xmin;
+                let y = e2MultiDoseEster3C(randx, mdDoses, mdTimes, mdEsters, true);
+                mdUncertaintyCloud.push({ Time: randx, E2: y });
+            }
+            marks.push(Plot.dot(mdUncertaintyCloud, { x: "Time", y: "E2", r: 1, fill: colorBabyBlue(), fillOpacity: 0.5 }))
         }
-        marks.push(Plot.dot(mdUncertaintyCloud, { x: "Time", y: "E2", r: 1, fill: colorBabyBlue(), fillOpacity: 0.5 }))
-        marks.push(Plot.line(multiDoseEstersCurve, { x: "Time", y: "E2", strokeWidth: 3, stroke: colorBabyPink() }))
-        marks.push(Plot.tip(multiDoseEstersCurve, Plot.pointerX({ x: "Time", y: "E2", fill: colorBackground(), stroke: colorBabyPink() })))
+
+        if (document.getElementById('dose-table').rows[1].cells[0].querySelector('input[type="checkbox"]').checked) {
+            let multiDoseEstersCurve = fillCurve(t => e2MultiDoseEster3C(t, mdDoses, mdTimes, mdEsters), xmin, xmax, NB_LINE_POINTS);
+
+            marks.push(Plot.line(multiDoseEstersCurve, { x: "Time", y: "E2", strokeWidth: 3, stroke: colorBabyPink() }))
+            marks.push(Plot.tip(multiDoseEstersCurve, Plot.pointerX({ x: "Time", y: "E2", fill: colorBackground(), stroke: colorBabyPink() })))
+        }
     }
 
     let [ssEveries, ssDoses, ssEsters] = getTDEs('steadystate-table');
 
     for (let i = 0; i < ssEveries.length; i++) {
-        let ssEsterCurve = fillCurve(t => e2SteadyState3C(t, ssDoses[i], ssEveries[i], ...PK3CParams[ssEsters[i]]), xmin, xmax, NB_LINE_POINTS);
-        
-        let ssUncertaintyCloud = [];
-        for (let j = 0; j < NB_CLOUD_POINTS; j++) {
-            let randx = Math.random() * (xmax - xmin) + xmin;
-            let randidx = Math.floor(Math.random() * mcmcSamplesPK3C[ssEsters[i]].length);
-            let y = e2SteadyState3C(randx, ssDoses[i], ssEveries[i], ...mcmcSamplesPK3C[ssEsters[i]][randidx]);
-            if (y > 2000) {
-                console.log(randidx)
+
+        if (document.getElementById('steadystate-table').rows[1 + i].cells[1].querySelector('input[type="checkbox"]').checked) {
+            let ssUncertaintyCloud = [];
+            for (let j = 0; j < NB_CLOUD_POINTS; j++) {
+                let randx = Math.random() * (xmax - xmin) + xmin;
+                let randidx = Math.floor(Math.random() * mcmcSamplesPK3C[ssEsters[i]].length);
+                let y = e2SteadyState3C(randx, ssDoses[i], ssEveries[i], ...mcmcSamplesPK3C[ssEsters[i]][randidx]);
+                if (y > 2000) {
+                    console.log(randidx)
+                }
+                ssUncertaintyCloud.push({ Time: randx, E2: y });
             }
-            ssUncertaintyCloud.push({ Time: randx, E2: y });
+            marks.push(Plot.dot(ssUncertaintyCloud, { x: "Time", y: "E2", r: 1, fill: colorBabyBlue(), fillOpacity: 0.5 }));
         }
-        marks.push(Plot.dot(ssUncertaintyCloud, { x: "Time", y: "E2", r: 1, fill: colorBabyBlue(), fillOpacity: 0.5 }));
-        marks.push(Plot.line(ssEsterCurve, { x: "Time", y: "E2", strokeWidth: 3, stroke: colorBabyPink() }))
+
+        if (document.getElementById('steadystate-table').rows[1 + i].cells[0].querySelector('input[type="checkbox"]').checked) {
+            let ssEsterCurve = fillCurve(t => e2SteadyState3C(t, ssDoses[i], ssEveries[i], ...PK3CParams[ssEsters[i]]), xmin, xmax, NB_LINE_POINTS);
+            marks.push(Plot.line(ssEsterCurve, { x: "Time", y: "E2", strokeWidth: 3, stroke: colorBabyPink() }))
+        }
     }
 
-
-    // let repeatedCurve = fillCurve(t => e2RepeatedDose3C(t, 3, 4, 8, ...PKParams["IMEV"]), 0, 50, 300);
-    // let steadyStateCurve = fillCurve(t => e2SteadyState3C(t, 3, 4, ...PKParams["IMEV"]), 0, 50, 300)
-    // let singleDoseCurve = fillCurve(t => e2SingleDose3C(t, 3, ...PKParams["IMEV"]), 0, 50, 300)
-    // let troughCurve = fillCurve(t => e2ssTrough3C(3, 4, ...PKParams["IMEV"]), 0, 50, 300)
-
     let e2curve = Plot.plot({
-        width: 710,
+        width: 828,
         // height: 500,
         x: { label: "time (days)" },
         y: { label: "e₂ (pg/ml)" },
@@ -109,12 +114,10 @@ function refresh() {
 window.onload = function () {
 
     // Create a default dose
-    addTDERow('dose-table', false);
-    document.getElementById('dose-table').rows[1].cells[0].querySelector('input').value = 0;
-    document.getElementById('dose-table').rows[1].cells[1].querySelector('input').value = 3;
+    addTDERow('dose-table', 0, 3, 'EV IM');
+    addTDERow('steadystate-table', 4, 3, 'EV IM');
 
-    addTDERow('steadystate-table', false);
-
+    // attach dragndrop to multi-dose table
     attachDragnDrop();
 
     //--------------------------------
@@ -151,7 +154,7 @@ window.onload = function () {
 
     document.getElementById('copy-xmr').addEventListener('click', function () {
         navigator.clipboard.writeText(this.innerText);
-        changeBackgroundColor('copy-xmr', colorBabyPink(), colorBackground(), 200);
+        changeBackgroundColor('copy-xmr', colorBabyPink(), colorBackground(), 150);
     });
 
     refresh();
