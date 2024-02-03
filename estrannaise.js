@@ -1,4 +1,5 @@
 const NB_CLOUD_POINTS = 4000;
+const NB_LINE_POINTS = 1000;
 
 function fillCurveFlat(func, xmin, xmax, nbsteps) {
     for (let i = xmin; i <= xmax; i += (xmax - xmin) / (nbsteps - 1)) {
@@ -46,7 +47,7 @@ function plotCurves() {
     let xmax = Math.max(31, 1.618 * Math.max(...mdTimes));
 
     if (mdTimes.length > 0) {
-        let multiDoseEstersCurve = fillCurve(t => e2MultiDoseEster3C(t, mdDoses, mdTimes, mdEsters), xmin, xmax, 1000);
+        let multiDoseEstersCurve = fillCurve(t => e2MultiDoseEster3C(t, mdDoses, mdTimes, mdEsters), xmin, xmax, NB_LINE_POINTS);
 
         let mdUncertaintyCloud = [];
         for (let i = 0; i < NB_CLOUD_POINTS; i++) {
@@ -54,19 +55,16 @@ function plotCurves() {
             let y = e2MultiDoseEster3C(randx, mdDoses, mdTimes, mdEsters, true);
             mdUncertaintyCloud.push({ Time: randx, E2: y });
         }
-        marks.push(Plot.dot(mdUncertaintyCloud, { x: "Time", y: "E2", r: 1, fill: colorBabyBlue(), fillOpacity: 1.0 }))
+        marks.push(Plot.dot(mdUncertaintyCloud, { x: "Time", y: "E2", r: 1, fill: colorBabyBlue(), fillOpacity: 0.5 }))
         marks.push(Plot.line(multiDoseEstersCurve, { x: "Time", y: "E2", strokeWidth: 3, stroke: colorBabyPink() }))
         marks.push(Plot.tip(multiDoseEstersCurve, Plot.pointerX({ x: "Time", y: "E2", fill: colorBackground(), stroke: colorBabyPink() })))
     }
 
-
-
     let [ssEveries, ssDoses, ssEsters] = getTDEs('steadystate-table');
 
     for (let i = 0; i < ssEveries.length; i++) {
-        let ssEsterCurve = fillCurve(t => e2SteadyState3C(t, ssDoses[i], ssEveries[i], ...PK3CParams[ssEsters[i]]), xmin, xmax, 1000);
-        marks.push(Plot.line(ssEsterCurve, { x: "Time", y: "E2", strokeWidth: 3, stroke: colorBabyPink() }))
-
+        let ssEsterCurve = fillCurve(t => e2SteadyState3C(t, ssDoses[i], ssEveries[i], ...PK3CParams[ssEsters[i]]), xmin, xmax, NB_LINE_POINTS);
+        
         let ssUncertaintyCloud = [];
         for (let j = 0; j < NB_CLOUD_POINTS; j++) {
             let randx = Math.random() * (xmax - xmin) + xmin;
@@ -74,7 +72,8 @@ function plotCurves() {
             let y = e2SteadyState3C(randx, ssDoses[i], ssEveries[i], ...mcmcSamplesPK3C[ssEsters[i]][randidx]);
             ssUncertaintyCloud.push({ Time: randx, E2: y });
         }
-        marks.push(Plot.dot(ssUncertaintyCloud, { x: "Time", y: "E2", r: 1, fill: colorBabyBlue(), fillOpacity: 1.0 }));
+        marks.push(Plot.dot(ssUncertaintyCloud, { x: "Time", y: "E2", r: 1, fill: colorBabyBlue(), fillOpacity: 0.5 }));
+        marks.push(Plot.line(ssEsterCurve, { x: "Time", y: "E2", strokeWidth: 3, stroke: colorBabyPink() }))
     }
 
 
