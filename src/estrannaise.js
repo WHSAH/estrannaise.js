@@ -1,7 +1,3 @@
-const NB_CLOUD_POINTS = 4000;
-const NB_LINE_POINTS = 1000;
-
-
 function refresh() {
     plotCurves();
 }

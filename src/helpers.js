@@ -136,13 +136,6 @@ function loadCSV(files) {
 
                             if (ester && (isFinite(csvrow[0]) || isValidDate(csvrow[0])) && isFinite(csvrow[1])) {
                                 addTDERow('dose-table', csvrow[0], parseFloat(csvrow[1]), ester)
-                                // let timeCell = row.cells[0];
-                                // let doseCell = row.cells[1];
-                                // let esterSelector = row.cells[2];
-
-                                // timeCell.querySelector('input').value = csvrow[0];
-                                // doseCell.querySelector('input').value = parseFloat(csvrow[1]);
-                                // esterSelector.querySelector('select').value = ester;
                             }
                         }
                     });
@@ -175,11 +168,15 @@ function exportCSV() {
     document.body.removeChild(downloadLink);
 }
 
-function getTDEs(tableId) {
+function getTDEs(tableId, getvisibility = false) {
     let doseTable = document.getElementById(tableId);
     let times = [];
     let doses = [];
     let esters = [];
+
+    let cvisibilities = [];
+    let uvisibilities = [];
+
     for (let i = 1; i < doseTable.rows.length; i++) {
         let row = doseTable.rows[i];
         let time = row.cells[2].querySelector('input').value;
@@ -189,12 +186,22 @@ function getTDEs(tableId) {
             times.push(time);
             doses.push(dose);
             esters.push(ester);
+            if (getvisibility) {
+                let cv = row.cells[0].querySelector('input');
+                cvisibilities.push(cv ? cv.checked : null);
+                let uv = row.cells[1].querySelector('input');
+                uvisibilities.push(uv ? uv.checked : null);
+            }
         }
     };
-    return [times, doses, esters];
+    if (getvisibility) {
+        return [times, doses, esters, cvisibilities, uvisibilities];
+    } else {
+        return [times, doses, esters]
+    };
 }
 
-function addTDERow(id, time = null, dose = null, ester = null, stationary = false) {
+function addTDERow(id, time = null, dose = null, ester = null, cvisible = true, uvisible = true, stationary = false) {
     let table = document.getElementById(id);
     let row = table.insertRow(-1);
 
@@ -209,7 +216,7 @@ function addTDERow(id, time = null, dose = null, ester = null, stationary = fals
         let visibilityCheckbox = document.createElement('input');
         visibilityCheckbox.type = 'checkbox';
         visibilityCheckbox.className = 'hidden-checkbox checked-style';
-        visibilityCheckbox.checked = true;
+        visibilityCheckbox.checked = cvisible;
         visibilityCell.appendChild(visibilityCheckbox);
 
         let visibilityCustomCheckbox = document.createElement('div');
@@ -231,7 +238,7 @@ function addTDERow(id, time = null, dose = null, ester = null, stationary = fals
         let uncertaintyCheckbox = document.createElement('input');
         uncertaintyCheckbox.type = 'checkbox';
         uncertaintyCheckbox.className = 'hidden-checkbox checked-style';
-        uncertaintyCheckbox.checked = true;
+        uncertaintyCheckbox.checked = uvisible;
         uncertaintyCell.appendChild(uncertaintyCheckbox);
 
         let uncertaintyCustomCheckbox = document.createElement('div');

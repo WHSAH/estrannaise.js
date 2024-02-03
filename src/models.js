@@ -1,7 +1,23 @@
 function lngamma(x) { return ieee754gamma.lngamma(x) }
 
-
 const esterList = ["EV IM", "EEn IM", "EC IM", "EUn IM", "EB IM"];
+
+
+function PK3CD3Symmetry(d, k1, k2, k3, op = 0) {
+    if ( op == 0 ) {
+        return [d, k1, k2, k3]
+    } else if ( op == 1 ) {
+        return [d, k2, k1, k3]
+    } else if ( op == 2 ) {
+        return [d*k1/k3, k3, k2, k1]
+    } else if ( op == 3 ) {
+        return [d*k1/k3, k2, k3, k1]
+    } else if ( op == 4 ) {
+        return [d*k2/k3, k3, k1, k2]
+    } else if ( op == 5 ) {
+        return [d*k2/k3, k1, k3, k2]
+    }
+}
 
 function e2SingleDose3C(t, dose, d, k1, k2, k3) {
     return t < 0 ? 0 : dose * d * k1 * k2 * (Math.exp(-k1 * t) / (k1 - k2) / (k1 - k3) - Math.exp(-k2 * t) / (k1 - k2) / (k2 - k3) + Math.exp(-k3 * t) / (k1 - k3) / (k2 - k3));
