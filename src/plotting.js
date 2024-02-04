@@ -16,9 +16,17 @@ function plotCurves() {
     let tipmarks = []
 
     let [mdTimes, mdDoses, mdEsters, [mdCVisib, ...cnulls], [mdUVisib, ...unulls]] = getTDEs('dose-table', true);
+    let [ssEveries, ssDoses, ssEsters, ssCVisibs, ssUVisibs] = getTDEs('steadystate-table', true);
+
 
     let xmin = Math.min(0, ...mdTimes);
     let xmax = Math.max(31, 1.618 * Math.max(...mdTimes));
+    for (let i = 0; i < ssEveries.length; i++) {
+        if (ssUVisibs[i] || ssCVisibs[i]) {
+            xmax = Math.max(xmax, 5 * ssEveries[i]);
+        }
+    }
+
 
     // track the max e2 across all multi-dose curves
     // to set the y-axis limit. uncertainty clouds ignored.
@@ -56,13 +64,7 @@ function plotCurves() {
         }
     }
 
-    let [ssEveries, ssDoses, ssEsters, ssCVisibs, ssUVisibs] = getTDEs('steadystate-table', true);
-
     for (let i = 0; i < ssEveries.length; i++) {
-
-        if (ssUVisibs[i] || ssCVisibs[i]) {
-            xmax = Math.max(xmax, 5 * ssEveries[i]);
-        }
 
         if (ssUVisibs[i]) {
 
@@ -97,7 +99,7 @@ function plotCurves() {
     }
 
     let e2curve = Plot.plot({
-        width: 818,
+        width: 848,
         // height: 500,
         x: { label: "time (days)" },
         y: { domain: [0, 1.25 * e2max], label: "e₂ (pg/ml)" },
