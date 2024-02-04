@@ -169,7 +169,26 @@ function exportCSV() {
     document.body.removeChild(downloadLink);
 }
 
-function getTDEs(tableId, getvisibility = false) {
+
+function readRow(row, keepincomplete = false) {
+
+    let time = row.cells[2].querySelector('input').value;
+    let dose = row.cells[3].querySelector('input').value;
+    let ester = row.cells[4].querySelector('select').value;
+
+    let cv = row.cells[0].querySelector('input');
+    let cvisibility = cv ? cv.checked : null;
+    let uv = row.cells[1].querySelector('input');
+    let uvisibility = uv ? uv.checked : null;
+
+    if ((!isNaN(parseFloat(time)) && !isNaN(parseFloat(dose)) && dose > 0) || keepincomplete) {
+        return { time: time, dose: dose, ester: ester, cvisibility: cvisibility, uvisibility: uvisibility };
+    } else {
+        return null;
+    }
+}
+
+function getTDEs(tableId, getvisibility = false, keepincomplete = false) {
     let doseTable = document.getElementById(tableId);
     let times = [];
     let doses = [];
@@ -180,31 +199,34 @@ function getTDEs(tableId, getvisibility = false) {
 
     for (let i = 1; i < doseTable.rows.length; i++) {
         let row = doseTable.rows[i];
-        let time = row.cells[2].querySelector('input').value;
-        let dose = row.cells[3].querySelector('input').value;
-        let ester = row.cells[4].querySelector('select').value
-        if (isFinite(time) && isFinite(dose) && dose > 0) {
-            times.push(time);
-            doses.push(dose);
-            esters.push(ester);
+        let rowdata = readRow(row, keepincomplete);
+        if (rowdata) {
+            times.push(rowdata.time);
+            doses.push(rowdata.dose);
+            esters.push(rowdata.ester);
             if (getvisibility) {
-                let cv = row.cells[0].querySelector('input');
-                cvisibilities.push(cv ? cv.checked : null);
-                let uv = row.cells[1].querySelector('input');
-                uvisibilities.push(uv ? uv.checked : null);
+                cvisibilities.push(rowdata.cvisibility);
+                uvisibilities.push(rowdata.uvisibility);
             }
         }
     };
+
     if (getvisibility) {
         return [times, doses, esters, cvisibilities, uvisibilities];
     } else {
         return [times, doses, esters]
     };
+
 }
 
-function addTDERow(id, time = null, dose = null, ester = null, cvisible = true, uvisible = true, stationary = false) {
+function addTDERow(id, time = null, dose = null, ester = null, cvisible = true, uvisible = true, stationaryclick = false) {
+
+    console.log('adding row', id, time, dose, ester, cvisible, uvisible, stationaryclick);
+
     let table = document.getElementById(id);
     let row = table.insertRow(-1);
+
+    rowValidity.set(row, false);
 
     // -----------------------------------------
     // Add visibility and uncertainty checkboxes
@@ -221,11 +243,13 @@ function addTDERow(id, time = null, dose = null, ester = null, cvisible = true, 
         visibilityCell.appendChild(visibilityCheckbox);
 
         let visibilityCustomCheckbox = document.createElement('div');
-        visibilityCustomCheckbox.className = 'custom-checkbox checked-style';
+        visibilityCustomCheckbox.className = visibilityCheckbox.checked ? 'custom-checkbox checked-style' : 'custom-checkbox';
         visibilityCustomCheckbox.onclick = function () {
             visibilityCheckbox.checked = !visibilityCheckbox.checked;
             this.className = visibilityCheckbox.checked ? 'custom-checkbox checked-style' : 'custom-checkbox';
-            refresh()
+            if (readRow(this.parentElement.parentElement)) {
+                refresh()
+            }
         };
         visibilityCell.appendChild(visibilityCustomCheckbox);
     }
@@ -243,11 +267,13 @@ function addTDERow(id, time = null, dose = null, ester = null, cvisible = true, 
         uncertaintyCell.appendChild(uncertaintyCheckbox);
 
         let uncertaintyCustomCheckbox = document.createElement('div');
-        uncertaintyCustomCheckbox.className = 'custom-checkbox checked-style';
+        uncertaintyCustomCheckbox.className = uncertaintyCheckbox.checked ? 'custom-checkbox checked-style' : 'custom-checkbox';
         uncertaintyCustomCheckbox.onclick = function () {
             uncertaintyCheckbox.checked = !uncertaintyCheckbox.checked;
             this.className = uncertaintyCheckbox.checked ? 'custom-checkbox checked-style' : 'custom-checkbox';
-            refresh()
+            if (readRow(this.parentElement.parentElement)) {
+                refresh()
+            }
         };
         uncertaintyCell.appendChild(uncertaintyCustomCheckbox);
     }
@@ -260,7 +286,15 @@ function addTDERow(id, time = null, dose = null, ester = null, cvisible = true, 
     if (time !== null) {
         timeCell.querySelector('input').value = time;
     }
-    timeCell.querySelector('input').addEventListener('input', refresh);
+    timeCell.querySelector('input').addEventListener('input', function () {
+        let myRow = this.parentElement.parentElement;
+        let currentValidity = Boolean(readRow(myRow, false));
+
+        if ((currentValidity !== rowValidity.get(myRow)) || currentValidity) {
+            rowValidity.set(myRow, currentValidity);
+            refresh()
+        }
+    });
 
     // timeCell.addClassName = "time-cell";
 
@@ -270,7 +304,17 @@ function addTDERow(id, time = null, dose = null, ester = null, cvisible = true, 
     if (dose !== null) {
         doseCell.querySelector('input').value = dose;
     }
-    doseCell.querySelector('input').addEventListener('input', refresh);
+    doseCell.querySelector('input').addEventListener('input', function () {
+        
+        let myRow = this.parentElement.parentElement;
+        let currentValidity = Boolean(readRow(myRow, false));
+
+        if ((currentValidity !== rowValidity.get(myRow)) || currentValidity) {
+            rowValidity.set(myRow, currentValidity);
+            refresh()
+        }
+
+    });
 
     // doseCell.addClassName = "dose-cell";
 
@@ -286,16 +330,21 @@ function addTDERow(id, time = null, dose = null, ester = null, cvisible = true, 
     if (ester !== null) {
         esterCell.querySelector('select').value = ester;
     }
-    esterCell.querySelector('select').addEventListener('change', refresh);
+    esterCell.querySelector('select').addEventListener('change',  function () {
+        if (readRow(this.parentElement.parentElement)) {
+            refresh()
+        }
+    });
 
     let deleteCell = row.insertCell(5);
     deleteCell.innerHTML = '<button class="flat-button delete-button">-</button>';
     deleteCell.querySelector('.delete-button').addEventListener('click', function () {
+        rowValidity.delete(this.parentNode.parentNode);
         this.parentNode.parentNode.remove();
         refresh();
     });
 
-    if (stationary) {
+    if (stationaryclick) {
         document.getElementById('add-dose-button').scrollIntoView();
     }
 
@@ -305,9 +354,9 @@ function addTDERow(id, time = null, dose = null, ester = null, cvisible = true, 
 function deleteAllRows(id) {
     let table = document.getElementById(id);
     while (table.rows.length > 1) {
+        rowValidity.delete(table.rows[table.rows.length - 1]);
         table.deleteRow(-1);
     }
-    refresh();
 }
 
 function attachDragNDropImport() {
@@ -351,7 +400,15 @@ function attachMultidoseButtonsEvents() {
     });
     document.getElementById('delete-all-doses-button').addEventListener('click', function () {
         deleteAllRows('dose-table');
+        refresh();
         addTDERow('dose-table');
+    });
+    document.getElementById('save-button').addEventListener('click', function () {
+        saveToLocalStorage();
+    });
+    document.getElementById('load-button').addEventListener('click', function () {
+        loadFromLocalStorage();
+        refresh();
     });
     document.getElementById('save-csv-button').addEventListener('click', function () {
         exportCSV();
@@ -370,6 +427,7 @@ function attachSteadyStateButtonsEvents() {
     });
     document.getElementById('delete-all-steadystates-button').addEventListener('click', function () {
         deleteAllRows('steadystate-table');
+        refresh();
         addTDERow('steadystate-table');
     });
 }
@@ -393,7 +451,7 @@ function themeSetup() {
             setColorScheme('night');
         }
     });
-    
+
 }
 
 function tipJarEvent() {
@@ -401,4 +459,40 @@ function tipJarEvent() {
         navigator.clipboard.writeText(this.innerText);
         changeBackgroundColor('copy-xmr', colorThePink(), null, 150);
     });
+}
+
+function saveToLocalStorage() {
+    let multiDoseTable = getTDEs('dose-table', true, true);
+    let steadyStateTable = getTDEs('steadystate-table', true, true);
+
+    console.log('\n');
+
+    console.log('saving md', multiDoseTable);
+    localStorage.setItem('multiDoseTable', JSON.stringify(multiDoseTable));
+
+    console.log('saving ss', steadyStateTable);
+    localStorage.setItem('steadyStateTable', JSON.stringify(steadyStateTable));
+}
+
+function loadFromLocalStorage() {
+    let multiDoseTable = JSON.parse(localStorage.getItem('multiDoseTable'));
+    let steadyStateTable = JSON.parse(localStorage.getItem('steadyStateTable'));
+
+    console.log('\n');
+    console.log('loaded md', multiDoseTable);
+    console.log('loaded ss', steadyStateTable);
+
+    if (multiDoseTable) {
+        deleteAllRows('dose-table');
+        for (let i = 0; i < multiDoseTable[0].length; i++) {
+            addTDERow('dose-table', multiDoseTable[0][i], multiDoseTable[1][i], multiDoseTable[2][i], multiDoseTable[3][i], multiDoseTable[4][i]);
+        }
+    }
+
+    if (steadyStateTable) {
+        deleteAllRows('steadystate-table');
+        for (let i = 0; i < steadyStateTable[0].length; i++) {
+            addTDERow('steadystate-table', steadyStateTable[0][i], steadyStateTable[1][i], steadyStateTable[2][i], steadyStateTable[3][i], steadyStateTable[4][i]);
+        }
+    }
 }

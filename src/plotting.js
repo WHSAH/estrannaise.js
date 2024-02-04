@@ -1,5 +1,5 @@
 const NB_CLOUD_POINTS = 3000;
-const NB_LINE_POINTS = 1000;
+const NB_LINE_POINTS = 2000;
 
 function fillCurve(func, xmin, xmax, nbsteps) {
     let curve = [];
@@ -28,8 +28,10 @@ function plotCurves() {
 
         if (mdUVisib) {
 
-            let testmdcurve = fillCurve(t => e2MultiDoseEster3C(t, mdDoses, mdTimes, mdEsters), xmin, xmax, NB_LINE_POINTS);
-            e2max = Math.max(e2max, ...testmdcurve.map(p => p.E2));
+            if (!mdCVisib) {
+                let probeMultiDoseCurve = fillCurve(t => e2MultiDoseEster3C(t, mdDoses, mdTimes, mdEsters), xmin, xmax, NB_LINE_POINTS);
+                e2max = Math.max(e2max, ...probeMultiDoseCurve.map(p => p.E2));
+            }
 
             let mdUncertaintyCloud = [];
             for (let i = 0; i < NB_CLOUD_POINTS; i++) {
@@ -58,7 +60,12 @@ function plotCurves() {
 
     for (let i = 0; i < ssEveries.length; i++) {
 
+        if (ssUVisibs[i] || ssCVisibs[i]) {
+            xmax = Math.max(xmax, 5 * ssEveries[i]);
+        }
+
         if (ssUVisibs[i]) {
+
             let ssUncertaintyCloud = [];
             for (let j = 0; j < NB_CLOUD_POINTS; j++) {
                 let randx = Math.random() * (xmax - xmin) + xmin;
@@ -67,13 +74,16 @@ function plotCurves() {
                 ssUncertaintyCloud.push({ Time: randx, E2: y });
             }
 
-            let testsscurve = fillCurve(t => e2SteadyState3C(t, ssDoses[i], ssEveries[i], ...PK3CParams[ssEsters[i]]), xmin, xmax, NB_LINE_POINTS);
-            e2max = Math.max(e2max, ...testsscurve.map(p => p.E2));
+            if (!ssCVisibs[i]) {
+                let probeSteadyStateCurve = fillCurve(t => e2SteadyState3C(t, ssDoses[i], ssEveries[i], ...PK3CParams[ssEsters[i]]), xmin, xmax, NB_LINE_POINTS);
+                e2max = Math.max(e2max, ...probeSteadyStateCurve.map(p => p.E2));
+            }
 
             dotmarks.push(Plot.dot(ssUncertaintyCloud, { x: "Time", y: "E2", r: 1, fill: colorTheBlue(0.6) }));
         }
 
         if (ssCVisibs[i]) {
+
             let ssEsterCurve = fillCurve(t => e2SteadyState3C(t, ssDoses[i], ssEveries[i], ...PK3CParams[ssEsters[i]]), xmin, xmax, NB_LINE_POINTS);
             ssEsterCurve = ssEsterCurve.map(p => ({ Time: p.Time, E2: p.E2, type: `${ssEsters[i]} ${ssDoses[i]}mg/${ssEveries[i]}day${ssEveries[i] > 1 ? "s" : ""}` }));
             e2max = Math.max(e2max, ...ssEsterCurve.map(p => p.E2));

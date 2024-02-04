@@ -1,16 +1,16 @@
 :root {
 
+    /* Night colors */
     --background-color-night: #2a2a2a;
     --standout-color-night: #343434;
     --the-blue-night: rgb(161, 203, 246);
     --the-pink-night: rgb(219, 186, 230);
 
+    /* Day colors */
     --background-color-day: #f8f8f8;
     --standout-color-day: #eeeeee;
     --the-blue-day: #5148b2;
-    /* --the-pink-day: #AC489B; */
-    --the-pink-day: #C356A3;
-    /* --the-pink-day: #cb23c2; */
+    --the-pink-day: #AC489B;
 
     --logo-blue: #9EC5FA;
     --logo-pink: #EAAEB9;
@@ -135,7 +135,14 @@ button.delete-button {
     /* This will make the divs flexible, sharing the available space */
     margin: 0 10px;
     /* Add some margin between the tables */
+}
 
+#dose-section {
+    margin-right: 2em;
+}
+
+#steadystate-section {
+    margin-left: 2em;
 }
 
 .sections-container {
