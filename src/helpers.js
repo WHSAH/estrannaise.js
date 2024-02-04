@@ -92,25 +92,26 @@ function convertCustomCSSVarToRGBA(varName, alpha = 1.0) {
     return `rgba(${rgb}, ${alpha})`
 }
 
-function colorBabyBlue(alpha = 1.0) { return convertCustomCSSVarToRGBA('--baby-blue', alpha) }
-function colorBabyPink(alpha = 1.0) { return convertCustomCSSVarToRGBA('--baby-pink', alpha) }
-function colorBackground(alpha = 1.0) { return convertCustomCSSVarToRGBA('--background-grey', alpha) }
-function colorButton(alpha = 1.0) { return convertCustomCSSVarToRGBA('--button-grey', alpha) }
+function colorTheBlue(alpha = 1.0) { return convertCustomCSSVarToRGBA('--the-blue', alpha) }
+function colorThePink(alpha = 1.0) { return convertCustomCSSVarToRGBA('--the-pink', alpha) }
+function colorBackground(alpha = 1.0) { return convertCustomCSSVarToRGBA('--background-color', alpha) }
+function colorStandout(alpha = 1.0) { return convertCustomCSSVarToRGBA('--standout-color', alpha) }
 
-// function colorBabyPink(alpha = 1.0) {
-//     let babyPink = rootStyle.getPropertyValue('--baby-pink').substring(4, color.length - 1);
-//     return `rgba(${babyPink}, ${alpha})`
-// }
-
-// function colorBackground(alpha = 1.0) {
-//     let background = rootStyle.getPropertyValue('--background').substring(4, color.length - 1);
-//     return `rgba(${background}, ${alpha})`
-// }
-
-// function colorButton(alpha = 1.0) {
-//     return `rgba(52, 52, 52, ${alpha})`
-// }
-
+function setColorScheme(scheme = 'night') {
+    let rootStyle = getComputedStyle(document.documentElement);
+    if (scheme == 'night') {
+        document.documentElement.style.setProperty('--background-color', rootStyle.getPropertyValue('--background-color-night'));
+        document.documentElement.style.setProperty('--standout-color', rootStyle.getPropertyValue('--standout-color-night'));
+        document.documentElement.style.setProperty('--the-blue', rootStyle.getPropertyValue('--the-blue-night'));
+        document.documentElement.style.setProperty('--the-pink', rootStyle.getPropertyValue('--the-pink-night'));
+    } else if (scheme == 'day') {
+        document.documentElement.style.setProperty('--background-color', rootStyle.getPropertyValue('--background-color-day'));
+        document.documentElement.style.setProperty('--standout-color', rootStyle.getPropertyValue('--standout-color-day'));
+        document.documentElement.style.setProperty('--the-blue', rootStyle.getPropertyValue('--the-blue-day'));
+        document.documentElement.style.setProperty('--the-pink', rootStyle.getPropertyValue('--the-pink-day'));
+    }
+    refresh();
+}
 
 
 function unitStep(x) {
@@ -309,7 +310,7 @@ function deleteAllRows(id) {
     refresh();
 }
 
-function attachDragnDropImport() {
+function attachDragNDropImport() {
 
     let doseTable = document.getElementById('dragndrop-zone');
     doseTable.addEventListener('dragenter', function (event) {
@@ -373,9 +374,19 @@ function attachSteadyStateButtonsEvents() {
     });
 }
 
+function themeEvent() {
+    document.getElementById('themeSwitch').addEventListener('change', function (event) {
+        if (event.target.checked) {
+            setColorScheme('day');
+        } else {
+            setColorScheme('night');
+        }
+    });
+}
+
 function tipJarEvent() {
     document.getElementById('copy-xmr').addEventListener('click', function () {
         navigator.clipboard.writeText(this.innerText);
-        changeBackgroundColor('copy-xmr', colorBabyPink(), colorBackground(), 150);
+        changeBackgroundColor('copy-xmr', colorThePink(), null, 150);
     });
 }

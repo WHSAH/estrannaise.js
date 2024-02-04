@@ -23,13 +23,18 @@
     <script src="src/estrannaise.js"></script>
 
     <div id="container">
-
         <header>
             <div style="display: flex; align-items: center;">
-                <img src="img/favicon-96x96.png" alt="Estrannaise" style="flex: 0 0 auto;">
-                <div>
+                <div id="logo">
+                    <img src="img/favicon-96x96.png" alt="Estrannaise" style="flex: 0 0 auto;">
+                </div>
+                <div style="width: 100%;">
                     <h1>estrannaise.js</h1>
-                    <h2>estradiol pharmacokinetics playground</h2>
+                    <h2>estradiol pharmacokinetics playground
+                        <label class="switch" style="margin-left: 11em;">
+                            <input type="checkbox" id="themeSwitch">
+                        <span class="slider round"></span>
+                    </label></h2>
                 </div>
             </div>
         </header>
@@ -37,6 +42,7 @@
         <div id="multidose-plot">
 
         </div>
+
         <div class="sections-container">
 
             <div id="dose-section">
@@ -117,11 +123,11 @@
                 </p>
             </div>
             <br>
-            <p>estrannaise.js (v0.2.5)<br>
-            MIT license (c) 2024 alix</p>
+            <p>estrannaise.js (v0.2.6)<br>
+                MIT license (c) 2024 alix</p>
             <br>
             <p>xmr tip jar<br><span
-                id="copy-xmr">85pzJGdG6PF9XtH7hAPd5g54yxFkcTCfkednKYPyAUjBZJYrao3qgBF4ftHg4hkKXqgvohjiJgxn7NHMPaCBse7AAFQe4B6</span>
+                    id="copy-xmr">85pzJGdG6PF9XtH7hAPd5g54yxFkcTCfkednKYPyAUjBZJYrao3qgBF4ftHg4hkKXqgvohjiJgxn7NHMPaCBse7AAFQe4B6</span>
             </p>
 
         </div>

@@ -1,36 +1,59 @@
 :root {
-    --baby-blue: rgb(161, 203, 246);
-    --baby-pink: rgb(219, 186, 230);
-    /* --baby-pink: rgb(234, 174, 185); */
-    --background-grey: #2a2a2a;
-    --standout-grey: #343434;
+
+    --background-color-night: #2a2a2a;
+    --standout-color-night: #343434;
+    --the-blue-night: rgb(161, 203, 246);
+    --the-pink-night: rgb(219, 186, 230);
+
+    --background-color-day: #f2f2f2;
+    --standout-color-day: #cbcbcb;
+    --the-blue-day: #5148b2;
+    --the-pink-day: #AC489B;
+    /* --the-pink-day: #cb23c2; */
+
+    --logo-blue: #9EC5FA;
+    --logo-pink: #EAAEB9;
+
+    --background-color: var(--background-color-night);
+    --standout-color: var(--standout-color-night);
+    --the-pink: var(--the-pink-night);
+    --the-blue: var(--the-blue-night);
+
 }
 
 
 body {
-    background-color: var(--background-grey);
-    color: var(--baby-blue);
+    background-color: var(--background-color);
+    color: var(--the-blue);
     font-family: monospace;
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
+.header {
+    /* display: flex; */
+    /* justify-content: space-between; */
+    /* align-items: flex-start; */
+    /* This will vertically center the h1 and the switch */
+    width: 54em;
+}
+
 a:link {
-    color: var(--baby-pink);
+    color: var(--the-pink);
 }
 
 /* Style for visited links */
 a:visited {
-    color: var(--baby-pink);
+    color: var(--the-pink);
 }
 
 input.flat-input {
     border: none;
     outline: none;
-    background-color: var(--standout-grey);
+    background-color: var(--standout-color);
     /* Light gray */
-    color: var(--baby-pink);
+    color: var(--the-pink);
     padding: 4px;
     font-size: 12px;
     margin: 0px;
@@ -43,9 +66,9 @@ input.flat-input {
 select.dropdown-ester {
     border: none;
     outline: none;
-    background-color: var(--standout-grey);
+    background-color: var(--standout-color);
     /* Light gray */
-    color: var(--baby-pink);
+    color: var(--the-pink);
     padding-top: 4px;
     padding-bottom: 4px;
     padding-left: 10px;
@@ -62,7 +85,7 @@ select.dropdown-ester {
 button.flat-button {
     border: none;
     outline: none;
-    background-color: var(--standout-grey);
+    background-color: var(--standout-color);
     /* Light gray */
     padding: 4px;
     padding-left: 10px;
@@ -70,7 +93,7 @@ button.flat-button {
     font-size: 12px;
     text-align: center;
     font-family: monospace;
-    color: var(--baby-blue);
+    color: var(--the-blue);
     border-radius: 4px;
 }
 
@@ -87,7 +110,7 @@ button.delete-button {
     height: 70%;
     /* margin: 3em; */
     padding: 0;
-    background-color: var(--background-grey);
+    background-color: var(--background-color);
 }
 
 #dose-table {
@@ -101,7 +124,8 @@ button.delete-button {
 }
 
 
-#dose-section, #steadystate-section {
+#dose-section,
+#steadystate-section {
     /* display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -130,7 +154,7 @@ button.delete-button {
 }
 
 #dragndrop-zone.overlay {
-    background-color: var(--baby-pink);
+    background-color: var(--the-pink);
 }
 
 header {
@@ -166,14 +190,14 @@ header {
     display: inline-block;
     width: 1.5em;
     height: 1.5em;
-    background-color: var(--standout-grey);
+    background-color: var(--standout-color);
     cursor: pointer;
     border-radius: 4px;
     transform: translate(0px, 0.15em);
 }
 
 .custom-checkbox.checked-style {
-    background-color: var(--baby-pink)
+    background-color: var(--the-pink)
 }
 
 .visibility-cell .uncertainty-cell {
@@ -185,3 +209,61 @@ header {
 .custom-checkbox {
     margin: auto;
 }
+
+/*------------------*/
+/* night/day switch */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 38px;
+    height: 24px;
+    margin-left: auto;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--background-color-day);
+    transition: .4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 4px;
+    bottom: 4px;
+    background-color: var(--the-pink-night);
+    transition: .1s;
+}
+
+input:checked+.slider {
+    background-color: var(--background-color-night);
+}
+
+input:checked+.slider:before {
+    transform: translateX(14px);
+    transition: .1s;
+    background-color: var(--the-pink-day);
+}
+
+.slider.round {
+    border-radius: 4px;
+}
+
+.slider.round:before {
+    border-radius: 4px;
+}
+/* night/day switch */
+/*------------------*/

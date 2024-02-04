@@ -8,10 +8,12 @@ window.onload = function () {
     addTDERow('dose-table', 0, 3, 'EV IM');
     addTDERow('steadystate-table', 4, 3, 'EV IM');
 
-    attachDragnDropImport();
+    attachDragNDropImport();
 
     attachMultidoseButtonsEvents();
     attachSteadyStateButtonsEvents();
+
+    themeEvent();
 
     tipJarEvent();
 

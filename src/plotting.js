@@ -37,7 +37,7 @@ function plotCurves() {
                 let y = e2MultiDoseEster3C(randx, mdDoses, mdTimes, mdEsters, true);
                 mdUncertaintyCloud.push({ Time: randx, E2: y });
             }
-            dotmarks.push(Plot.dot(mdUncertaintyCloud, { x: "Time", y: "E2", r: 1, fill: colorBabyBlue(), fillOpacity: 0.5 }))
+            dotmarks.push(Plot.dot(mdUncertaintyCloud, { x: "Time", y: "E2", r: 1, fill: colorTheBlue(0.6) }))
         }
 
         if (mdCVisib) {
@@ -45,11 +45,11 @@ function plotCurves() {
             multiDoseEstersCurve = multiDoseEstersCurve.map(p => ({ Time: p.Time, E2: p.E2 }));
 
             e2max = Math.max(e2max, ...multiDoseEstersCurve.map(p => p.E2));
-            linemarks.push(Plot.line(multiDoseEstersCurve, { x: "Time", y: "E2", strokeWidth: 3, stroke: colorBabyPink() }))
+            linemarks.push(Plot.line(multiDoseEstersCurve, { x: "Time", y: "E2", strokeWidth: 3, stroke: colorThePink() }))
             tipmarks.push(Plot.tip(multiDoseEstersCurve, Plot.pointerX({
                 x: "Time", y: "E2",
                 title: p => `multi-dose\n\ntime: ${numberToDayHour(p.Time)}\n  e2: ${p.E2.toFixed(0)} pg/ml`,
-                fontFamily: "monospace", fill: colorBackground(0.618), stroke: colorBabyPink()
+                fontFamily: "monospace", fill: colorBackground(0.618), stroke: colorThePink()
             })))
         }
     }
@@ -70,18 +70,18 @@ function plotCurves() {
             let testsscurve = fillCurve(t => e2SteadyState3C(t, ssDoses[i], ssEveries[i], ...PK3CParams[ssEsters[i]]), xmin, xmax, NB_LINE_POINTS);
             e2max = Math.max(e2max, ...testsscurve.map(p => p.E2));
 
-            dotmarks.push(Plot.dot(ssUncertaintyCloud, { x: "Time", y: "E2", r: 1, fill: colorBabyBlue(), fillOpacity: 0.5 }));
+            dotmarks.push(Plot.dot(ssUncertaintyCloud, { x: "Time", y: "E2", r: 1, fill: colorTheBlue(0.6) }));
         }
 
         if (ssCVisibs[i]) {
             let ssEsterCurve = fillCurve(t => e2SteadyState3C(t, ssDoses[i], ssEveries[i], ...PK3CParams[ssEsters[i]]), xmin, xmax, NB_LINE_POINTS);
             ssEsterCurve = ssEsterCurve.map(p => ({ Time: p.Time, E2: p.E2, type: `${ssEsters[i]} ${ssDoses[i]}mg/${ssEveries[i]}day${ssEveries[i] > 1 ? "s" : ""}` }));
             e2max = Math.max(e2max, ...ssEsterCurve.map(p => p.E2));
-            linemarks.push(Plot.line(ssEsterCurve, { x: "Time", y: "E2", strokeWidth: 3, stroke: colorBabyPink() }));
+            linemarks.push(Plot.line(ssEsterCurve, { x: "Time", y: "E2", strokeWidth: 3, stroke: colorThePink() }));
             tipmarks.push(Plot.tip(ssEsterCurve, Plot.pointerX({
                 x: "Time", y: "E2",
                 title: p => `${p.type.toLowerCase()}\n\ntime: ${numberToDayHour(p.Time)}\n  e2: ${p.E2.toFixed(0)} pg/ml`,
-                fontFamily: "monospace", fill: colorBackground(0.618), stroke: colorBabyPink()
+                fontFamily: "monospace", fill: colorBackground(0.618), stroke: colorThePink()
             })));
         }
     }
