@@ -221,8 +221,6 @@ function getTDEs(tableId, getvisibility = false, keepincomplete = false) {
 
 function addTDERow(id, time = null, dose = null, ester = null, cvisible = true, uvisible = true, stationaryclick = false) {
 
-    console.log('adding row', id, time, dose, ester, cvisible, uvisible, stationaryclick);
-
     let table = document.getElementById(id);
     let row = table.insertRow(-1);
 
@@ -305,7 +303,7 @@ function addTDERow(id, time = null, dose = null, ester = null, cvisible = true, 
         doseCell.querySelector('input').value = dose;
     }
     doseCell.querySelector('input').addEventListener('input', function () {
-        
+
         let myRow = this.parentElement.parentElement;
         let currentValidity = Boolean(readRow(myRow, false));
 
@@ -330,7 +328,7 @@ function addTDERow(id, time = null, dose = null, ester = null, cvisible = true, 
     if (ester !== null) {
         esterCell.querySelector('select').value = ester;
     }
-    esterCell.querySelector('select').addEventListener('change',  function () {
+    esterCell.querySelector('select').addEventListener('change', function () {
         if (readRow(this.parentElement.parentElement)) {
             refresh()
         }
@@ -339,8 +337,16 @@ function addTDERow(id, time = null, dose = null, ester = null, cvisible = true, 
     let deleteCell = row.insertCell(5);
     deleteCell.innerHTML = '<button class="flat-button delete-button">-</button>';
     deleteCell.querySelector('.delete-button').addEventListener('click', function () {
-        rowValidity.delete(this.parentNode.parentNode);
-        this.parentNode.parentNode.remove();
+        let myRow = this.parentNode.parentNode;
+        if (myRow.rowIndex == 1) {
+            myRow.cells[2].querySelector('input').value = '';
+            myRow.cells[3].querySelector('input').value = '';
+            myRow.cells[4].querySelector('select').value = 'EV IM';
+            rowValidity.set(myRow, false);
+        } else {
+            rowValidity.delete(myRow);
+            myRow.remove();
+        }
         refresh();
     });
 
@@ -400,11 +406,15 @@ function attachMultidoseButtonsEvents() {
     });
     document.getElementById('delete-all-doses-button').addEventListener('click', function () {
         deleteAllRows('dose-table');
-        refresh();
         addTDERow('dose-table');
+        refresh();
     });
     document.getElementById('save-button').addEventListener('click', function () {
         saveToLocalStorage();
+        this.innerHTML = 'stashed';
+        setTimeout(() => {
+            this.innerHTML = 'stash';
+        }, 2000);
     });
     document.getElementById('load-button').addEventListener('click', function () {
         loadFromLocalStorage();
@@ -465,22 +475,21 @@ function saveToLocalStorage() {
     let multiDoseTable = getTDEs('dose-table', true, true);
     let steadyStateTable = getTDEs('steadystate-table', true, true);
 
-    console.log('\n');
-
-    console.log('saving md', multiDoseTable);
+    // console.log('\n');
     localStorage.setItem('multiDoseTable', JSON.stringify(multiDoseTable));
-
-    console.log('saving ss', steadyStateTable);
+    // console.log('saved md', multiDoseTable);
     localStorage.setItem('steadyStateTable', JSON.stringify(steadyStateTable));
+    // console.log('saved ss', steadyStateTable);
 }
 
 function loadFromLocalStorage() {
-    let multiDoseTable = JSON.parse(localStorage.getItem('multiDoseTable'));
-    let steadyStateTable = JSON.parse(localStorage.getItem('steadyStateTable'));
 
-    console.log('\n');
-    console.log('loaded md', multiDoseTable);
-    console.log('loaded ss', steadyStateTable);
+    // console.log('\n');
+    let multiDoseTable = JSON.parse(localStorage.getItem('multiDoseTable'));
+    // console.log('loaded md', multiDoseTable);
+    let steadyStateTable = JSON.parse(localStorage.getItem('steadyStateTable'));
+    // console.log('loaded ss', steadyStateTable);
+
 
     if (multiDoseTable) {
         deleteAllRows('dose-table');
