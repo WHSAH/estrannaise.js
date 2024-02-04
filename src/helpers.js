@@ -319,11 +319,11 @@ function addTDERow(id, time = null, dose = null, ester = null, cvisible = true, 
     let esterCell = row.insertCell(4)
     esterCell.innerHTML =
         '<select class="dropdown-ester"> \
-            <option value="EV IM">EV IM</option> \
-            <option value="EEn IM">EEn IM</option> \
-            <option value="EC IM">EC IM</option> \
-            <option value="EB IM">EB IM</option> \
-            <option value="EUn IM">EUn IM</option> \
+            <option value="EV IM">ev im</option> \
+            <option value="EEn IM">een im</option> \
+            <option value="EC IM">ec im</option> \
+            <option value="EB IM">eb im</option> \
+            <option value="EUn IM">eun im</option> \
             </select>';
     if (ester !== null) {
         esterCell.querySelector('select').value = ester;
@@ -401,29 +401,29 @@ function changeBackgroundColor(elementId, color1, color2, delay = 100) {
 }
 
 function attachMultidoseButtonsEvents() {
-    document.getElementById('add-dose-button').addEventListener('click', function () {
+    document.getElementById('add-dose-button').addEventListener('mousedown', function () {
         addTDERow('dose-table');
     });
-    document.getElementById('delete-all-doses-button').addEventListener('click', function () {
+    document.getElementById('delete-all-doses-button').addEventListener('mousedown', function () {
         deleteAllRows('dose-table');
         addTDERow('dose-table');
         refresh();
     });
-    document.getElementById('save-button').addEventListener('click', function () {
+    document.getElementById('save-button').addEventListener('mousedown', function () {
         saveToLocalStorage();
         this.innerHTML = 'stashed';
         setTimeout(() => {
             this.innerHTML = 'stash';
         }, 2000);
     });
-    document.getElementById('load-button').addEventListener('click', function () {
+    document.getElementById('load-button').addEventListener('mousedown', function () {
         loadFromLocalStorage();
         refresh();
     });
-    document.getElementById('save-csv-button').addEventListener('click', function () {
+    document.getElementById('save-csv-button').addEventListener('mousedown', function () {
         exportCSV();
     });
-    document.getElementById('import-csv-dialog').addEventListener('click', function () {
+    document.getElementById('import-csv-dialog').addEventListener('mousedown', function () {
         document.getElementById('csv-file').click();
     });
     document.getElementById('csv-file').addEventListener('change', function (e) {
@@ -432,10 +432,10 @@ function attachMultidoseButtonsEvents() {
 }
 
 function attachSteadyStateButtonsEvents() {
-    document.getElementById('add-steadystate-button').addEventListener('click', function () {
+    document.getElementById('add-steadystate-button').addEventListener('mousedown', function () {
         addTDERow('steadystate-table');
     });
-    document.getElementById('delete-all-steadystates-button').addEventListener('click', function () {
+    document.getElementById('delete-all-steadystates-button').addEventListener('mousedown', function () {
         deleteAllRows('steadystate-table');
         refresh();
         addTDERow('steadystate-table');
@@ -465,7 +465,7 @@ function themeSetup() {
 }
 
 function tipJarEvent() {
-    document.getElementById('copy-xmr').addEventListener('click', function () {
+    document.getElementById('copy-xmr').addEventListener('mousedown', function () {
         navigator.clipboard.writeText(this.innerText);
         changeBackgroundColor('copy-xmr', colorThePink(), null, 150);
     });

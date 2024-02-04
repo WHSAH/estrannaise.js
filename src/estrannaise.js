@@ -27,6 +27,5 @@ function refresh(save = false) {
     if (save) {
         saveToLocalStorage();
     }
-
     plotCurves();
 }

@@ -94,6 +94,7 @@ button.flat-button {
     font-size: 12px;
     text-align: center;
     font-family: monospace;
+    font-weight: bold;
     color: var(--the-blue);
     border-radius: 4px;
 }

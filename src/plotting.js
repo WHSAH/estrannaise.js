@@ -1,5 +1,5 @@
-const NB_CLOUD_POINTS = 3000;
-const NB_LINE_POINTS = 2000;
+const NB_CLOUD_POINTS = 1500;
+const NB_LINE_POINTS = 1500;
 
 function fillCurve(func, xmin, xmax, nbsteps) {
     let curve = [];
@@ -47,7 +47,7 @@ function plotCurves() {
                 let y = e2MultiDoseEster3C(randx, mdDoses, mdTimes, mdEsters, true);
                 mdUncertaintyCloud.push({ Time: randx, E2: y });
             }
-            dotmarks.push(Plot.dot(mdUncertaintyCloud, { x: "Time", y: "E2", r: 1, fill: colorTheBlue(0.6) }))
+            dotmarks.push(Plot.dot(mdUncertaintyCloud, { x: "Time", y: "E2", r: 2, fill: colorTheBlue(0.5) }))
         }
 
         if (mdCVisib) {
@@ -58,7 +58,7 @@ function plotCurves() {
             linemarks.push(Plot.line(multiDoseEstersCurve, { x: "Time", y: "E2", strokeWidth: 3, stroke: colorThePink() }))
             tipmarks.push(Plot.tip(multiDoseEstersCurve, Plot.pointerX({
                 x: "Time", y: "E2",
-                title: p => `multi-dose\n\ntime: ${numberToDayHour(p.Time)}\n  e2: ${p.E2.toFixed(0)} pg/ml`,
+                title: p => `multi-dose\n\ntime: ${numberToDayHour(p.Time)}\n  e₂: ${p.E2.toFixed(0)} pg/ml`,
                 fontFamily: "monospace", fill: colorBackground(0.618), stroke: colorThePink()
             })))
         }
@@ -81,18 +81,17 @@ function plotCurves() {
                 e2max = Math.max(e2max, ...probeSteadyStateCurve.map(p => p.E2));
             }
 
-            dotmarks.push(Plot.dot(ssUncertaintyCloud, { x: "Time", y: "E2", r: 1, fill: colorTheBlue(0.6) }));
+            dotmarks.push(Plot.dot(ssUncertaintyCloud, { x: "Time", y: "E2", r: 2, fill: colorTheBlue(0.5) }));
         }
 
         if (ssCVisibs[i]) {
-
             let ssEsterCurve = fillCurve(t => e2SteadyState3C(t, ssDoses[i], ssEveries[i], ...PK3CParams[ssEsters[i]]), xmin, xmax, NB_LINE_POINTS);
             ssEsterCurve = ssEsterCurve.map(p => ({ Time: p.Time, E2: p.E2, type: `${ssEsters[i]} ${ssDoses[i]}mg/${ssEveries[i]}day${ssEveries[i] > 1 ? "s" : ""}` }));
             e2max = Math.max(e2max, ...ssEsterCurve.map(p => p.E2));
             linemarks.push(Plot.line(ssEsterCurve, { x: "Time", y: "E2", strokeWidth: 3, stroke: colorThePink() }));
             tipmarks.push(Plot.tip(ssEsterCurve, Plot.pointerX({
                 x: "Time", y: "E2",
-                title: p => `${p.type.toLowerCase()}\n\ntime: ${numberToDayHour(p.Time)}\n  e2: ${p.E2.toFixed(0)} pg/ml`,
+                title: p => `${p.type.toLowerCase()}\n\ntime: ${numberToDayHour(p.Time)}\n  e₂: ${p.E2.toFixed(0)} pg/ml\n  tr: ${e2ssTrough3C(ssDoses[i], ssEveries[i], ...PK3CParams[ssEsters[i]]).toFixed(0)} pg/ml\n  av: ${e2ssAverage3C(ssDoses[i], ssEveries[i], ...PK3CParams[ssEsters[i]]).toFixed(0)} pg/ml`,
                 fontFamily: "monospace", fill: colorBackground(0.618), stroke: colorThePink()
             })));
         }
@@ -102,15 +101,26 @@ function plotCurves() {
         width: 848,
         // height: 500,
         x: { label: "time (days)" },
-        y: { domain: [0, 1.25 * e2max], label: "e₂ (pg/ml)" },
+        y: { domain: [0, 1.25 * e2max], label: "serum e₂ (pg/ml)" },
         marks: [
             Plot.gridX({ stroke: "grey" }),
             Plot.gridY({ stroke: "grey" }),
-            Plot.ruleX([0]),
+            Plot.ruleX([xmin]),
             Plot.ruleY([0]),
         ].concat(dotmarks).concat(linemarks).concat(tipmarks)
     })
-    let div = document.getElementById("multidose-plot");
-    div.innerHTML = "";
-    div.append(e2curve);
+
+    let plot = document.getElementById("multidose-plot");
+
+    plot.innerHTML = "";
+    
+    // Select all text elements in the plot and set their font weight to bold
+    let textElements = e2curve.querySelectorAll('text');
+    textElements.forEach(textElement => {
+        textElement.style.fontFamily = 'monospace';
+    });
+    
+    plot.append(e2curve);
+    return e2curve;
+
 }
