@@ -75,7 +75,7 @@ select.dropdown-ester {
     padding-left: 10px;
     padding-right: 10px;
     font-size: 12px;
-    text-align: left;
+    text-align: right;
     font-family: monospace;
     border-radius: 4px;
     height: 1.84em;
@@ -107,7 +107,8 @@ button.delete-button {
     border: none;
 }
 
-#multidose-plot {
+#plot-region {
+    display: block;
     width: 100%;
     height: 70%;
     /* margin: 3em; */
@@ -126,24 +127,16 @@ button.delete-button {
 }
 
 
-#dose-section,
-#steadystate-section {
-    /* display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    width: 45%; */
-    flex: 1 1 0px;
-    /* This will make the divs flexible, sharing the available space */
-    margin: 0 10px;
-    /* Add some margin between the tables */
-}
-
 #dose-section {
-    margin-right: 2em;
+    display: block;
+    width: 40%;
+    /* margin-right: 2em; */
 }
 
 #steadystate-section {
-    margin-left: 2em;
+    display: block;
+    width: 40%;
+    /* margin-left: 2em; */
 }
 
 .sections-container {
@@ -175,14 +168,14 @@ header {
 
 /* fake footer because github pages is weird */
 #footer {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
+    /* display: flex; */
+    /* flex-direction: column; */
+    /* align-items: flex-start; */
     text-align: left;
     display: inline-block;
     margin-top: 5em;
     font-size: 9px;
-    padding-left: 1.25em;
+    /* padding-left: 1.25em; */
 }
 
 #copy-xmr {
@@ -276,3 +269,11 @@ input:checked+.slider:before {
 }
 /* night/day switch */
 /*------------------*/
+
+
+#stashrecall-container {
+    display: block;
+    text-align: right;
+    margin-top: 1em;
+    width: 100%;
+}

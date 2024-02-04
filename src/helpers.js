@@ -409,14 +409,14 @@ function attachMultidoseButtonsEvents() {
         addTDERow('dose-table');
         refresh();
     });
-    document.getElementById('save-button').addEventListener('mousedown', function () {
+    document.getElementById('stash-button').addEventListener('mousedown', function () {
         saveToLocalStorage();
-        this.innerHTML = 'stashed';
+        this.innerHTML = 'stashed!';
         setTimeout(() => {
-            this.innerHTML = 'stash';
-        }, 2000);
+            this.innerHTML = 'stash all';
+        }, 618);
     });
-    document.getElementById('load-button').addEventListener('mousedown', function () {
+    document.getElementById('recall-button').addEventListener('mousedown', function () {
         loadFromLocalStorage();
         refresh();
     });
@@ -482,6 +482,17 @@ function saveToLocalStorage() {
     // console.log('saved ss', steadyStateTable);
 }
 
+function getShareURL() {
+    let multiDoseTable = getTDEs('dose-table', true, true);
+    let steadyStateTable = getTDEs('steadystate-table', true, true);
+
+    let params = new URLSearchParams();
+    params.set('multiDoseTable', JSON.stringify(multiDoseTable));
+    params.set('steadyStateTable', JSON.stringify(steadyStateTable));
+
+    return window.location.origin + window.location.pathname + '?' + params.toString();
+}
+
 function loadFromLocalStorage() {
 
     // console.log('\n');
@@ -490,6 +501,26 @@ function loadFromLocalStorage() {
     let steadyStateTable = JSON.parse(localStorage.getItem('steadyStateTable'));
     // console.log('loaded ss', steadyStateTable);
 
+
+    if (multiDoseTable) {
+        deleteAllRows('dose-table');
+        for (let i = 0; i < multiDoseTable[0].length; i++) {
+            addTDERow('dose-table', multiDoseTable[0][i], multiDoseTable[1][i], multiDoseTable[2][i], multiDoseTable[3][i], multiDoseTable[4][i]);
+        }
+    }
+
+    if (steadyStateTable) {
+        deleteAllRows('steadystate-table');
+        for (let i = 0; i < steadyStateTable[0].length; i++) {
+            addTDERow('steadystate-table', steadyStateTable[0][i], steadyStateTable[1][i], steadyStateTable[2][i], steadyStateTable[3][i], steadyStateTable[4][i]);
+        }
+    }
+}
+
+function loadFromURL() {
+    let params = new URLSearchParams(window.location.search);
+    let multiDoseTable = JSON.parse(params.get('multiDoseTable'));
+    let steadyStateTable = JSON.parse(params.get('steadyStateTable'));
 
     if (multiDoseTable) {
         deleteAllRows('dose-table');

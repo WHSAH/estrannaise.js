@@ -44,15 +44,20 @@
 
         </div>
 
+        <div id="stashrecall-container">
+            <button id="stash-button" class="flat-button" style="width: 8em;">stash all</button>
+            <button id="recall-button" class="flat-button">recall</button>
+        </div>
+
         <div class="sections-container">
 
             <div id="dose-section">
-                <h4>multi-doses</h4>
+                <span style="font-weight: bold;">multi-doses</span>
                 <div id="multidose-bottom-button" style="margin-top: 1em;">
                     <button id="add-dose-button" class="flat-button">add</button>
                     <button id="delete-all-doses-button" class="flat-button">clear</button>
-                    <button id="save-button" class="flat-button">stash</button>
-                    <button id="load-button" class="flat-button">load</button>
+                    <!-- <button id="stash-button" class="flat-button">stash</button>
+                    <button id="recall-button" class="flat-button">recall</button> -->
                     <input type="file" id="csv-file" accept=".csv" style="display: none;">
                     <button id="import-csv-dialog" class="flat-button">import</button>
                     <button id="save-csv-button" class="flat-button">export</button>
@@ -74,14 +79,14 @@
                         <tbody>
                         </tbody>
                     </table>
-                    <span style="font-weight: normal; font-size: 9px; padding-left: 6em;">drag-n-drop csv on table to
-                        import</span>
+                    <!-- <span style="font-weight: normal; font-size: 9px; padding-left: 6em;">drag-n-drop csv on table to -->
+                    <span style="font-weight: normal; font-size: 9px; display: block; text-align: right;">drag-n-drop csv on table to import</span>
                 </div>
             </div> <!-- dose-section -->
 
 
             <div id="steadystate-section">
-                <h4>steady-states</h4>
+                <span style="font-weight: bold;">steady-states</span>
                 <div id="bottom-button" style="margin-top: 1em;">
                     <button id="add-steadystate-button" class="flat-button">add</button>
                     <button id="delete-all-steadystates-button" class="flat-button">clear</button>
