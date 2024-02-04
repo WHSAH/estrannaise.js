@@ -6,11 +6,11 @@ Under the hood, estrannaise.js uses pharmacokinetic compartments models together
 **estrannaise.js is entirely client-side. Your data, whether entered, imported, or stashed, remains exclusively within your browser and will never be transmitted to the developer(s) or any third-party.**
 
 # TODO
-- Double click add to guess values of next row (same dose, next time from two last times)
+- Double click add to guess values of next row (same dose, next time from last two times)
 - Add emix model of interstudy variability
-- Handle mixed days/dates. When one or more dates Assume days are offsets from earliest date
-- Enable/disable individual doses, if disabled then u visibility checkbox is disabled as well.
-- Figure out the behavior when deleting first multi-dose row. Previous item should automatically take care of it.
+- Handle mixed days/dates. If one or more dates are present in the day column days assume offsets are in relation to the earliest date
+- Enable/disable individual doses, if disabled then u visibility checkbox is disabled as well
+- Figure out the behavior when deleting first multi-dose row. Previous item should automatically take care of it
 - Add sublingual/buccal model (2C model?)
 - Add patch model (3C model followed by glued 2C model if removal time specified)
 - Add oral model (4C compartment with combined E1+E1S C's, or 5C with separate E1 and E1S C's)
