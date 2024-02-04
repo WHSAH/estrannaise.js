@@ -110,16 +110,14 @@ function plotCurves() {
         ].concat(dotmarks).concat(linemarks).concat(tipmarks)
     })
 
-    let plot = document.getElementById("multidose-plot");
-
-    plot.innerHTML = "";
-    
     // Select all text elements in the plot and set their font weight to bold
     let textElements = e2curve.querySelectorAll('text');
     textElements.forEach(textElement => {
         textElement.style.fontFamily = 'monospace';
     });
     
+    let plot = document.getElementById("plot-region");
+    plot.innerHTML = "";
     plot.append(e2curve);
     return e2curve;
 
