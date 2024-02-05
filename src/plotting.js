@@ -1,5 +1,8 @@
-const NB_CLOUD_POINTS = 1500;
+const NB_CLOUD_POINTS = 2500;
 const NB_LINE_POINTS = 1500;
+
+const CLOUD_POINT_SIZE = 1.3;
+const CLOUD_POINT_OPACITY = 0.5;
 
 function fillCurve(func, xmin, xmax, nbsteps) {
     let curve = [];
@@ -47,7 +50,7 @@ function plotCurves() {
                 let y = e2MultiDoseEster3C(randx, mdDoses, mdTimes, mdEsters, true);
                 mdUncertaintyCloud.push({ Time: randx, E2: y });
             }
-            dotmarks.push(Plot.dot(mdUncertaintyCloud, { x: "Time", y: "E2", r: 2, fill: colorTheBlue(0.5) }))
+            dotmarks.push(Plot.dot(mdUncertaintyCloud, { x: "Time", y: "E2", r: CLOUD_POINT_SIZE, fill: colorTheBlue(CLOUD_POINT_OPACITY) }))
         }
 
         if (mdCVisib) {
@@ -81,7 +84,7 @@ function plotCurves() {
                 e2max = Math.max(e2max, ...probeSteadyStateCurve.map(p => p.E2));
             }
 
-            dotmarks.push(Plot.dot(ssUncertaintyCloud, { x: "Time", y: "E2", r: 2, fill: colorTheBlue(0.5) }));
+            dotmarks.push(Plot.dot(ssUncertaintyCloud, { x: "Time", y: "E2", r: CLOUD_POINT_SIZE, fill: colorTheBlue(CLOUD_POINT_OPACITY) }));
         }
 
         if (ssCVisibs[i]) {

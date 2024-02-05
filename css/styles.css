@@ -3,8 +3,8 @@
     /* Night colors */
     --background-color-night: #2a2a2a;
     --standout-color-night: #343434;
-    --the-blue-night: rgb(161, 203, 246);
-    --the-pink-night: rgb(219, 186, 230);
+    --the-blue-night: #A1CBF6;
+    --the-pink-night: #DBBAE6;
 
     /* Day colors */
     --background-color-day: #f8f8f8;

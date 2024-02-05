@@ -18,7 +18,7 @@
     <script src="lib/papaparse.min.js"></script>
     <script src="data/tfs_pk3c.js"></script>
     <script src="src/models.js"></script>
-    <script src="src/helpers.js"></script>
+    <script src="src/core.js"></script>
     <script src="src/plotting.js"></script>
     <script src="src/estrannaise.js"></script>
 
@@ -45,8 +45,9 @@
         </div>
 
         <div id="stashrecall-container">
-            <button id="stash-button" class="flat-button" style="width: 8em;">stash all</button>
+            <button id="stash-button" class="flat-button" style="width: 7.5em;">stash all</button>
             <button id="recall-button" class="flat-button">recall</button>
+            <button id="delete-stash-button" class="flat-button" style="width: 9em;">delete stash</button>
         </div>
 
         <div class="sections-container">
@@ -115,7 +116,7 @@
 
         <!-- someone tell me why github pages don't render <footer> correctly? -->
         <div id="footer">
-            <p>data from the amazing people behind the <a
+            <p>our inferences use the data collected by the amazing people behind the <a
                     href="https://transfemscience.org/articles/injectable-e2-meta-analysis/" target="_blank">tfs
                     meta-analysis</a></p>
             <p>with help encouragements and entertainment from emily torble lea annie izzy meringue photino
@@ -124,7 +125,7 @@
             <br>
             <div style="width: 58em;">
                 <p>
-                <span style="font-weight: bold;">disclaimer</span><br>
+                    <span style="font-weight: bold;">disclaimer</span><br>
                     this page, designed as a playground to explore estradiol pharmacokinetics, provides a simulation
                     for informational and entertainment purposes only. the developer(s) cannot guarantee the accuracy of
                     the
@@ -145,10 +146,10 @@
                 </p>
             </div>
             <br>
-            <p>estrannaise.js (v0.2.10-disclaimer)<br>
-                mit license (c) 2024 alix</p>
+            <p>estrannaise.js (v0.2.10-disclaimer)</p>
+            <p>mit license (c) 2024 alix</p>
             <br>
-            <p>xmr tip jar<br><span
+            <p><span id="tipjar-text">xmr tip jar</span><br><span
                     id="copy-xmr">85pzJGdG6PF9XtH7hAPd5g54yxFkcTCfkednKYPyAUjBZJYrao3qgBF4ftHg4hkKXqgvohjiJgxn7NHMPaCBse7AAFQe4B6</span>
             </p>
 

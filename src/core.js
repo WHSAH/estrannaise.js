@@ -420,6 +420,15 @@ function attachMultidoseButtonsEvents() {
         loadFromLocalStorage();
         refresh();
     });
+   
+    document.getElementById('delete-stash-button').addEventListener('mousedown', function () {
+        deleteLocalStorage();
+        this.innerHTML = 'deleted!';
+        setTimeout(() => {
+            this.innerHTML = 'delete stash';
+        }, 618);
+    });
+
     document.getElementById('save-csv-button').addEventListener('mousedown', function () {
         exportCSV();
     });
@@ -464,9 +473,16 @@ function themeSetup() {
 
 }
 
-function tipJarEvent() {
+function attachTipJarEvent() {
     document.getElementById('copy-xmr').addEventListener('mousedown', function () {
         navigator.clipboard.writeText(this.innerText);
+        
+        document.getElementById('tipjar-text').innerHTML = 'xmr tip jar address copied, thank you!';
+        
+        setTimeout(() => {
+            document.getElementById('tipjar-text').innerHTML = 'xmr tip jar';
+        }, 350);
+
         changeBackgroundColor('copy-xmr', colorThePink(), null, 150);
     });
 }
@@ -480,17 +496,6 @@ function saveToLocalStorage() {
     // console.log('saved md', multiDoseTable);
     localStorage.setItem('steadyStateTable', JSON.stringify(steadyStateTable));
     // console.log('saved ss', steadyStateTable);
-}
-
-function getShareURL() {
-    let multiDoseTable = getTDEs('dose-table', true, true);
-    let steadyStateTable = getTDEs('steadystate-table', true, true);
-
-    let params = new URLSearchParams();
-    params.set('multiDoseTable', JSON.stringify(multiDoseTable));
-    params.set('steadyStateTable', JSON.stringify(steadyStateTable));
-
-    return window.location.origin + window.location.pathname + '?' + params.toString();
 }
 
 function loadFromLocalStorage() {
@@ -515,6 +520,21 @@ function loadFromLocalStorage() {
             addTDERow('steadystate-table', steadyStateTable[0][i], steadyStateTable[1][i], steadyStateTable[2][i], steadyStateTable[3][i], steadyStateTable[4][i]);
         }
     }
+}
+
+function deleteLocalStorage() {
+    localStorage.clear()
+}
+
+function getShareURL() {
+    let multiDoseTable = getTDEs('dose-table', true, true);
+    let steadyStateTable = getTDEs('steadystate-table', true, true);
+
+    let params = new URLSearchParams();
+    params.set('multiDoseTable', JSON.stringify(multiDoseTable));
+    params.set('steadyStateTable', JSON.stringify(steadyStateTable));
+
+    return window.location.origin + window.location.pathname + '?' + params.toString();
 }
 
 function loadFromURL() {
