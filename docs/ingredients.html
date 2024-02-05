@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>estrannaise ingredients</title>
+    <link rel="icon" type="image/png" sizes="96x96" href="../img/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="../img/favicon-48x48.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../img/favicon-32x32.png">
+    <script src="../lib/mathjax/tex-chtml.js" id="MathJax-script" async></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                tags: 'ams'
+            }
+        };
+    </script>
+    <link rel="stylesheet" type="text/css" href="../css/ingredients_styles.css">
+</head>
+
+<body>
+    <div id="container">
+        <h1>introduction</h1>
+        <p>estrannaise.js uses several mathematical concepts under the hood. It combines
+            pharmacokinetics compartments models with markov chain monte carlo (mcmc)
+            to infer the pharmacokinetics parameters of estradiol using Bayesian
+            generative models, both hierarchical and non-hierarchical, that account
+            for the variability found in data both within and across studies.
+            The following is the list of the ingredients and the recipe behind it.</p>
+
+
+        <h1>pharmacokinetics models</h1>
+        <p>
+            The pharmacokinetics models used in estrannaise.js are traditional compartments models. For
+            now we use only linear first-order ordinary differential equations (ODEs).
+            These models are used to describe the absorption, distribution, metabolism,
+            and excretion of drugs in the body.
+        </p>
+        <div>
+            <h3>Simple 3-compartments model</h3>
+            <img class="flex-item" src="3compartmentsIMesters_night.png" style="width: 18em; float: left; margin: 2em;"
+                alt="3-compartments model of im esters">
+            <p class="flex-item">
+                To begin, we model the metabolism of an intramuscular depot of estradiol
+                ester by a very simple 3-compartments model which includes three processes.
+                The first compartment, shown on the right, models the content of estradiol ester in the depot,
+                the second the serum concentration of the estradiol ester, and the third the serum concentration
+                of estradiol. The first process is the diffusion of the ester out of the
+                oil and into systemic circulation, the second process is the hydrolysis of
+                the ester into estradiol by esterases in the liver, and the third process
+                is the elimination of estradiol by the body, mainly by glucuronidation
+                and conjugation followed by excretion by the kidneys, and to a lesser extent
+                by the liver and the intestines. For a portion of the estradiol this last
+                process must be preceeded by the unbinding of the estradiol from the
+                estrogen receptor which happens on a different time-scale.
+            </p>
+            <p>
+                The differential equation for this model in the presence of multiples doses
+                \(d_i\) at times \(t_i\) is given by
+                \begin{equation}\begin{split}
+                \frac{dD(t)}{dt} &= -k_1 D(t) + \sum_i d_i \delta(t - t_i),\\
+                \frac{dE_s(t)}{dt} &= k_1 D(t) - k_2 E_s(t),\\
+                \frac{dE_2(t)}{dt} & = k_2 E_s(t) - k_3 E_2(t),\\
+                B(T_0) &= E_s(T_0) = E_2(T_0) = 0,
+                \end{split}\end{equation}
+                where \(T_0\) represents some time prior to the smallest amongst all \(t_i\)'s and
+                \(\delta(t)\) is the Dirac delta function. The serum concentration of estradiol \(E_2^{sd}(t)\)
+                after the injection of a single dose \(d\) at time \(t=0\) is given by
+                \begin{equation}
+                E_2^{sd3C}(t~\vert~d, k_1, k_2, k_3) = d k_1 k_2 H(t)\left[\frac{e^{-k_1 t}}{(k_1 - k_2)(k_1 - k_3)} -
+                \frac{e^{-k_2t}}{(k_1 - k_2)(k_2 - k_3)} + \frac{e^{-k_3 t}}{(k_1 - k_3)(k_2 - k_3)}\right]
+                \end{equation}
+                where the Heaviside function
+                \begin{equation}
+                H(t) = \begin{cases}
+                0 & \text{if } t < 0,\\ 1 & \text{if } t \geq 0, \end{cases} \end{equation} insures the solution is zero
+                    for \(t < 0\). This assumes there were no baseline serum level prior to the injection. For multiple
+                    doses we have the following multi-dose solution 
+                    \begin{equation}\begin{split}
+                    E_2^{md3C}&(t~\vert~\lbrace d_i, t_i\rbrace, k_1, k_2, k_3)=\sum_i E^{sd3C}_2(t - t_i~\vert~d_i,
+                    k_1, k_2, k_3),\\ &=k_1 k_2\sum_i d_i H(t - t_i)\left[\frac{e^{-k_1 (t - t_i)}}{(k_1 - k_2)(k_1 -
+                    k_3)} - \frac{e^{-k_2(t - t_i)}}{(k_1 - k_2)(k_2 - k_3)} + \frac{e^{-k_3(t - t_i)}}{(k_1 - k_3)(k_2
+                    - k_3)}\right]. \end{split}\end{equation} This solution is nothing but the expression of the
+                    superposition principle of linear ODEs. By the same principle, we can just as well let the
+                    parameters \(k_1, k_2, k_3\) vary from dose to dose, in effect simulating the the use of a
+                    combination of different esters at different times. This multi-dose, multi-ester solution is given by
+                
+                    \begin{equation}\begin{split}
+                    E_2^{mde3C}&\left(t~\vert~\lbrace d_i, t_i, k_{1i}, k_{2i}, k_{3i}\rbrace\right)=\sum_i E^{sd3C}_2(t - t_i~\vert~d_i,
+                    k_{1i}, k_{2i}, k_{3i}),\\ &=\sum_i d_i k_{1i} k_{2i} H(t - t_i)\left[\frac{e^{-k_{1i} (t - t_i)}}{(k_{1i} - k_{2i})(k_{1i} -
+                    k_{3i})} - \frac{e^{-k_{2i}(t - t_i)}}{(k_{1i} - k_{2i})(k_{2i} - k_{3i})} + \frac{e^{-k_{3i}(t - t_i)}}{(k_{1i} - k_{3i})(k_{2i}
+                    - k_{3i})}\right]. \end{split}\end{equation}
+                </p>
+        </div>
+        <h1>simple non-hierarchical generative model</h1>
+        <p>
+            Given a data set consisting of a series of measurements of serum estradiol levels following
+            the injection of a single dose, we 
+            
+        </p>
+
+        <h1>interlude<br>\(D_3\) symmetry of the \(E_2\) curve</h1>
+        <p>
+            Here's a fun fact about the the single-dose solution \(E^{sdEC}_2\) and the multi-dose solution
+            \(E^{mdEC}_2\) with all \(d_i\) equal. Let's use \(E_2\) to denote either of them and omit
+            the time variable for brevity. The function \(E_2\) is invariant under 5 different reparametrizations, or 6
+            if we include the trivial one, called the identity which we denote by \(\operatorname{id}\).
+            Notice first that interchanging \( k_1 \leftrightarrow k_2\) leaves
+            the solution unchanged since the first and second terms transform into each other. Let's call this
+            transformation \(\operatorname{T}_1\),
+            \begin{equation}\begin{split}
+            \operatorname{T}_1\left[E_2(d, k_1, k_2, k_3)\right] &= E_2(d, k_2, k_1, k_3),\\
+            &= E_2(d, k_1, k_2, k_3).
+            \end{split}\end{equation}
+            The second transformation is the interchange of \(k_1 \leftrightarrow k_3\), which we call
+            \(\operatorname{T}_2\).
+            By itself it doesn't leave \(E_2\) invariant unless we simultaneously substitute \(d\rightarrow dk_1/k_3\).
+            Indeed, with a tiny bit of algebra we find
+            \begin{equation}\begin{split}
+            \operatorname{T}_2\left[E_2\right] &= E_2\left(d k_1/k_3, k_3, k_2, k_1\right),\\
+            &= E_2(d, k_1, k_2, k_3).
+            \end{split}\end{equation}
+            With \(\operatorname{T}_1\) and \(\operatorname{T}_2\) in our possession we can generate the remaining
+            transformations. For example, applying \(\operatorname{T}_2\) followed by \(\operatorname{T}_1\) or vis-vers
+            gives us the transformation \(\operatorname{T}_3\) and \(\operatorname{T}_4\). Omitting the brackets for
+            brevity,
+            \begin{equation}\begin{split}
+            \operatorname{T}_3 E_2 = \operatorname{T}_1\operatorname{T}_2E_2 &= E_2(dk_1/k_3, k_2, k_3, k_1),\\
+            & = E_2(d, k_1, k_2, k_3),
+            \end{split}\end{equation}
+            and
+            \begin{equation}\begin{split}
+            \operatorname{T}_4 E_2 = \operatorname{T}_2\operatorname{T}_1E_2 &= E_2(dk_2/k_3, k_3, k_1, k_2),\\
+            & = E_2(d, k_1, k_2, k_3).
+            \end{split}\end{equation}
+            The final transformation implies applying \(\operatorname{T}_3\) followed by \(\operatorname{T}_2\)
+            which incidentally is the same as applying \(\operatorname{T}_4\) followed by \(\operatorname{T}_1\).
+            We call this transformation \(\operatorname{T}_5\), and we can verify with some more algebra that
+            \begin{equation}\begin{split}
+            \operatorname{T}_5 E_2 &= \operatorname{T}_2\operatorname{T}_1\operatorname{T}_2E_2,\\
+            &= \operatorname{T}_1\operatorname{T}_2\operatorname{T}_1E_2,\\
+            &= E_2(dk_2/k_3, k_1, k_3, k_2),\\
+            &= E_2(d, k_1, k_2, k_3).
+            \end{split}\end{equation}
+            It is easy to show that both \(\operatorname{T}_1\) and \(\operatorname{T}_2\) are involutions, namely
+            that applying either twice gives us the identity transformation which does not transform the parameters,
+            i.e.
+            $$\operatorname{T}_1 \operatorname{T}_1 = \operatorname{id} = \operatorname{T}_2\operatorname{T}_2.$$
+            Using the latter and either definition of \(\operatorname{T}_5\) we can further show that
+            \begin{equation}\begin{split}
+            \operatorname{T}_5\operatorname{T}_5 &=
+            \operatorname{T}_1\operatorname{T}_2(\operatorname{T}_1\operatorname{T}_1)\operatorname{T}_2\operatorname{T}_1,\\
+            &= \operatorname{T}_1\operatorname{T}_2\operatorname{id}\operatorname{T}_2\operatorname{T}_1,\\
+            &= \operatorname{T}_1(\operatorname{T}_2\operatorname{T}_2)\operatorname{T}_1,\\
+            &= \operatorname{T}_1\operatorname{T}_1,\\
+            &= \operatorname{id}.
+            \end{split}\end{equation}
+            Thus \(\operatorname{T}_5\) is also an involution. Using those involutions we can show that
+            \(\operatorname{T}_3\) and \(\operatorname{T}_4\) are inverse of each other. Indeed
+            \begin{equation}\begin{split}
+            \operatorname{T}_3\operatorname{T}_4 &=
+            \operatorname{T}_1\operatorname{T}_2\operatorname{T}_2\operatorname{T}_1,\\
+            &= \operatorname{T}_1\operatorname{T}_1,\\
+            &= \operatorname{id}.
+            \end{split}\end{equation}
+            and similarly for \(\operatorname{T}_4\operatorname{T}_3\). We are thus in the presence of a group. It is
+            easy but boring to show that the group is isomorphic to the dihedral group \(D_3\) of the equilateral
+            triangle and to the
+            symmetric group \(S_3\) of permutations over 3 elements. The latter fact was already heavily hinted by the
+            appearance
+            of all 6 different permutations of the parameters \(k_1, k_2, k_3\) in the argument of \(E2\) under the the
+            action of the
+            6 transformations.
+            We can also show this isomorphism explicitely by building the following group multiplication table, also
+            called the Callay table,
+            \begin{equation}\begin{array}{c|cccccc}
+            & \operatorname{id} & \operatorname{T}_1 & \operatorname{T}_2 & \operatorname{T}_3 & \operatorname{T}_4 &
+            \operatorname{T}_5\\
+            \hline
+            \operatorname{id} & \operatorname{id} & \operatorname{T}_1 & \operatorname{T}_2 & \operatorname{T}_3 &
+            \operatorname{T}_4 & \operatorname{T}_5\\
+            \operatorname{T}_1 & \operatorname{T}_1 & \operatorname{id} & \operatorname{T}_3 & \operatorname{T}_2 &
+            \operatorname{T}_5 & \operatorname{T}_4\\
+            \operatorname{T}_2 & \operatorname{T}_2 & \operatorname{T}_4 & \operatorname{id} & \operatorname{T}_5 &
+            \operatorname{T}_1 & \operatorname{T}_3\\
+            \operatorname{T}_3 & \operatorname{T}_3 & \operatorname{T}_5 & \operatorname{T}_1 & \operatorname{T}_4 &
+            \operatorname{id} & \operatorname{T}_2\\
+            \operatorname{T}_4 & \operatorname{T}_4 & \operatorname{T}_2 & \operatorname{T}_5 & \operatorname{id} &
+            \operatorname{T}_3 & \operatorname{T}_1\\
+            \operatorname{T}_5 & \operatorname{T}_5 & \operatorname{T}_3 & \operatorname{T}_4 & \operatorname{T}_1 &
+            \operatorname{T}_2 & \operatorname{id}\\
+            \end{array}\end{equation}
+            and noticing that it is identical to the Callay table of \(D_3\) and \(S_3\).
+        </p>
+        <p>Why do we care at all about any of that? Because this reparametrization invariance can cause
+            issues when we try to fit the parameters of the model to data. Indeed, the likelihood and posterior
+            distribution have (at least) 6 modes, one for each permutation of the parameters.
+            In the context of finding point estimates, e.g. using least-square (LS), maximum likelihood (ML),
+            or maximum a-posteriori (MAP), this can cause the optimization algorithm to get stuck or confused
+            and fail to converge completely depending on the specific algorithm used. In the context of sampling
+            the posterior distribution it can make it difficult and slow down the convergence of the MCMC algorithm.
+        </p>
+        <p>
+            At its core, this problem stems from the fact that we are trying to infer a 3-compartments model
+            using only one of its dependent variable, which makes the problem ill-posed. The best remedy to this
+            issue would be to have also access to curves for serum levels of the ester or of the ester concentration
+            in the depot and to use those simultaneously during the fit. This would break the \(D_3\) symmetry and
+            by removing the ambiguity under \(k_1 \leftrightarrow k_2\) and \(k_1\leftrightarrow k_3\) transformation
+            and would make the inference problem well-posed.
+
+            The second best remedy is to reason about the physical time-scale of the processes of the pharmacokinetic
+            model
+            and apply constraints during the optimization to break the symmetry, e.g. by imposing an inequality
+            such as \(k_2 > k_3 > k_1\). This in effect obscures narrows down the space of parameters to include
+            a single mode which in turn prevents the optimization algorithm from getting stuck or confused.
+            In the context of inference using MCMC you can either use those time scales to set the hyperparameters,
+            use the constraints to parametrize the model, or use a more advanced MCMC sampler
+            and leave it to the algorithm to sample all modes of the posterior.
+
+        </p>
+
+        <h1>hierarchical emix model of inter-study variability</h1>
+    </div>
+</body>
+
+</html>
