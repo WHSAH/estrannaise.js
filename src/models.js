@@ -20,7 +20,29 @@ function PK3CD3Symmetry(d, k1, k2, k3, op = 0) {
 }
 
 function e2SingleDose3C(t, dose, d, k1, k2, k3) {
-    return t < 0 ? 0 : dose * d * k1 * k2 * (Math.exp(-k1 * t) / (k1 - k2) / (k1 - k3) - Math.exp(-k2 * t) / (k1 - k2) / (k2 - k3) + Math.exp(-k3 * t) / (k1 - k3) / (k2 - k3));
+    if (t < 0) {
+        return 0;
+    }
+
+    // When one or more rate is equal the single-dose solution
+    // is ill-defined because one or more denominators are zero.
+    // In these cases we must first take the limit the recover
+    // the correct solution.
+    if (k1 == k2 && k2 == k3) {
+        // checked!
+        return dose * d * k1 * k1 * t * t * Math.exp(-k1 * t) / 2;
+    } else if (k1 == k2 && k2 != k3) {
+        // checked!
+        return dose * d * k1 * k1 * (Math.exp(-k3 * t) - Math.exp(-k1 * t) * (1 + (k1 - k3) * t)) / (k1 - k3) / (k1 - k3);
+    } else if (k1 == k3 && k2 != k3) {
+        // checked!
+        return dose * d * k1 * k2 * (Math.exp(-k2 * t) - Math.exp(-k1 * t) * (1 + (k1 - k2) * t)) / (k1 - k2) / (k1 - k2);
+    } else if (k2 == k3 && k1 != k3) {
+        // checked!
+        return dose * d * k1 * k2 * (Math.exp(-k1 * t) - Math.exp(-k2 * t) * (1 - (k1 - k2) * t)) / (k1 - k2) / (k1 - k2);
+    } else {
+        return dose * d * k1 * k2 * (Math.exp(-k1 * t) / (k1 - k2) / (k1 - k3) - Math.exp(-k2 * t) / (k1 - k2) / (k2 - k3) + Math.exp(-k3 * t) / (k1 - k3) / (k2 - k3));
+    }
 }
 
 function e2SteadyState3C(t, dose, T, d, k1, k2, k3) {
