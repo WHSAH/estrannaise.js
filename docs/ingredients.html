@@ -77,7 +77,7 @@
         <h1>introduction</h1>
         <p>
             estrannaise.js uses several mathematical concepts under the hood. It combines
-            pharmacokinetics compartments models with markov chain monte carlo (mcmc)
+            pharmacokinetics compartments models with markov chain monte carlo (MCMC)
             to infer the pharmacokinetics parameters of estradiol using Bayesian
             generative models, both hierarchical and non-hierarchical, that account
             for the variability found in data both within and across studies.
@@ -94,8 +94,11 @@
         </p>
         <div>
             <h3>Simple 3-compartments model</h3>
-            <img id="simple3C-img" class="flex-item" src="3compartmentsIMesters_night.png"
-                style="width: 18em; float: left; margin: 2em;" alt="3-compartments model of im esters">
+            <figure style="float: left; margin-right: 2em; text-align: center; width: 20em;">
+                <img id="simple3C-img" class="flex-item" src="3compartmentsIMesters_night.png"
+                    style="width: 18em; margin: 2em;" alt="3-compartments model of im esters">
+                <figcaption>Figure 1. Three-compartments model of intramuscular injections</figcaption>
+            </figure>
             <p class="flex-item">
                 To begin, we model the metabolism of an intramuscular depot of estradiol
                 ester by a very simple 3-compartments model which includes three processes.
@@ -147,16 +150,59 @@
         </div>
         <h1>simple flat generative model</h1>
 
-        <div>
-            <img id="flat-img" class="flex-item" src="flat_model_night.png"
-                style="width: 18em; float: left; margin: 2em;" alt="flat model">
-
-            <p></p>
-        </div>
+        <figure style="float: left; margin-right: 2em; text-align: center; width: 20em;">
+            <img id="simple3C-img" class="flex-item" src="flat_model_night.png"
+                style="width: 18em; margin: 2em;" alt="flat generative model">
+            <figcaption>Figure 2. Flat generative model with normally distributed serum levels</figcaption>
+        </figure>
 
         <p>
             Given a data set consisting of a series of measurements of serum estradiol levels following
-            the injection of a single dose, we
+            the injection of a single dose, we can write down a simple generative model for the data
+            where each measurement is assumed to be independent and normally distributed around the
+            deterministic value given by the single-dose solution of the 3-compartments model. The four
+            parameters of the pharmacokinetic model are the dose \(d\), and the three rate constants 
+            \(k_1, k_2, k_3\). We assume that each of them is distributed according to a gamma distribution.
+            There is a fifth parameter, the standard deviation of the normal distribution, which we assume
+            is distributed according to an inverse gamma distribution. The generative model is therefore 
+            given by
+            \begin{equation}\begin{split}
+            d &\sim \operatorname{Gamma}(\alpha_d, \beta_d),\\
+            k_1 &\sim \operatorname{Gamma}(\alpha_{k_1}, \beta_{k_1}),\\
+            k_2 &\sim \operatorname{Gamma}(\alpha_{k_2}, \beta_{k_2}),\\
+            k_3 &\sim \operatorname{Gamma}(\alpha_{k_3}, \beta_{k_3}),\\
+            \sigma &\sim \operatorname{InvGamma}(\alpha_{\sigma}, \beta_{\sigma}),\\
+            x_i &\sim \operatorname{Normal}\left(E_2^{sd3C}(t_i~\vert~d, k_1, k_2, k_3), \sigma\right),\quad i=1,\ldots,N.
+            \end{split}\end{equation}
+            The plate model is shown in Figure 2. The hyperparameters \(\alpha\)'s and \(\beta\)'s that
+            control the rates can be use to encore prior knowledge about them. For example, if we know
+            that the half-life of estradiol is just short of 24 hours, we can set \(\alpha_{k_3} = \beta_{k_3} = 1\)
+            which would give us a mean of 24 hours for the half-life of estradiol. Indeed the mean
+            of a gamma distribution is given by \(\alpha/\beta\). Since we know that esterase rapidly
+            cleave the ester into estradiol in a matter of hours we can set \(1 < \beta_{k_2} < 10 \) with
+            \(\alpha_{k_2} = 1\). The rate of diffusion of the ester out of the depot varies, but we can
+            make a rough guess that the time-scale is on the order of a few days up to a few months, and we
+            can therefore set \(\alpha_{k_1} = 1\) and \(\beta_{k_1} = 1/5\). To set the hyperparameters of the
+            inverse gamma prior over the standard deviation we eyeball the data, notice that there is a
+            large range of variation, and set it so that its mean is somewhere between 10 and 100. Since the
+            mean of an inverse gamma distribution is given by \(\beta/(\alpha - 1)\) we can set \(\alpha_{\sigma} = 2\)
+            and \(\beta_{\sigma} = 20\). One reason to choose the inverse gamma distribution over the gamma
+            distribution is that it has a long tail but also suppresses small values, which helps prevent
+            the collapse of the posterior distribution to small values of \(\sigma\).
+        </p>
+        <p>
+            The explicit formula for the generative model is
+            \begin{equation}\begin{split}
+            & P(\lbrace x_i\rbrace, d, k_1, k_2, k_3, \sigma~\vert~\alpha, \beta) = P(d)P(k_1)P(k_2)P(k_3)P(\sigma)\prod_{i=1}^N P(x_i~\vert~d, k_1, k_2, k_3, \sigma),\\
+            &= \frac{\beta_d^{\alpha_d}}{\Gamma(\alpha_d)}d^{\alpha_d - 1}e^{-\beta_d d}\frac{\beta_{k_1}^{\alpha_{k_1}}}{\Gamma(\alpha_{k_1})}k_1^{\alpha_{k_1} - 1}e^{-\beta_{k_1} k_1}\frac{\beta_{k_2}^{\alpha_{k_2}}}{\Gamma(\alpha_{k_2})}k_2^{\alpha_{k_2} - 1}e^{-\beta_{k_2} k_2}\frac{\beta_{k_3}^{\alpha_{k_3}}}{\Gamma(\alpha_{k_3})}k_3^{\alpha_{k_3} - 1}e^{-\beta_{k_3} k_3} \\
+            &\times\frac{\beta_{\sigma}^{\alpha_{\sigma}}}{\Gamma(\alpha_{\sigma})}\sigma^{-\alpha_{\sigma} - 1}e^{-\beta_{\sigma}/\sigma}\prod_{i=1}^N \frac{1}{\sqrt{2\pi\sigma^2}}e^{-\frac{1}{2\sigma^2}\left(x_i - E_2^{sd3C}(t_i~\vert~d, k_1, k_2, k_3)\right)^2}.
+            \end{split}\end{equation}
+            The posterior distribution over the parameters of the model is given by
+            \begin{equation}\begin{split}
+            P(d, k_1, k_2, k_3, \sigma~\vert~\lbrace x_i\rbrace, \alpha, \beta) &= \frac{P(\lbrace x_i\rbrace, d, k_1, k_2, k_3, \sigma~\vert~\alpha, \beta)}{P(\lbrace x_i\rbrace~\vert~\alpha, \beta)},\\
+            &= \frac{P(\lbrace x_i\rbrace, d, k_1, k_2, k_3, \sigma~\vert~\alpha, \beta)}{\int P(\lbrace x_i\rbrace, d, k_1, k_2, k_3, \sigma~\vert~\alpha, \beta)~d\sigma~dk_3~dk_2~dk_1~dd}.
+            \end{split}\end{equation}
+            
 
         </p>
 
@@ -280,12 +326,14 @@
 
         </p>
 
-        <h1>hierarchical emix model</h1>
+        <h1>hierarchical Esther model</h1>
+
+
+
+        <h1>hierarchical Emix model</h1>
         <div>
             <img id="emix-img" class="flex-item" src="hierarchical_emix_model_night.png"
                 style="width: 18em; float: left; margin: 2em;" alt="hierarchical emix model">
-
-            <p>foobar</p>
         </div>
 
         </p>

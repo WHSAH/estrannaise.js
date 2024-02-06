@@ -29,19 +29,49 @@ function e2SingleDose3C(t, dose, d, k1, k2, k3) {
     // In these cases we must first take the limit the recover
     // the correct solution.
     if (k1 == k2 && k2 == k3) {
-        // checked!
+
         return dose * d * k1 * k1 * t * t * Math.exp(-k1 * t) / 2;
+
     } else if (k1 == k2 && k2 != k3) {
-        // checked!
+        
         return dose * d * k1 * k1 * (Math.exp(-k3 * t) - Math.exp(-k1 * t) * (1 + (k1 - k3) * t)) / (k1 - k3) / (k1 - k3);
-    } else if (k1 == k3 && k2 != k3) {
-        // checked!
+
+    } else if (k1 != k2 && k1 == k3) {
+    
         return dose * d * k1 * k2 * (Math.exp(-k2 * t) - Math.exp(-k1 * t) * (1 + (k1 - k2) * t)) / (k1 - k2) / (k1 - k2);
-    } else if (k2 == k3 && k1 != k3) {
-        // checked!
+    
+    } else if (k1 != k2 && k2 == k3) {
+    
         return dose * d * k1 * k2 * (Math.exp(-k1 * t) - Math.exp(-k2 * t) * (1 - (k1 - k2) * t)) / (k1 - k2) / (k1 - k2);
+    
     } else {
+
         return dose * d * k1 * k2 * (Math.exp(-k1 * t) / (k1 - k2) / (k1 - k3) - Math.exp(-k2 * t) / (k1 - k2) / (k2 - k3) + Math.exp(-k3 * t) / (k1 - k3) / (k2 - k3));
+
+    }
+}
+
+
+function e2SingleDoseAUC3C(t, dose, d, k1, k2, k3) {
+    if (t < 0) {
+        return 0;
+    }
+    if (k1 == k2 && k2 == k3) {
+
+        return dose * d / k1 * (1 - Math.exp(-k1 * t) * (1 + k1 * t + k1 * k1 * t * t / 2))
+
+    } else if (k1 == k2 && k2 != k3) {
+
+        return dose * d * k1 * k1 / (k1 - k3) / (k1 - k3) * ((1 - Math.exp(-k3 * t))/ k3 - 2 / k1 + k3 / k1 / k1 + Math.exp(-k1 * t) * (2 * k1 - k3 + k1 * (k1 - k3) * t) / k1 / k1)
+
+    } else if (k1 != k2 && k1 == k3) {
+        
+        // return dose * d * k1 * k1 / (k1 - k3) / (k1 - k3) * ((1 - Math.exp(-k3 * t))/ k3 - 2 / k1 + k3 / k1 / k1 + Math.exp(-k1 * t) * (2 * k1 - k3 + k1 * (k1 - k3) * t) / k1 / k1)
+
+    } else if (k1 != k3 && k2 == k3) {
+
+    } else {
+        return dose * d * k1 * k2 * ((1 - Math.exp(-k1 * t)) / k1 / (k1 - k2) / (k1 - k3) - (1 - Math.exp(-k2 * t)) / k2 / (k1 - k2) / (k2 - k3) + (1 - Math.exp(-k3 * t)) / k3 / (k1 - k3) / (k2 - k3));
     }
 }
 

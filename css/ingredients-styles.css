@@ -23,3 +23,9 @@ h1, h2, h3, h4 {
     margin-bottom: 0.2em;
     text-align: right;
 }
+
+figcaption {
+    color: var(--the-pink);
+    font-size: 12px;
+    text-align: right;
+}
