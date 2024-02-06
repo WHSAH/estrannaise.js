@@ -420,13 +420,25 @@ function attachMultidoseButtonsEvents() {
         loadFromLocalStorage();
         refresh();
     });
-   
+
     document.getElementById('delete-stash-button').addEventListener('mousedown', function () {
         deleteLocalStorage();
         this.innerHTML = 'deleted!';
         setTimeout(() => {
             this.innerHTML = 'delete stash';
         }, 618);
+    });
+
+    document.getElementById('share-button').addEventListener('mousedown', function () {
+            navigator.clipboard.writeText(getShareURL());
+
+            document.getElementById('share-button').innerHTML = 'copied!';
+
+            setTimeout(() => {
+                document.getElementById('share-button').innerHTML = 'share';
+            }, 1000);
+
+            changeBackgroundColor('share-button', colorThePink(), null, 150);
     });
 
     document.getElementById('save-csv-button').addEventListener('mousedown', function () {
@@ -476,9 +488,9 @@ function themeSetup() {
 function attachTipJarEvent() {
     document.getElementById('copy-xmr').addEventListener('mousedown', function () {
         navigator.clipboard.writeText(this.innerText);
-        
+
         document.getElementById('tipjar-text').innerHTML = 'xmr tip jar address copied, thank you!';
-        
+
         setTimeout(() => {
             document.getElementById('tipjar-text').innerHTML = 'xmr tip jar';
         }, 350);
