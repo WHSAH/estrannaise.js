@@ -14,18 +14,25 @@ window.onload = function () {
 
     // EEn steady state
     addTDERow('steadystate-table', 7, 5, 'EEn IM');
-    
-    
+
+
     attachDragNDropImport();
-    
+
     attachMultidoseButtonsEvents();
     attachSteadyStateButtonsEvents();
-    
+
     themeSetup();
-    
+
     attachTipJarEvent();
-    
-    loadFromLocalStorage();
+
+    let url = window.location.href;
+    let urlObj = new URL(url);
+    let params = new URLSearchParams(urlObj.search);
+    if (params.has('multiDoseTable') || params.has('steadyStateTable')) {
+        loadFromURL(url);
+    } else {
+        loadFromLocalStorage();
+    }
 
     refresh();
 }
