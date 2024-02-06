@@ -456,14 +456,14 @@ function themeSetup() {
     let currentHour = new Date().getHours();
 
     if (currentHour >= 6 && currentHour < 18) {
-        document.getElementById('themeSwitch').checked = true;
+        document.getElementById('nightday-slider').checked = true;
         setColorScheme('day');
     } else {
-        document.getElementById('themeSwitch').checked = false;
+        document.getElementById('nightday-slider').checked = false;
         setColorScheme('night');
     }
 
-    document.getElementById('themeSwitch').addEventListener('change', function (event) {
+    document.getElementById('nightday-slider').addEventListener('change', function (event) {
         if (event.target.checked) {
             setColorScheme('day');
         } else {
