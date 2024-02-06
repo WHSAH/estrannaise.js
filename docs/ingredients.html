@@ -6,6 +6,11 @@
     <link rel="icon" type="image/png" sizes="96x96" href="../img/favicon-96x96.png">
     <link rel="icon" type="image/png" sizes="48x48" href="../img/favicon-48x48.png">
     <link rel="icon" type="image/png" sizes="32x32" href="../img/favicon-32x32.png">
+
+    <link rel="stylesheet" type="text/css" href="../css/colors.css">
+    <link rel="stylesheet" type="text/css" href="../css/slider.css">
+    <link rel="stylesheet" type="text/css" href="../css/ingredients-styles.css">
+
     <script src="../lib/mathjax/tex-chtml.js" id="MathJax-script" async></script>
     <script>
         window.MathJax = {
@@ -13,19 +18,71 @@
                 tags: 'ams'
             }
         };
+
+        function setColorScheme(scheme = 'night') {
+            let rootStyle = getComputedStyle(document.documentElement);
+            if (scheme == 'night') {
+                document.documentElement.style.setProperty('--background-color', rootStyle.getPropertyValue('--background-color-night'));
+                document.documentElement.style.setProperty('--standout-color', rootStyle.getPropertyValue('--standout-color-night'));
+                document.documentElement.style.setProperty('--the-blue', rootStyle.getPropertyValue('--the-blue-night'));
+                document.documentElement.style.setProperty('--the-pink', rootStyle.getPropertyValue('--the-pink-night'));
+
+                let images = document.getElementsByTagName('img');
+                for (let i = 0; i < images.length; i++) {
+                    images[i].src = images[i].src.replace('day', 'night');
+                }
+            } else if (scheme == 'day') {
+                document.documentElement.style.setProperty('--background-color', rootStyle.getPropertyValue('--background-color-day'));
+                document.documentElement.style.setProperty('--standout-color', rootStyle.getPropertyValue('--standout-color-day'));
+                document.documentElement.style.setProperty('--the-blue', rootStyle.getPropertyValue('--the-blue-day'));
+                document.documentElement.style.setProperty('--the-pink', rootStyle.getPropertyValue('--the-pink-day'));
+                let images = document.getElementsByTagName('img');
+                for (let i = 0; i < images.length; i++) {
+                    images[i].src = images[i].src.replace('night', 'day');
+                }
+            }
+        }
+
+        window.onload = function () {
+            let currentHour = new Date().getHours();
+
+            if (currentHour >= 6 && currentHour < 18) {
+                document.getElementById('nightday-slider').checked = true;
+                setColorScheme('day');
+            } else {
+                document.getElementById('nightday-slider').checked = false;
+                setColorScheme('night');
+            }
+
+            document.getElementById('nightday-slider').addEventListener('change', function (event) {
+                if (event.target.checked) {
+                    setColorScheme('day');
+                } else {
+                    setColorScheme('night');
+                }
+            });
+        }
+
+
     </script>
-    <link rel="stylesheet" type="text/css" href="../css/ingredients_styles.css">
 </head>
 
 <body>
+
     <div id="container">
+        <label class="switch" style="text-align: right;">
+            <input type="checkbox" id="nightday-slider">
+            <span class="slider round"></span>
+        </label>
         <h1>introduction</h1>
-        <p>estrannaise.js uses several mathematical concepts under the hood. It combines
+        <p>
+            estrannaise.js uses several mathematical concepts under the hood. It combines
             pharmacokinetics compartments models with markov chain monte carlo (mcmc)
             to infer the pharmacokinetics parameters of estradiol using Bayesian
             generative models, both hierarchical and non-hierarchical, that account
             for the variability found in data both within and across studies.
-            The following is the list of the ingredients and the recipe behind it.</p>
+            The following is the list of the ingredients and the recipe behind it.
+        </p>
 
 
         <h1>pharmacokinetics models</h1>
@@ -37,8 +94,8 @@
         </p>
         <div>
             <h3>Simple 3-compartments model</h3>
-            <img class="flex-item" src="3compartmentsIMesters_night.png" style="width: 18em; float: left; margin: 2em;"
-                alt="3-compartments model of im esters">
+            <img id="simple3C-img" class="flex-item" src="3compartmentsIMesters_night.png"
+                style="width: 18em; float: left; margin: 2em;" alt="3-compartments model of im esters">
             <p class="flex-item">
                 To begin, we model the metabolism of an intramuscular depot of estradiol
                 ester by a very simple 3-compartments model which includes three processes.
@@ -74,28 +131,33 @@
                 H(t) = \begin{cases}
                 0 & \text{if } t < 0,\\ 1 & \text{if } t \geq 0, \end{cases} \end{equation} insures the solution is zero
                     for \(t < 0\). This assumes there were no baseline serum level prior to the injection. For multiple
-                    doses we have the following multi-dose solution 
-                    \begin{equation}\begin{split}
+                    doses we have the following multi-dose solution \begin{equation}\begin{split}
                     E_2^{md3C}&(t~\vert~\lbrace d_i, t_i\rbrace, k_1, k_2, k_3)=\sum_i E^{sd3C}_2(t - t_i~\vert~d_i,
                     k_1, k_2, k_3),\\ &=k_1 k_2\sum_i d_i H(t - t_i)\left[\frac{e^{-k_1 (t - t_i)}}{(k_1 - k_2)(k_1 -
                     k_3)} - \frac{e^{-k_2(t - t_i)}}{(k_1 - k_2)(k_2 - k_3)} + \frac{e^{-k_3(t - t_i)}}{(k_1 - k_3)(k_2
                     - k_3)}\right]. \end{split}\end{equation} This solution is nothing but the expression of the
                     superposition principle of linear ODEs. By the same principle, we can just as well let the
                     parameters \(k_1, k_2, k_3\) vary from dose to dose, in effect simulating the the use of a
-                    combination of different esters at different times. This multi-dose, multi-ester solution is given by
-                
-                    \begin{equation}\begin{split}
-                    E_2^{mde3C}&\left(t~\vert~\lbrace d_i, t_i, k_{1i}, k_{2i}, k_{3i}\rbrace\right)=\sum_i E^{sd3C}_2(t - t_i~\vert~d_i,
-                    k_{1i}, k_{2i}, k_{3i}),\\ &=\sum_i d_i k_{1i} k_{2i} H(t - t_i)\left[\frac{e^{-k_{1i} (t - t_i)}}{(k_{1i} - k_{2i})(k_{1i} -
-                    k_{3i})} - \frac{e^{-k_{2i}(t - t_i)}}{(k_{1i} - k_{2i})(k_{2i} - k_{3i})} + \frac{e^{-k_{3i}(t - t_i)}}{(k_{1i} - k_{3i})(k_{2i}
-                    - k_{3i})}\right]. \end{split}\end{equation}
-                </p>
+                    combination of different esters at different times. This multi-dose, multi-ester solution is given
+                    by \begin{equation}\begin{split} E_2^{mde3C}&\left(t~\vert~\lbrace d_i, t_i, k_{1i}, k_{2i},
+                    k_{3i}\rbrace\right)=\sum_i E^{sd3C}_2(t - t_i~\vert~d_i, k_{1i}, k_{2i}, k_{3i}),\\ &=\sum_i d_i
+                    k_{1i} k_{2i} H(t - t_i)\left[\frac{e^{-k_{1i} (t - t_i)}}{(k_{1i} - k_{2i})(k_{1i} - k_{3i})} -
+                    \frac{e^{-k_{2i}(t - t_i)}}{(k_{1i} - k_{2i})(k_{2i} - k_{3i})} + \frac{e^{-k_{3i}(t -
+                    t_i)}}{(k_{1i} - k_{3i})(k_{2i} - k_{3i})}\right]. \end{split}\end{equation} </p>
         </div>
-        <h1>simple non-hierarchical generative model</h1>
+        <h1>simple flat generative model</h1>
+
+        <div>
+            <img id="flat-img" class="flex-item" src="flat_model_night.png"
+                style="width: 18em; float: left; margin: 2em;" alt="flat model">
+
+            <p></p>
+        </div>
+
         <p>
             Given a data set consisting of a series of measurements of serum estradiol levels following
-            the injection of a single dose, we 
-            
+            the injection of a single dose, we
+
         </p>
 
         <h1>interlude<br>\(D_3\) symmetry of the \(E_2\) curve</h1>
@@ -218,7 +280,15 @@
 
         </p>
 
-        <h1>hierarchical emix model of inter-study variability</h1>
+        <h1>hierarchical emix model</h1>
+        <div>
+            <img id="emix-img" class="flex-item" src="hierarchical_emix_model_night.png"
+                style="width: 18em; float: left; margin: 2em;" alt="hierarchical emix model">
+
+            <p>foobar</p>
+        </div>
+
+        </p>
     </div>
 </body>
 

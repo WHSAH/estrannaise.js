@@ -1,0 +1,25 @@
+body {
+    background-color: var(--background-color);
+    color: var(--the-blue);
+    font-family: monospace;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 14px;
+    text-align: right;
+}
+
+#container {
+    width: 60%;
+}
+
+p {
+    margin-bottom: 2em;
+    text-align: left;
+}
+
+h1, h2, h3, h4 {
+    color: var(--the-pink);
+    margin-bottom: 0.2em;
+    text-align: right;
+}
