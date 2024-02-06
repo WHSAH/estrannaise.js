@@ -242,7 +242,7 @@ function addTDERow(id, time = null, dose = null, ester = null, cvisible = true, 
 
         let visibilityCustomCheckbox = document.createElement('div');
         visibilityCustomCheckbox.className = visibilityCheckbox.checked ? 'custom-checkbox checked-style' : 'custom-checkbox';
-        visibilityCustomCheckbox.onclick = function () {
+        visibilityCustomCheckbox.onmousedown = function () {
             visibilityCheckbox.checked = !visibilityCheckbox.checked;
             this.className = visibilityCheckbox.checked ? 'custom-checkbox checked-style' : 'custom-checkbox';
             if (readRow(this.parentElement.parentElement)) {
@@ -266,7 +266,7 @@ function addTDERow(id, time = null, dose = null, ester = null, cvisible = true, 
 
         let uncertaintyCustomCheckbox = document.createElement('div');
         uncertaintyCustomCheckbox.className = uncertaintyCheckbox.checked ? 'custom-checkbox checked-style' : 'custom-checkbox';
-        uncertaintyCustomCheckbox.onclick = function () {
+        uncertaintyCustomCheckbox.onmousedown = function () {
             uncertaintyCheckbox.checked = !uncertaintyCheckbox.checked;
             this.className = uncertaintyCheckbox.checked ? 'custom-checkbox checked-style' : 'custom-checkbox';
             if (readRow(this.parentElement.parentElement)) {
