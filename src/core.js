@@ -181,7 +181,7 @@ function readRow(row, keepincomplete = false) {
     let uv = row.cells[1].querySelector('input');
     let uvisibility = uv ? uv.checked : null;
 
-    if ((!isNaN(parseFloat(time)) && !isNaN(parseFloat(dose)) && dose > 0) || keepincomplete) {
+    if ((!isNaN(parseFloat(time)) && !isNaN(parseFloat(dose)) && parseFloat(dose) > 0) || keepincomplete) {
         return { time: parseFloat(time), dose: parseFloat(dose), ester: ester, cvisibility: cvisibility, uvisibility: uvisibility };
     } else {
         return null;
@@ -227,13 +227,13 @@ function guessNextRow(tableID) {
         if (beforeLastRow && lastRow) {
             if (table.rows.length >= 4) {
                 let beforeBeforeLastRow = readRow(table.rows[table.rows.length - 3]);
-                if (beforeBeforeLastRow 
+                if (beforeBeforeLastRow
                     && (lastRow.dose === beforeBeforeLastRow.dose)
                     && (lastRow.dose !== beforeLastRow.dose)) {
-                        let timeDifference = beforeLastRow.time - beforeBeforeLastRow.time;
-                        let dose = beforeLastRow.dose;
-                        let ester = beforeLastRow.ester;
-                        return { time: lastRow.time + timeDifference, dose: dose, ester: ester };
+                    let timeDifference = beforeLastRow.time - beforeBeforeLastRow.time;
+                    let dose = beforeLastRow.dose;
+                    let ester = beforeLastRow.ester;
+                    return { time: lastRow.time + timeDifference, dose: dose, ester: ester };
                 }
             }
             if (lastRow.ester == beforeLastRow.ester) {
@@ -262,46 +262,50 @@ function addTDERow(tableID, time = null, dose = null, ester = null, cvisible = t
     visibilityCell.width = '1.7em';
     visibilityCell.height = '1.7em';
 
+    if (tableID == 'steadystate-table' || ((tableID == 'multidose-table') && (table.rows.length == 2))) {
+        let visibilityCheckbox = document.createElement('input');
+        visibilityCheckbox.type = 'checkbox';
+        visibilityCheckbox.className = 'hidden-checkbox checked-style';
+        visibilityCheckbox.checked = cvisible;
+        visibilityCell.appendChild(visibilityCheckbox);
 
-    let visibilityCheckbox = document.createElement('input');
-    visibilityCheckbox.type = 'checkbox';
-    visibilityCheckbox.className = 'hidden-checkbox checked-style';
-    visibilityCheckbox.checked = cvisible;
-    visibilityCell.appendChild(visibilityCheckbox);
-
-    let visibilityCustomCheckbox = document.createElement('div');
-    visibilityCustomCheckbox.className = visibilityCheckbox.checked ? 'custom-checkbox checked-style' : 'custom-checkbox';
-    visibilityCustomCheckbox.addEventListener('mousedown', function () {
-        visibilityCheckbox.checked = !visibilityCheckbox.checked;
-        this.className = visibilityCheckbox.checked ? 'custom-checkbox checked-style' : 'custom-checkbox';
-
-        if (readRow(this.parentElement.parentElement)) {
-            refresh()
-        }
-    });
-    visibilityCell.appendChild(visibilityCustomCheckbox);
+        let visibilityCustomCheckbox = document.createElement('div');
+        visibilityCustomCheckbox.className = visibilityCheckbox.checked ? 'custom-checkbox checked-style' : 'custom-checkbox';
+        visibilityCustomCheckbox.onmousedown = function () {
+            visibilityCheckbox.checked = !visibilityCheckbox.checked;
+            this.className = visibilityCheckbox.checked ? 'custom-checkbox checked-style' : 'custom-checkbox';
+            if (readRow(this.parentElement.parentElement)) {
+                refresh()
+            }
+        };
+        visibilityCell.appendChild(visibilityCustomCheckbox);
+    }
 
     let uncertaintyCell = row.insertCell(1);
     uncertaintyCell.className = 'uncertainty-cell';
     uncertaintyCell.width = '1.7em';
     uncertaintyCell.height = '1.7em';
+    
+    if (tableID == 'steadystate-table' || ((tableID == 'multidose-table') && (table.rows.length == 2))) {
 
-    let uncertaintyCheckbox = document.createElement('input');
-    uncertaintyCheckbox.type = 'checkbox';
-    uncertaintyCheckbox.className = 'hidden-checkbox checked-style';
-    uncertaintyCheckbox.checked = uvisible;
-    uncertaintyCell.appendChild(uncertaintyCheckbox);
+        let uncertaintyCheckbox = document.createElement('input');
+        uncertaintyCheckbox.type = 'checkbox';
+        uncertaintyCheckbox.className = 'hidden-checkbox checked-style';
+        uncertaintyCheckbox.checked = uvisible;
+        uncertaintyCell.appendChild(uncertaintyCheckbox);
 
-    let uncertaintyCustomCheckbox = document.createElement('div');
-    uncertaintyCustomCheckbox.className = uncertaintyCheckbox.checked ? 'custom-checkbox checked-style' : 'custom-checkbox';
-    uncertaintyCustomCheckbox.onmousedown = function () {
-        uncertaintyCheckbox.checked = !uncertaintyCheckbox.checked;
-        this.className = uncertaintyCheckbox.checked ? 'custom-checkbox checked-style' : 'custom-checkbox';
-        if (readRow(this.parentElement.parentElement)) {
-            refresh()
-        }
-    };
-    uncertaintyCell.appendChild(uncertaintyCustomCheckbox);
+        let uncertaintyCustomCheckbox = document.createElement('div');
+        uncertaintyCustomCheckbox.className = uncertaintyCheckbox.checked ? 'custom-checkbox checked-style' : 'custom-checkbox';
+        uncertaintyCustomCheckbox.onmousedown = function () {
+            uncertaintyCheckbox.checked = !uncertaintyCheckbox.checked;
+            this.className = uncertaintyCheckbox.checked ? 'custom-checkbox checked-style' : 'custom-checkbox';
+            if (readRow(this.parentElement.parentElement)) {
+                refresh()
+            }
+        };
+        uncertaintyCell.appendChild(uncertaintyCustomCheckbox);
+    }
+
     // -----------------------------------------
 
 
@@ -319,8 +323,6 @@ function addTDERow(tableID, time = null, dose = null, ester = null, cvisible = t
             refresh()
         }
     });
-
-    // timeCell.addClassName = "time-cell";
 
 
     let doseCell = row.insertCell(3)
@@ -340,7 +342,6 @@ function addTDERow(tableID, time = null, dose = null, ester = null, cvisible = t
 
     });
 
-    // doseCell.addClassName = "dose-cell";
 
     let esterCell = row.insertCell(4)
     esterCell.innerHTML =
@@ -361,20 +362,26 @@ function addTDERow(tableID, time = null, dose = null, ester = null, cvisible = t
     });
 
     let deleteCell = row.insertCell(5);
-    deleteCell.innerHTML = '<button class="flat-button delete-button">-</button>';
-    deleteCell.querySelector('.delete-button').addEventListener('click', function () {
-        let myRow = this.parentNode.parentNode;
-        if (myRow.rowIndex == 1) {
-            myRow.cells[2].querySelector('input').value = '';
-            myRow.cells[3].querySelector('input').value = '';
-            myRow.cells[4].querySelector('select').value = 'EV IM';
-            rowValidity.set(myRow, false);
-        } else {
+    if (tableID == 'steadystate-table' || (tableID == 'multidose-table' && table.rows.length > 2)) {   
+        deleteCell.innerHTML = '<button class="flat-button delete-button">-</button>';
+        deleteCell.querySelector('.delete-button').addEventListener('click', function () {
+            let myRow = this.parentNode.parentNode;
+            let myTable = myRow.parentNode.parentNode;
+
             rowValidity.delete(myRow);
             myRow.remove();
-        }
-        refresh();
-    });
+
+            if (myTable.rows.length < 2) {
+                addTDERow(myTable.id);
+            }
+
+            refresh();
+        });
+    } else {
+        // yo this is janky, but it's the only way I found to keep
+        // the table looking good because I suck at CSS
+        deleteCell.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;';
+    }
 
     return row;
 }
@@ -434,6 +441,12 @@ function attachMultidoseButtonsEvents() {
         if (guess) {
             addTDERow('multidose-table', guess.time, guess.dose, guess.ester);
             refresh();
+        } else {
+            document.getElementById('guess-button').innerHTML = '(._.?';
+
+            setTimeout(() => {
+                document.getElementById('guess-button').innerHTML = 'guess';
+            }, 500);
         }
     });
 
