@@ -13,7 +13,7 @@
 </head>
 
 <body>
-    
+
     <script src="lib/loggamma.js"></script>
     <script src="lib/d3.min.js"></script>
     <script src="lib/plot.min.js"></script>
@@ -26,18 +26,25 @@
 
     <div id="container">
         <header>
-            <div style="display: flex; align-items: center;">
+            <!-- Good god this css is gory. 
+                that 1.2em top margin is holding the whole thing together -->
+            <div id="header-div", style="display: flex; align-items: flex-start;">
                 <div id="logo">
-                    <img src="img/favicon-96x96.png" alt="Estrannaise" style="flex: 0 0 auto;">
+                    <img src="img/favicon-96x96.png" alt="estrannaise.js logo">
                 </div>
-                <div style="width: 100%;">
-                    <h1>estrannaise.js</h1>
-                    <h2>estradiol pharmacokinetics playground</a>
-                        <label class="switch" style="margin-left: 12.5em;">
+                <div style="height: 100%; width: 100%; display: flex; flex-direction: column; justify-content: space-between; margin-top: 1.2em;">
+                    
+                    <h1 style="margin-top: auto; margin-bottom: 0em;">estrannaise.js</h1>
+                    
+                    <div id="subtitle" style="display: flex; justify-content: space-between; width: 100%; align-items: flex-end;">
+
+                        <h2 style="margin-right: auto; margin-bottom: 0em;">estradiol pharmacokinetics playground</h2>
+                        
+                        <label class="switch" style="margin-left: auto;">
                             <input type="checkbox" id="nightday-slider">
                             <span class="slider round"></span>
                         </label>
-                    </h2>
+                    </div>
                 </div>
             </div>
         </header>
@@ -53,7 +60,7 @@
             <button id="share-button" class="flat-button" style="width: 8em;">share url</button>
         </div>
 
-        <div class="sections-container", id="sections-container">
+        <div class="sections-container" , id="sections-container">
 
             <div id="multidose-section">
                 <span style="font-weight: bold;">multi-doses</span>
@@ -85,7 +92,8 @@
                         </tbody>
                     </table>
                     <!-- <span style="font-weight: normal; font-size: 9px; padding-left: 6em;">drag-n-drop csv on table to -->
-                    <span style="font-weight: normal; font-size: 9px; display: block; text-align: center;">drag-n-drop csv on table to import</span>
+                    <span style="font-weight: normal; font-size: 9px; display: block; text-align: center;">drag-n-drop
+                        csv on table to import</span>
                 </div>
             </div> <!-- multidose-section -->
 
@@ -120,15 +128,16 @@
         <!-- someone tell me why github pages don't render <footer> correctly? -->
         <div id="footer">
             <div style="width: 58em;">
-            <p>our inferences use the data collected by the amazing people behind the <a
-                    href="https://transfemscience.org/articles/injectable-e2-meta-analysis/" target="_blank">tfs
-                    meta-analysis</a>
-            </p>
-            <p>estradiol undecylate data was reprocessed from scratch using the original Greppert 1975 and Vermeulen 1975 datasets.</p>
-            <p>with help encouragements and entertainment from emily torble lea annie izzy meringue photino
-                <br>and let's be honest github copilot
-            </p>
-            <br>
+                <p>our inferences use the data collected by the amazing people behind the <a
+                        href="https://transfemscience.org/articles/injectable-e2-meta-analysis/" target="_blank">tfs
+                        meta-analysis</a>
+                </p>
+                <p>estradiol undecylate data was reprocessed from scratch using the original Greppert 1975 and Vermeulen
+                    1975 datasets.</p>
+                <p>with help encouragements and entertainment from emily torble lea annie izzy meringue photino
+                    <br>and let's be honest github copilot
+                </p>
+                <br>
                 <p>
                     <span style="font-weight: bold;">disclaimer</span><br>
                     this page, designed as a playground to explore estradiol pharmacokinetics, provides a simulation

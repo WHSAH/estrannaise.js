@@ -11,12 +11,25 @@ a {
     text-decoration: none;
 }
 
-.header {
+
+header {
+    display: inline-block;
+    flex-direction: column;
+    align-items: flex-start;
+    /* text-align: left; */
+    width: 100%;
+}
+
+/* fake footer because github pages is weird */
+#footer {
     /* display: flex; */
-    /* justify-content: space-between; */
-    /* align-items: flex-start; */
-    /* This will vertically center the h1 and the switch */
-    width: 54em;
+    /* flex-direction: column; */
+    /* align-items: right; */
+    /* text-align: right; */
+    display: inline-block;
+    margin-top: 5em;
+    font-size: 9px;
+    /* padding-left: 1.25em; */
 }
 
 a:link {
@@ -86,59 +99,49 @@ button.delete-button {
     border: none;
 }
 
+#container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: auto;
+    margin-left: auto;
+    margin-right: auto;
+
+}
+
 #plot-region {
     display: block;
-    width: 100%;
-    height: 70%;
+    position: relative;
+    /* width: 100%;
+    height: 70%; */
     /* margin: 3em; */
     padding: 0;
     background-color: var(--background-color);
 }
 
-#multidose-section {
-    display: block;
-    /* width: 40%; */
-    margin-right: 3em;
-}
-
-#steadystate-section {
-    display: block;
-    /* width: 40%; */
-    margin-left: 3em;
-}
 
 #sections-container {
     display: flex;
     justify-content: space-between;
+    width: 100%;
 }
 
-#container {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
+#multidose-section {
+    /* display: inline-block; */
+    /* width: 40%; */
+    /* margin-right: 3em; */
+    margin-right: auto;
+}
+
+#steadystate-section {
+    /* display: inline-block; */
+    margin-left: auto;
+    /* width: 40%; */
+    /* margin-left: 3em; */
 }
 
 #dragndrop-zone.overlay {
     background-color: var(--the-pink);
-}
-
-header {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    text-align: left;
-}
-
-/* fake footer because github pages is weird */
-#footer {
-    /* display: flex; */
-    /* flex-direction: column; */
-    /* align-items: flex-start; */
-    text-align: left;
-    display: inline-block;
-    margin-top: 5em;
-    font-size: 9px;
-    /* padding-left: 1.25em; */
 }
 
 #copy-xmr {
@@ -176,8 +179,9 @@ header {
 }
 
 #stashrecall-container {
-    display: block;
+    display: inline-block;
     text-align: right;
     margin-top: 1em;
+    margin-left: auto;
     width: 100%;
 }
