@@ -28,8 +28,7 @@ function plotCurves(uncertainty = "cloud") {
     let firstRow = readRow(document.getElementById('multidose-table').rows[1], true);
     mdCVisib = firstRow.cvisibility;
     mdUVisib = firstRow.uvisibility;
-    console.log(firstRow, mdCVisib, mdUVisib);
-
+    
     let [ssEveries, ssDoses, ssEsters, ssCVisibs, ssUVisibs] = getTDEs('steadystate-table', true);
 
 
