@@ -1,4 +1,5 @@
 const NB_CLOUD_POINTS = 3500;
+const NB_UCURVES = 200;
 const NB_LINE_POINTS = 1500;
 
 const CLOUD_POINT_SIZE = 1.3;
@@ -12,18 +13,25 @@ function fillCurve(func, xmin, xmax, nbsteps) {
     return curve;
 }
 
-function plotCurves() {
+function plotCurves(uncertainty = "cloud") {
 
     let dotmarks = [];
     let linemarks = [];
-    let tipmarks = []
+    let ulinemarks = [];
+    let rulemarks = [];
+    let tipmarks = [];
 
-    let [mdTimes, mdDoses, mdEsters, [mdCVisib, ...cnulls], [mdUVisib, ...unulls]] = getTDEs('dose-table', true);
+    let [mdTimes, mdDoses, mdEsters, [mdCVisib, ...cnulls], [mdUVisib, ...unulls]] = getTDEs('multidose-table', true);
     let [ssEveries, ssDoses, ssEsters, ssCVisibs, ssUVisibs] = getTDEs('steadystate-table', true);
 
 
     let xmin = Math.min(0, ...mdTimes);
-    let xmax = Math.max(31, 1.618 * Math.max(...mdTimes));
+    let xmax = 31;
+    
+    if (mdCVisib || mdUVisib) {
+        xmax = Math.max(xmax, 1.618 * Math.max(...mdTimes));
+    }
+
     for (let i = 0; i < ssEveries.length; i++) {
         if (ssUVisibs[i] || ssCVisibs[i]) {
             xmax = Math.max(xmax, 5 * ssEveries[i]);
@@ -44,13 +52,18 @@ function plotCurves() {
                 e2max = Math.max(e2max, ...probeMultiDoseCurve.map(p => p.E2));
             }
 
-            let mdUncertaintyCloud = [];
-            for (let i = 0; i < NB_CLOUD_POINTS; i++) {
-                let randx = Math.random() * (xmax - xmin) + xmin;
-                let y = e2MultiDoseEster3C(randx, mdDoses, mdTimes, mdEsters, true);
-                mdUncertaintyCloud.push({ Time: randx, E2: y });
+            if (uncertainty === "cloud") {
+                let mdUncertaintyCloud = [];
+                for (let i = 0; i < NB_CLOUD_POINTS; i++) {
+                    let randx = Math.random() * (xmax - xmin) + xmin;
+                    let y = e2MultiDoseEster3C(randx, mdDoses, mdTimes, mdEsters, true);
+                    mdUncertaintyCloud.push({ Time: randx, E2: y });
+                }
+                dotmarks.push(Plot.dot(mdUncertaintyCloud, { x: "Time", y: "E2", r: CLOUD_POINT_SIZE, fill: colorTheBlue(CLOUD_POINT_OPACITY) }))
+            } else if (uncertainty = "lines") {
+
+
             }
-            dotmarks.push(Plot.dot(mdUncertaintyCloud, { x: "Time", y: "E2", r: CLOUD_POINT_SIZE, fill: colorTheBlue(CLOUD_POINT_OPACITY) }))
         }
 
         if (mdCVisib) {
@@ -58,7 +71,11 @@ function plotCurves() {
             multiDoseEstersCurve = multiDoseEstersCurve.map(p => ({ Time: p.Time, E2: p.E2 }));
 
             e2max = Math.max(e2max, ...multiDoseEstersCurve.map(p => p.E2));
-            linemarks.push(Plot.line(multiDoseEstersCurve, { x: "Time", y: "E2", strokeWidth: 3, stroke: colorThePink() }))
+            linemarks.push(Plot.line(multiDoseEstersCurve, { x: "Time", y: "E2", strokeWidth: 3, stroke: colorThePink(), strokeDash: [2, 2]}));
+            
+            // Plot.ruleX(aapl, Plot.pointerX({x: "Date", py: "Close", stroke: "red"})),
+            // rulemarks.push(Plot.ruleY(multiDoseEstersCurve, Plot.pointerY({ y: "E2", px: "Time", strokeWidth: 0.3, strokeDash: [2, 2], stroke: colorThePink() })));
+            
             tipmarks.push(Plot.tip(multiDoseEstersCurve, Plot.pointerX({
                 x: "Time", y: "E2",
                 title: p => `multi-dose\n\ntime: ${numberToDayHour(p.Time)}\n  e₂: ${p.E2.toFixed(0)} pg/ml`,
@@ -110,7 +127,7 @@ function plotCurves() {
             Plot.gridY({ stroke: "grey" }),
             Plot.ruleX([xmin]),
             Plot.ruleY([0]),
-        ].concat(dotmarks).concat(linemarks).concat(tipmarks)
+        ].concat(rulemarks).concat(dotmarks).concat(linemarks).concat(tipmarks)
     })
 
     // Select all text elements in the plot and set their font weight to bold
@@ -118,7 +135,7 @@ function plotCurves() {
     textElements.forEach(textElement => {
         textElement.style.fontFamily = 'monospace';
     });
-    
+
     let plot = document.getElementById("plot-region");
     plot.innerHTML = "";
     plot.append(e2curve);

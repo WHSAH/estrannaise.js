@@ -93,7 +93,7 @@ button.delete-button {
 
 #dose-table {
     /* margin-left: 5.5em; */
-    width: 1%;
+    /* width: 1%; */
     white-space: nowrap;
     /* display: flex;
     flex-direction: column;
@@ -102,19 +102,19 @@ button.delete-button {
 }
 
 
-#dose-section {
+#multidose-section {
     display: block;
-    width: 40%;
-    /* margin-right: 2em; */
+    /* width: 40%; */
+    margin-right: 3em;
 }
 
 #steadystate-section {
     display: block;
-    width: 40%;
-    /* margin-left: 2em; */
+    /* width: 40%; */
+    margin-left: 3em;
 }
 
-.sections-container {
+#sections-container {
     display: flex;
     justify-content: space-between;
 }

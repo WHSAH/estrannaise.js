@@ -53,13 +53,14 @@
             <button id="share-button" class="flat-button" style="width: 8em;">share url</button>
         </div>
 
-        <div class="sections-container">
+        <div class="sections-container", id="sections-container">
 
-            <div id="dose-section">
+            <div id="multidose-section">
                 <span style="font-weight: bold;">multi-doses</span>
-                <div id="multidose-bottom-button" style="margin-top: 1em;">
+                <div id="multidose-buttons" style="margin-top: 1em;">
                     <button id="add-dose-button" class="flat-button">add</button>
-                    <button id="delete-all-doses-button" class="flat-button">clear</button>
+                    <button id="guess-button" class="flat-button">guess</button>
+                    <button id="clear-doses-button" class="flat-button">clear</button>
                     <!-- <button id="stash-button" class="flat-button">stash</button>
                     <button id="recall-button" class="flat-button">recall</button> -->
                     <input type="file" id="csv-file" accept=".csv" style="display: none;">
@@ -68,7 +69,7 @@
                 </div>
                 <br>
                 <div id="dragndrop-zone">
-                    <table id="dose-table">
+                    <table id="multidose-table">
                         <!-- <caption style="text-align: left; margin: 0.3em; font-weight: bold;">multi-doses</caption> -->
                         <thead>
                             <tr>
@@ -84,17 +85,16 @@
                         </tbody>
                     </table>
                     <!-- <span style="font-weight: normal; font-size: 9px; padding-left: 6em;">drag-n-drop csv on table to -->
-                    <span style="font-weight: normal; font-size: 9px; display: block; text-align: right;">drag-n-drop
-                        csv on table to import</span>
+                    <span style="font-weight: normal; font-size: 9px; display: block; text-align: center;">drag-n-drop csv on table to import</span>
                 </div>
-            </div> <!-- dose-section -->
+            </div> <!-- multidose-section -->
 
 
             <div id="steadystate-section">
                 <span style="font-weight: bold;">steady-states</span>
                 <div id="bottom-button" style="margin-top: 1em;">
                     <button id="add-steadystate-button" class="flat-button">add</button>
-                    <button id="delete-all-steadystates-button" class="flat-button">clear</button>
+                    <button id="clear-steadystates-button" class="flat-button">clear</button>
                 </div>
                 <br>
                 <table id="steadystate-table">
@@ -149,7 +149,7 @@
                 </p>
             </div>
             <br>
-            <p>estrannaise.js (v0.2.12)</p>
+            <p>estrannaise.js (v0.2.13)</p>
             <p>mit license (c) 2024 alix</p>
             <br>
             <p><span id="tipjar-text">xmr tip jar</span><br><span
