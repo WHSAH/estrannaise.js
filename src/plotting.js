@@ -21,7 +21,15 @@ function plotCurves(uncertainty = "cloud") {
     let rulemarks = [];
     let tipmarks = [];
 
+    // If the first row of the multi-dose table is invalid 
+    // we won't know about mdCVisib and mdUVisib
     let [mdTimes, mdDoses, mdEsters, [mdCVisib, ...cnulls], [mdUVisib, ...unulls]] = getTDEs('multidose-table', true);
+    // So read it again with keepincomplete=true
+    let firstRow = readRow(document.getElementById('multidose-table').rows[1], true);
+    mdCVisib = firstRow.cvisibility;
+    mdUVisib = firstRow.uvisibility;
+    console.log(firstRow, mdCVisib, mdUVisib);
+
     let [ssEveries, ssDoses, ssEsters, ssCVisibs, ssUVisibs] = getTDEs('steadystate-table', true);
 
 

@@ -274,9 +274,9 @@ function addTDERow(tableID, time = null, dose = null, ester = null, cvisible = t
         visibilityCustomCheckbox.onmousedown = function () {
             visibilityCheckbox.checked = !visibilityCheckbox.checked;
             this.className = visibilityCheckbox.checked ? 'custom-checkbox checked-style' : 'custom-checkbox';
-            if (readRow(this.parentElement.parentElement)) {
+            // if (readRow(this.parentElement.parentElement)) {
                 refresh()
-            }
+            // }
         };
         visibilityCell.appendChild(visibilityCustomCheckbox);
     }
@@ -299,9 +299,9 @@ function addTDERow(tableID, time = null, dose = null, ester = null, cvisible = t
         uncertaintyCustomCheckbox.onmousedown = function () {
             uncertaintyCheckbox.checked = !uncertaintyCheckbox.checked;
             this.className = uncertaintyCheckbox.checked ? 'custom-checkbox checked-style' : 'custom-checkbox';
-            if (readRow(this.parentElement.parentElement)) {
+            // if (readRow(this.parentElement.parentElement)) {
                 refresh()
-            }
+            // }
         };
         uncertaintyCell.appendChild(uncertaintyCustomCheckbox);
     }
@@ -396,25 +396,25 @@ function deleteAllRows(tableID) {
 
 function attachDragNDropImport() {
 
-    let doseTable = document.getElementById('dragndrop-zone');
+    let dragNDropZone = document.getElementById('dragndrop-zone');
 
-    doseTable.addEventListener('dragenter', function (event) {
-        doseTable.classList.add('overlay');
+    dragNDropZone.addEventListener('dragenter', function (event) {
+        dragNDropZone.classList.add('overlay');
     });
 
-    doseTable.addEventListener('dragleave', function (event) {
-        if (event.relatedTarget === null || !doseTable.contains(event.relatedTarget)) {
-            doseTable.classList.remove('overlay');
+    dragNDropZone.addEventListener('dragleave', function (event) {
+        if (event.relatedTarget === null || !dragNDropZone.contains(event.relatedTarget)) {
+            dragNDropZone.classList.remove('overlay');
         }
     });
 
-    doseTable.addEventListener('dragover', function (event) {
+    dragNDropZone.addEventListener('dragover', function (event) {
         event.preventDefault();
     });
 
-    doseTable.addEventListener('drop', function (event) {
+    dragNDropZone.addEventListener('drop', function (event) {
         event.preventDefault();
-        doseTable.classList.remove('overlay');
+        dragNDropZone.classList.remove('overlay');
         let files = event.dataTransfer.files;
         loadCSV(files)
     });

@@ -112,9 +112,6 @@ button.delete-button {
 #plot-region {
     display: block;
     position: relative;
-    /* width: 100%;
-    height: 70%; */
-    /* margin: 3em; */
     padding: 0;
     background-color: var(--background-color);
 }
@@ -127,17 +124,12 @@ button.delete-button {
 }
 
 #multidose-section {
-    /* display: inline-block; */
-    /* width: 40%; */
-    /* margin-right: 3em; */
+
     margin-right: auto;
 }
 
 #steadystate-section {
-    /* display: inline-block; */
     margin-left: auto;
-    /* width: 40%; */
-    /* margin-left: 3em; */
 }
 
 #dragndrop-zone.overlay {
