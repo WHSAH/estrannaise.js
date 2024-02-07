@@ -7,6 +7,10 @@ body {
     align-items: center;
 }
 
+a {
+    text-decoration: none;
+}
+
 .header {
     /* display: flex; */
     /* justify-content: space-between; */
@@ -91,17 +95,6 @@ button.delete-button {
     background-color: var(--background-color);
 }
 
-#dose-table {
-    /* margin-left: 5.5em; */
-    /* width: 1%; */
-    white-space: nowrap;
-    /* display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    text-align: left; */
-}
-
-
 #multidose-section {
     display: block;
     /* width: 40%; */
@@ -118,11 +111,6 @@ button.delete-button {
     display: flex;
     justify-content: space-between;
 }
-
-/* .plot-label {
-    text-shadow: none !important;
-    -webkit-text-stroke: none !important;
-} */
 
 #container {
     display: flex;

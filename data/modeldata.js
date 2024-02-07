@@ -3,19 +3,8 @@ const flatPK3CParams = {
     "EEn IM": [61.71, 0.50, 4.43, 0.108],
     "EC IM": [56.77, 0.98, 1.67, 0.15],
     "EB IM": [383.56, 7.35, 21.79, 0.63],
-    // "EUn IM": [246.49, 0.0364, 5.70, 2.01]
-    // New EUn IM parameters using original data uncertainty
-    "EUn IM": [45.14, 0.03866, 1.427, 0.4235]
-}
-
-const emixPK3CParams = {
-
-    "EV IM": [95.0, 1.55, 17.2, 0.21],
-    "EEn IM": [61.71, 0.50, 4.43, 0.108],
-    "EC IM": [56.77, 0.98, 1.67, 0.15],
-    "EB IM": [383.56, 7.35, 21.79, 0.63],
-
-    "EUn IM": [392.95, 0.0166, 2.591, 1.633], // prior k1, k2, k3 means = 0.05, 0.2, 0.5
+    "EUn IM": [45.14, 0.03866, 1.427, 0.4235] // New EUn IM parameters using original data uncertainty
+    // "EUn IM": [26.045, 0.0629, 0.845, 0.323]
 }
 
 let PK3CParams = flatPK3CParams;
