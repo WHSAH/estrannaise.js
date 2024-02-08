@@ -8,7 +8,7 @@
 // expressely asked people not to reproduce their work
 // and i'm not an asshole or plagiarizer. all of this model
 // data and all of this code and all of the math behind it
-// were made and rederived  entirely from scratch and are
+// were made and rederived entirely from scratch and are
 // purely my own.
 
 // no those parameters will not give the exact same
@@ -22,10 +22,13 @@
 // all the original data from the papers because
 // i need the original uncertainties, which is essential
 // to include in the inferences in order to improve
-// accuracy and give a better idea of the prediction uncertainty
-// this is not something the inferences behind the tfs simulator used. 
+// accuracy and give a better idea of the prediction uncertainty.
+// this is not something the inferences behind the tfs simulator used
+// and kind of a point of pride and one of the main reason
+// why i started this project. i quite dislike point estimates.
+// they give a false sense of certainty.
 
-// anyway thanks for stopping by
+// anyway thanks for stopping by and stay tune!
 
 const flatPK3CParams = {
     "EV IM": [95.0, 1.55, 17.2, 0.21],
