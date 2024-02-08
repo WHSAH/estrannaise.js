@@ -1,10 +1,38 @@
+// hi there! glad you're snooping around and looking
+// under the hood, you've just found the secret ingredients!
+// isn't it fun? :)
+
+// no, those are not the same parameters as
+// the ones used by the tfs simulator, they are
+// my very own. the creators of the tfs simulator have
+// expressely asked people not to reproduce their work
+// and i'm not an asshole or plagiarizer. all of this model
+// data and all of this code and all of the math behind it
+// were made and rederived  entirely from scratch and are
+// purely my own.
+
+// no those parameters will not give the exact same
+// predictions as the tfs simulator, but qualitatively
+// our results and curves are similar. just test it out
+// with EV and EEn for example! mines will predict levels
+// that are slightly higher.
+
+// i did use part of the data sets they collected though,
+// but i am also working on revisiting and redigitizing
+// all the original data from the papers because
+// i need the original uncertainties, which is essential
+// to include in the inferences in order to improve
+// accuracy and give a better idea of the prediction uncertainty
+// this is not something the inferences behind the tfs simulator used. 
+
+// anyway thanks for stopping by
+
 const flatPK3CParams = {
     "EV IM": [95.0, 1.55, 17.2, 0.21],
     "EEn IM": [61.71, 0.50, 4.43, 0.108],
     "EC IM": [56.77, 0.98, 1.67, 0.15],
     "EB IM": [383.56, 7.35, 21.79, 0.63],
     "EUn IM": [45.14, 0.03866, 1.427, 0.4235] // New EUn IM parameters using original data uncertainty
-    // "EUn IM": [26.045, 0.0629, 0.845, 0.323]
 }
 
 let PK3CParams = flatPK3CParams;
