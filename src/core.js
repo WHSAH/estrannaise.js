@@ -346,11 +346,11 @@ function addTDERow(tableID, time = null, dose = null, ester = null, cvisible = t
     let esterCell = row.insertCell(4)
     esterCell.innerHTML =
         '<select class="dropdown-ester"> \
-            <option value="EV IM">ev im</option> \
-            <option value="EEn IM">een im</option> \
-            <option value="EC IM">ec im</option> \
-            <option value="EB IM">eb im</option> \
-            <option value="EUn IM">eun im</option> \
+            <option value="EV im">ev im</option> \
+            <option value="EEn im mk2">een im</option> \
+            <option value="EC im">ec im</option> \
+            <option value="EB im">eb im</option> \
+            <option value="EUn im">eun im</option> \
             </select>';
     if (ester !== null) {
         esterCell.querySelector('select').value = ester;

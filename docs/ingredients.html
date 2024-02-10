@@ -77,7 +77,7 @@
         <h1>introduction</h1>
         <p>
             estrannaise.js uses several mathematical concepts under the hood. It combines
-            pharmacokinetics compartments models with markov chain monte carlo (MCMC)
+            pharmacokinetics compartments models with Markov Chain Monte Carlo (MCMC)
             to infer the pharmacokinetics parameters of estradiol using Bayesian
             generative models, both hierarchical and non-hierarchical, that account
             for the variability found in data both within and across studies.
@@ -148,12 +148,12 @@
                     \frac{e^{-k_{2i}(t - t_i)}}{(k_{1i} - k_{2i})(k_{2i} - k_{3i})} + \frac{e^{-k_{3i}(t -
                     t_i)}}{(k_{1i} - k_{3i})(k_{2i} - k_{3i})}\right]. \end{split}\end{equation} </p>
         </div>
-        <h1>simple flat generative model</h1>
+        <h1>simple gaussian generative model</h1>
 
         <figure style="float: left; margin-right: 2em; text-align: center; width: 20em;">
-            <img id="simple3C-img" class="flex-item" src="flat_model_night.png"
-                style="width: 18em; margin: 2em;" alt="flat generative model">
-            <figcaption>Figure 2. Flat generative model with normally distributed serum levels</figcaption>
+            <img id="simple3C-img" class="flex-item" src="gaussian_model_night.png" style="width: 18em; margin: 2em;"
+                alt="gaussian generative model">
+            <figcaption>Figure 2. Gaussian generative model with normally distributed serum levels</figcaption>
         </figure>
 
         <p>
@@ -161,10 +161,10 @@
             the injection of a single dose, we can write down a simple generative model for the data
             where each measurement is assumed to be independent and normally distributed around the
             deterministic value given by the single-dose solution of the 3-compartments model. The four
-            parameters of the pharmacokinetic model are the dose \(d\), and the three rate constants 
+            parameters of the pharmacokinetic model are the dose \(d\), and the three rate constants
             \(k_1, k_2, k_3\). We assume that each of them is distributed according to a gamma distribution.
             There is a fifth parameter, the standard deviation of the normal distribution, which we assume
-            is distributed according to an inverse gamma distribution. The generative model is therefore 
+            is distributed according to an inverse gamma distribution. The generative model is therefore
             given by
             \begin{equation}\begin{split}
             d &\sim \operatorname{Gamma}(\alpha_d, \beta_d),\\
@@ -172,171 +172,223 @@
             k_2 &\sim \operatorname{Gamma}(\alpha_{k_2}, \beta_{k_2}),\\
             k_3 &\sim \operatorname{Gamma}(\alpha_{k_3}, \beta_{k_3}),\\
             \sigma &\sim \operatorname{InvGamma}(\alpha_{\sigma}, \beta_{\sigma}),\\
-            x_i &\sim \operatorname{Normal}\left(E_2^{sd3C}(t_i~\vert~d, k_1, k_2, k_3), \sigma\right),\quad i=1,\ldots,N.
+            x_i &\sim \operatorname{Normal}\left(E_2^{sd3C}(t_i~\vert~d, k_1, k_2, k_3), \sigma\right),\quad
+            i=1,\ldots,N.
             \end{split}\end{equation}
-            The plate model is shown in Figure 2. The hyperparameters \(\alpha\)'s and \(\beta\)'s that
-            control the rates can be use to encore prior knowledge about them. For example, if we know
+            The plate model is shown in Figure 2. If the standard deviation \(\sigma_i\) is available
+            then we can simply use those explicitly instead of specifying a prior on a unique \(\sigma\).
+            The hyperparameters \(\alpha\)'s and \(\beta\)'s that
+            control the rates can be use to enforce prior knowledge about them. For example, if we know
             that the half-life of estradiol is just short of 24 hours, we can set \(\alpha_{k_3} = \beta_{k_3} = 1\)
             which would give us a mean of 24 hours for the half-life of estradiol. Indeed the mean
             of a gamma distribution is given by \(\alpha/\beta\). Since we know that esterase rapidly
             cleave the ester into estradiol in a matter of hours we can set \(1 < \beta_{k_2} < 10 \) with
-            \(\alpha_{k_2} = 1\). The rate of diffusion of the ester out of the depot varies, but we can
-            make a rough guess that the time-scale is on the order of a few days up to a few months, and we
-            can therefore set \(\alpha_{k_1} = 1\) and \(\beta_{k_1} = 1/5\). To set the hyperparameters of the
-            inverse gamma prior over the standard deviation we eyeball the data, notice that there is a
-            large range of variation, and set it so that its mean is somewhere between 10 and 100. Since the
-            mean of an inverse gamma distribution is given by \(\beta/(\alpha - 1)\) we can set \(\alpha_{\sigma} = 2\)
-            and \(\beta_{\sigma} = 20\). One reason to choose the inverse gamma distribution over the gamma
-            distribution is that it has a long tail but also suppresses small values, which helps prevent
-            the collapse of the posterior distribution to small values of \(\sigma\).
-        </p>
-        <p>
-            The explicit formula for the generative model is
-            \begin{equation}\begin{split}
-            & P(\lbrace x_i\rbrace, d, k_1, k_2, k_3, \sigma~\vert~\alpha, \beta) = P(d)P(k_1)P(k_2)P(k_3)P(\sigma)\prod_{i=1}^N P(x_i~\vert~d, k_1, k_2, k_3, \sigma),\\
-            &= \frac{\beta_d^{\alpha_d}}{\Gamma(\alpha_d)}d^{\alpha_d - 1}e^{-\beta_d d}\frac{\beta_{k_1}^{\alpha_{k_1}}}{\Gamma(\alpha_{k_1})}k_1^{\alpha_{k_1} - 1}e^{-\beta_{k_1} k_1}\frac{\beta_{k_2}^{\alpha_{k_2}}}{\Gamma(\alpha_{k_2})}k_2^{\alpha_{k_2} - 1}e^{-\beta_{k_2} k_2}\frac{\beta_{k_3}^{\alpha_{k_3}}}{\Gamma(\alpha_{k_3})}k_3^{\alpha_{k_3} - 1}e^{-\beta_{k_3} k_3} \\
-            &\times\frac{\beta_{\sigma}^{\alpha_{\sigma}}}{\Gamma(\alpha_{\sigma})}\sigma^{-\alpha_{\sigma} - 1}e^{-\beta_{\sigma}/\sigma}\prod_{i=1}^N \frac{1}{\sqrt{2\pi\sigma^2}}e^{-\frac{1}{2\sigma^2}\left(x_i - E_2^{sd3C}(t_i~\vert~d, k_1, k_2, k_3)\right)^2}.
-            \end{split}\end{equation}
-            The posterior distribution over the parameters of the model is given by
-            \begin{equation}\begin{split}
-            P(d, k_1, k_2, k_3, \sigma~\vert~\lbrace x_i\rbrace, \alpha, \beta) &= \frac{P(\lbrace x_i\rbrace, d, k_1, k_2, k_3, \sigma~\vert~\alpha, \beta)}{P(\lbrace x_i\rbrace~\vert~\alpha, \beta)},\\
-            &= \frac{P(\lbrace x_i\rbrace, d, k_1, k_2, k_3, \sigma~\vert~\alpha, \beta)}{\int P(\lbrace x_i\rbrace, d, k_1, k_2, k_3, \sigma~\vert~\alpha, \beta)~d\sigma~dk_3~dk_2~dk_1~dd}.
-            \end{split}\end{equation}
-            
+                \(\alpha_{k_2}=1\). The rate of diffusion of the ester out of the depot varies, but we can make a rough
+                guess that the time-scale is on the order of a few days up to a few months, and we can therefore set
+                \(\alpha_{k_1}=1\) and \(\beta_{k_1}=1/5\). To set the hyperparameters of the inverse gamma prior over
+                the standard deviation we eyeball the data, notice that there is a large range of variation, and set it
+                so that its mean is somewhere between 10 and 100. Since the mean of an inverse gamma distribution is
+                given by \(\beta/(\alpha - 1)\) we can set \(\alpha_{\sigma}=2\) and \(\beta_{\sigma}=20\). One reason
+                to choose the inverse gamma distribution over the gamma distribution is that it has a long tail but also
+                suppresses small values, which helps prevent the collapse of the posterior distribution to small values
+                of \(\sigma\). </p>
+                <p>
+                    Another possibilities for a prior on the standard deviation is to use a non-informative prior
+                    like the Jeffreys prior of the reference prior. Both the Jeffreys and reference priors are given by
+                    \begin{equation}
+                    P(\sigma) \propto \frac{1}{\sigma}.
+                    \end{equation}
+                    Unfortunately, the this is an improper proper distribution (it integral diverges). While the
+                    resulting
+                    posterior is proper it can cause problems with automatic MCMC samplers like the ones we use as part
+                    of Julia's Turing.jl package. We will therefore approximate this prior by a proper prior which gives
+                    something close to a \(1/\sigma\) behavior for and medium \(\sigma\) and a long exponential tail for
+                    large
+                    \(\sigma\). The gamma distribution with a small value of for both \(\alpha\) and \(\beta\) is a
+                    good candidate for this and we can set for example \(\alpha_{\sigma} = 1/10\) and \(\beta_{\sigma} =
+                    1/100\).
+                </p>
+                <p>
+                    The explicit formula for the generative model is
+                    \begin{equation}\begin{split}
+                    & P(\lbrace x_i\rbrace, d, k_1, k_2, k_3, \sigma~\vert~\alpha, \beta) =
+                    P(d)P(k_1)P(k_2)P(k_3)P(\sigma)\prod_{i=1}^N P(x_i~\vert~d, k_1, k_2, k_3, \sigma),\\
+                    &= \frac{\beta_d^{\alpha_d}}{\Gamma(\alpha_d)}d^{\alpha_d - 1}e^{-\beta_d
+                    d}\frac{\beta_{k_1}^{\alpha_{k_1}}}{\Gamma(\alpha_{k_1})}k_1^{\alpha_{k_1} - 1}e^{-\beta_{k_1}
+                    k_1}\frac{\beta_{k_2}^{\alpha_{k_2}}}{\Gamma(\alpha_{k_2})}k_2^{\alpha_{k_2} - 1}e^{-\beta_{k_2}
+                    k_2}\frac{\beta_{k_3}^{\alpha_{k_3}}}{\Gamma(\alpha_{k_3})}k_3^{\alpha_{k_3} - 1}e^{-\beta_{k_3}
+                    k_3} \\
+                    &\times\frac{\beta_{\sigma}^{\alpha_{\sigma}}}{\Gamma(\alpha_{\sigma})}\sigma^{-\alpha_{\sigma} -
+                    1}e^{-\beta_{\sigma}/\sigma}\prod_{i=1}^N
+                    \frac{1}{\sqrt{2\pi\sigma^2}}e^{-\frac{1}{2\sigma^2}\left(x_i - E_2^{sd3C}(t_i~\vert~d, k_1, k_2,
+                    k_3)\right)^2}.
+                    \end{split}\end{equation}
+                    The posterior distribution over the parameters of the model is given by
+                    \begin{equation}\begin{split}
+                    P(d, k_1, k_2, k_3, \sigma~\vert~\lbrace x_i\rbrace, \alpha, \beta) &= \frac{P(\lbrace x_i\rbrace,
+                    d, k_1, k_2, k_3, \sigma~\vert~\alpha, \beta)}{P(\lbrace x_i\rbrace~\vert~\alpha, \beta)},\\
+                    &= \frac{P(\lbrace x_i\rbrace, d, k_1, k_2, k_3, \sigma~\vert~\alpha, \beta)}{\int P(\lbrace
+                    x_i\rbrace, d, k_1, k_2, k_3, \sigma~\vert~\alpha, \beta)~d\sigma~dk_3~dk_2~dk_1~dd}.
+                    \end{split}\end{equation}
+                </p>
 
-        </p>
+                <h1>interlude<br>\(D_3\) symmetry of the \(E_2\) curve</h1>
+                <p>
+                    Here's a fun fact about the the single-dose solution \(E^{sdEC}_2\) and the multi-dose solution
+                    \(E^{mdEC}_2\) with all \(d_i\) equal. Let's use \(E_2\) to denote either of them and omit
+                    the time variable for brevity. The function \(E_2\) is invariant under 5 different
+                    reparametrizations, or 6
+                    if we include the trivial one, called the identity which we denote by \(\operatorname{id}\).
+                    Notice first that interchanging \( k_1 \leftrightarrow k_2\) leaves
+                    the solution unchanged since the first and second terms transform into each other. Let's call this
+                    transformation \(\operatorname{T}_1\),
+                    \begin{equation}\begin{split}
+                    \operatorname{T}_1\left[E_2(d, k_1, k_2, k_3)\right] &= E_2(d, k_2, k_1, k_3),\\
+                    &= E_2(d, k_1, k_2, k_3).
+                    \end{split}\end{equation}
+                    The second transformation is the interchange of \(k_1 \leftrightarrow k_3\), which we call
+                    \(\operatorname{T}_2\).
+                    By itself it doesn't leave \(E_2\) invariant unless we simultaneously substitute \(d\rightarrow
+                    dk_1/k_3\).
+                    Indeed, with a tiny bit of algebra we find
+                    \begin{equation}\begin{split}
+                    \operatorname{T}_2\left[E_2\right] &= E_2\left(d k_1/k_3, k_3, k_2, k_1\right),\\
+                    &= E_2(d, k_1, k_2, k_3).
+                    \end{split}\end{equation}
+                    With \(\operatorname{T}_1\) and \(\operatorname{T}_2\) in our possession we can generate the
+                    remaining
+                    transformations. For example, applying \(\operatorname{T}_2\) followed by \(\operatorname{T}_1\) or
+                    vis-vers
+                    gives us the transformation \(\operatorname{T}_3\) and \(\operatorname{T}_4\). Omitting the brackets
+                    for
+                    brevity,
+                    \begin{equation}\begin{split}
+                    \operatorname{T}_3 E_2 = \operatorname{T}_1\operatorname{T}_2E_2 &= E_2(dk_1/k_3, k_2, k_3, k_1),\\
+                    & = E_2(d, k_1, k_2, k_3),
+                    \end{split}\end{equation}
+                    and
+                    \begin{equation}\begin{split}
+                    \operatorname{T}_4 E_2 = \operatorname{T}_2\operatorname{T}_1E_2 &= E_2(dk_2/k_3, k_3, k_1, k_2),\\
+                    & = E_2(d, k_1, k_2, k_3).
+                    \end{split}\end{equation}
+                    The final transformation implies applying \(\operatorname{T}_3\) followed by \(\operatorname{T}_2\)
+                    which incidentally is the same as applying \(\operatorname{T}_4\) followed by
+                    \(\operatorname{T}_1\).
+                    We call this transformation \(\operatorname{T}_5\), and we can verify with some more algebra that
+                    \begin{equation}\begin{split}
+                    \operatorname{T}_5 E_2 &= \operatorname{T}_2\operatorname{T}_1\operatorname{T}_2E_2,\\
+                    &= \operatorname{T}_1\operatorname{T}_2\operatorname{T}_1E_2,\\
+                    &= E_2(dk_2/k_3, k_1, k_3, k_2),\\
+                    &= E_2(d, k_1, k_2, k_3).
+                    \end{split}\end{equation}
+                    It is easy to show that both \(\operatorname{T}_1\) and \(\operatorname{T}_2\) are involutions,
+                    namely
+                    that applying either twice gives us the identity transformation which does not transform the
+                    parameters,
+                    i.e.
+                    $$\operatorname{T}_1 \operatorname{T}_1 = \operatorname{id} =
+                    \operatorname{T}_2\operatorname{T}_2.$$
+                    Using the latter and either definition of \(\operatorname{T}_5\) we can further show that
+                    \begin{equation}\begin{split}
+                    \operatorname{T}_5\operatorname{T}_5 &=
+                    \operatorname{T}_1\operatorname{T}_2(\operatorname{T}_1\operatorname{T}_1)\operatorname{T}_2\operatorname{T}_1,\\
+                    &= \operatorname{T}_1\operatorname{T}_2\operatorname{id}\operatorname{T}_2\operatorname{T}_1,\\
+                    &= \operatorname{T}_1(\operatorname{T}_2\operatorname{T}_2)\operatorname{T}_1,\\
+                    &= \operatorname{T}_1\operatorname{T}_1,\\
+                    &= \operatorname{id}.
+                    \end{split}\end{equation}
+                    Thus \(\operatorname{T}_5\) is also an involution. Using those involutions we can show that
+                    \(\operatorname{T}_3\) and \(\operatorname{T}_4\) are inverse of each other. Indeed
+                    \begin{equation}\begin{split}
+                    \operatorname{T}_3\operatorname{T}_4 &=
+                    \operatorname{T}_1\operatorname{T}_2\operatorname{T}_2\operatorname{T}_1,\\
+                    &= \operatorname{T}_1\operatorname{T}_1,\\
+                    &= \operatorname{id}.
+                    \end{split}\end{equation}
+                    and similarly for \(\operatorname{T}_4\operatorname{T}_3\). We are thus in the presence of a group.
+                    It is
+                    easy but boring to show that the group is isomorphic to the dihedral group \(D_3\) of the
+                    equilateral
+                    triangle and to the
+                    symmetric group \(S_3\) of permutations over 3 elements. The latter fact was already heavily hinted
+                    by the
+                    appearance
+                    of all 6 different permutations of the parameters \(k_1, k_2, k_3\) in the argument of \(E2\) under
+                    the the
+                    action of the
+                    6 transformations.
+                    We can also show this isomorphism explicitely by building the following group multiplication table,
+                    also
+                    called the Callay table,
+                    \begin{equation}\begin{array}{c|cccccc}
+                    & \operatorname{id} & \operatorname{T}_1 & \operatorname{T}_2 & \operatorname{T}_3 &
+                    \operatorname{T}_4 &
+                    \operatorname{T}_5\\
+                    \hline
+                    \operatorname{id} & \operatorname{id} & \operatorname{T}_1 & \operatorname{T}_2 & \operatorname{T}_3
+                    &
+                    \operatorname{T}_4 & \operatorname{T}_5\\
+                    \operatorname{T}_1 & \operatorname{T}_1 & \operatorname{id} & \operatorname{T}_3 &
+                    \operatorname{T}_2 &
+                    \operatorname{T}_5 & \operatorname{T}_4\\
+                    \operatorname{T}_2 & \operatorname{T}_2 & \operatorname{T}_4 & \operatorname{id} &
+                    \operatorname{T}_5 &
+                    \operatorname{T}_1 & \operatorname{T}_3\\
+                    \operatorname{T}_3 & \operatorname{T}_3 & \operatorname{T}_5 & \operatorname{T}_1 &
+                    \operatorname{T}_4 &
+                    \operatorname{id} & \operatorname{T}_2\\
+                    \operatorname{T}_4 & \operatorname{T}_4 & \operatorname{T}_2 & \operatorname{T}_5 &
+                    \operatorname{id} &
+                    \operatorname{T}_3 & \operatorname{T}_1\\
+                    \operatorname{T}_5 & \operatorname{T}_5 & \operatorname{T}_3 & \operatorname{T}_4 &
+                    \operatorname{T}_1 &
+                    \operatorname{T}_2 & \operatorname{id}\\
+                    \end{array}\end{equation}
+                    and noticing that it is identical to the Callay table of \(D_3\) and \(S_3\).
+                </p>
+                <p>Why do we care at all about any of that? Because this reparametrization invariance can cause
+                    issues when we try to fit the parameters of the model to data. Indeed, the likelihood and posterior
+                    distribution have (at least) 6 modes, one for each permutation of the parameters.
+                    In the context of finding point estimates, e.g. using least-square (LS), maximum likelihood (ML),
+                    or maximum a-posteriori (MAP), this can cause the optimization algorithm to get stuck or confused
+                    and fail to converge completely depending on the specific algorithm used. In the context of sampling
+                    the posterior distribution it can make it difficult and slow down the convergence of the MCMC
+                    algorithm.
+                </p>
+                <p>
+                    At its core, this problem stems from the fact that we are trying to infer a 3-compartments model
+                    using only one of its dependent variable, which makes the problem ill-posed. The best remedy to this
+                    issue would be to have also access to curves for serum levels of the ester or of the ester
+                    concentration
+                    in the depot and to use those simultaneously during the fit. This would break the \(D_3\) symmetry
+                    and
+                    by removing the ambiguity under \(k_1 \leftrightarrow k_2\) and \(k_1\leftrightarrow k_3\)
+                    transformation
+                    and would make the inference problem well-posed.
 
-        <h1>interlude<br>\(D_3\) symmetry of the \(E_2\) curve</h1>
-        <p>
-            Here's a fun fact about the the single-dose solution \(E^{sdEC}_2\) and the multi-dose solution
-            \(E^{mdEC}_2\) with all \(d_i\) equal. Let's use \(E_2\) to denote either of them and omit
-            the time variable for brevity. The function \(E_2\) is invariant under 5 different reparametrizations, or 6
-            if we include the trivial one, called the identity which we denote by \(\operatorname{id}\).
-            Notice first that interchanging \( k_1 \leftrightarrow k_2\) leaves
-            the solution unchanged since the first and second terms transform into each other. Let's call this
-            transformation \(\operatorname{T}_1\),
-            \begin{equation}\begin{split}
-            \operatorname{T}_1\left[E_2(d, k_1, k_2, k_3)\right] &= E_2(d, k_2, k_1, k_3),\\
-            &= E_2(d, k_1, k_2, k_3).
-            \end{split}\end{equation}
-            The second transformation is the interchange of \(k_1 \leftrightarrow k_3\), which we call
-            \(\operatorname{T}_2\).
-            By itself it doesn't leave \(E_2\) invariant unless we simultaneously substitute \(d\rightarrow dk_1/k_3\).
-            Indeed, with a tiny bit of algebra we find
-            \begin{equation}\begin{split}
-            \operatorname{T}_2\left[E_2\right] &= E_2\left(d k_1/k_3, k_3, k_2, k_1\right),\\
-            &= E_2(d, k_1, k_2, k_3).
-            \end{split}\end{equation}
-            With \(\operatorname{T}_1\) and \(\operatorname{T}_2\) in our possession we can generate the remaining
-            transformations. For example, applying \(\operatorname{T}_2\) followed by \(\operatorname{T}_1\) or vis-vers
-            gives us the transformation \(\operatorname{T}_3\) and \(\operatorname{T}_4\). Omitting the brackets for
-            brevity,
-            \begin{equation}\begin{split}
-            \operatorname{T}_3 E_2 = \operatorname{T}_1\operatorname{T}_2E_2 &= E_2(dk_1/k_3, k_2, k_3, k_1),\\
-            & = E_2(d, k_1, k_2, k_3),
-            \end{split}\end{equation}
-            and
-            \begin{equation}\begin{split}
-            \operatorname{T}_4 E_2 = \operatorname{T}_2\operatorname{T}_1E_2 &= E_2(dk_2/k_3, k_3, k_1, k_2),\\
-            & = E_2(d, k_1, k_2, k_3).
-            \end{split}\end{equation}
-            The final transformation implies applying \(\operatorname{T}_3\) followed by \(\operatorname{T}_2\)
-            which incidentally is the same as applying \(\operatorname{T}_4\) followed by \(\operatorname{T}_1\).
-            We call this transformation \(\operatorname{T}_5\), and we can verify with some more algebra that
-            \begin{equation}\begin{split}
-            \operatorname{T}_5 E_2 &= \operatorname{T}_2\operatorname{T}_1\operatorname{T}_2E_2,\\
-            &= \operatorname{T}_1\operatorname{T}_2\operatorname{T}_1E_2,\\
-            &= E_2(dk_2/k_3, k_1, k_3, k_2),\\
-            &= E_2(d, k_1, k_2, k_3).
-            \end{split}\end{equation}
-            It is easy to show that both \(\operatorname{T}_1\) and \(\operatorname{T}_2\) are involutions, namely
-            that applying either twice gives us the identity transformation which does not transform the parameters,
-            i.e.
-            $$\operatorname{T}_1 \operatorname{T}_1 = \operatorname{id} = \operatorname{T}_2\operatorname{T}_2.$$
-            Using the latter and either definition of \(\operatorname{T}_5\) we can further show that
-            \begin{equation}\begin{split}
-            \operatorname{T}_5\operatorname{T}_5 &=
-            \operatorname{T}_1\operatorname{T}_2(\operatorname{T}_1\operatorname{T}_1)\operatorname{T}_2\operatorname{T}_1,\\
-            &= \operatorname{T}_1\operatorname{T}_2\operatorname{id}\operatorname{T}_2\operatorname{T}_1,\\
-            &= \operatorname{T}_1(\operatorname{T}_2\operatorname{T}_2)\operatorname{T}_1,\\
-            &= \operatorname{T}_1\operatorname{T}_1,\\
-            &= \operatorname{id}.
-            \end{split}\end{equation}
-            Thus \(\operatorname{T}_5\) is also an involution. Using those involutions we can show that
-            \(\operatorname{T}_3\) and \(\operatorname{T}_4\) are inverse of each other. Indeed
-            \begin{equation}\begin{split}
-            \operatorname{T}_3\operatorname{T}_4 &=
-            \operatorname{T}_1\operatorname{T}_2\operatorname{T}_2\operatorname{T}_1,\\
-            &= \operatorname{T}_1\operatorname{T}_1,\\
-            &= \operatorname{id}.
-            \end{split}\end{equation}
-            and similarly for \(\operatorname{T}_4\operatorname{T}_3\). We are thus in the presence of a group. It is
-            easy but boring to show that the group is isomorphic to the dihedral group \(D_3\) of the equilateral
-            triangle and to the
-            symmetric group \(S_3\) of permutations over 3 elements. The latter fact was already heavily hinted by the
-            appearance
-            of all 6 different permutations of the parameters \(k_1, k_2, k_3\) in the argument of \(E2\) under the the
-            action of the
-            6 transformations.
-            We can also show this isomorphism explicitely by building the following group multiplication table, also
-            called the Callay table,
-            \begin{equation}\begin{array}{c|cccccc}
-            & \operatorname{id} & \operatorname{T}_1 & \operatorname{T}_2 & \operatorname{T}_3 & \operatorname{T}_4 &
-            \operatorname{T}_5\\
-            \hline
-            \operatorname{id} & \operatorname{id} & \operatorname{T}_1 & \operatorname{T}_2 & \operatorname{T}_3 &
-            \operatorname{T}_4 & \operatorname{T}_5\\
-            \operatorname{T}_1 & \operatorname{T}_1 & \operatorname{id} & \operatorname{T}_3 & \operatorname{T}_2 &
-            \operatorname{T}_5 & \operatorname{T}_4\\
-            \operatorname{T}_2 & \operatorname{T}_2 & \operatorname{T}_4 & \operatorname{id} & \operatorname{T}_5 &
-            \operatorname{T}_1 & \operatorname{T}_3\\
-            \operatorname{T}_3 & \operatorname{T}_3 & \operatorname{T}_5 & \operatorname{T}_1 & \operatorname{T}_4 &
-            \operatorname{id} & \operatorname{T}_2\\
-            \operatorname{T}_4 & \operatorname{T}_4 & \operatorname{T}_2 & \operatorname{T}_5 & \operatorname{id} &
-            \operatorname{T}_3 & \operatorname{T}_1\\
-            \operatorname{T}_5 & \operatorname{T}_5 & \operatorname{T}_3 & \operatorname{T}_4 & \operatorname{T}_1 &
-            \operatorname{T}_2 & \operatorname{id}\\
-            \end{array}\end{equation}
-            and noticing that it is identical to the Callay table of \(D_3\) and \(S_3\).
-        </p>
-        <p>Why do we care at all about any of that? Because this reparametrization invariance can cause
-            issues when we try to fit the parameters of the model to data. Indeed, the likelihood and posterior
-            distribution have (at least) 6 modes, one for each permutation of the parameters.
-            In the context of finding point estimates, e.g. using least-square (LS), maximum likelihood (ML),
-            or maximum a-posteriori (MAP), this can cause the optimization algorithm to get stuck or confused
-            and fail to converge completely depending on the specific algorithm used. In the context of sampling
-            the posterior distribution it can make it difficult and slow down the convergence of the MCMC algorithm.
-        </p>
-        <p>
-            At its core, this problem stems from the fact that we are trying to infer a 3-compartments model
-            using only one of its dependent variable, which makes the problem ill-posed. The best remedy to this
-            issue would be to have also access to curves for serum levels of the ester or of the ester concentration
-            in the depot and to use those simultaneously during the fit. This would break the \(D_3\) symmetry and
-            by removing the ambiguity under \(k_1 \leftrightarrow k_2\) and \(k_1\leftrightarrow k_3\) transformation
-            and would make the inference problem well-posed.
+                    The second best remedy is to reason about the physical time-scale of the processes of the
+                    pharmacokinetic
+                    model
+                    and apply constraints during the optimization to break the symmetry, e.g. by imposing an inequality
+                    such as \(k_2 > k_3 > k_1\). This in effect obscures narrows down the space of parameters to include
+                    a single mode which in turn prevents the optimization algorithm from getting stuck or confused.
+                    In the context of inference using MCMC you can either use those time scales to set the
+                    hyperparameters,
+                    use the constraints to parametrize the model, or use a more advanced MCMC sampler
+                    and leave it to the algorithm to sample all modes of the posterior.
 
-            The second best remedy is to reason about the physical time-scale of the processes of the pharmacokinetic
-            model
-            and apply constraints during the optimization to break the symmetry, e.g. by imposing an inequality
-            such as \(k_2 > k_3 > k_1\). This in effect obscures narrows down the space of parameters to include
-            a single mode which in turn prevents the optimization algorithm from getting stuck or confused.
-            In the context of inference using MCMC you can either use those time scales to set the hyperparameters,
-            use the constraints to parametrize the model, or use a more advanced MCMC sampler
-            and leave it to the algorithm to sample all modes of the posterior.
+                </p>
 
-        </p>
-
-        <h1>hierarchical Esther model</h1>
+                <h1>gaussian model with random weights</h1>
+                    <img id="gaussian-randomweights" class="flex-item" src="gaussian_model_randomweights_night.png"
+                        style="width: 18em; display: block; margin-left: auto;"
+                        alt="gaussian model with random weights">
 
 
+                <h1>hierarchical emix model</h1>
+                    <img id="emix-img" class="flex-item" src="hierarchical_emix_model_night.png"
+                        style="width: 18em; display: block; margin-left: auto;" alt="hierarchical emix model">
 
-        <h1>hierarchical Emix model</h1>
-        <div>
-            <img id="emix-img" class="flex-item" src="hierarchical_emix_model_night.png"
-                style="width: 18em; float: left; margin: 2em;" alt="hierarchical emix model">
-        </div>
-
-        </p>
     </div>
 </body>
 

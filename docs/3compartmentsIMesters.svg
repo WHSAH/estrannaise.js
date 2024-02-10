@@ -3,11 +3,11 @@
 
 <svg
    width="43.464565pc"
-   height="59.055119pc"
-   viewBox="0 0 183.99999 250"
+   height="55.055pc"
+   viewBox="0 0 183.99999 233.06618"
    version="1.1"
    id="svg5"
-   inkscape:version="1.2.2 (03908c27, 2023-01-22)"
+   inkscape:version="1.3.2 (091e20e, 2023-11-25)"
    sodipodi:docname="3compartmentsIMesters.svg"
    inkscape:export-filename="3compartmentsIMesters_day.png"
    inkscape:export-xdpi="150"
@@ -28,53 +28,17 @@
      inkscape:document-units="mm"
      showgrid="false"
      inkscape:zoom="0.41814035"
-     inkscape:cx="373.08047"
-     inkscape:cy="511.78988"
-     inkscape:window-width="1309"
+     inkscape:cx="371.8847"
+     inkscape:cy="510.59411"
+     inkscape:window-width="1312"
      inkscape:window-height="712"
      inkscape:window-x="0"
      inkscape:window-y="37"
      inkscape:window-maximized="0"
-     inkscape:current-layer="layer2"
+     inkscape:current-layer="layer1"
      showguides="true" />
   <defs
      id="defs2">
-    <marker
-       style="overflow:visible"
-       id="marker1266"
-       refX="0"
-       refY="0"
-       orient="auto-start-reverse"
-       inkscape:stockid="Arrow4"
-       markerWidth="5"
-       markerHeight="6"
-       viewBox="0 0 5 6"
-       inkscape:isstock="true"
-       inkscape:collect="always"
-       preserveAspectRatio="xMidYMid">
-      <path
-         style="fill:context-stroke;fill-rule:evenodd;stroke:none"
-         d="m 1,0 -3,3 h -2 l 3,-3 -3,-3 h 2 z"
-         id="path1264" />
-    </marker>
-    <marker
-       style="overflow:visible"
-       id="Arrow4"
-       refX="0"
-       refY="0"
-       orient="auto-start-reverse"
-       inkscape:stockid="Arrow4"
-       markerWidth="5"
-       markerHeight="6"
-       viewBox="0 0 5 6"
-       inkscape:isstock="true"
-       inkscape:collect="always"
-       preserveAspectRatio="xMidYMid">
-      <path
-         style="fill:context-stroke;fill-rule:evenodd;stroke:none"
-         d="m 1,0 -3,3 h -2 l 3,-3 -3,-3 h 2 z"
-         id="path1741" />
-    </marker>
     <rect
        x="103.6893"
        y="65.754189"
@@ -198,8 +162,8 @@
     <rect
        x="103.6893"
        y="65.754189"
-       width="433.36108"
-       height="156.79845"
+       width="497.93271"
+       height="123.31687"
        id="rect16919-4" />
     <rect
        x="521.2865"
@@ -333,312 +297,228 @@
        width="103.89781"
        height="86.472542"
        id="rect999-8" />
+    <rect
+       x="258.80273"
+       y="201.42664"
+       width="103.89781"
+       height="86.472542"
+       id="rect999-8-4" />
+    <rect
+       x="30.519188"
+       y="195.3228"
+       width="154.50092"
+       height="129.06221"
+       id="rect1055-1-8" />
+    <rect
+       x="258.80273"
+       y="201.42664"
+       width="167.14674"
+       height="116.9155"
+       id="rect1069-0-0" />
+    <rect
+       x="30.519188"
+       y="195.3228"
+       width="106.57456"
+       height="82.595314"
+       id="rect1071-1-4" />
+    <rect
+       x="258.80273"
+       y="201.42664"
+       width="155.15784"
+       height="123.25197"
+       id="rect3265-1-6" />
+    <rect
+       x="30.519188"
+       y="195.3228"
+       width="191.66051"
+       height="149.9384"
+       id="rect3267-2-0" />
+    <marker
+       style="overflow:visible"
+       id="Arrow4-2-3"
+       refX="0"
+       refY="0"
+       orient="auto-start-reverse"
+       inkscape:stockid="Arrow4"
+       markerWidth="5"
+       markerHeight="6"
+       viewBox="0 0 5 6"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         style="fill:context-stroke;fill-rule:evenodd;stroke:none"
+         d="m 1,0 -3,3 h -2 l 3,-3 -3,-3 h 2 z"
+         id="path1741-7-2" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="marker1266-1-6"
+       refX="0"
+       refY="0"
+       orient="auto-start-reverse"
+       inkscape:stockid="Arrow4"
+       markerWidth="5"
+       markerHeight="6"
+       viewBox="0 0 5 6"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         style="fill:context-stroke;fill-rule:evenodd;stroke:none"
+         d="m 1,0 -3,3 h -2 l 3,-3 -3,-3 h 2 z"
+         id="path1264-5-9" />
+    </marker>
+    <rect
+       x="193.87634"
+       y="805.14563"
+       width="235.17833"
+       height="70.456322"
+       id="rect3665-5-4" />
+    <rect
+       x="258.80273"
+       y="201.42664"
+       width="83.492874"
+       height="62.754532"
+       id="rect2629-2-1" />
+    <rect
+       x="258.80273"
+       y="201.42664"
+       width="83.492874"
+       height="62.754532"
+       id="rect2645-2-3" />
+    <rect
+       x="258.80273"
+       y="201.42664"
+       width="83.492874"
+       height="62.754532"
+       id="rect2659-6-7" />
+    <rect
+       x="420.55072"
+       y="87.958321"
+       width="358.70502"
+       height="166.2962"
+       id="rect2841-0-8" />
+    <rect
+       x="420.55072"
+       y="87.958321"
+       width="358.70502"
+       height="166.2962"
+       id="rect2929-3-8" />
+    <rect
+       x="420.55072"
+       y="87.958321"
+       width="358.70502"
+       height="166.2962"
+       id="rect2939-8-3" />
+    <rect
+       x="103.6893"
+       y="65.754189"
+       width="497.93271"
+       height="123.31687"
+       id="rect16919-4-8" />
   </defs>
-  <g
-     inkscape:label="night"
-     inkscape:groupmode="layer"
-     id="layer1"
-     transform="translate(-7.4802342,-9.0767708)"
-     style="display:none">
-    <text
-       xml:space="preserve"
-       transform="matrix(0.26458333,0,0,0.26458333,7.0872324,29.364262)"
-       id="text997"
-       style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:33.3333px;font-family:monospace;-inkscape-font-specification:'monospace Italic';text-align:center;white-space:pre;shape-inside:url(#rect999);display:inline;fill:#dbbae6;fill-opacity:1;stroke:none;stroke-width:0.865512;stroke-miterlimit:3.7;stroke-dasharray:none;stroke-opacity:1"><tspan
-         x="270.74548"
-         y="231.4943"
-         id="tspan2865">D(t)</tspan></text>
-    <text
-       xml:space="preserve"
-       transform="matrix(0.26458333,0,0,0.26458333,14.839353,25.413368)"
-       id="text1053"
-       style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:32px;font-family:monospace;-inkscape-font-specification:'monospace Italic';text-align:end;white-space:pre;shape-inside:url(#rect1055);display:inline;fill:#dbbae6;fill-opacity:1;stroke:none;stroke-width:0.865512;stroke-miterlimit:3.7;stroke-dasharray:none;stroke-opacity:1"
-       x="75.484375"
-       y="0"><tspan
-         x="31.394531"
-         y="224.18807"
-         id="tspan2867">ester in </tspan><tspan
-         x="31.394531"
-         y="264.18807"
-         id="tspan2869">im depot</tspan></text>
-    <text
-       xml:space="preserve"
-       transform="matrix(0.26458333,0,0,0.26458333,-0.01737182,85.242915)"
-       id="text1063"
-       style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:33.3333px;font-family:monospace;-inkscape-font-specification:'monospace Italic';text-align:center;white-space:pre;shape-inside:url(#rect1069);display:inline;fill:#dbbae6;fill-opacity:1;stroke:none;stroke-width:0.865512;stroke-miterlimit:3.7;stroke-dasharray:none;stroke-opacity:1"><tspan
-         x="295.86845"
-         y="231.4943"
-         id="tspan2873">E<tspan
-   style="font-size:65%;baseline-shift:sub"
-   id="tspan2871">s</tspan>(t)</tspan></text>
-    <text
-       xml:space="preserve"
-       transform="matrix(0.26458333,0,0,0.26458333,27.519715,82.063437)"
-       id="text1067"
-       style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:32px;font-family:monospace;-inkscape-font-specification:'monospace Italic';text-align:end;white-space:pre;shape-inside:url(#rect1071);display:inline;fill:#dbbae6;fill-opacity:1;stroke:none;stroke-width:0.865512;stroke-miterlimit:3.7;stroke-dasharray:none;stroke-opacity:1"
-       x="75.484375"
-       y="0"><tspan
-         x="41.078125"
-         y="224.18807"
-         id="tspan2875">serum </tspan><tspan
-         x="41.078125"
-         y="264.18807"
-         id="tspan2877">ester</tspan></text>
-    <text
-       xml:space="preserve"
-       transform="matrix(0.26458333,0,0,0.26458333,1.5685779,141.48459)"
-       id="text3259"
-       style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:33.3333px;font-family:monospace;-inkscape-font-specification:'monospace Italic';text-align:center;white-space:pre;shape-inside:url(#rect3265);display:inline;fill:#dbbae6;fill-opacity:1;stroke:none;stroke-width:0.865512;stroke-miterlimit:3.7;stroke-dasharray:none;stroke-opacity:1"><tspan
-         x="289.87431"
-         y="231.4943"
-         id="tspan2881">E<tspan
-   style="font-size:65%;baseline-shift:sub"
-   id="tspan2879">2</tspan>(t)</tspan></text>
-    <text
-       xml:space="preserve"
-       transform="matrix(0.26458333,0,0,0.26458333,5.007395,137.94153)"
-       id="text3263"
-       style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:32px;font-family:monospace;-inkscape-font-specification:'monospace Italic';text-align:end;white-space:pre;shape-inside:url(#rect3267);display:inline;fill:#dbbae6;fill-opacity:1;stroke:none;stroke-width:0.865512;stroke-miterlimit:3.7;stroke-dasharray:none;stroke-opacity:1"
-       x="85.085938"
-       y="0"><tspan
-         x="126.16406"
-         y="224.18807"
-         id="tspan2883">serum </tspan><tspan
-         x="49.351562"
-         y="264.18807"
-         id="tspan2885">estradiol</tspan></text>
-    <g
-       id="g1468">
-      <path
-         style="fill:none;fill-opacity:1;stroke:#dbbae6;stroke-width:0.8;stroke-miterlimit:3.7;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow4)"
-         d="m 88.80748,163.73469 v 15.18075"
-         id="path3639" />
-      <circle
-         style="fill:none;stroke:#dbbae6;stroke-width:0.8;stroke-miterlimit:3.7;stroke-dasharray:none;stroke-opacity:1"
-         id="path234"
-         cx="88.80748"
-         cy="88.157013"
-         r="16.149738" />
-      <circle
-         style="fill:none;stroke:#dbbae6;stroke-width:0.8;stroke-miterlimit:3.7;stroke-dasharray:none;stroke-opacity:1"
-         id="circle1059"
-         cx="88.80748"
-         cy="144.0351"
-         r="16.149738" />
-      <circle
-         style="fill:none;stroke:#dbbae6;stroke-width:0.8;stroke-miterlimit:3.7;stroke-dasharray:none;stroke-opacity:1"
-         id="circle3253"
-         cx="88.80748"
-         cy="199.91319"
-         r="16.149738" />
-      <path
-         style="fill:none;fill-opacity:1;stroke:#dbbae6;stroke-width:0.8;stroke-miterlimit:3.7;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker1266)"
-         d="m 88.80748,108.15186 v 15.18076"
-         id="path3406" />
-      <path
-         style="fill:none;fill-opacity:1;stroke:#dbbae6;stroke-width:0.8;stroke-miterlimit:3.7;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow4)"
-         d="m 88.80748,220.7703 v 15.18075"
-         id="path3641" />
-    </g>
-    <text
-       xml:space="preserve"
-       transform="matrix(0.26458333,0,0,0.26458333,11.287561,8.604438)"
-       id="text3649"
-       style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:32px;font-family:monospace;-inkscape-font-specification:'monospace Italic';text-align:center;white-space:pre;shape-inside:url(#rect3651);display:inline;fill:#dbbae6;fill-opacity:1;stroke:none;stroke-width:3.13323;stroke-miterlimit:3.7;stroke-dasharray:none;stroke-opacity:1" />
-    <text
-       xml:space="preserve"
-       transform="matrix(0.26458333,0,0,0.26458333,6.3395486,29.694964)"
-       id="text3663"
-       style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:32px;font-family:monospace;-inkscape-font-specification:'monospace Italic';text-align:center;white-space:pre;shape-inside:url(#rect3665);display:inline;fill:#dbbae6;fill-opacity:1;stroke:none;stroke-width:1.24346;stroke-miterlimit:3.7;stroke-dasharray:none;stroke-opacity:1"><tspan
-         x="205.84863"
-         y="834.01229"
-         id="tspan2887">Elimination</tspan></text>
-    <text
-       xml:space="preserve"
-       transform="matrix(0.26458333,0,0,0.26458333,24.266025,56.066984)"
-       id="text2627"
-       style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:33.3333px;font-family:monospace;-inkscape-font-specification:'monospace Italic';text-align:center;white-space:pre;shape-inside:url(#rect2629);display:inline;fill:#dbbae6;fill-opacity:1;stroke:none;stroke-width:0.865512;stroke-miterlimit:3.7;stroke-dasharray:none;stroke-opacity:1"><tspan
-         x="284.04616"
-         y="231.4943"
-         id="tspan2891">k<tspan
-   style="font-size:65%;baseline-shift:sub"
-   id="tspan2889">1</tspan></tspan></text>
-    <text
-       xml:space="preserve"
-       transform="matrix(0.26458333,0,0,0.26458333,24.266025,111.82791)"
-       id="text2643"
-       style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:33.3333px;font-family:monospace;-inkscape-font-specification:'monospace Italic';text-align:center;white-space:pre;shape-inside:url(#rect2645);display:inline;fill:#dbbae6;fill-opacity:1;stroke:none;stroke-width:0.865512;stroke-miterlimit:3.7;stroke-dasharray:none;stroke-opacity:1"><tspan
-         x="284.04616"
-         y="231.4943"
-         id="tspan2895">k<tspan
-   style="font-size:65%;baseline-shift:sub"
-   id="tspan2893">2</tspan></tspan></text>
-    <text
-       xml:space="preserve"
-       transform="matrix(0.26458333,0,0,0.26458333,24.266025,168.82573)"
-       id="text2657"
-       style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:33.3333px;font-family:monospace;-inkscape-font-specification:'monospace Italic';text-align:center;white-space:pre;shape-inside:url(#rect2659);display:inline;fill:#dbbae6;fill-opacity:1;stroke:none;stroke-width:0.865512;stroke-miterlimit:3.7;stroke-dasharray:none;stroke-opacity:1"><tspan
-         x="284.04616"
-         y="231.4943"
-         id="tspan2899">k<tspan
-   style="font-size:65%;baseline-shift:sub"
-   id="tspan2897">3</tspan></tspan></text>
-    <text
-       xml:space="preserve"
-       transform="matrix(0.26458333,0,0,0.26458333,-23.466621,88.344143)"
-       id="text2839"
-       style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;font-family:monospace;-inkscape-font-specification:'monospace Italic';text-align:center;white-space:pre;shape-inside:url(#rect2841);display:inline;fill:#dbbae6;fill-opacity:1;stroke:none;stroke-width:1.24346;stroke-miterlimit:3.7"><tspan
-         x="535.09277"
-         y="109.60834"
-         id="tspan2901">diffusion</tspan></text>
-    <text
-       xml:space="preserve"
-       transform="matrix(0.26458333,0,0,0.26458333,-21.778352,143.5082)"
-       id="text2927"
-       style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;font-family:monospace;-inkscape-font-specification:'monospace Italic';text-align:center;white-space:pre;shape-inside:url(#rect2929);display:inline;fill:#dbbae6;fill-opacity:1;stroke:none;stroke-width:1.24346;stroke-miterlimit:3.7"><tspan
-         x="527.8916"
-         y="109.60834"
-         id="tspan2903">hydrolysis</tspan></text>
-    <text
-       xml:space="preserve"
-       transform="matrix(0.26458333,0,0,0.26458333,6.7369616,196.57817)"
-       id="text2937"
-       style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;font-family:monospace;-inkscape-font-specification:'monospace Italic';text-align:start;white-space:pre;shape-inside:url(#rect2939);display:inline;fill:#dbbae6;fill-opacity:1;stroke:none;stroke-width:1.24346;stroke-miterlimit:3.7"
-       x="-138.35173"
-       y="0"><tspan
-         x="420.55078"
-         y="109.60834"
-         id="tspan2905">unbinding and/or
-</tspan><tspan
-         x="420.55078"
-         y="139.60834"
-         id="tspan2907">glucuronidation</tspan></text>
-    <text
-       xml:space="preserve"
-       transform="matrix(0.26458333,0,0,0.26458333,11.287561,8.604438)"
-       id="text11090"
-       style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;font-family:monospace;-inkscape-font-specification:'monospace Italic';text-align:center;white-space:pre;shape-inside:url(#rect11092);display:inline;fill:#dbbae6;fill-opacity:1;stroke:none;stroke-width:1.89732;stroke-linejoin:round;stroke-miterlimit:3.7;stroke-opacity:1" />
-    <text
-       xml:space="preserve"
-       transform="matrix(0.26458333,0,0,0.26458333,11.287561,8.604438)"
-       id="text11102"
-       style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;font-family:monospace;-inkscape-font-specification:'monospace Italic';text-align:center;white-space:pre;shape-inside:url(#rect11104);display:inline;fill:#dbbae6;fill-opacity:1;stroke:none;stroke-width:1.89732;stroke-linejoin:round;stroke-miterlimit:3.7;stroke-opacity:1" />
-    <text
-       xml:space="preserve"
-       transform="matrix(0.26458333,0,0,0.26458333,3.7651262,9.0767708)"
-       id="text16917"
-       style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:33.3333px;font-family:monospace;-inkscape-font-specification:'monospace Italic';text-align:center;white-space:pre;shape-inside:url(#rect16919);display:inline;fill:#dbbae6;fill-opacity:1;stroke:none;stroke-width:1.88976;stroke-linejoin:round;stroke-miterlimit:3.7;stroke-dasharray:none;stroke-opacity:1"><tspan
-         x="140.34099"
-         y="95.82242"
-         id="tspan2909">three compartments </tspan><tspan
-         x="120.33776"
-         y="137.48905"
-         id="tspan2911">model of im depot of </tspan><tspan
-         x="170.34585"
-         y="179.15567"
-         id="tspan2913">estradiol ester</tspan></text>
-  </g>
   <g
      inkscape:groupmode="layer"
      id="layer2"
      inkscape:label="day"
-     style="display:inline">
+     style="display:none">
     <text
        xml:space="preserve"
-       transform="matrix(0.26458333,0,0,0.26458333,-0.3930018,20.287491)"
+       transform="matrix(0.26458333,0,0,0.26458333,-0.3930018,-3.1247038)"
        id="text997-7"
        style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:33.3333px;font-family:monospace;-inkscape-font-specification:'monospace Italic';text-align:center;white-space:pre;shape-inside:url(#rect999-8);display:inline;fill:#ac489b;fill-opacity:1;stroke:none;stroke-width:0.865512;stroke-miterlimit:3.7;stroke-dasharray:none;stroke-opacity:1"><tspan
          x="270.74548"
          y="231.4943"
-         id="tspan2915">D(t)</tspan></text>
+         id="tspan24">D(t)</tspan></text>
     <text
        xml:space="preserve"
-       transform="matrix(0.26458333,0,0,0.26458333,7.3591188,16.336597)"
+       transform="matrix(0.26458333,0,0,0.26458333,7.3591188,-7.0755978)"
        id="text1053-6"
        style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:32px;font-family:monospace;-inkscape-font-specification:'monospace Italic';text-align:end;white-space:pre;shape-inside:url(#rect1055-1);display:inline;fill:#ac489b;fill-opacity:1;stroke:none;stroke-width:0.865512;stroke-miterlimit:3.7;stroke-dasharray:none;stroke-opacity:1"
        x="75.484375"
        y="0"><tspan
          x="31.394531"
          y="224.18807"
-         id="tspan2917">ester in </tspan><tspan
+         id="tspan25">ester in </tspan><tspan
          x="31.394531"
          y="264.18807"
-         id="tspan2919">im depot</tspan></text>
+         id="tspan26">im depot</tspan></text>
     <text
        xml:space="preserve"
-       transform="matrix(0.26458333,0,0,0.26458333,-7.497606,76.166144)"
+       transform="matrix(0.26458333,0,0,0.26458333,-7.497606,52.753949)"
        id="text1063-0"
        style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:33.3333px;font-family:monospace;-inkscape-font-specification:'monospace Italic';text-align:center;white-space:pre;shape-inside:url(#rect1069-0);display:inline;fill:#ac489b;fill-opacity:1;stroke:none;stroke-width:0.865512;stroke-miterlimit:3.7;stroke-dasharray:none;stroke-opacity:1"><tspan
          x="295.86845"
          y="231.4943"
-         id="tspan2923">E<tspan
+         id="tspan28">E<tspan
    style="font-size:65%;baseline-shift:sub"
-   id="tspan2921">s</tspan>(t)</tspan></text>
+   id="tspan27">s</tspan>(t)</tspan></text>
     <text
        xml:space="preserve"
-       transform="matrix(0.26458333,0,0,0.26458333,20.039481,72.986666)"
+       transform="matrix(0.26458333,0,0,0.26458333,20.039481,49.574471)"
        id="text1067-0"
        style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:32px;font-family:monospace;-inkscape-font-specification:'monospace Italic';text-align:end;white-space:pre;shape-inside:url(#rect1071-1);display:inline;fill:#ac489b;fill-opacity:1;stroke:none;stroke-width:0.865512;stroke-miterlimit:3.7;stroke-dasharray:none;stroke-opacity:1"
        x="75.484375"
        y="0"><tspan
          x="41.078125"
          y="224.18807"
-         id="tspan2925">serum </tspan><tspan
+         id="tspan29">serum </tspan><tspan
          x="41.078125"
          y="264.18807"
-         id="tspan2927">ester</tspan></text>
+         id="tspan30">ester</tspan></text>
     <text
        xml:space="preserve"
-       transform="matrix(0.26458333,0,0,0.26458333,-5.9116563,132.40782)"
+       transform="matrix(0.26458333,0,0,0.26458333,-5.9116563,108.99563)"
        id="text3259-9"
        style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:33.3333px;font-family:monospace;-inkscape-font-specification:'monospace Italic';text-align:center;white-space:pre;shape-inside:url(#rect3265-1);display:inline;fill:#ac489b;fill-opacity:1;stroke:none;stroke-width:0.865512;stroke-miterlimit:3.7;stroke-dasharray:none;stroke-opacity:1"><tspan
          x="289.87431"
          y="231.4943"
-         id="tspan2931">E<tspan
+         id="tspan32">E<tspan
    style="font-size:65%;baseline-shift:sub"
-   id="tspan2929">2</tspan>(t)</tspan></text>
+   id="tspan31">2</tspan>(t)</tspan></text>
     <text
        xml:space="preserve"
-       transform="matrix(0.26458333,0,0,0.26458333,-2.4728392,128.86476)"
+       transform="matrix(0.26458333,0,0,0.26458333,-2.4728392,105.45257)"
        id="text3263-5"
        style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:32px;font-family:monospace;-inkscape-font-specification:'monospace Italic';text-align:end;white-space:pre;shape-inside:url(#rect3267-2);display:inline;fill:#ac489b;fill-opacity:1;stroke:none;stroke-width:0.865512;stroke-miterlimit:3.7;stroke-dasharray:none;stroke-opacity:1"
        x="85.085938"
        y="0"><tspan
          x="126.16406"
          y="224.18807"
-         id="tspan2933">serum </tspan><tspan
+         id="tspan33">serum </tspan><tspan
          x="49.351562"
          y="264.18807"
-         id="tspan2935">estradiol</tspan></text>
+         id="tspan34">estradiol</tspan></text>
     <path
        style="fill:none;fill-opacity:1;stroke:#ac489b;stroke-width:0.8;stroke-miterlimit:3.7;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow4-2)"
-       d="m 81.327246,154.65792 v 15.18075"
+       d="m 81.327246,131.24573 v 15.18075"
        id="path3639-2" />
     <circle
        style="fill:none;stroke:#ac489b;stroke-width:0.8;stroke-miterlimit:3.7;stroke-dasharray:none;stroke-opacity:1"
        id="path234-8"
        cx="81.327248"
-       cy="79.080246"
+       cy="55.668053"
        r="16.149738" />
     <circle
        style="fill:none;stroke:#ac489b;stroke-width:0.8;stroke-miterlimit:3.7;stroke-dasharray:none;stroke-opacity:1"
        id="circle1059-5"
        cx="81.327248"
-       cy="134.95833"
+       cy="111.54613"
        r="16.149738" />
     <circle
        style="fill:none;stroke:#ac489b;stroke-width:0.8;stroke-miterlimit:3.7;stroke-dasharray:none;stroke-opacity:1"
        id="circle3253-9"
        cx="81.327248"
-       cy="190.83643"
+       cy="167.42422"
        r="16.149738" />
     <path
        style="fill:none;fill-opacity:1;stroke:#ac489b;stroke-width:0.8;stroke-miterlimit:3.7;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker1266-1)"
-       d="M 81.327246,99.075089 V 114.25585"
+       d="M 81.327246,75.662894 V 90.843655"
        id="path3406-4" />
     <path
        style="fill:none;fill-opacity:1;stroke:#ac489b;stroke-width:0.8;stroke-miterlimit:3.7;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow4-2)"
-       d="m 81.327246,211.69353 v 15.18075"
+       d="m 81.327246,188.28134 v 15.18075"
        id="path3641-3" />
     <text
        xml:space="preserve"
@@ -647,72 +527,72 @@
        style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:32px;font-family:monospace;-inkscape-font-specification:'monospace Italic';text-align:center;white-space:pre;shape-inside:url(#rect3651-2);display:inline;fill:#ac489b;fill-opacity:1;stroke:none;stroke-width:3.13323;stroke-miterlimit:3.7;stroke-dasharray:none;stroke-opacity:1" />
     <text
        xml:space="preserve"
-       transform="matrix(0.26458333,0,0,0.26458333,-1.1406856,20.618193)"
+       transform="matrix(0.26458333,0,0,0.26458333,-1.1406856,-2.7940018)"
        id="text3663-0"
        style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:32px;font-family:monospace;-inkscape-font-specification:'monospace Italic';text-align:center;white-space:pre;shape-inside:url(#rect3665-5);display:inline;fill:#ac489b;fill-opacity:1;stroke:none;stroke-width:1.24346;stroke-miterlimit:3.7;stroke-dasharray:none;stroke-opacity:1"><tspan
          x="205.84863"
          y="834.01229"
-         id="tspan2937">Elimination</tspan></text>
+         id="tspan35">elimination</tspan></text>
     <text
        xml:space="preserve"
-       transform="matrix(0.26458333,0,0,0.26458333,16.785791,46.990213)"
+       transform="matrix(0.26458333,0,0,0.26458333,16.785791,23.578018)"
        id="text2627-5"
        style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:33.3333px;font-family:monospace;-inkscape-font-specification:'monospace Italic';text-align:center;white-space:pre;shape-inside:url(#rect2629-2);display:inline;fill:#ac489b;fill-opacity:1;stroke:none;stroke-width:0.865512;stroke-miterlimit:3.7;stroke-dasharray:none;stroke-opacity:1"><tspan
          x="284.04616"
          y="231.4943"
-         id="tspan2941">k<tspan
+         id="tspan37">k<tspan
    style="font-size:65%;baseline-shift:sub"
-   id="tspan2939">1</tspan></tspan></text>
+   id="tspan36">1</tspan></tspan></text>
     <text
        xml:space="preserve"
-       transform="matrix(0.26458333,0,0,0.26458333,16.785791,102.75114)"
+       transform="matrix(0.26458333,0,0,0.26458333,16.785791,79.338945)"
        id="text2643-6"
        style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:33.3333px;font-family:monospace;-inkscape-font-specification:'monospace Italic';text-align:center;white-space:pre;shape-inside:url(#rect2645-2);display:inline;fill:#ac489b;fill-opacity:1;stroke:none;stroke-width:0.865512;stroke-miterlimit:3.7;stroke-dasharray:none;stroke-opacity:1"><tspan
          x="284.04616"
          y="231.4943"
-         id="tspan2945">k<tspan
+         id="tspan39">k<tspan
    style="font-size:65%;baseline-shift:sub"
-   id="tspan2943">2</tspan></tspan></text>
+   id="tspan38">2</tspan></tspan></text>
     <text
        xml:space="preserve"
-       transform="matrix(0.26458333,0,0,0.26458333,16.785791,159.74896)"
+       transform="matrix(0.26458333,0,0,0.26458333,16.785791,136.33677)"
        id="text2657-3"
        style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:33.3333px;font-family:monospace;-inkscape-font-specification:'monospace Italic';text-align:center;white-space:pre;shape-inside:url(#rect2659-6);display:inline;fill:#ac489b;fill-opacity:1;stroke:none;stroke-width:0.865512;stroke-miterlimit:3.7;stroke-dasharray:none;stroke-opacity:1"><tspan
          x="284.04616"
          y="231.4943"
-         id="tspan2949">k<tspan
+         id="tspan41">k<tspan
    style="font-size:65%;baseline-shift:sub"
-   id="tspan2947">3</tspan></tspan></text>
+   id="tspan40">3</tspan></tspan></text>
     <text
        xml:space="preserve"
-       transform="matrix(0.26458333,0,0,0.26458333,-30.946855,79.267372)"
+       transform="matrix(0.26458333,0,0,0.26458333,-30.946855,55.855177)"
        id="text2839-6"
        style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;font-family:monospace;-inkscape-font-specification:'monospace Italic';text-align:center;white-space:pre;shape-inside:url(#rect2841-0);display:inline;fill:#ac489b;fill-opacity:1;stroke:none;stroke-width:1.24346;stroke-miterlimit:3.7"><tspan
          x="535.09277"
          y="109.60834"
-         id="tspan2951">diffusion</tspan></text>
+         id="tspan42">diffusion</tspan></text>
     <text
        xml:space="preserve"
-       transform="matrix(0.26458333,0,0,0.26458333,-29.258586,134.43143)"
+       transform="matrix(0.26458333,0,0,0.26458333,-29.258586,111.01924)"
        id="text2927-3"
        style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;font-family:monospace;-inkscape-font-specification:'monospace Italic';text-align:center;white-space:pre;shape-inside:url(#rect2929-3);display:inline;fill:#ac489b;fill-opacity:1;stroke:none;stroke-width:1.24346;stroke-miterlimit:3.7"><tspan
          x="527.8916"
          y="109.60834"
-         id="tspan2953">hydrolysis</tspan></text>
+         id="tspan43">hydrolysis</tspan></text>
     <text
        xml:space="preserve"
-       transform="matrix(0.26458333,0,0,0.26458333,-0.7432726,187.5014)"
+       transform="matrix(0.26458333,0,0,0.26458333,-0.7432726,164.08921)"
        id="text2937-0"
        style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;font-family:monospace;-inkscape-font-specification:'monospace Italic';text-align:start;white-space:pre;shape-inside:url(#rect2939-8);display:inline;fill:#ac489b;fill-opacity:1;stroke:none;stroke-width:1.24346;stroke-miterlimit:3.7"
        x="-138.35173"
        y="0"><tspan
          x="420.55078"
          y="109.60834"
-         id="tspan2955">unbinding and/or
+         id="tspan44">unbinding and/or
 </tspan><tspan
          x="420.55078"
          y="139.60834"
-         id="tspan2957">glucuronidation</tspan></text>
+         id="tspan45">glucuronidation</tspan></text>
     <text
        xml:space="preserve"
        transform="matrix(0.26458333,0,0,0.26458333,3.8073268,-0.4723326)"
@@ -725,17 +605,189 @@
        style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.6667px;font-family:monospace;-inkscape-font-specification:'monospace Italic';text-align:center;white-space:pre;shape-inside:url(#rect11104-8);display:inline;fill:#ac489b;fill-opacity:1;stroke:none;stroke-width:1.89732;stroke-linejoin:round;stroke-miterlimit:3.7;stroke-opacity:1" />
     <text
        xml:space="preserve"
-       transform="matrix(0.26458333,0,0,0.26458333,-3.715108,2e-7)"
+       transform="matrix(0.26458333,0,0,0.26458333,-7.7597534,-3.7965718)"
        id="text16917-0"
        style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:33.3333px;font-family:monospace;-inkscape-font-specification:'monospace Italic';text-align:center;white-space:pre;shape-inside:url(#rect16919-4);display:inline;fill:#ac489b;fill-opacity:1;stroke:none;stroke-width:1.88976;stroke-linejoin:round;stroke-miterlimit:3.7;stroke-dasharray:none;stroke-opacity:1"><tspan
-         x="140.34099"
+         x="112.61644"
          y="95.82242"
-         id="tspan2959">three compartments </tspan><tspan
-         x="120.33776"
-         y="137.48905"
-         id="tspan2961">model of im depot of </tspan><tspan
-         x="170.34585"
-         y="179.15567"
-         id="tspan2963">estradiol ester</tspan></text>
+         id="tspan46">three compartments model</tspan></text>
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer1"
+     inkscape:label="night">
+    <text
+       xml:space="preserve"
+       transform="matrix(0.26458333,0,0,0.26458333,-0.3930018,-3.1247038)"
+       id="text997-7-1"
+       style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:33.3333px;font-family:monospace;-inkscape-font-specification:'monospace Italic';text-align:center;white-space:pre;shape-inside:url(#rect999-8-4);display:inline;fill:#dbbae6;fill-opacity:1;stroke:none;stroke-width:0.865512;stroke-miterlimit:3.7;stroke-dasharray:none;stroke-opacity:1"><tspan
+         x="270.74548"
+         y="231.4943"
+         id="tspan47">D(t)</tspan></text>
+    <text
+       xml:space="preserve"
+       transform="matrix(0.26458333,0,0,0.26458333,7.3591188,-7.0755978)"
+       id="text1053-6-5"
+       style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:32px;font-family:monospace;-inkscape-font-specification:'monospace Italic';text-align:end;white-space:pre;shape-inside:url(#rect1055-1-8);display:inline;fill:#dbbae6;fill-opacity:1;stroke:none;stroke-width:0.865512;stroke-miterlimit:3.7;stroke-dasharray:none;stroke-opacity:1"
+       x="75.484375"
+       y="0"><tspan
+         x="31.394531"
+         y="224.18807"
+         id="tspan48">ester in </tspan><tspan
+         x="31.394531"
+         y="264.18807"
+         id="tspan49">im depot</tspan></text>
+    <text
+       xml:space="preserve"
+       transform="matrix(0.26458333,0,0,0.26458333,-7.497606,52.753949)"
+       id="text1063-0-3"
+       style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:33.3333px;font-family:monospace;-inkscape-font-specification:'monospace Italic';text-align:center;white-space:pre;shape-inside:url(#rect1069-0-0);display:inline;fill:#dbbae6;fill-opacity:1;stroke:none;stroke-width:0.865512;stroke-miterlimit:3.7;stroke-dasharray:none;stroke-opacity:1"><tspan
+         x="295.86845"
+         y="231.4943"
+         id="tspan51">E<tspan
+   style="font-size:65%;baseline-shift:sub"
+   id="tspan50">s</tspan>(t)</tspan></text>
+    <text
+       xml:space="preserve"
+       transform="matrix(0.26458333,0,0,0.26458333,20.039481,49.574471)"
+       id="text1067-0-5"
+       style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:32px;font-family:monospace;-inkscape-font-specification:'monospace Italic';text-align:end;white-space:pre;shape-inside:url(#rect1071-1-4);display:inline;fill:#dbbae6;fill-opacity:1;stroke:none;stroke-width:0.865512;stroke-miterlimit:3.7;stroke-dasharray:none;stroke-opacity:1"
+       x="75.484375"
+       y="0"><tspan
+         x="41.078125"
+         y="224.18807"
+         id="tspan52">serum </tspan><tspan
+         x="41.078125"
+         y="264.18807"
+         id="tspan53">ester</tspan></text>
+    <text
+       xml:space="preserve"
+       transform="matrix(0.26458333,0,0,0.26458333,-5.9116563,108.99563)"
+       id="text3259-9-4"
+       style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:33.3333px;font-family:monospace;-inkscape-font-specification:'monospace Italic';text-align:center;white-space:pre;shape-inside:url(#rect3265-1-6);display:inline;fill:#dbbae6;fill-opacity:1;stroke:none;stroke-width:0.865512;stroke-miterlimit:3.7;stroke-dasharray:none;stroke-opacity:1"><tspan
+         x="289.87431"
+         y="231.4943"
+         id="tspan55">E<tspan
+   style="font-size:65%;baseline-shift:sub"
+   id="tspan54">2</tspan>(t)</tspan></text>
+    <text
+       xml:space="preserve"
+       transform="matrix(0.26458333,0,0,0.26458333,-2.4728392,105.45257)"
+       id="text3263-5-3"
+       style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:32px;font-family:monospace;-inkscape-font-specification:'monospace Italic';text-align:end;white-space:pre;shape-inside:url(#rect3267-2-0);display:inline;fill:#dbbae6;fill-opacity:1;stroke:none;stroke-width:0.865512;stroke-miterlimit:3.7;stroke-dasharray:none;stroke-opacity:1"
+       x="85.085938"
+       y="0"><tspan
+         x="126.16406"
+         y="224.18807"
+         id="tspan56">serum </tspan><tspan
+         x="49.351562"
+         y="264.18807"
+         id="tspan57">estradiol</tspan></text>
+    <path
+       style="display:inline;fill:none;fill-opacity:1;stroke:#dbbae6;stroke-width:0.8;stroke-miterlimit:3.7;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow4-2-3)"
+       d="m 81.327246,131.24573 v 15.18075"
+       id="path3639-2-6" />
+    <circle
+       style="display:inline;fill:none;stroke:#dbbae6;stroke-width:0.8;stroke-miterlimit:3.7;stroke-dasharray:none;stroke-opacity:1"
+       id="path234-8-5"
+       cx="81.327248"
+       cy="55.668053"
+       r="16.149738" />
+    <circle
+       style="display:inline;fill:none;stroke:#dbbae6;stroke-width:0.8;stroke-miterlimit:3.7;stroke-dasharray:none;stroke-opacity:1"
+       id="circle1059-5-9"
+       cx="81.327248"
+       cy="111.54613"
+       r="16.149738" />
+    <circle
+       style="display:inline;fill:none;stroke:#dbbae6;stroke-width:0.8;stroke-miterlimit:3.7;stroke-dasharray:none;stroke-opacity:1"
+       id="circle3253-9-5"
+       cx="81.327248"
+       cy="167.42422"
+       r="16.149738" />
+    <path
+       style="display:inline;fill:none;fill-opacity:1;stroke:#dbbae6;stroke-width:0.8;stroke-miterlimit:3.7;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker1266-1-6)"
+       d="M 81.327246,75.662894 V 90.843655"
+       id="path3406-4-4" />
+    <path
+       style="display:inline;fill:none;fill-opacity:1;stroke:#dbbae6;stroke-width:0.8;stroke-miterlimit:3.7;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow4-2-3)"
+       d="m 81.327246,188.28134 v 15.18075"
+       id="path3641-3-9" />
+    <text
+       xml:space="preserve"
+       transform="matrix(0.26458333,0,0,0.26458333,-1.1406856,-2.7940018)"
+       id="text3663-0-1"
+       style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:32px;font-family:monospace;-inkscape-font-specification:'monospace Italic';text-align:center;white-space:pre;shape-inside:url(#rect3665-5-4);display:inline;fill:#dbbae6;fill-opacity:1;stroke:none;stroke-width:1.24346;stroke-miterlimit:3.7;stroke-dasharray:none;stroke-opacity:1"><tspan
+         x="205.84863"
+         y="834.01229"
+         id="tspan58">elimination</tspan></text>
+    <text
+       xml:space="preserve"
+       transform="matrix(0.26458333,0,0,0.26458333,16.785791,23.578018)"
+       id="text2627-5-7"
+       style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:33.3333px;font-family:monospace;-inkscape-font-specification:'monospace Italic';text-align:center;white-space:pre;shape-inside:url(#rect2629-2-1);display:inline;fill:#dbbae6;fill-opacity:1;stroke:none;stroke-width:0.865512;stroke-miterlimit:3.7;stroke-dasharray:none;stroke-opacity:1"><tspan
+         x="284.04616"
+         y="231.4943"
+         id="tspan60">k<tspan
+   style="font-size:65%;baseline-shift:sub"
+   id="tspan59">1</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       transform="matrix(0.26458333,0,0,0.26458333,16.785791,79.338945)"
+       id="text2643-6-5"
+       style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:33.3333px;font-family:monospace;-inkscape-font-specification:'monospace Italic';text-align:center;white-space:pre;shape-inside:url(#rect2645-2-3);display:inline;fill:#dbbae6;fill-opacity:1;stroke:none;stroke-width:0.865512;stroke-miterlimit:3.7;stroke-dasharray:none;stroke-opacity:1"><tspan
+         x="284.04616"
+         y="231.4943"
+         id="tspan62">k<tspan
+   style="font-size:65%;baseline-shift:sub"
+   id="tspan61">2</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       transform="matrix(0.26458333,0,0,0.26458333,16.785791,136.33677)"
+       id="text2657-3-5"
+       style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:33.3333px;font-family:monospace;-inkscape-font-specification:'monospace Italic';text-align:center;white-space:pre;shape-inside:url(#rect2659-6-7);display:inline;fill:#dbbae6;fill-opacity:1;stroke:none;stroke-width:0.865512;stroke-miterlimit:3.7;stroke-dasharray:none;stroke-opacity:1"><tspan
+         x="284.04616"
+         y="231.4943"
+         id="tspan64">k<tspan
+   style="font-size:65%;baseline-shift:sub"
+   id="tspan63">3</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       transform="matrix(0.26458333,0,0,0.26458333,-30.946855,55.855177)"
+       id="text2839-6-4"
+       style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;font-family:monospace;-inkscape-font-specification:'monospace Italic';text-align:center;white-space:pre;shape-inside:url(#rect2841-0-8);display:inline;fill:#dbbae6;fill-opacity:1;stroke:none;stroke-width:1.24346;stroke-miterlimit:3.7"><tspan
+         x="535.09277"
+         y="109.60834"
+         id="tspan65">diffusion</tspan></text>
+    <text
+       xml:space="preserve"
+       transform="matrix(0.26458333,0,0,0.26458333,-29.258586,111.01924)"
+       id="text2927-3-1"
+       style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;font-family:monospace;-inkscape-font-specification:'monospace Italic';text-align:center;white-space:pre;shape-inside:url(#rect2929-3-8);display:inline;fill:#dbbae6;fill-opacity:1;stroke:none;stroke-width:1.24346;stroke-miterlimit:3.7"><tspan
+         x="527.8916"
+         y="109.60834"
+         id="tspan66">hydrolysis</tspan></text>
+    <text
+       xml:space="preserve"
+       transform="matrix(0.26458333,0,0,0.26458333,-0.7432726,164.08921)"
+       id="text2937-0-8"
+       style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;font-family:monospace;-inkscape-font-specification:'monospace Italic';text-align:start;white-space:pre;shape-inside:url(#rect2939-8-3);display:inline;fill:#dbbae6;fill-opacity:1;stroke:none;stroke-width:1.24346;stroke-miterlimit:3.7"
+       x="-138.35173"
+       y="0"><tspan
+         x="420.55078"
+         y="109.60834"
+         id="tspan67">unbinding and/or
+</tspan><tspan
+         x="420.55078"
+         y="139.60834"
+         id="tspan68">glucuronidation</tspan></text>
+    <text
+       xml:space="preserve"
+       transform="matrix(0.26458333,0,0,0.26458333,-7.7597534,-3.7965718)"
+       id="text16917-0-8"
+       style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:33.3333px;font-family:monospace;-inkscape-font-specification:'monospace Italic';text-align:center;white-space:pre;shape-inside:url(#rect16919-4-8);display:inline;fill:#dbbae6;fill-opacity:1;stroke:none;stroke-width:1.88976;stroke-linejoin:round;stroke-miterlimit:3.7;stroke-dasharray:none;stroke-opacity:1"><tspan
+         x="112.61644"
+         y="95.82242"
+         id="tspan69">three compartments model</tspan></text>
   </g>
 </svg>
