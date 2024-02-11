@@ -4,51 +4,94 @@ const esterList = ["EV IM", "EEn IM", "EC IM", "EUn IM", "EB IM"];
 
 
 function PK3CD3Symmetry(d, k1, k2, k3, op = 0) {
-    if ( op == 0 ) {
+    if (op == 0) {
         return [d, k1, k2, k3]
-    } else if ( op == 1 ) {
+    } else if (op == 1) {
         return [d, k2, k1, k3]
-    } else if ( op == 2 ) {
-        return [d*k1/k3, k3, k2, k1]
-    } else if ( op == 3 ) {
-        return [d*k1/k3, k2, k3, k1]
-    } else if ( op == 4 ) {
-        return [d*k2/k3, k3, k1, k2]
-    } else if ( op == 5 ) {
-        return [d*k2/k3, k1, k3, k2]
+    } else if (op == 2) {
+        return [d * k1 / k3, k3, k2, k1]
+    } else if (op == 3) {
+        return [d * k1 / k3, k2, k3, k1]
+    } else if (op == 4) {
+        return [d * k2 / k3, k3, k1, k2]
+    } else if (op == 5) {
+        return [d * k2 / k3, k1, k3, k2]
     }
 }
 
-function e2SingleDose3C(t, dose, d, k1, k2, k3) {
+// parameters ds and d2 are optional initial conditions in
+// the second and third compartments Es(0) = Ds and E2(0) = D2
+function e2SingleDose3C(t, dose, d, k1, k2, k3, Ds = 0.0, D2 = 0.0) {
     if (t < 0) {
         return 0;
+    }
+
+    let ret = 0;
+
+    if (D2 > 0) {
+        ret += D2 * Math.exp(-k3 * t)
+    }
+
+    if (Ds > 0) {
+        if (k2 == k3) {
+            ret += Ds * k2 * t * Math.exp(-k2 * t)
+        } else {
+            ret += Ds * k2 / (k2 - k3) * (Math.exp(-k3 * t) - Math.exp(-k2 * t))    
+        }
     }
 
     // When one or more rate is equal the single-dose solution
     // is ill-defined because one or more denominators are zero.
     // In these cases we must first take the limit the recover
     // the correct solution.
-    if (k1 == k2 && k2 == k3) {
+    if (dose > 0 && d > 0) {
+        if (k1 == k2 && k2 == k3) {
 
-        return dose * d * k1 * k1 * t * t * Math.exp(-k1 * t) / 2;
+            ret += dose * d * k1 * k1 * t * t * Math.exp(-k1 * t) / 2;
 
-    } else if (k1 == k2 && k2 != k3) {
-        
-        return dose * d * k1 * k1 * (Math.exp(-k3 * t) - Math.exp(-k1 * t) * (1 + (k1 - k3) * t)) / (k1 - k3) / (k1 - k3);
+        } else if (k1 == k2 && k2 != k3) {
 
-    } else if (k1 != k2 && k1 == k3) {
-    
-        return dose * d * k1 * k2 * (Math.exp(-k2 * t) - Math.exp(-k1 * t) * (1 + (k1 - k2) * t)) / (k1 - k2) / (k1 - k2);
-    
-    } else if (k1 != k2 && k2 == k3) {
-    
-        return dose * d * k1 * k2 * (Math.exp(-k1 * t) - Math.exp(-k2 * t) * (1 - (k1 - k2) * t)) / (k1 - k2) / (k1 - k2);
-    
-    } else {
+            ret += dose * d * k1 * k1 * (Math.exp(-k3 * t) - Math.exp(-k1 * t) * (1 + (k1 - k3) * t)) / (k1 - k3) / (k1 - k3);
 
-        return dose * d * k1 * k2 * (Math.exp(-k1 * t) / (k1 - k2) / (k1 - k3) - Math.exp(-k2 * t) / (k1 - k2) / (k2 - k3) + Math.exp(-k3 * t) / (k1 - k3) / (k2 - k3));
+        } else if (k1 != k2 && k1 == k3) {
 
+            ret += dose * d * k1 * k2 * (Math.exp(-k2 * t) - Math.exp(-k1 * t) * (1 + (k1 - k2) * t)) / (k1 - k2) / (k1 - k2);
+
+        } else if (k1 != k2 && k2 == k3) {
+
+            ret += dose * d * k1 * k2 * (Math.exp(-k1 * t) - Math.exp(-k2 * t) * (1 - (k1 - k2) * t)) / (k1 - k2) / (k1 - k2);
+
+        } else {
+
+            ret += dose * d * k1 * k2 * (Math.exp(-k1 * t) / (k1 - k2) / (k1 - k3) - Math.exp(-k2 * t) / (k1 - k2) / (k2 - k3) + Math.exp(-k3 * t) / (k1 - k3) / (k2 - k3));
+
+        }
     }
+
+    return ret;
+}
+
+function esSingleDose3C(t, dose, d, k1, k2, k3, Ds = 0.0) {
+
+    if (t < 0) {
+        return 0.0;
+    }
+
+    let ret = 0.0;
+
+    if (Ds > 0) {
+        ret += Ds * Math.exp(-k2 * t);
+    }
+
+    if (dose > 0 && d > 0) {
+        if (k1 === k2) {
+            ret += dose * d * k1 * t * Math.exp(-k1 * t);
+        } else {
+            ret += dose * d * k1 / (k1 - k2) * (Math.exp(-k2 * t) - Math.exp(-k1 * t));
+        }
+    }
+
+    return ret;
 }
 
 
@@ -56,16 +99,17 @@ function e2SingleDoseAUC3C(t, dose, d, k1, k2, k3) {
     if (t < 0) {
         return 0;
     }
+
     if (k1 == k2 && k2 == k3) {
 
         return dose * d / k1 * (1 - Math.exp(-k1 * t) * (1 + k1 * t + k1 * k1 * t * t / 2))
 
     } else if (k1 == k2 && k2 != k3) {
 
-        return dose * d * k1 * k1 / (k1 - k3) / (k1 - k3) * ((1 - Math.exp(-k3 * t))/ k3 - 2 / k1 + k3 / k1 / k1 + Math.exp(-k1 * t) * (2 * k1 - k3 + k1 * (k1 - k3) * t) / k1 / k1)
+        return dose * d * k1 * k1 / (k1 - k3) / (k1 - k3) * ((1 - Math.exp(-k3 * t)) / k3 - 2 / k1 + k3 / k1 / k1 + Math.exp(-k1 * t) * (2 * k1 - k3 + k1 * (k1 - k3) * t) / k1 / k1)
 
     } else if (k1 != k2 && k1 == k3) {
-        
+
         // return dose * d * k1 * k1 / (k1 - k3) / (k1 - k3) * ((1 - Math.exp(-k3 * t))/ k3 - 2 / k1 + k3 / k1 / k1 + Math.exp(-k1 * t) * (2 * k1 - k3 + k1 * (k1 - k3) * t) / k1 / k1)
 
     } else if (k1 != k3 && k2 == k3) {
@@ -96,7 +140,7 @@ function e2MultiDose3C(t, d, k1, k2, k3, doses = [1.0], times = [0.0]) {
     return sum;
 }
 
-function e2MultiDoseEster3C(t, doses = [1.0], times = [0.0], esters = ["IMEV"], random=false) {
+function e2MultiDoseEster3C(t, doses = [1.0], times = [0.0], esters = ["IMEV"], random = false) {
     let sum = 0;
     for (let i = 0; i < doses.length; i++) {
         if (!random) {
@@ -117,4 +161,14 @@ function e2RepeatedDose3C(t, dose, T, K, d, k1, k2, k3) {
     return sum;
 }
 
-
+function e2Patch3C(t, dose, d, k1, k2, k3, W = 3.5) {
+    if (t < 0.0) {
+        return 0.0;
+    } else if (0 <= t <= W) {
+        return e2SingleDose3C(t, dose, d, k1, k2, k3);
+    } else if (t > W) {
+        let esW = esSingleDose3C(W, dose, d, k1, k2, k3);
+        let e2W = e2SingleDose3C(W, dose, d, k1, k2, k3);
+        return e2SingleDose3C(t - W, 0.0, 0.0, k1, k2, k3, esW, e2W);
+    }
+}
