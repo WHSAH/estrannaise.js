@@ -13,6 +13,14 @@ body {
     width: 60%;
 }
 
+a {
+    text-decoration: none;
+}
+
+a:link, a:visited {
+    color: var(--the-pink);
+}
+
 p {
     margin-bottom: 2em;
     text-align: left;
@@ -28,4 +36,14 @@ figcaption {
     color: var(--the-pink);
     font-size: 12px;
     text-align: right;
+}
+
+.eqborder {
+    display: inline-block; 
+    border: 3px solid var(--the-pink);
+    border-radius: 6px;
+    margin: 1em;
+    padding: 1em; 
+    padding-bottom: 0em; 
+    padding-left: 1em;
 }

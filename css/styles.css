@@ -32,12 +32,7 @@ header {
     /* padding-left: 1.25em; */
 }
 
-a:link {
-    color: var(--the-pink);
-}
-
-/* Style for visited links */
-a:visited {
+a:link, a:visited {
     color: var(--the-pink);
 }
 
@@ -45,7 +40,6 @@ input.flat-input {
     border: none;
     outline: none;
     background-color: var(--standout-color);
-    /* Light gray */
     color: var(--the-pink);
     padding: 4px;
     font-size: 12px;
