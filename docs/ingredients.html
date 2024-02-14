@@ -274,7 +274,26 @@
         E_2^{ss3C}(t) = d k_1 k_2\left[\frac{e^{-k_1 (t - T\lfloor t/T\rfloor)}}{(1 - e^{-k_1T})(k_1 - k_2)(k_1 - k_3)} - \frac{e^{-k_2(t - T\lfloor t/T\rfloor)}}{(1 - e^{-k_2T})(k_1 - k_2)(k_2 - k_3)} + \frac{e^{-k_3 (t - T\lfloor t/T\rfloor)}}{(1 - e^{-k_3T})(k_1 - k_3)(k_2 - k_3)}\right].
         \end{equation}
         </div></div>
-        This solution is periodic with period \(T\) and gives us easy access to exposure,
+        It is trivial to show that for any integer \(n\)
+        $$E_2^{ss3C}(t + nT) = E_2^{ss3C}(t),$$
+        and therefore the solution is indeed periodic with period \(T\).
+        </p>
+        <figure>
+          <img
+          id="im_curves"
+          class="flex-item"
+          src="im_curves_night.png"
+          style="display: block; width: 100%; margin-left: auto"
+          alt="Single dose curves and comparison of the steady-state and normal solutions for intramuscular injections"
+              />
+              <figcaption>
+                Figure X. Single dose curves and comparison of multi-dose solutions and their steady-state for
+                estradiol valerate and enanthate.
+              </figcaption>
+        </figure>
+        
+        <p>
+        The steady-state solution gives us easy access to the exposure,
         also called the area under the curve (AUC). Since \(\int_0^T e^{-k t} = (1 - e^{-k T})/k\)
         the numerators in \eqref{eq:steadystate3C} cancel the steady state factor in the denominators and
         therefore the AUC over one period
