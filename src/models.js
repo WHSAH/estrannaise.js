@@ -1,11 +1,11 @@
 // function lngamma(x) { return ieee754gamma.lngamma(x) }
 
-const methodList = ["EV IM", "EEn IM", "EC IM", "EUn IM", "EB IM", "DOT patch tw", "DOT patch ow"];
+const methodList = ["EV im", "EEn im", "EC im", "EUn im", "EB im", "DOT patch tw", "DOT patch ow"];
 
 const PKFunctions = {
     "EV im": function (t, dose) { return e2SingleDose3C(t, dose, ...PK3CParams["EV im"]) },
-    "EEn im mk1": function (t, dose) { return e2SingleDose3C(t, dose, ...PK3CParams["EEn im mk1"]) },
-    "EEn im mk2": function (t, dose) { return e2SingleDose3C(t, dose, ...PK3CParams["EEn im mk2"]) },
+    // "EEn im mk1": function (t, dose) { return e2SingleDose3C(t, dose, ...PK3CParams["EEn im mk1"]) },
+    "EEn im": function (t, dose) { return e2SingleDose3C(t, dose, ...PK3CParams["EEn im"]) },
     "EC im": function (t, dose) { return e2SingleDose3C(t, dose, ...PK3CParams["EC im"]) }, 
     "EUn im": function (t, dose) { return e2SingleDose3C(t, dose, ...PK3CParams["EUn im"]) },
     "EB im": function (t, dose) { return e2SingleDose3C(t, dose, ...PK3CParams["EB im"]) },
@@ -15,8 +15,8 @@ const PKFunctions = {
 
 const PKRandomFunctions = {
     "EV im": function(t, dose) { return e2SingleDose3C(t, dose, ...randomMCMCSample("EV im")) },
-    "EEn im mk1": function(t, dose) { return e2SingleDose3C(t, dose, ...randomMCMCSample("EEn im mk1")) },
-    "EEn im mk2": function(t, dose) { return e2SingleDose3C(t, dose, ...randomMCMCSample("EEn im mk2")) },
+    // "EEn im mk1": function(t, dose) { return e2SingleDose3C(t, dose, ...randomMCMCSample("EEn im mk1")) },
+    "EEn im": function(t, dose) { return e2SingleDose3C(t, dose, ...randomMCMCSample("EEn im")) },
     "EC im": function(t, dose) { return e2SingleDose3C(t, dose, ...randomMCMCSample("EC im")) },
     "EUn im": function(t, dose) { return e2SingleDose3C(t, dose, ...randomMCMCSample("EUn im")) },
     "EB im": function(t, dose) { return e2SingleDose3C(t, dose, ...randomMCMCSample("EB im")) },

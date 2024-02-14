@@ -347,7 +347,7 @@ function addTDERow(tableID, time = null, dose = null, ester = null, cvisible = t
     esterCell.innerHTML = (
         '<select class="dropdown-ester"> \
             <option value="EV im">ev im</option> \
-            <option value="EEn im mk2">een im</option> \
+            <option value="EEn im">een im</option> \
             <option value="EC im">ec im</option> \
             <option value="EB im">eb im</option> \
             <option value="EUn im">eun im</option>' + 
