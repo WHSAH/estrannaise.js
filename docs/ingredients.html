@@ -178,12 +178,16 @@
         <p>
           The differential equation for this model in the presence of multiples
           doses \(d_i\) at times \(t_i\) is given by
-          \begin{equation*}\begin{split} \frac{dD(t)}{dt} &= -k_1 D(t) + \sum_i
-          d_i \delta(t - t_i),\\ \frac{dE_s(t)}{dt} &= k_1 D(t) - k_2 E_s(t),\\
-          \frac{dE_2(t)}{dt} & = k_2 E_s(t) - k_3 E_2(t),\\ D(0) &= E_s(0) =
-          E_2(0) = 0, \end{split}\end{equation*} where \(\delta(t)\) is the
-          Dirac delta function and without lose of generality we have assumed
-          that all \(t_i > 0\)'s. The serum concentration of estradiol
+          \begin{equation}\label{eq:3C}\begin{split}
+          \frac{dD(t)}{dt} &= -k_1 D(t) + \sum_i d_i \delta(t - t_i),\\
+          \frac{dE_s(t)}{dt} &= k_1 D(t) - k_2 E_s(t),\\
+          \frac{dE_2(t)}{dt} & = k_2 E_s(t) - k_3 E_2(t),\\ 
+          D(0) &= E_s(0) = E_2(0) = 0, 
+          \end{split}\end{equation} 
+          where \(\delta(t)\) is the Dirac delta function we have assumed without
+          loss of generality that all \(t_i > 0\)'s. One can consider a single dose \(d\)
+          at a time that approaches zero in order to mimick a situation with initial condition
+          \(D(0) = d\). The serum concentration of estradiol
           \(E_2^{sd}(t)\) after the injection of a single dose \(d\) at time
           \(t=0\) is given by (see <a href="#appendix_gensol3C">appendix</a> for details)
           <br>
@@ -218,10 +222,118 @@
           - k_{3i})} - \frac{e^{-k_{2i}(t - t_i)}}{(k_{1i} - k_{2i})(k_{2i} -
           k_{3i})} + \frac{e^{-k_{3i}(t - t_i)}}{(k_{1i} - k_{3i})(k_{2i} -
           k_{3i})}\right]. \end{split}\end{equation*}
+          Note that technically all esters should share the same elimination
+          rate \(k_3\), but we can relax this assumption by keeping in mind
+          that this model does not perfectly captures reality and process
+          rates in a model that tries to collapse reality into 3 compartments
+          will inevitably have to bleed into, and compensate for, each others'
+          imperfections during curve-fitting.
         </p>
       </div>
 
-      <h3>two (and a half) compartments model for DOT patches</h3>
+      <h3>steady state solution under repeated doses</h3>
+      <p>
+        Following the repeated injection of the same dose at regular intervals,
+        serum estradiol levels will settle into a periodic pattern called the
+        steady-state solution. The steady-state solution \(E_2^{ss3C}(t)\)
+        is given by the multi-dose solution with an infinite train of doses
+        \(d\) at regular intervals \(T\) which we write
+        \begin{equation}\label{eq:infinitesumsteadystate3C}\begin{split}
+        E_2^{ss3C}(t) &= \sum_{i=-\infty}^{\infty} E^{sd3C}_2(t - iT~\vert~d, k_1, k_2, k_3),\\
+        &= d k_1 k_2\sum_{i=-\infty}^\infty H(t - iT)\left[\frac{e^{-k_1 (t - iT)}}{(k_1 - k_2)(k_1 - k_3)} - \frac{e^{-k_2(t - iT)}}{(k_1 - k_2)(k_2 - k_3)} + \frac{e^{-k_3(t - iT)}}{(k_1 - k_3)(k_2 - k_3)}\right].
+        \end{split}\end{equation}
+        The dependence on \(i\) takes the form of the following infinite sum
+        \begin{equation*}
+        S = \sum_{i=-\infty}^\infty H(t - iT) e^{k T i}.
+        \end{equation*}
+        Note that for a given \(t\), the Heaviside function is non-zero only when
+        \(t - iT \ge 0\) (remember we define \(H(0) = 1\)) and therefore 
+        when \(i \le \lfloor t/T \rfloor\) where \(\lfloor~.\rfloor\) is the floor
+        function which rounds toward \(-\infty\). We can therefore truncate the infinite sum
+        \begin{equation*}
+        S = \sum_{i=-\infty}^{\lfloor t/T\rfloor}e^{k T i}.
+        \end{equation*}
+        Now shift the summation by introducing the change of variable
+        \(i \rightarrow i + \lfloor t/T\rfloor\),
+        \begin{equation*}
+        S = e^{k T\lfloor t/T\rfloor} \sum_{i=-\infty}^0 e^{k T i},
+        \end{equation*}
+        and flip the sum by sending \(i \rightarrow -i\) to get
+        \begin{equation*}
+        S = e^{k T\lfloor t/T\rfloor} \sum_{i=0}^\infty e^{-k T i}.
+        \end{equation*}
+        Since \(e^{-kT}\) is strictly smaller than 1 we use the geometric series
+        which finally gives us
+        \begin{equation*}
+        S = \frac{e^{k T\lfloor t/T\rfloor}}{1 - e^{-kT}}.
+        \end{equation*}
+        Using this identity for the three exponential terms in \eqref{eq:infinitesumsteadystate3C} 
+        we finally obtain an explicit expression for the steady-state solution
+        <div style="text-align: center"><div class="eqborder">
+        \begin{equation}\label{eq:steadystate3C}
+        E_2^{ss3C}(t) = d k_1 k_2\left[\frac{e^{-k_1 (t - T\lfloor t/T\rfloor)}}{(1 - e^{-k_1T})(k_1 - k_2)(k_1 - k_3)} - \frac{e^{-k_2(t - T\lfloor t/T\rfloor)}}{(1 - e^{-k_2T})(k_1 - k_2)(k_2 - k_3)} + \frac{e^{-k_3 (t - T\lfloor t/T\rfloor)}}{(1 - e^{-k_3T})(k_1 - k_3)(k_2 - k_3)}\right].
+        \end{equation}
+        </div></div>
+        This solution is periodic with period \(T\) and gives us easy access to exposure,
+        also called the area under the curve (AUC). Since \(\int_0^T e^{-k t} = (1 - e^{-k T})/k\)
+        the numerators in \eqref{eq:steadystate3C} cancel the steady state factor in the denominators and
+        therefore the AUC over one period
+        \begin{equation*}\begin{split}
+        \text{AUC} = \int_0^T E_2^{ss3C}(t) dt &= d k_1 k_2\left(\frac{1}{k_1(k_1 - k_2)(k_1-k_3)} - \frac{1}{k_2(k_1-k_2)(k_2-k_3)} + \frac{1}{k_3(k_1-k_3)(k_2-k_3)}\right),\\
+        &= d k_1 k_2\frac{k_2 k_3 (k_2 - k_3) - k_1 k_3(k_1 - k_3) + k_1 k_2(k_1 - k_2)}{k_1 k_2 k_3(k_1 - k_2)(k_1-k_3)(k_2 - k_3)},\\
+        & = \frac{d}{k_3}.
+        \end{split}\end{equation*}
+        Note how the AUC is independent of the rates \(k_1, k_2\). The average level
+        at steady state is therefore
+        \begin{equation*}
+        \overline{E^{ss}_2} = \frac{AUC}{T} = \frac{d}{k_3 T}.
+        \end{equation*}
+        For the purpose of hormonotherapy we are often interested in levels "at trough",
+        namely at their lowest just before the next injection. This is given by
+        \begin{equation*}
+        E^{ss}_2(0) = d k_1 k_2\left[\frac{1}{(1 - e^{-k_1T})(k_1 - k_2)(k_1 - k_3)} - \frac{1}{(1 - e^{-k_2T})(k_1 - k_2)(k_2 - k_3)} + \frac{1}{(1 - e^{-k_3T})(k_1 - k_3)(k_2 - k_3)}\right].
+        \end{equation*}
+        One interesting point to note is that this is not the "true" trough, but a very
+        close approximation. The "true" trough happens a a little after the injection. We do not
+        show this but the derivative is indeed always negative or zero at \(t = 0\). One can check
+        that at first order in \(k_1, k_2, k_3\) with \(T\) of order 1 the derivative is
+        approximately \(-d k_1 k_2 T/12\) which is negative for non-zero rates. Intuitively
+        this is due to the fact that there is a delay introduced by rates of diffusion and
+        cleavage of the ester and therefore the rate of increase of serum estradiol caused
+        by the new depot does not immediately compensate for the rate of elimination. There
+        is inertia in the system.
+      </p>
+    
+
+      <h3>3-compartments model for patches</h3>
+      We can use the 3-compartment model to model the pharmacokinetic of transdermal estradiol.
+      Patches are made of a backing layer, a reservoir of estradiol, and a membrane that
+      controls the rate of diffusion of estradiol into the skin. \(D(t)\) can now stand
+      for the amount of estradiol in the patch, the rate \(k_1\) for the rate of diffusion
+      across the membrane, \(E_s(t)\) for the amount of estradiol in the skin, 
+      and \(k_2\) the combined rate of diffusion and absorption of estradiol across the
+      skin and into capillaries. The differential equation is thus given \eqref{eq:3C}
+      once again. One particularity of using patches is that one usually replaces
+      it once or twice a week. Denote the length of time the patch is worn \(W\). When
+      \(t = W\) is reached the patch is removed and \(D(W)\) is set to zero. From this
+      point on \(E_s(t)\) and \(E_2(t)\) act as a 2-compartments model with initial conditions
+      \(E_s(W)\) and \(E_2(W)\). To get \(E_2(t)\) for \(t > W\) can use \eqref{eq:thirdcompartmentsolution} with
+      where all \(d_i=0\), and \(d_0^s = E_s(W)\) and \(d_0^2 = E_2(W)\) both at \(t_0 = W\).
+      We can immediately write
+      \begin{equation}\label{eq:patch3C}\begin{split}
+      E^{p3C}_2(t) &= \begin{cases}
+      E_2^{sd3C}(t), & \text{if } 0 \le t \le W,\\
+      \frac{k_2 E_s^{sd3C}(W)}{k_2 - k_3}\left[e^{-k_3(t - W)} - e^{-k_2(t - W)}\right] + E_2^{sd3C}(W) e^{-k_3 (t - W)}, & \text{if } t > W.
+      \end{cases}
+      \end{split}\end{equation}
+      where \(E_s^{sd3C}(W)\) is the amount of estradiol in the skin at the moment the patch
+      is removed, which we find using \eqref{eq:secondcompartmentsolution}
+      \begin{equation*}
+      E_s^{sd3C}(W) = \frac{d k_1}{k_1 - k_2}\left[e^{-k_2 W} - e^{-k_1 W}\right].
+      \end{equation*}
+
+
+      <h3>2&frac12;-compartments model for DOT patches</h3>
       <p>
         Delivery optimized thermodynamics (DOT) estradiol patches deliver
         a consistent amount of estradiol over a period of 3 to 7 days. The rate
@@ -230,7 +342,7 @@
         therefore model the amount of estradiol left in the patch following
         application at \(t = 0\) using the following differential equation
         \begin{equation*}\begin{split}
-        \frac{dP(t)}{dt} &= -k_1 H\left(P(t)\right) H(t),\\
+        \frac{dP(t)}{dt} &= -d k_1 H\left(P(t)\right) H(t),\\
         P(0) & = d.
         \end{split}\end{equation*}
         We need the presence of the first Heaviside function to insure that the
@@ -238,14 +350,14 @@
         is exhausted. It follows that the amount of estradiol in the patch
         \begin{equation*}
         P(t) = \begin{cases} d, & \text{if } t < 0, \\
-        d - k_1 t, &\text{if }0 \le t \le d/k_1, \\
-        0 &\text{if } t > d/k_1.
+        d(1- k_1 t), &\text{if }0 \le t \le 1/k_1, \\
+        0 &\text{if } t > 1/k_1.
         \end{cases}
         \end{equation*}
         The differential equations for the estradiol in the skin \(E_s(t)\)
         and for serum estradiol \(E_2(t)\) are given by
         \begin{equation*}\begin{split}
-        \frac{dE_s(t)}{dt} &= k_1 \delta_{0 \le t \le d/k_1} - k_2 E_s(t),\\
+        \frac{dE_s(t)}{dt} &= dk_1 \delta_{0 \le t \le 1/k_1} - k_2 E_s(t),\\
         \frac{dE_2(t)}{dt} &= k_2 E_s(t) - k_3 E_2(t),
         \end{split}\end{equation*}
         where \(\delta_x\) is the Kronecker delta
@@ -265,12 +377,12 @@
         <div style="text-align: center">
             <div class="eqborder">
         \begin{equation}\label{eq:pathsolE2}\begin{split}
-                E_2^w(t) &= \frac{k_1}{k_3}\left[1 - H(t - d/k_1)\right]\\
-                &+\frac{k_1 e^{-k_2 t}}{k_2 - k_3}\left[1 - e^{d k_2/k_1} H(t - d/k_1)\right]\\
-                &+\frac{k_1 k_2 e^{-k_3 t}}{k_3(k_2 - k_3)}\left[1 - e^{d k_3/k_1} H(t - d/k_1)\right].
+                E_2^w(t) &= \frac{dk_1}{k_3}\left[1 - H(t - 1/k_1)\right]\\
+                &+\frac{dk_1 e^{-k_2 t}}{k_2 - k_3}\left[1 - e^{k_2/k_1} H(t - 1/k_1)\right]\\
+                &+\frac{dk_1 k_2 e^{-k_3 t}}{k_3(k_2 - k_3)}\left[1 - e^{k_3/k_1} H(t - 1/k_1)\right].
         \end{split}\end{equation}
         </div></div>
-        Note how the solution is no longer linear in the dose \(d\). This solution
+        Note how the solution is still linear in \(d\). This solution
         characterizes the serum estradiol in the case where the patch is worn 
         indefinitely. In practice the patch is replaced every 3 to 7 days. Let's
         call the time during which the patch in worn \(W\). After removal at
@@ -409,7 +521,7 @@
         the multi-dose solution \(E^{mdEC}_2\) with all \(d_i\) equal. Let's use
         \(E_2\) to denote either of them and omit the time variable for brevity.
         The function \(E_2\) is invariant under 5 different transformations of its parameters,
-        or 6 if we include the trivial one, called the identity which we denote
+        or 6 if we include the trivial one, called the identity and denoted
         by \(\operatorname{id}\). Notice first that interchanging \( k_1
         \leftrightarrow k_2\) leaves the solution unchanged since the first and
         second terms transform into each other. Let's call this transformation
@@ -425,7 +537,7 @@
         \end{split}\end{equation*} With \(\operatorname{T}_1\) and
         \(\operatorname{T}_2\) in our possession we can generate the remaining
         transformations. For example, applying \(\operatorname{T}_2\) followed
-        by \(\operatorname{T}_1\) or vis-vers gives us the transformation
+        by \(\operatorname{T}_1\) or vis-versa gives us the transformation
         \(\operatorname{T}_3\) and \(\operatorname{T}_4\). Omitting the brackets
         for brevity, \begin{equation*}\begin{split} \operatorname{T}_3 E_2 =
         \operatorname{T}_1\operatorname{T}_2E_2 &= E_2(dk_1/k_3, k_2, k_3,
@@ -557,6 +669,39 @@
         style="width: 18em; display: block; margin-left: auto"
         alt="hierarchical emix model"
       />
+
+      <h1>data and inferences</h1>
+      <h3>twice-weekly patches</h3>
+      <p>
+      We collected and digitized the data from the following sources
+        <div style="margin-top: 2em; margin-bottom: 2em;">
+          <ul>
+            <li style="direction: ltr;"><a href="https://doi.org/10.1016/S0378-5122(03)00189-0">Houssain et al. 2003 - Dose proportionality study of four doses of an estradiol transdermal system, Estradot®</a></li>
+            <li style="direction: ltr;"><a href="https://doi.org/10.1016/S0378-5122(03)00190-7">Houssain et al. 2003 - Comparative bioequivalence studies with Estradot® and Menorest® transdermal systems</a></li>
+            <li style="direction: ltr;"><a href="https://dailymed.nlm.nih.gov/dailymed/lookup.cfm?setid=f4efb0bf-b96f-4e20-a0f2-0806ab92b2d4">Mylan Pharmaceuticals Inc. Mylan Estradiol patch drug label (updated January 12, 2022)</a></li>
+          </ul>
+        </div>
+      </p>
+      <p>
+        We perform the inference using the 3-compartments PK model and 
+        a normal data likelihood and individual random weights for  each individual 
+        combination of (study, dose). We do not remove the baseline levels from the data 
+        and instead leave it as a parameter to be infered by the model. Once again each
+        combination of (study, dose) gets their own random baseline level. 
+        We ignore the two data points at \(t=0\) in Houssain et al. 2003 with n=30 
+        given the apparent decrease in serum level between hour 0 and hour 2. 
+        This dataset uses twice-weekly patches and we therefore set \(W = 3.5\).
+      </p>
+
+      <img
+        id="patchdataplot"
+        class="flex-item"
+        src="patchdata_twiceweekly_night.png"
+        style="display: block; margin-left: auto"
+        alt="Plot of twice-weekly patch data"
+      />
+      
+      
 
       <h1 id="appendix">appendix</h1>
       <h3 id="appendix_gensol3C">
