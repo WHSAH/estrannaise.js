@@ -115,11 +115,13 @@
 
   <body>
     <div id="container">
-      <label class="switch" style="text-align: right">
-        <input type="checkbox" id="nightday-slider" />
-        <span class="slider round"></span>
-      </label>
-      <h1>introduction</h1>
+      <div>
+        <label class="switch">
+          <input type="checkbox" id="nightday-slider" />
+          <span class="slider round"></span>
+        </label>
+        <h1>introduction</h1>
+      </div>
       <p>
         estrannaise.js uses several mathematical concepts under the hood. It
         combines pharmacokinetics compartments models with Markov Chain Monte
@@ -391,20 +393,24 @@
       &=\frac{e^{k T\lfloor t/T\rfloor} - e^{k T\lfloor(t - W)/T\rfloor}}{1 - e^{-k T}},
       \end{split}\end{equation*}
       and therefore the steady-state solution for patches
-      <div style="text-align: center"><div class="eqborder">
+      <div style="text-align: center;"><div class="eqborder">
       \begin{equation}\label{eq:steadystatepatch3C}\begin{split}
-      E^{ssp3C}_2(t) &= d k_1 k_2\left[\frac{e^{-k_1 (t - T\lfloor t/T\rfloor)} - e^{-k_1(t - T\lfloor(t - W)/T\rfloor)}}{(1 - e^{-k_1T})(k_1 - k_2)(k_1 - k_3)} - \frac{e^{-k_2 (t - T\lfloor t/T\rfloor)} - e^{-k_2(t - T\lfloor(t - W)/T\rfloor)}}{(1 - e^{-k_2T})(k_1 - k_2)(k_2 - k_3)} + \frac{e^{-k_3 (t - T\lfloor t/T\rfloor)} - e^{-k_3(t - T\lfloor(t - W)/T\rfloor)}}{(1 - e^{-k_3T})(k_1 - k_3)(k_2 - k_3)}\right]\\
-      &+ \frac{k_2 E_s^{sd3C}(W)}{k_2 - k_3}\left[\frac{e^{-k_3(t - W - T\lfloor(t - W)/T\rfloor)}}{1 - e^{-k_3 T}} - \frac{e^{-k_2(t - W - T\lfloor(t - W)/T\rfloor)}}{1 - e^{-k_2 T}}\right] + E_2^{sd3C}(W) \frac{e^{-k_3 (t - W - T\lfloor(t - W)/T\rfloor)}}{1 - e^{-k_3 T}}.
+      E^{ssp3C}_2(t) = d k_1 k_2&\left[\frac{e^{-k_1 (t - T\lfloor t/T\rfloor)} - e^{-k_1(t - T\lfloor(t - W)/T\rfloor)}}{(1 - e^{-k_1T})(k_1 - k_2)(k_1 - k_3)} - \frac{e^{-k_2 (t - T\lfloor t/T\rfloor)} - e^{-k_2(t - T\lfloor(t - W)/T\rfloor)}}{(1 - e^{-k_2T})(k_1 - k_2)(k_2 - k_3)} \right.\\
+      &\left.+ \frac{e^{-k_3 (t - T\lfloor t/T\rfloor)} - e^{-k_3(t - T\lfloor(t - W)/T\rfloor)}}{(1 - e^{-k_3T})(k_1 - k_3)(k_2 - k_3)}\right]\\
+      \\
+      &+ \frac{k_2 E_s^{sd3C}(W)}{k_2 - k_3}\left[\frac{e^{-k_3(t - W - T\lfloor(t - W)/T\rfloor)}}{1 - e^{-k_3 T}} - \frac{e^{-k_2(t - W - T\lfloor(t - W)/T\rfloor)}}{1 - e^{-k_2 T}}\right] \\
+      &+ E_2^{sd3C}(W) \frac{e^{-k_3 (t - W - T\lfloor(t - W)/T\rfloor)}}{1 - e^{-k_3 T}}.
       \end{split}\end{equation}
       </div></div>
       <br>
       Figure X shows the convergence of a solution that is the sum of single patch solutions
-      to the exact curve given by the steady-state patch solution. Note that the bottom two
-      plots represent unrealistic situation where new patches are added faster than old
-      ones are removed and would lead to an infinite accumulation of patches on one's body.
+      to the exact curve given by the steady-state patch solution. Note that in the bottom two
+      plots \(T < W\) which represents an unrealistic situation where new patches are added 
+      faster than old patches are removed and would lead to an infinite accumulation of patches 
+      on one's body.
       They only serves to illustrate the validity of the steady-state solution in all cases.
-      Interestingly it would not lead to an infinite accumulation of estradiol given that
-      old patches are eventually exhausted.
+      Interestingly it does not lead to an unbounded increase of serum estradiol given that
+      old patches are eventually exhausted. Moreover the period switches from \(T\) to \(W\).
 <figure>
   <img
   id="patch_curves"
