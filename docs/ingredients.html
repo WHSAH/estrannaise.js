@@ -264,10 +264,10 @@
         \end{equation*}
         Since \(e^{-kT}\) is strictly smaller than 1 we use the geometric series
         which finally gives us
-        \begin{equation*}
+        \begin{equation}\label{eq:ssgeomidentity}
         S = \frac{e^{k T\lfloor t/T\rfloor}}{1 - e^{-kT}}.
-        \end{equation*}
-        Using this identity for the three exponential terms in \eqref{eq:infinitesumsteadystate3C} 
+        \end{equation}
+        Using \eqref{eq:ssgeomidentity} for the three exponential terms in \eqref{eq:infinitesumsteadystate3C} 
         we finally obtain an explicit expression for the steady-state solution
         <div style="text-align: center"><div class="eqborder">
         \begin{equation}\label{eq:steadystate3C}
@@ -289,9 +289,11 @@
         \overline{E^{ss}_2} = \frac{AUC}{T} = \frac{d}{k_3 T}.
         \end{equation*}
         For the purpose of hormonotherapy we are often interested in levels "at trough",
-        namely at their lowest just before the next injection. This is given by
+        namely at their lowest just before the next injection. This is given by the value
+        of serum estradiol at the beginning of each period in the steady state, for example
+        at \(t = 0\), and thus
         \begin{equation*}
-        E^{ss}_2(0) = d k_1 k_2\left[\frac{1}{(1 - e^{-k_1T})(k_1 - k_2)(k_1 - k_3)} - \frac{1}{(1 - e^{-k_2T})(k_1 - k_2)(k_2 - k_3)} + \frac{1}{(1 - e^{-k_3T})(k_1 - k_3)(k_2 - k_3)}\right].
+        E^{tr}_2 = E^{ss}_2(0) = d k_1 k_2\left[\frac{1}{(1 - e^{-k_1T})(k_1 - k_2)(k_1 - k_3)} - \frac{1}{(1 - e^{-k_2T})(k_1 - k_2)(k_2 - k_3)} + \frac{1}{(1 - e^{-k_3T})(k_1 - k_3)(k_2 - k_3)}\right].
         \end{equation*}
         One interesting point to note is that this is not the "true" trough, but a very
         close approximation. The "true" trough happens a a little after the injection. We do not
@@ -306,34 +308,71 @@
     
 
       <h3>3-compartments model for patches</h3>
-      We can use the 3-compartment model to model the pharmacokinetic of transdermal estradiol.
-      Patches are made of a backing layer, a reservoir of estradiol, and a membrane that
-      controls the rate of diffusion of estradiol into the skin. \(D(t)\) can now stand
-      for the amount of estradiol in the patch, the rate \(k_1\) for the rate of diffusion
-      across the membrane, \(E_s(t)\) for the amount of estradiol in the skin, 
-      and \(k_2\) the combined rate of diffusion and absorption of estradiol across the
-      skin and into capillaries. The differential equation is thus given \eqref{eq:3C}
-      once again. One particularity of using patches is that one usually replaces
-      it once or twice a week. Denote the length of time the patch is worn \(W\). When
-      \(t = W\) is reached the patch is removed and \(D(W)\) is set to zero. From this
-      point on \(E_s(t)\) and \(E_2(t)\) act as a 2-compartments model with initial conditions
-      \(E_s(W)\) and \(E_2(W)\). To get \(E_2(t)\) for \(t > W\) can use \eqref{eq:thirdcompartmentsolution} with
-      where all \(d_i=0\), and \(d_0^s = E_s(W)\) and \(d_0^2 = E_2(W)\) both at \(t_0 = W\).
-      We can immediately write
-      \begin{equation}\label{eq:patch3C}\begin{split}
-      E^{p3C}_2(t) &= \begin{cases}
-      E_2^{sd3C}(t), & \text{if } 0 \le t \le W,\\
-      \frac{k_2 E_s^{sd3C}(W)}{k_2 - k_3}\left[e^{-k_3(t - W)} - e^{-k_2(t - W)}\right] + E_2^{sd3C}(W) e^{-k_3 (t - W)}, & \text{if } t > W.
-      \end{cases}
+      <p>
+        We can use the 3-compartment model to model the pharmacokinetic of transdermal estradiol.
+        Patches are made of a backing layer, a reservoir of estradiol, and a membrane that
+        controls the rate of diffusion of estradiol into the skin. \(D(t)\) can now stand
+        for the amount of estradiol in the patch, the rate \(k_1\) for the rate of diffusion
+        across the membrane, \(E_s(t)\) for the amount of estradiol in the skin,
+        and \(k_2\) the combined rate of diffusion and absorption of estradiol across the
+        skin and into capillaries. The differential equation is thus given \eqref{eq:3C}
+        once again. One particularity of using patches is that one usually replaces
+        it once or twice a week. Denote the length of time the patch is worn \(W\). When
+        \(t = W\) is reached the patch is removed and \(D(W)\) is set to zero. From this
+        point on \(E_s(t)\) and \(E_2(t)\) act as a 2-compartments model with initial conditions
+        \(E_s(W)\) and \(E_2(W)\). To get \(E_2(t)\) for \(t \ge W\) can use \eqref{eq:thirdcompartmentsolution} with
+        where all \(d_i=0\), and \(d_0^s = E_s(W)\) and \(d_0^2 = E_2(W)\) both at \(t_0 = W\).
+        We can immediately write
+        <div style="text-align: center">
+          <div class="eqborder">
+        \begin{equation}\label{eq:patch3C}\begin{split}
+        E^{p3C}_2(t) &= \begin{cases}
+        E_2^{sd3C}(t), & \text{if } 0 \le t < W,\\
+        \frac{k_2 E_s^{sd3C}(W)}{k_2 - k_3}\left[e^{-k_3(t - W)} - e^{-k_2(t - W)}\right] + E_2^{sd3C}(W) e^{-k_3 (t - W)}, & \text{if } t \ge W.
+        \end{cases}
+        \end{split}\end{equation}
+          </div></div>  
+        where \(E_s^{sd3C}(W)\) is the amount of estradiol in the skin at the moment the patch
+        is removed, which we find using \eqref{eq:secondcompartmentsolution}
+        \begin{equation*}
+        E_s^{sd3C}(W) = \frac{d k_1}{k_1 - k_2}\left[e^{-k_2 W} - e^{-k_1 W}\right].
+        \end{equation*}
+      </p>
+      <h3>steady state solution for patches</h3>
+      <p>
+      The pieceweise form of the single patch solution \eqref{eq:patch3C} introduces
+      one small complication when we want to compute the steady state solution. Intuitively,
+      the steady-state at a time \(t\) is given by the sum of all contributions from
+      the solution after \(t \ge W\) plus the contribution of the currently worn patch. Let's
+      rewrite \eqref{eq:patch3C} in a more convenient form reminescent of the multi-dose solution
+      \begin{equation*}\begin{split}
+      E^{ssp3C}_2(t) &= \sum_{i=-\infty}^{\infty} E^{p3C}_2(t - iT),\\
+      &= \sum_{i=-\infty}^{\infty} E_2^{sd3C}(t - iT) H(t - iT) H^+(W - t + iT) \\
+      & + \sum_{i=-\infty}^{\infty}\frac{k_2 E_s^{sd3C}(W)}{k_2 - k_3}H(t - W - i T)\left[e^{-k_3(t - W -iT)} - e^{-k_2(t - W - iT)}\right] + E_2^{sd3C}(W) H(t - W - i T) e^{-k_3 (t - W - iT)},
+      \end{split}\end{equation*}
+      where \(H^+(x)\) that is 0 if \(x \le 0\) and 1 if \(x > 0\) which we need in order
+      to respect the strict inequality \(t < W\) in the first part o f \eqref{eq:patch3C}. The
+      identity \eqref{eq:ssgeomidentity} gives us the second infinite sum, so let's focus
+      on the first. The product of Heaviside functions \(H(t - iT) H^+(W - t + iT)\) is non-zero
+      only when
+      $$t - iT \ge 0 \text{ and } W - t + iT > 0,$$
+      which implies
+      $$ \lfloor(t - W)/T\rfloor < i \le \lfloor t/T\rfloor.$$
+      The dependence on \(i\) in this second infinite sum takes the form
+      \begin{equation*}\begin{split}
+      R &= \sum_{i=-\infty}^\infty e^{k T i} H(t - iT) H^+(W - t + iT),\\
+      &=\sum_{i=\lfloor(t - W)/T\rfloor + 1}^{\lfloor t/T\rfloor} \left(e^{k T}\right)^i,\\
+      &=\frac{e^{k T\lfloor t/T\rfloor} - e^{k T\lfloor(t - W)/T\rfloor}}{1 - e^{-k T}},
+      \end{split}\end{equation*}
+      and therefore the steady-state solution for patches
+      <div style="text-align: center"><div class="eqborder">
+      \begin{equation}\label{eq:steadystatepatch3C}\begin{split}
+      E^{ssp3C}_2(t) &= d k_1 k_2\left[\frac{e^{-k_1 (t - T\lfloor t/T\rfloor)} - e^{-k_1(t - T\lfloor(t - W)/T\rfloor)}}{(1 - e^{-k_1T})(k_1 - k_2)(k_1 - k_3)} - \frac{e^{-k_2 (t - T\lfloor t/T\rfloor)} - e^{-k_2(t - T\lfloor(t - W)/T\rfloor)}}{(1 - e^{-k_2T})(k_1 - k_2)(k_2 - k_3)} + \frac{e^{-k_3 (t - T\lfloor t/T\rfloor)} - e^{-k_3(t - T\lfloor(t - W)/T\rfloor)}}{(1 - e^{-k_3T})(k_1 - k_3)(k_2 - k_3)}\right]\\
+      &+ \frac{k_2 E_s^{sd3C}(W)}{k_2 - k_3}\left[\frac{e^{-k_3(t - W - T\lfloor(t - W)/T\rfloor)}}{1 - e^{-k_3 T}} - \frac{e^{-k_2(t - W - T\lfloor(t - W)/T\rfloor)}}{1 - e^{-k_2 T}}\right] + E_2^{sd3C}(W) \frac{e^{-k_3 (t - W - T\lfloor(t - W)/T\rfloor)}}{1 - e^{-k_3 T}}.
       \end{split}\end{equation}
-      where \(E_s^{sd3C}(W)\) is the amount of estradiol in the skin at the moment the patch
-      is removed, which we find using \eqref{eq:secondcompartmentsolution}
-      \begin{equation*}
-      E_s^{sd3C}(W) = \frac{d k_1}{k_1 - k_2}\left[e^{-k_2 W} - e^{-k_1 W}\right].
-      \end{equation*}
-
-
-      <h3>2&frac12;-compartments model for DOT patches</h3>
+      </div></div>
+      </p>
+      <!-- <h3>2&frac12;-compartments model for DOT patches</h3>
       <p>
         Delivery optimized thermodynamics (DOT) estradiol patches deliver
         a consistent amount of estradiol over a period of 3 to 7 days. The rate
@@ -410,7 +449,7 @@
         \frac{k_2 E^w_s(W)}{k_2 - k_3}\left[e^{-k_3(t - W)} - e^{-k_2(t - W)}\right] + E^w_2(W) e^{-k_3 (t - W)},
         \end{split} & \text{if } t > W.
               \end{cases}
-        \end{split}\end{equation}
+        \end{split}\end{equation} -->
 
       <h1>inference with simple gaussian model</h1>
 
