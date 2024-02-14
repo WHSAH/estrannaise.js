@@ -156,7 +156,7 @@
             alt="3-compartments model of im esters"
           />
           <figcaption>
-            Figure 1. Three-compartments model of intramuscular injections
+            Figure X. Three-compartments model of intramuscular injections
           </figcaption>
         </figure>
         <p class="flex-item">
@@ -288,6 +288,12 @@
         \begin{equation*}
         \overline{E^{ss}_2} = \frac{AUC}{T} = \frac{d}{k_3 T}.
         \end{equation*}
+        This highlights the fact that average levels only depend on the elimination rate of
+        estradiol by the body and the dose per-\(T\) and are therefore independent of the
+        specific ester used. Reality is more messy than this simple model and this messiness
+        will be captured by the fact that the rate \(k_3\) we will infer later will 
+        be different for different esters.
+      
         For the purpose of hormonotherapy we are often interested in levels "at trough",
         namely at their lowest just before the next injection. This is given by the value
         of serum estradiol at the beginning of each period in the steady state, for example
@@ -350,9 +356,10 @@
       &= \sum_{i=-\infty}^{\infty} E_2^{sd3C}(t - iT) H(t - iT) H^+(W - t + iT) \\
       & + \sum_{i=-\infty}^{\infty}\frac{k_2 E_s^{sd3C}(W)}{k_2 - k_3}H(t - W - i T)\left[e^{-k_3(t - W -iT)} - e^{-k_2(t - W - iT)}\right] + E_2^{sd3C}(W) H(t - W - i T) e^{-k_3 (t - W - iT)},
       \end{split}\end{equation*}
-      where \(H^+(x)\) that is 0 if \(x \le 0\) and 1 if \(x > 0\) which we need in order
-      to respect the strict inequality \(t < W\) in the first part o f \eqref{eq:patch3C}. The
-      identity \eqref{eq:ssgeomidentity} gives us the second infinite sum, so let's focus
+      where \(H^+(x) = 1 - H(-x)\), meaning that contrary to \(H(0) = 1\) this version of 
+      the Heaviside function is defined such that  \(H^+(0) = 0\) We need it to respect the strict
+      inequality \(t < W\) in the first part of \eqref{eq:patch3C}.
+      The identity \eqref{eq:ssgeomidentity} gives us the second infinite sum, so let's focus
       on the first. The product of Heaviside functions \(H(t - iT) H^+(W - t + iT)\) is non-zero
       only when
       $$t - iT \ge 0 \text{ and } W - t + iT > 0,$$
@@ -371,6 +378,27 @@
       &+ \frac{k_2 E_s^{sd3C}(W)}{k_2 - k_3}\left[\frac{e^{-k_3(t - W - T\lfloor(t - W)/T\rfloor)}}{1 - e^{-k_3 T}} - \frac{e^{-k_2(t - W - T\lfloor(t - W)/T\rfloor)}}{1 - e^{-k_2 T}}\right] + E_2^{sd3C}(W) \frac{e^{-k_3 (t - W - T\lfloor(t - W)/T\rfloor)}}{1 - e^{-k_3 T}}.
       \end{split}\end{equation}
       </div></div>
+      <br>
+      Figure X shows the convergence of a solution that is the sum of single patch solutions
+      to the exact curve given by the steady-state patch solution. Note that the bottom two
+      plots represent unrealistic situation where new patches are added faster than old
+      ones are removed and would lead to an infinite accumulation of patches on one's body.
+      They only serves to illustrate the validity of the steady-state solution in all cases.
+      Interestingly it would not lead to an infinite accumulation of estradiol given that
+      old patches are eventually exhausted.
+<figure>
+  <img
+  id="patch_curves"
+  class="flex-item"
+  src="patch_curves_night.png"
+  style="display: block; width: 100%; margin-left: auto"
+  alt="Comparison of the steady-state and normal solutions for patches"
+      />
+      <figcaption>
+        Figure X. Comparison of multi-dose patch solutions and their steady-state patch solutions
+      </figcaption>
+</figure>
+
       </p>
       <!-- <h3>2&frac12;-compartments model for DOT patches</h3>
       <p>
@@ -464,7 +492,7 @@
           alt="gaussian generative model"
         />
         <figcaption>
-          Figure 2. Gaussian generative model with normally distributed serum
+          Figure X. Gaussian generative model with normally distributed serum
           levels
         </figcaption>
       </figure>
