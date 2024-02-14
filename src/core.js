@@ -133,10 +133,10 @@ function loadCSV(files) {
                     deleteAllRows('multidose-table');
                     results.data.forEach(function (csvrow) {
                         if (csvrow.length >= 3) {
-                            let ester = findIntersecting(methodList, csvrow[2].replace(/\s/g, '').replace(/im/gi, ''));
+                            let delivtype = findIntersecting(methodList, csvrow[2]); //.replace(/\s/g, '').replace(/im/gi, ''));
 
-                            if (ester && (isFinite(csvrow[0]) || isValidDate(csvrow[0])) && isFinite(csvrow[1])) {
-                                addTDERow('multidose-table', csvrow[0], parseFloat(csvrow[1]), ester)
+                            if (delivtype && (isFinite(csvrow[0]) || isValidDate(csvrow[0])) && isFinite(csvrow[1])) {
+                                addTDERow('multidose-table', csvrow[0], parseFloat(csvrow[1]), delivtype)
                             }
                         }
                     });
