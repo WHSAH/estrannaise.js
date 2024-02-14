@@ -5,6 +5,7 @@ const NB_LINE_POINTS = 1500;
 const CLOUD_POINT_SIZE = 1.3;
 const CLOUD_POINT_OPACITY = 0.5;
 
+
 function fillCurve(func, xmin, xmax, nbsteps) {
     let curve = [];
     for (let i = xmin; i <= xmax; i += (xmax - xmin) / (nbsteps - 1)) {
@@ -12,6 +13,7 @@ function fillCurve(func, xmin, xmax, nbsteps) {
     }
     return curve;
 }
+
 
 function plotCurves(uncertainty = "cloud") {
 
@@ -60,7 +62,7 @@ function plotCurves(uncertainty = "cloud") {
             // The cloud points are not used to set it since they
             // sometimes are too far up.
             if (!mdCVisib) {
-                let probeMultiDoseCurve = fillCurve(t => e2MultiDoseEster3C(t, mdDoses, mdTimes, mdEsters), xmin, xmax, NB_LINE_POINTS);
+                let probeMultiDoseCurve = fillCurve(t => e2MultiDose3C(t, mdDoses, mdTimes, mdEsters), xmin, xmax, NB_LINE_POINTS);
                 e2max = Math.max(e2max, ...probeMultiDoseCurve.map(p => p.E2));
             }
 
@@ -68,7 +70,7 @@ function plotCurves(uncertainty = "cloud") {
                 let mdUncertaintyCloud = [];
                 for (let i = 0; i < NB_CLOUD_POINTS; i++) {
                     let randx = Math.random() * (xmax - xmin) + xmin;
-                    let y = e2MultiDoseEster3C(randx, mdDoses, mdTimes, mdEsters, true);
+                    let y = e2MultiDose3C(randx, mdDoses, mdTimes, mdEsters, true);
                     mdUncertaintyCloud.push({ Time: randx, E2: y });
                 }
                 dotmarks.push(Plot.dot(mdUncertaintyCloud, { x: "Time", y: "E2", r: CLOUD_POINT_SIZE, fill: colorTheBlue(CLOUD_POINT_OPACITY) }))
@@ -79,16 +81,16 @@ function plotCurves(uncertainty = "cloud") {
 
 
         if (mdCVisib) {
-            let multiDoseEstersCurve = fillCurve(t => e2MultiDoseEster3C(t, mdDoses, mdTimes, mdEsters), xmin, xmax, NB_LINE_POINTS);
-            multiDoseEstersCurve = multiDoseEstersCurve.map(p => ({ Time: p.Time, E2: p.E2 }));
+            let multiDoseCurve = fillCurve(t => e2MultiDose3C(t, mdDoses, mdTimes, mdEsters), xmin, xmax, NB_LINE_POINTS);
+            multiDoseCurve = multiDoseCurve.map(p => ({ Time: p.Time, E2: p.E2 }));
 
-            e2max = Math.max(e2max, ...multiDoseEstersCurve.map(p => p.E2));
-            linemarks.push(Plot.line(multiDoseEstersCurve, { x: "Time", y: "E2", strokeWidth: 2, stroke: colorThePink(), strokeDash: [2, 2]}));
+            e2max = Math.max(e2max, ...multiDoseCurve.map(p => p.E2));
+            linemarks.push(Plot.line(multiDoseCurve, { x: "Time", y: "E2", strokeWidth: 2, stroke: colorThePink(), strokeDash: [2, 2]}));
             
             // Plot.ruleX(aapl, Plot.pointerX({x: "Date", py: "Close", stroke: "red"})),
-            // rulemarks.push(Plot.ruleY(multiDoseEstersCurve, Plot.pointerY({ y: "E2", px: "Time", strokeWidth: 0.3, strokeDash: [2, 2], stroke: colorThePink() })));
+            // rulemarks.push(Plot.ruleY(multiDoseCurve, Plot.pointerY({ y: "E2", px: "Time", strokeWidth: 0.3, strokeDash: [2, 2], stroke: colorThePink() })));
             
-            tipmarks.push(Plot.tip(multiDoseEstersCurve, Plot.pointerX({
+            tipmarks.push(Plot.tip(multiDoseCurve, Plot.pointerX({
                 x: "Time", y: "E2",
                 title: p => `multi-dose\n\ntime: ${numberToDayHour(p.Time)}\n  e₂: ${p.E2.toFixed(0)} pg/ml`,
                 fontFamily: "monospace", fill: colorBackground(0.618), stroke: colorThePink()

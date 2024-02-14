@@ -1,7 +1,33 @@
-function lngamma(x) { return ieee754gamma.lngamma(x) }
+// function lngamma(x) { return ieee754gamma.lngamma(x) }
 
-const esterList = ["EV IM", "EEn IM", "EC IM", "EUn IM", "EB IM"];
+const methodList = ["EV IM", "EEn IM", "EC IM", "EUn IM", "EB IM", "DOT patch tw", "DOT patch ow"];
 
+const PKFunctions = {
+    "EV im": function (t, dose) { return e2SingleDose3C(t, dose, ...PK3CParams["EV im"]) },
+    "EEn im mk1": function (t, dose) { return e2SingleDose3C(t, dose, ...PK3CParams["EEn im mk1"]) },
+    "EEn im mk2": function (t, dose) { return e2SingleDose3C(t, dose, ...PK3CParams["EEn im mk2"]) },
+    "EC im": function (t, dose) { return e2SingleDose3C(t, dose, ...PK3CParams["EC im"]) }, 
+    "EUn im": function (t, dose) { return e2SingleDose3C(t, dose, ...PK3CParams["EUn im"]) },
+    "EB im": function (t, dose) { return e2SingleDose3C(t, dose, ...PK3CParams["EB im"]) },
+    "DOT patch tw": function (t, dose) { return e2Patch3CTwiceWeekly(t, dose, ...PK3CParams["DOT patch tw"]) },
+    "DOT patch ow": function (t, dose) { return e2Patch3COnceWeekly(t, dose, ...PK3CParams["DOT patch ow"]) }
+}
+
+const PKRandomFunctions = {
+    "EV im": function(t, dose) { return e2SingleDose3C(t, dose, ...randomMCMCSample("EV im")) },
+    "EEn im mk1": function(t, dose) { return e2SingleDose3C(t, dose, ...randomMCMCSample("EEn im mk1")) },
+    "EEn im mk2": function(t, dose) { return e2SingleDose3C(t, dose, ...randomMCMCSample("EEn im mk2")) },
+    "EC im": function(t, dose) { return e2SingleDose3C(t, dose, ...randomMCMCSample("EC im")) },
+    "EUn im": function(t, dose) { return e2SingleDose3C(t, dose, ...randomMCMCSample("EUn im")) },
+    "EB im": function(t, dose) { return e2SingleDose3C(t, dose, ...randomMCMCSample("EB im")) },
+    "DOT patch tw": function(t, dose) { return e2Patch3CTwiceWeekly(t, dose, ...randomMCMCSample("DOT patch tw")) },
+    "DOT patch ow": function(t, dose) { return e2Patch3COnceWeekly(t, dose, ...randomMCMCSample("DOT patch ow")) }
+}
+
+function randomMCMCSample(type) {
+    let randidx = Math.floor(Math.random() * mcmcSamplesPK3C[type].length)
+    return mcmcSamplesPK3C[type][randidx]
+}
 
 function PK3CD3Symmetry(d, k1, k2, k3, op = 0) {
     if (op == 0) {
@@ -132,22 +158,24 @@ function e2ssAverage3C(dose, T, d, k1, k2, k3) {
     return dose * d / k3 / T
 }
 
-function e2MultiDose3C(t, d, k1, k2, k3, doses = [1.0], times = [0.0]) {
-    let sum = 0;
-    for (let i = 0; i < doses.length; i++) {
-        sum += doses[i] * e2SingleDose3C(t - times[i], d, k1, k2, k3);
-    }
-    return sum;
-}
+// function e2MultiDose3C(t, d, k1, k2, k3, doses = [1.0], times = [0.0]) {
+//     let sum = 0;
+//     for (let i = 0; i < doses.length; i++) {
+//         sum += doses[i] * e2SingleDose3C(t - times[i], d, k1, k2, k3);
+//     }
+//     return sum;
+// }
 
-function e2MultiDoseEster3C(t, doses = [1.0], times = [0.0], esters = ["IMEV"], random = false) {
+function e2MultiDose3C(t, doses = [1.0], times = [0.0], types = ["EV im"], random = false) {
     let sum = 0;
     for (let i = 0; i < doses.length; i++) {
         if (!random) {
-            sum += e2SingleDose3C(t - times[i], doses[i], ...PK3CParams[esters[i]]);
+            sum += PKFunctions[types[i]](t - times[i], doses[i]);
+            // sum += e2SingleDose3C(t - times[i], doses[i], ...PK3CParams[esters[i]]);
         } else {
-            let randidx = Math.floor(Math.random() * mcmcSamplesPK3C[esters[i]].length);
-            sum += e2SingleDose3C(t - times[i], doses[i], ...mcmcSamplesPK3C[esters[i]][randidx]);
+            // let randidx = Math.floor(Math.random() * mcmcSamplesPK3C[esters[i]].length);
+            // sum += e2SingleDose3C(t - times[i], doses[i], ...mcmcSamplesPK3C[esters[i]][randidx]);
+            sum += PKRandomFunctions[types[i]](t - times[i], doses[i]);
         }
     }
     return sum;
@@ -161,14 +189,22 @@ function e2RepeatedDose3C(t, dose, T, K, d, k1, k2, k3) {
     return sum;
 }
 
-function e2Patch3C(t, dose, d, k1, k2, k3, W = 3.5) {
+function e2Patch3C(t, dose, d, k1, k2, k3, W) {
     if (t < 0.0) {
         return 0.0;
-    } else if (0 <= t <= W) {
+    } else if ((0 <= t) && (t <= W)) {
         return e2SingleDose3C(t, dose, d, k1, k2, k3);
     } else if (t > W) {
         let esW = esSingleDose3C(W, dose, d, k1, k2, k3);
         let e2W = e2SingleDose3C(W, dose, d, k1, k2, k3);
         return e2SingleDose3C(t - W, 0.0, 0.0, k1, k2, k3, esW, e2W);
     }
+}
+
+function e2Patch3CTwiceWeekly(t, dose, d, k1, k2, k3) {
+    return e2Patch3C(t, dose, d, k1, k2, k3, 3.5);
+}
+
+function e2Patch3COnceWeekly(t, dose, d, k1, k2, k3) {
+    return e2Patch3C(t, dose, d, k1, k2, k3, 7.0);
 }

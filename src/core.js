@@ -133,7 +133,7 @@ function loadCSV(files) {
                     deleteAllRows('multidose-table');
                     results.data.forEach(function (csvrow) {
                         if (csvrow.length >= 3) {
-                            let ester = findIntersecting(esterList, csvrow[2].replace(/\s/g, '').replace(/im/gi, ''));
+                            let ester = findIntersecting(methodList, csvrow[2].replace(/\s/g, '').replace(/im/gi, ''));
 
                             if (ester && (isFinite(csvrow[0]) || isValidDate(csvrow[0])) && isFinite(csvrow[1])) {
                                 addTDERow('multidose-table', csvrow[0], parseFloat(csvrow[1]), ester)
@@ -344,15 +344,16 @@ function addTDERow(tableID, time = null, dose = null, ester = null, cvisible = t
 
 
     let esterCell = row.insertCell(4)
-    esterCell.innerHTML =
+    esterCell.innerHTML = (
         '<select class="dropdown-ester"> \
             <option value="EV im">ev im</option> \
             <option value="EEn im mk2">een im</option> \
             <option value="EC im">ec im</option> \
             <option value="EB im">eb im</option> \
-            <option value="EUn im">eun im</option> \
-            <option value="DOT patch">patch</option> \
-            </select>';
+            <option value="EUn im">eun im</option>' + 
+            (tableID == 'multidose-table' ? '<option value="DOT patch tw">patch tw</option> \
+            <option value="DOT patch ow">patch ow</option> \
+            </select>' : ''));
     if (ester !== null) {
         esterCell.querySelector('select').value = ester;
     }
