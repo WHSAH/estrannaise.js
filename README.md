@@ -6,13 +6,9 @@ Under the hood, estrannaise.js uses pharmacokinetic compartments models and MCMC
 **estrannaise.js is entirely client-side. Your data, whether entered, imported, or stashed, remains exclusively within your browser and will never be transmitted to the developer(s) or any third-party.**
 
 # TODO
-- Double click "add" button to guess values of next row (same dose and ester, next time from last two times)
-- Add fits and uncertainty from emix model of interstudy variability
+- Add steady state patch solution
 - Handle mixed days/dates. If one or more dates are present in the day column days assume offsets are in relation to the earliest date
-- Enable/disable individual doses, if disabled then u visibility checkbox is disabled as well
-- Figure out the behavior when deleting first multi-dose row. Previous item should automatically take care of it
 - Add sublingual/buccal model (2C model?)
-- Add patch model (3C model followed by glued 2C model if removal time specified)
 - Add oral model (4C compartment with combined E1+E1S C's, or 5C with separate E1 and E1S C's)
 
 # Disclaimer
