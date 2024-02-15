@@ -365,7 +365,7 @@
         E_s^{sd3C}(W) = \frac{d k_1}{k_1 - k_2}\left[e^{-k_2 W} - e^{-k_1 W}\right].
         \end{equation*}
       </p>
-      <h3>steady state solution for patches</h3>
+      <h3 id="steadystatepatch3C">steady state solution for patches</h3>
       <p>
       The pieceweise form of the single patch solution \eqref{eq:patch3C} introduces
       one small complication when we want to compute the steady state solution. Intuitively,
@@ -398,7 +398,7 @@
       E^{ssp3C}_2(t) = d k_1 k_2&\left[\frac{e^{-k_1 (t - T\lfloor t/T\rfloor)} - e^{-k_1(t - T\lfloor(t - W)/T\rfloor)}}{(1 - e^{-k_1T})(k_1 - k_2)(k_1 - k_3)} - \frac{e^{-k_2 (t - T\lfloor t/T\rfloor)} - e^{-k_2(t - T\lfloor(t - W)/T\rfloor)}}{(1 - e^{-k_2T})(k_1 - k_2)(k_2 - k_3)} \right.\\
       &\left.+ \frac{e^{-k_3 (t - T\lfloor t/T\rfloor)} - e^{-k_3(t - T\lfloor(t - W)/T\rfloor)}}{(1 - e^{-k_3T})(k_1 - k_3)(k_2 - k_3)}\right]\\
       \\
-      &+ \frac{k_2 E_s^{sd3C}(W)}{k_2 - k_3}\left[\frac{e^{-k_3(t - W - T\lfloor(t - W)/T\rfloor)}}{1 - e^{-k_3 T}} - \frac{e^{-k_2(t - W - T\lfloor(t - W)/T\rfloor)}}{1 - e^{-k_2 T}}\right] \\
+      &+ E_s^{sd3C}(W)\frac{k_2}{k_2 - k_3}\left[\frac{e^{-k_3(t - W - T\lfloor(t - W)/T\rfloor)}}{1 - e^{-k_3 T}} - \frac{e^{-k_2(t - W - T\lfloor(t - W)/T\rfloor)}}{1 - e^{-k_2 T}}\right] \\
       &+ E_2^{sd3C}(W) \frac{e^{-k_3 (t - W - T\lfloor(t - W)/T\rfloor)}}{1 - e^{-k_3 T}}.
       \end{split}\end{equation}
       </div></div>
