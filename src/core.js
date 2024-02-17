@@ -47,6 +47,16 @@ function sortDatesAndOffsets(dates) {
         .map(item => item.date);
 }
 
+function isArraySorted(arr) {
+    for(let i = 0; i < arr.length - 1; i++) {
+        if(arr[i] > arr[i + 1]) {
+            return false;
+        }
+    }
+    return true;
+}
+
+
 function getMonospaceWidth() {
     let element = document.createElement('pre');
     element.style.position = 'absolute';
@@ -593,11 +603,11 @@ function getShareURL() {
     params.set('multiDoseTable', JSON.stringify(multiDoseTable));
     params.set('steadyStateTable', JSON.stringify(steadyStateTable));
 
-    return window.location.origin + window.location.pathname + '?' + params.toString();
+    return window.location.origin + window.location.pathname + '#' + params.toString();
 }
 
 function loadFromURL() {
-    let params = new URLSearchParams(window.location.search);
+    let params = window.location.hash.substring(1);
     let multiDoseTable = JSON.parse(params.get('multiDoseTable'));
     let steadyStateTable = JSON.parse(params.get('steadyStateTable'));
 
