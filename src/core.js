@@ -360,10 +360,11 @@ function addTDERow(tableID, time = null, dose = null, ester = null, cvisible = t
             <option value="EEn im">een im</option> \
             <option value="EC im">ec im</option> \
             <option value="EB im">eb im</option> \
-            <option value="EUn im">eun im</option>' + 
-            (tableID == 'multidose-table' ? '<option value="DOT patch tw">patch tw</option> \
+            <option value="EUn im">eun im</option> \
+            <option value="EUn csq">eun casubq</option> \
+            <option value="DOT patch tw">patch tw</option> \
             <option value="DOT patch ow">patch ow</option> \
-            </select>' : ''));
+            </select>');
     if (ester !== null) {
         esterCell.querySelector('select').value = ester;
     }
@@ -454,10 +455,10 @@ function attachMultidoseButtonsEvents() {
             addTDERow('multidose-table', guess.time, guess.dose, guess.ester);
             refresh();
         } else {
-            document.getElementById('guess-button').innerHTML = '(._.?';
+            document.getElementById('guess-button').innerHTML = '?._.)';
 
             setTimeout(() => {
-                document.getElementById('guess-button').innerHTML = 'guess';
+                document.getElementById('guess-button').innerHTML = 'add guess';
             }, 500);
         }
     });

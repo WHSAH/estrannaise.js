@@ -1,4 +1,5 @@
 const NB_CLOUD_POINTS = 3500;
+const NB_CLOUDPOINTS_PER_SAMPLE = 10;
 const NB_UCURVES = 200;
 const NB_LINE_POINTS = 1500;
 
@@ -25,13 +26,13 @@ function plotCurves(uncertainty = "cloud") {
 
     // If the first row of the multi-dose table is invalid 
     // we won't know about mdCVisib and mdUVisib
-    let [mdTimes, mdDoses, mdEsters, [mdCVisib, ...cnulls], [mdUVisib, ...unulls]] = getTDEs('multidose-table', true);
+    let [mdTimes, mdDoses, mdTypes, [mdCVisib, ...cnulls], [mdUVisib, ...unulls]] = getTDEs('multidose-table', true);
     // So read it again with keepincomplete=true
     let firstRow = readRow(document.getElementById('multidose-table').rows[1], true);
     mdCVisib = firstRow.cvisibility;
     mdUVisib = firstRow.uvisibility;
     
-    let [ssEveries, ssDoses, ssEsters, ssCVisibs, ssUVisibs] = getTDEs('steadystate-table', true);
+    let [ssEveries, ssDoses, ssTypes, ssCVisibs, ssUVisibs] = getTDEs('steadystate-table', true);
 
 
     let xmin = Math.min(0, ...mdTimes);
@@ -62,7 +63,7 @@ function plotCurves(uncertainty = "cloud") {
             // The cloud points are not used to set it since they
             // sometimes are too far up.
             if (!mdCVisib) {
-                let probeMultiDoseCurve = fillCurve(t => e2MultiDose3C(t, mdDoses, mdTimes, mdEsters), xmin, xmax, NB_LINE_POINTS);
+                let probeMultiDoseCurve = fillCurve(t => e2MultiDose3C(t, mdDoses, mdTimes, mdTypes), xmin, xmax, NB_LINE_POINTS);
                 e2max = Math.max(e2max, ...probeMultiDoseCurve.map(p => p.E2));
             }
 
@@ -70,7 +71,7 @@ function plotCurves(uncertainty = "cloud") {
                 let mdUncertaintyCloud = [];
                 for (let i = 0; i < NB_CLOUD_POINTS; i++) {
                     let randx = Math.random() * (xmax - xmin) + xmin;
-                    let y = e2MultiDose3C(randx, mdDoses, mdTimes, mdEsters, true);
+                    let y = e2MultiDose3C(randx, mdDoses, mdTimes, mdTypes, true);
                     mdUncertaintyCloud.push({ Time: randx, E2: y });
                 }
                 dotmarks.push(Plot.dot(mdUncertaintyCloud, { x: "Time", y: "E2", r: CLOUD_POINT_SIZE, fill: colorTheBlue(CLOUD_POINT_OPACITY) }))
@@ -81,7 +82,7 @@ function plotCurves(uncertainty = "cloud") {
 
 
         if (mdCVisib) {
-            let multiDoseCurve = fillCurve(t => e2MultiDose3C(t, mdDoses, mdTimes, mdEsters), xmin, xmax, NB_LINE_POINTS);
+            let multiDoseCurve = fillCurve(t => e2MultiDose3C(t, mdDoses, mdTimes, mdTypes), xmin, xmax, NB_LINE_POINTS);
             multiDoseCurve = multiDoseCurve.map(p => ({ Time: p.Time, E2: p.E2 }));
 
             e2max = Math.max(e2max, ...multiDoseCurve.map(p => p.E2));
@@ -105,13 +106,12 @@ function plotCurves(uncertainty = "cloud") {
             let ssUncertaintyCloud = [];
             for (let j = 0; j < NB_CLOUD_POINTS; j++) {
                 let randx = Math.random() * (xmax - xmin) + xmin;
-                let randidx = Math.floor(Math.random() * mcmcSamplesPK3C[ssEsters[i]].length);
-                let y = e2SteadyState3C(randx, ssDoses[i], ssEveries[i], ...mcmcSamplesPK3C[ssEsters[i]][randidx]);
+                let y = PKRandomFunctions[ssTypes[i]](randx, ssDoses[i], true, ssEveries[i]);
                 ssUncertaintyCloud.push({ Time: randx, E2: y });
             }
 
             if (!ssCVisibs[i]) {
-                let probeSteadyStateCurve = fillCurve(t => e2SteadyState3C(t, ssDoses[i], ssEveries[i], ...PK3CParams[ssEsters[i]]), xmin, xmax, NB_LINE_POINTS);
+                let probeSteadyStateCurve = fillCurve(t => PKFunctions[ssTypes[i]](t, ssDoses[i], true, ssEveries[i]), xmin, xmax, NB_LINE_POINTS);
                 e2max = Math.max(e2max, ...probeSteadyStateCurve.map(p => p.E2));
             }
 
@@ -119,13 +119,13 @@ function plotCurves(uncertainty = "cloud") {
         }
 
         if (ssCVisibs[i]) {
-            let ssEsterCurve = fillCurve(t => e2SteadyState3C(t, ssDoses[i], ssEveries[i], ...PK3CParams[ssEsters[i]]), xmin, xmax, NB_LINE_POINTS);
-            ssEsterCurve = ssEsterCurve.map(p => ({ Time: p.Time, E2: p.E2, type: `${ssEsters[i]} ${ssDoses[i]}mg/${ssEveries[i]}day${ssEveries[i] > 1 ? "s" : ""}` }));
+            let ssEsterCurve = fillCurve(t => PKFunctions[ssTypes[i]](t, ssDoses[i], true, ssEveries[i]), xmin, xmax, NB_LINE_POINTS);
+            ssEsterCurve = ssEsterCurve.map(p => ({ Time: p.Time, E2: p.E2, type: `${ssTypes[i]} ${ssDoses[i]}mg/${ssEveries[i]}day${ssEveries[i] > 1 ? "s" : ""}` }));
             e2max = Math.max(e2max, ...ssEsterCurve.map(p => p.E2));
             linemarks.push(Plot.line(ssEsterCurve, { x: "Time", y: "E2", strokeWidth: 2, stroke: colorThePink() }));
             tipmarks.push(Plot.tip(ssEsterCurve, Plot.pointerX({
                 x: "Time", y: "E2",
-                title: p => `${p.type.toLowerCase()}\n\ntime: ${numberToDayHour(p.Time)}\n  e₂: ${p.E2.toFixed(0)} pg/ml\n  tr: ${e2ssTrough3C(ssDoses[i], ssEveries[i], ...PK3CParams[ssEsters[i]]).toFixed(0)} pg/ml\n  av: ${e2ssAverage3C(ssDoses[i], ssEveries[i], ...PK3CParams[ssEsters[i]]).toFixed(0)} pg/ml`,
+                title: p => `${p.type.toLowerCase()}\n\ntime: ${numberToDayHour(p.Time)}\n  e₂: ${p.E2.toFixed(0)} pg/ml\n  tr: ${e2ssTrough3C(ssDoses[i], ssEveries[i], ...PKParams[ssTypes[i]]).toFixed(0)} pg/ml\n  av: ${e2ssAverage3C(ssDoses[i], ssEveries[i], ...PKParams[ssTypes[i]]).toFixed(0)} pg/ml`,
                 fontFamily: "monospace", fill: colorBackground(0.618), stroke: colorThePink()
             })));
         }

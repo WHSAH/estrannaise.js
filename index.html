@@ -17,6 +17,7 @@
     <!-- <script src="lib/loggamma.js"></script> -->
     <script src="lib/d3.min.js"></script>
     <script src="lib/plot.min.js"></script>
+    <script src="lib/math.min.js"></script>
     <script src="lib/papaparse.min.js"></script>
     <script src="data/modeldata.js"></script>
     <script src="src/models.js"></script>
@@ -26,8 +27,7 @@
 
     <div id="container">
         <header>
-            <!-- Good god this css is gory. 
-                that 1.2em top margin is holding the whole thing together -->
+            <!-- Good god this css is gory. -->
             <div id="header-div", style="display: flex; align-items: flex-start;">
                 <div id="logo">
                     <img src="img/favicon-96x96.png" alt="estrannaise.js logo">
@@ -66,10 +66,8 @@
                 <span style="font-weight: bold;">multi-doses</span>
                 <div id="multidose-buttons" style="margin-top: 1em;">
                     <button id="add-dose-button" class="flat-button">add</button>
-                    <button id="guess-button" class="flat-button">guess</button>
+                    <button id="guess-button" class="flat-button">add guess</button>
                     <button id="clear-doses-button" class="flat-button">clear</button>
-                    <!-- <button id="stash-button" class="flat-button">stash</button>
-                    <button id="recall-button" class="flat-button">recall</button> -->
                     <input type="file" id="csv-file" accept=".csv" style="display: none;">
                     <button id="import-csv-dialog" class="flat-button">import</button>
                     <button id="save-csv-button" class="flat-button">export</button>
@@ -161,7 +159,7 @@
                 </p>
             </div>
             <br>
-            <p>estrannaise.js (v0.2.16)</p>
+            <p>estrannaise.js (v0.2.17)</p>
             <p>mit license (c) 2024 alix</p>
             <br>
             <p><span id="tipjar-text">xmr tip jar</span><br><span

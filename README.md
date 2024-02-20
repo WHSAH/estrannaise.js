@@ -6,7 +6,7 @@ Under the hood, estrannaise.js uses pharmacokinetic compartments models and MCMC
 **estrannaise.js is entirely client-side. Your data, whether entered, imported, or stashed, remains exclusively within your browser and will never be transmitted to the developer(s) or any third-party.**
 
 # TODO
-- Add steady state patch solution
+- Fix bug at large time for multi-dose. Especially for EUn csq
 - Handle mixed days/dates. If one or more dates are present in the day column days assume offsets are in relation to the earliest date
 - Add sublingual/buccal model (2C model?)
 - Add oral model (4C compartment with combined E1+E1S C's, or 5C with separate E1 and E1S C's)
