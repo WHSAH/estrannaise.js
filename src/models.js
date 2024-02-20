@@ -49,8 +49,8 @@ function PKD3Symmetries(d, k1, k2, k3) {
     ];
 }
 
-// parameters ds and d2 are optional initial conditions in
-// the second and third compartments Es(0) = Ds and E2(0) = D2
+// parameters ds and d2 are optional initial conditions
+// Es(0) = ds and E2(0) = d2 for the second and third compartments 
 function e2SingleDose3C(t, dose, d, k1, k2, k3, Ds = 0.0, D2 = 0.0, steadystate = false, T=0.0) {
 
     if (!steadystate) {
@@ -100,19 +100,19 @@ function e2SingleDose3C(t, dose, d, k1, k2, k3, Ds = 0.0, D2 = 0.0, steadystate 
 
             } else {
 
-                let l1 = -k1 * t - Math.log(Math.abs(k1 - k2)) - Math.log(Math.abs(k1 - k3));
-                let s1 = Math.sign(k1 - k2) * Math.sign(k1 - k3);
+                // let l1 = -k1 * t - Math.log(Math.abs(k1 - k2)) - Math.log(Math.abs(k1 - k3));
+                // let s1 = Math.sign(k1 - k2) * Math.sign(k1 - k3);
 
-                let l2 = -k2 * t - Math.log(Math.abs(k1 - k2)) - Math.log(Math.abs(k2 - k3));
-                let s2 = -Math.sign(k1 - k2) * Math.sign(k2 - k3);
+                // let l2 = -k2 * t - Math.log(Math.abs(k1 - k2)) - Math.log(Math.abs(k2 - k3));
+                // let s2 = -Math.sign(k1 - k2) * Math.sign(k2 - k3);
 
-                let l3 = -k3 * t - Math.log(Math.abs(k1 - k3)) - Math.log(Math.abs(k2 - k3));
-                let s3 = Math.sign(k1 - k3) * Math.sign(k2 - k3);
+                // let l3 = -k3 * t - Math.log(Math.abs(k1 - k3)) - Math.log(Math.abs(k2 - k3));
+                // let s3 = Math.sign(k1 - k3) * Math.sign(k2 - k3);
 
-                // ret += dose * d * k1 * k2 * Math.exp(logsumsignedexp([l1, l2, l3], [s1, s2, s3]));
-                ret += Math.exp(Math.log(dose) + Math.log(d) + Math.log(k1) + Math.log(k2) + logsumsignedexp([l1, l2, l3], [s1, s2, s3]));
+                // // ret += dose * d * k1 * k2 * Math.exp(logsumsignedexp([l1, l2, l3], [s1, s2, s3]));
+                // ret += Math.exp(Math.log(dose) + Math.log(d) + Math.log(k1) + Math.log(k2) + logsumsignedexp([l1, l2, l3], [s1, s2, s3]));
 
-                // ret += dose * d * k1 * k2 * (Math.exp(-k1 * t) / (k1 - k2) / (k1 - k3) - Math.exp(-k2 * t) / (k1 - k2) / (k2 - k3) + Math.exp(-k3 * t) / (k1 - k3) / (k2 - k3));
+                ret += dose * d * k1 * k2 * (Math.exp(-k1 * t) / (k1 - k2) / (k1 - k3) - Math.exp(-k2 * t) / (k1 - k2) / (k2 - k3) + Math.exp(-k3 * t) / (k1 - k3) / (k2 - k3));
             }
         }
         if (isNaN(ret)) {
@@ -190,30 +190,30 @@ function e2ssAverage3C(dose, T, d, k1, k2, k3) {
 
 
 function e2MultiDose3C(t, doses = [1.0], times = [0.0], types = ["EV im"], random = false) {
-    let exponents = [];
-    for (let i = 0; i < doses.length; i++) {
-        if (!random) {
-            exponents.push(Math.log(PKFunctions[types[i]](t - times[i], doses[i])));
-        } else {
-            exponents.push(Math.log(PKRandomFunctions[types[i]](t - times[i], doses[i])));
-        }
-    }
-    let ret = Math.exp(_logsumexp(exponents));
-    if (isNaN(ret)) {
-        return 0.0;
-    } else {
-        return ret;
-    }
-    // let sum = 0;
+    // let exponents = [];
     // for (let i = 0; i < doses.length; i++) {
     //     if (!random) {
-    //         sum += PKFunctions[types[i]](t - times[i], doses[i]);
+    //         exponents.push(Math.log(PKFunctions[types[i]](t - times[i], doses[i])));
     //     } else {
-    //         sum += PKRandomFunctions[types[i]](t - times[i], doses[i]);
+    //         exponents.push(Math.log(PKRandomFunctions[types[i]](t - times[i], doses[i])));
     //     }
     // }
-    // console.log(foo, sum, foo - sum)
-    // return sum;
+    // // console.log(t, exponents)
+    // let ret = Math.exp(_logsumexp(exponents));
+    // if (isNaN(ret)) {
+    //     return 0.0;
+    // } else {
+    //     return ret;
+    // }
+    let sum = 0;
+    for (let i = 0; i < doses.length; i++) {
+        if (!random) {
+            sum += PKFunctions[types[i]](t - times[i], doses[i]);
+        } else {
+            sum += PKRandomFunctions[types[i]](t - times[i], doses[i]);
+        }
+    }
+    return sum;
 }
 
 function e2RepeatedDose3C(t, dose, T, K, d, k1, k2, k3) {
