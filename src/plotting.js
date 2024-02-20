@@ -125,7 +125,8 @@ function plotCurves(uncertainty = "cloud") {
             linemarks.push(Plot.line(ssEsterCurve, { x: "Time", y: "E2", strokeWidth: 2, stroke: colorThePink() }));
             tipmarks.push(Plot.tip(ssEsterCurve, Plot.pointerX({
                 x: "Time", y: "E2",
-                title: p => `${p.type.toLowerCase()}\n\ntime: ${numberToDayHour(p.Time)}\n  e₂: ${p.E2.toFixed(0)} pg/ml\n  tr: ${e2ssTrough3C(ssDoses[i], ssEveries[i], ...PKParams[ssTypes[i]]).toFixed(0)} pg/ml\n  av: ${e2ssAverage3C(ssDoses[i], ssEveries[i], ...PKParams[ssTypes[i]]).toFixed(0)} pg/ml`,
+                // title: p => `${p.type.toLowerCase()}\n\ntime: ${numberToDayHour(p.Time)}\n  e₂: ${p.E2.toFixed(0)} pg/ml\n  tr: ${PKFunctions[ssTypes[i]](0.0, ssDoses[i], true, ssEveries[i]).toFixed(0)} pg/ml\n  av: ${e2ssAverage3C(ssDoses[i], ssEveries[i], ...PKParams[ssTypes[i]]).toFixed(0)} pg/ml`,
+                title: p => `${p.type.toLowerCase()}\n\n  time: ${numberToDayHour(p.Time)}\n    e₂: ${p.E2.toFixed(0)} pg/ml\ntrough: ${PKFunctions[ssTypes[i]](0.0, ssDoses[i], true, ssEveries[i]).toFixed(0)} pg/ml`,
                 fontFamily: "monospace", fill: colorBackground(0.618), stroke: colorThePink()
             })));
         }
