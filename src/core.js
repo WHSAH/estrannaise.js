@@ -608,9 +608,9 @@ function getShareURL() {
 }
 
 function loadFromURL() {
-    let params = window.location.hash.substring(1);
-    let multiDoseTable = JSON.parse(params.get('multiDoseTable'));
-    let steadyStateTable = JSON.parse(params.get('steadyStateTable'));
+    let hashParams = new URLSearchParams(window.location.hash.substring(1));
+    let multiDoseTable = JSON.parse(hashParams.get('multiDoseTable'));
+    let steadyStateTable = JSON.parse(hashParams.get('steadyStateTable'));
 
     if (multiDoseTable) {
         deleteAllRows('multidose-table');
