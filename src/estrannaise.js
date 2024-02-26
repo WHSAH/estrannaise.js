@@ -1,6 +1,8 @@
 let rowValidity = new Map();
 let conversionFactor = 1.0;
 let units = "pg/mL";
+let daysAsIntervals = false;
+// let uncertaintyViz = "cloud";
 
 window.onload = function () {
 
@@ -15,7 +17,7 @@ window.onload = function () {
     addTDERow('multidose-table', 75, 3.7, 'EEn im');
 
     // EEn steady state
-    addTDERow('steadystate-table', 7, 5, 'EEn im');
+    addTDERow('steadystate-table', 7, 4, 'EEn im');
 
 
     attachDragNDropImport();

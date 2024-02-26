@@ -34,12 +34,19 @@ function plotCurves(uncertainty = "cloud") {
     
     let [ssEveries, ssDoses, ssTypes, ssCVisibs, ssUVisibs] = getTDEs('steadystate-table', true);
 
-
-    let xmin = Math.min(0, ...mdTimes);
+    let xmin = 0
+    if (!daysAsIntervals) {
+        xmin = Math.min(0, ...mdTimes)
+    }
+    
     let xmax = 31;
     
     if (mdCVisib || mdUVisib) {
-        xmax = Math.max(xmax, 1.618 * Math.max(...mdTimes));
+        if (daysAsIntervals) {
+            xmax = Math.max(xmax, 1.618 * (math.sum(mdTimes) - mdTimes[0]))
+        } else {
+            xmax = Math.max(xmax, 1.618 * Math.max(...mdTimes));
+        }
     }
 
     for (let i = 0; i < ssEveries.length; i++) {
@@ -63,7 +70,7 @@ function plotCurves(uncertainty = "cloud") {
             // The cloud points are not used to set it since they
             // sometimes are too far up.
             if (!mdCVisib) {
-                let probeMultiDoseCurve = fillCurve(t => e2MultiDose3C(t, mdDoses, mdTimes, mdTypes), xmin, xmax, NB_LINE_POINTS);
+                let probeMultiDoseCurve = fillCurve(t => e2MultiDose3C(t, mdDoses, mdTimes, mdTypes, false, daysAsIntervals), xmin, xmax, NB_LINE_POINTS);
                 e2max = Math.max(e2max, ...probeMultiDoseCurve.map(p => p.E2));
             }
 
@@ -71,7 +78,7 @@ function plotCurves(uncertainty = "cloud") {
                 let mdUncertaintyCloud = [];
                 for (let i = 0; i < NB_CLOUD_POINTS; i++) {
                     let randx = Math.random() * (xmax - xmin) + xmin;
-                    let y = e2MultiDose3C(randx, mdDoses, mdTimes, mdTypes, true);
+                    let y = e2MultiDose3C(randx, mdDoses, mdTimes, mdTypes, true, daysAsIntervals);
                     mdUncertaintyCloud.push({ Time: randx, E2: y });
                 }
                 dotmarks.push(Plot.dot(mdUncertaintyCloud, { x: "Time", y: "E2", r: CLOUD_POINT_SIZE, fill: colorTheBlue(CLOUD_POINT_OPACITY) }))
@@ -82,7 +89,7 @@ function plotCurves(uncertainty = "cloud") {
 
 
         if (mdCVisib) {
-            let multiDoseCurve = fillCurve(t => e2MultiDose3C(t, mdDoses, mdTimes, mdTypes), xmin, xmax, NB_LINE_POINTS);
+            let multiDoseCurve = fillCurve(t => e2MultiDose3C(t, mdDoses, mdTimes, mdTypes, false, daysAsIntervals), xmin, xmax, NB_LINE_POINTS);
             multiDoseCurve = multiDoseCurve.map(p => ({ Time: p.Time, E2: p.E2 }));
 
             e2max = Math.max(e2max, ...multiDoseCurve.map(p => p.E2));

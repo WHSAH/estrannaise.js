@@ -9,33 +9,49 @@ const methodList = ["EV im", "EEn im", "EC im", "EUn im", "EB im", "DOT patch tw
 // This allows for a little bit more flexibility in the future
 // if we want to add more compartments or initial conditions.
 // Generalizing too soon is a bad idea.
+//
+// ...but I could also move on to using dictionaries as arguments
+// instead of positional arguments, that would be a good idea.
 
 const PKFunctions = {
-    "EV im": function (t, dose, steadystate=false, T=0.0) { return e2SingleDose3C(t, conversionFactor * dose, ...PKParams["EV im"], 0.0, 0.0, steadystate, T) },
-    "EEn im": function (t, dose, steadystate=false, T=0.0) { return e2SingleDose3C(t, conversionFactor * dose, ...PKParams["EEn im"], 0.0, 0.0, steadystate, T) },
-    "EC im": function (t, dose, steadystate=false, T=0.0) { return e2SingleDose3C(t, conversionFactor * dose, ...PKParams["EC im"], 0.0, 0.0, steadystate, T) },
-    "EUn im": function (t, dose, steadystate=false, T=0.0) { return e2SingleDose3C(t, conversionFactor * dose, ...PKParams["EUn im"], 0.0, 0.0, steadystate, T) },
-    "EUn csq": function (t, dose, steadystate=false, T=0.0) { return e2SingleDose3C(t, conversionFactor * dose, ...PKParams["EUn csq"], 0.0, 0.0, steadystate, T) },
-    "EB im": function (t, dose, steadystate=false, T=0.0) { return e2SingleDose3C(t, conversionFactor * dose, ...PKParams["EB im"], 0.0, 0.0, steadystate, T) },
+    "EV im": function (t, dose, steadystate=false, T=0.0) { return e2Curve3C(t, conversionFactor * dose, ...PKParams["EV im"], 0.0, 0.0, steadystate, T) },
+    "EEn im": function (t, dose, steadystate=false, T=0.0) { return e2Curve3C(t, conversionFactor * dose, ...PKParams["EEn im"], 0.0, 0.0, steadystate, T) },
+    "EC im": function (t, dose, steadystate=false, T=0.0) { return e2Curve3C(t, conversionFactor * dose, ...PKParams["EC im"], 0.0, 0.0, steadystate, T) },
+    "EUn im": function (t, dose, steadystate=false, T=0.0) { return e2Curve3C(t, conversionFactor * dose, ...PKParams["EUn im"], 0.0, 0.0, steadystate, T) },
+    "EUn csq": function (t, dose, steadystate=false, T=0.0) { return e2Curve3C(t, conversionFactor * dose, ...PKParams["EUn csq"], 0.0, 0.0, steadystate, T) },
+    "EB im": function (t, dose, steadystate=false, T=0.0) { return e2Curve3C(t, conversionFactor * dose, ...PKParams["EB im"], 0.0, 0.0, steadystate, T) },
     "DOT patch tw": function (t, dose, steadystate=false, T=0.0) { return e2Patch3C(t, conversionFactor * dose, ...PKParams["DOT patch tw"], 3.5, steadystate, T) },
     "DOT patch ow": function (t, dose, steadystate=false, T=0.0) { return e2Patch3C(t, conversionFactor * dose, ...PKParams["DOT patch ow"], 7.0, steadystate, T) }
 }
 
 const PKRandomFunctions = {
-    "EV im": function(t, dose, steadystate=false, T=0.0) { return e2SingleDose3C(t, conversionFactor * dose, ...randomMCMCSample("EV im"), 0.0, 0.0, steadystate, T) },
-    "EEn im": function(t, dose, steadystate=false, T=0.0) { return e2SingleDose3C(t, conversionFactor * dose, ...randomMCMCSample("EEn im"), 0.0, 0.0, steadystate, T) },
-    "EC im": function(t, dose, steadystate=false, T=0.0) { return e2SingleDose3C(t, conversionFactor * dose, ...randomMCMCSample("EC im"), 0.0, 0.0, steadystate, T) },
-    "EUn im": function(t, dose, steadystate=false, T=0.0) { return e2SingleDose3C(t, conversionFactor * dose, ...randomMCMCSample("EUn im"), 0.0, 0.0, steadystate, T) },
-    "EUn csq": function(t, dose, steadystate=false, T=0.0) { return e2SingleDose3C(t, conversionFactor * dose, ...randomMCMCSample("EUn csq"), 0.0, 0.0, steadystate, T) },
-    "EB im": function(t, dose, steadystate=false, T=0.0) { return e2SingleDose3C(t, conversionFactor * dose, ...randomMCMCSample("EB im"), 0.0, 0.0, steadystate, T) },
-    "DOT patch tw": function(t, dose, steadystate=false, T=0.0) { return e2Patch3C(t, conversionFactor * dose, ...randomMCMCSample("DOT patch tw"), 3.5, steadystate, T) },
-    "DOT patch ow": function(t, dose, steadystate=false, T=0.0) { return e2Patch3C(t, conversionFactor * dose, ...randomMCMCSample("DOT patch ow"), 7.0, steadystate, T) }
+    "EV im": function(t, dose, steadystate=false, T=0.0, idx=null) { return e2Curve3C(t, conversionFactor * dose, ...randomMCMCSample("EV im", idx), 0.0, 0.0, steadystate, T) },
+    "EEn im": function(t, dose, steadystate=false, T=0.0, idx=null) { return e2Curve3C(t, conversionFactor * dose, ...randomMCMCSample("EEn im", idx), 0.0, 0.0, steadystate, T) },
+    "EC im": function(t, dose, steadystate=false, T=0.0, idx=null) { return e2Curve3C(t, conversionFactor * dose, ...randomMCMCSample("EC im", idx), 0.0, 0.0, steadystate, T) },
+    "EUn im": function(t, dose, steadystate=false, T=0.0, idx=null) { return e2Curve3C(t, conversionFactor * dose, ...randomMCMCSample("EUn im", idx), 0.0, 0.0, steadystate, T) },
+    "EUn csq": function(t, dose, steadystate=false, T=0.0, idx=null) { return e2Curve3C(t, conversionFactor * dose, ...randomMCMCSample("EUn csq", idx), 0.0, 0.0, steadystate, T) },
+    "EB im": function(t, dose, steadystate=false, T=0.0, idx=null) { return e2Curve3C(t, conversionFactor * dose, ...randomMCMCSample("EB im", idx), 0.0, 0.0, steadystate, T) },
+    "DOT patch tw": function(t, dose, steadystate=false, T=0.0, idx=null) { return e2Patch3C(t, conversionFactor * dose, ...randomMCMCSample("DOT patch tw", idx), 3.5, steadystate, T) },
+    "DOT patch ow": function(t, dose, steadystate=false, T=0.0, idx=null) { return e2Patch3C(t, conversionFactor * dose, ...randomMCMCSample("DOT patch ow", idx), 7.0, steadystate, T) }
 }
 
 
-function randomMCMCSample(type) {
-    let randidx = Math.floor(Math.random() * mcmcSamplesPK[type].length)
-    return mcmcSamplesPK[type][randidx]
+function calculateUncertainty(t, dose, type, steadystate=false, T=0.0) {
+    let idx = Array.from({length: mcmcSamplesPK[type].length}, (_, i) => i);
+    let values = idx.map(i => PKRandomFunctions[type](t, dose, steadystate, T, i));
+    
+    let std = math.std(values)
+    let q025 = math.quantileSeq(values, 0.025);
+    let q975 = math.quantileSeq(values, 0.975);
+    return [std, q025, q975];
+}
+
+
+function randomMCMCSample(type, idx=null) {
+    if (idx === null) {
+        idx = Math.floor(Math.random() * mcmcSamplesPK[type].length)
+    }
+    return mcmcSamplesPK[type][idx]
 }
 
 function PKD3Symmetries(d, k1, k2, k3) {
@@ -51,7 +67,7 @@ function PKD3Symmetries(d, k1, k2, k3) {
 
 // parameters ds and d2 are optional initial conditions
 // Es(0) = ds and E2(0) = d2 for the second and third compartments 
-function e2SingleDose3C(t, dose, d, k1, k2, k3, Ds = 0.0, D2 = 0.0, steadystate = false, T=0.0) {
+function e2Curve3C(t, dose, d, k1, k2, k3, Ds = 0.0, D2 = 0.0, steadystate = false, T=1.0) {
 
     if (!steadystate) {
         if (t < 0) {
@@ -189,7 +205,7 @@ function e2ssAverage3C(dose, T, d, k1, k2, k3) {
 }
 
 
-function e2MultiDose3C(t, doses = [1.0], times = [0.0], types = ["EV im"], random = false) {
+function e2MultiDose3C(t, doses = [1.0], times = [0.0], types = ["EV im"], random = false, intervals = false) {
     // let exponents = [];
     // for (let i = 0; i < doses.length; i++) {
     //     if (!random) {
@@ -205,6 +221,13 @@ function e2MultiDose3C(t, doses = [1.0], times = [0.0], types = ["EV im"], rando
     // } else {
     //     return ret;
     // }
+
+    if (intervals) {
+        times = times.map((sum => value => sum += value)(0));
+        let initialTime = times[0]
+        times = times.map(t => t - initialTime);
+    };
+
     let sum = 0;
     for (let i = 0; i < doses.length; i++) {
         if (!random) {
@@ -219,7 +242,7 @@ function e2MultiDose3C(t, doses = [1.0], times = [0.0], types = ["EV im"], rando
 function e2RepeatedDose3C(t, dose, T, K, d, k1, k2, k3) {
     let sum = 0;
     for (let i = 0; i < K; i++) {
-        sum += e2SingleDose3C(t - T * i, dose, d, k1, k2, k3);
+        sum += e2Curve3C(t - T * i, dose, d, k1, k2, k3);
     }
     return sum;
 }
@@ -229,11 +252,11 @@ function e2Patch3C(t, dose, d, k1, k2, k3, W, steadystate = false, T = 0.0) {
         if (t < 0.0) {
             return 0.0;
         } else if ((0 <= t) && (t <= W)) {
-            return e2SingleDose3C(t, dose, d, k1, k2, k3);
+            return e2Curve3C(t, dose, d, k1, k2, k3);
         } else if (t > W) {
             let esW = esSingleDose3C(W, dose, d, k1, k2, k3);
-            let e2W = e2SingleDose3C(W, dose, d, k1, k2, k3);
-            return e2SingleDose3C(t - W, 0.0, 0.0, k1, k2, k3, esW, e2W);
+            let e2W = e2Curve3C(W, dose, d, k1, k2, k3);
+            return e2Curve3C(t - W, 0.0, 0.0, k1, k2, k3, esW, e2W);
         }
     } else {
         return e2SteadyStatePatch3C(t, dose, T, d, k1, k2, k3, W);
@@ -243,7 +266,7 @@ function e2Patch3C(t, dose, d, k1, k2, k3, W, steadystate = false, T = 0.0) {
 
 function e2SteadyStatePatch3C(t, dose, T, d, k1, k2, k3, W) {
     let esW = esSingleDose3C(W, dose, d, k1, k2, k3);
-    let e2W = e2SingleDose3C(W, dose, d, k1, k2, k3);
+    let e2W = e2Curve3C(W, dose, d, k1, k2, k3);
 
     let ret = dose * d * k1 * k2 * (
         Math.exp(_logsubexp(-k1 * (t - T * Math.floor(t/T)), -k1 * (t - T * Math.floor((t - W)/T)))) / (1 - Math.exp(-k1 * T)) / (k1 - k2) / (k1 - k3)
@@ -258,6 +281,7 @@ function e2SteadyStatePatch3C(t, dose, T, d, k1, k2, k3, W) {
     return ret;
 }
 
+
 function e2iv3C(t, dose, d, k21, k2e, k12, k1s, k1e, ks1, kse) {
     let A = iv3Cmatrix(k21, k2e, k12, k1s, k1e, ks1, kse);
     if (typeof t === "number") {
@@ -270,8 +294,6 @@ function e2iv3C(t, dose, d, k21, k2e, k12, k1s, k1e, ks1, kse) {
         return math.multiply(dose * d, evolve(A, [1.0, 0, 0], math.diff(t)).map(x => x[0]));
     }
 }
-
-
 
 function iv3Cmatrix(k21, k2e, k12, k1s, k1e, ks1, kse) {
     return [[-(k21 + k2e),                 k12,             0], 
@@ -286,7 +308,6 @@ function slpo4Cmatrix(kp2, k21, k2e, k12, k1s, k1e, ks1, kse) {
             [   0,             0,                 k1s,  -(ks1 + kse)]];
 }
 
-
 function evolve(A, initial, dts) {
     let sol = [initial];
     for (let i = 0; i < dts.length; i++) {
@@ -294,8 +315,6 @@ function evolve(A, initial, dts) {
     }
     return sol
 }
-
-
 
 function _logsumexp(arr) {
     let max = Math.max(...arr);

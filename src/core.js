@@ -231,7 +231,7 @@ function getTDEs(tableId, getvisibility = false, keepincomplete = false) {
 
 function guessNextRow(tableID) {
     let table = document.getElementById(tableID);
-    if (table.rows.length >= 3) {
+    if (table.rows.length >= 3 && !daysAsIntervals) {
         let beforeLastRow = readRow(table.rows[table.rows.length - 2]);
         let lastRow = readRow(table.rows[table.rows.length - 1]);
         if (beforeLastRow && lastRow) {
@@ -243,6 +243,11 @@ function guessNextRow(tableID) {
                     let timeDifference = beforeLastRow.time - beforeBeforeLastRow.time;
                     let dose = beforeLastRow.dose;
                     let ester = beforeLastRow.ester;
+                    // if (daysAsIntervals) {
+                    //     return { time: lastRow.time, dose: dose, ester: ester };
+                    // } else {
+                    //     return { time: lastRow.time + timeDifference, dose: dose, ester: ester };
+                    // }
                     return { time: lastRow.time + timeDifference, dose: dose, ester: ester };
                 }
             }
@@ -250,9 +255,18 @@ function guessNextRow(tableID) {
                 let timeDifference = lastRow.time - beforeLastRow.time;
                 let doseDifference = lastRow.dose - beforeLastRow.dose;
                 let ester = lastRow.ester;
+                // if (daysAsIntervals) {
+                //     return { time: lastRow.time, dose: lastRow.dose + doseDifference, ester: ester };
+                // } else {
+                //     return { time: lastRow.time + timeDifference, dose: lastRow.dose + doseDifference, ester: ester };
+                // };
                 return { time: lastRow.time + timeDifference, dose: lastRow.dose + doseDifference, ester: ester };
             }
         }
+    } else if (table.rows.length >= 2 && daysAsIntervals) {
+        // if days are given as intervals just repeat the last row
+        let lastRow = readRow(table.rows[table.rows.length - 1]);
+        return lastRow;
     }
     return null;
 }
@@ -367,7 +381,16 @@ function addTDERow(tableID, time = null, dose = null, ester = null, cvisible = t
             </select>');
     if (ester !== null) {
         esterCell.querySelector('select').value = ester;
+    } else {
+        // If no ester is specified and there are
+        // more than one row in the table, add
+        // the same ester as the one before
+        if (table.rows.length > 2) {
+            ester = table.rows[table.rows.length - 2].cells[4].querySelector('select').value;
+            esterCell.querySelector('select').value = ester;
+        }
     }
+
     esterCell.querySelector('select').addEventListener('change', function () {
         if (readRow(this.parentElement.parentElement)) {
             refresh()
@@ -455,7 +478,7 @@ function attachMultidoseButtonsEvents() {
             addTDERow('multidose-table', guess.time, guess.dose, guess.ester);
             refresh();
         } else {
-            document.getElementById('guess-button').innerHTML = '?._.)';
+            document.getElementById('guess-button').innerHTML = '&nbsp;&nbsp;?._.)&nbsp;&nbsp;';
 
             setTimeout(() => {
                 document.getElementById('guess-button').innerHTML = 'add guess';
@@ -476,6 +499,7 @@ function attachMultidoseButtonsEvents() {
             this.innerHTML = 'stash all';
         }, 618);
     });
+
     document.getElementById('recall-button').addEventListener('mousedown', function () {
         loadFromLocalStorage();
         refresh();
@@ -553,6 +577,11 @@ function attachOptionsEvents() {
         }
         refresh();
     });
+
+    document.querySelector('.dropdown-daysinput').addEventListener('change', function(event) {
+        daysAsIntervals = (event.target.value === 'intervals');
+        refresh();
+    });
 }
 
 function attachTipJarEvent() {
@@ -582,12 +611,8 @@ function saveToLocalStorage() {
 
 function loadFromLocalStorage() {
 
-    // console.log('\n');
     let multiDoseTable = JSON.parse(localStorage.getItem('multiDoseTable'));
-    // console.log('loaded md', multiDoseTable);
     let steadyStateTable = JSON.parse(localStorage.getItem('steadyStateTable'));
-    // console.log('loaded ss', steadyStateTable);
-
 
     if (multiDoseTable) {
         deleteAllRows('multidose-table');
