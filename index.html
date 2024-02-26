@@ -53,11 +53,24 @@
 
         </div>
         
-        <div id="stashrecall-container" style="margin-bottom: 2em;">
-            <button id="stash-button" class="flat-button" style="width: 7.5em;">stash all</button>
-            <button id="recall-button" class="flat-button" style="width: 5em;">recall</button>
-            <button id="delete-stash-button" class="flat-button" style="width: 9em;">delete stash</button>
-            <button id="share-button" class="flat-button" style="width: 8em;">share url</button>
+        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+            <div id="options" style="display: flex; margin-bottom: 1em; margin-right: auto;">
+                <select class="dropdown-units" style="display: inline-block; margin-right: 0.6em;">
+                    <option value="pg/mL">pg/mL</option> 
+                    <option value="pmol/L">pmol/L</option> 
+                </select>
+                <!-- <select class="dropdown-uncertaintytype" style="display: inline-block; margin-right: 0.6em;">
+                    <option value="cloud">uncertainty cloud</option> 
+                    <option value="range">uncertainty range</option> 
+                    <option value="curves">uncertainty curves</option> 
+                </select> -->
+            </div>
+            <div id="stashrecall-container" style="margin-bottom: 2em; margin-left: auto;">
+                <button id="stash-button" class="flat-button" style="width: 7.5em;">stash all</button>
+                <button id="recall-button" class="flat-button" style="width: 5em;">recall</button>
+                <button id="delete-stash-button" class="flat-button" style="width: 9em;">delete stash</button>
+                <button id="share-button" class="flat-button" style="width: 8em;">share url</button>
+            </div>
         </div>
 
         <div class="sections-container" , id="sections-container">

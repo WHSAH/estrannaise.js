@@ -543,6 +543,18 @@ function themeSetup() {
 
 }
 
+function attachOptionsEvents() {
+    document.querySelector('.dropdown-units').addEventListener('change', function(event) {
+        units = event.target.value;
+        if (units === 'pg/mL') {
+            conversionFactor = 1.0;
+        } else if (units === 'pmol/L') {
+            conversionFactor = 3.6713;
+        }
+        refresh();
+    });
+}
+
 function attachTipJarEvent() {
     document.getElementById('copy-xmr').addEventListener('mousedown', function () {
         navigator.clipboard.writeText(this.innerText);

@@ -1,4 +1,6 @@
 let rowValidity = new Map();
+let conversionFactor = 1.0;
+let units = "pg/mL";
 
 window.onload = function () {
 
@@ -17,6 +19,8 @@ window.onload = function () {
 
 
     attachDragNDropImport();
+
+    attachOptionsEvents();
 
     attachMultidoseButtonsEvents();
     attachSteadyStateButtonsEvents();

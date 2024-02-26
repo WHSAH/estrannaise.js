@@ -11,25 +11,25 @@ const methodList = ["EV im", "EEn im", "EC im", "EUn im", "EB im", "DOT patch tw
 // Generalizing too soon is a bad idea.
 
 const PKFunctions = {
-    "EV im": function (t, dose, steadystate=false, T=0.0) { return e2SingleDose3C(t, dose, ...PKParams["EV im"], 0.0, 0.0, steadystate, T) },
-    "EEn im": function (t, dose, steadystate=false, T=0.0) { return e2SingleDose3C(t, dose, ...PKParams["EEn im"], 0.0, 0.0, steadystate, T) },
-    "EC im": function (t, dose, steadystate=false, T=0.0) { return e2SingleDose3C(t, dose, ...PKParams["EC im"], 0.0, 0.0, steadystate, T) }, 
-    "EUn im": function (t, dose, steadystate=false, T=0.0) { return e2SingleDose3C(t, dose, ...PKParams["EUn im"], 0.0, 0.0, steadystate, T) },
-    "EUn csq": function (t, dose, steadystate=false, T=0.0) { return e2SingleDose3C(t, dose, ...PKParams["EUn csq"], 0.0, 0.0, steadystate, T) },
-    "EB im": function (t, dose, steadystate=false, T=0.0) { return e2SingleDose3C(t, dose, ...PKParams["EB im"], 0.0, 0.0, steadystate, T) },
-    "DOT patch tw": function (t, dose, steadystate=false, T=0.0) { return e2Patch3C(t, dose, ...PKParams["DOT patch tw"], 3.5, steadystate, T) },
-    "DOT patch ow": function (t, dose, steadystate=false, T=0.0) { return e2Patch3C(t, dose, ...PKParams["DOT patch ow"], 7.0, steadystate, T) }
+    "EV im": function (t, dose, steadystate=false, T=0.0) { return e2SingleDose3C(t, conversionFactor * dose, ...PKParams["EV im"], 0.0, 0.0, steadystate, T) },
+    "EEn im": function (t, dose, steadystate=false, T=0.0) { return e2SingleDose3C(t, conversionFactor * dose, ...PKParams["EEn im"], 0.0, 0.0, steadystate, T) },
+    "EC im": function (t, dose, steadystate=false, T=0.0) { return e2SingleDose3C(t, conversionFactor * dose, ...PKParams["EC im"], 0.0, 0.0, steadystate, T) },
+    "EUn im": function (t, dose, steadystate=false, T=0.0) { return e2SingleDose3C(t, conversionFactor * dose, ...PKParams["EUn im"], 0.0, 0.0, steadystate, T) },
+    "EUn csq": function (t, dose, steadystate=false, T=0.0) { return e2SingleDose3C(t, conversionFactor * dose, ...PKParams["EUn csq"], 0.0, 0.0, steadystate, T) },
+    "EB im": function (t, dose, steadystate=false, T=0.0) { return e2SingleDose3C(t, conversionFactor * dose, ...PKParams["EB im"], 0.0, 0.0, steadystate, T) },
+    "DOT patch tw": function (t, dose, steadystate=false, T=0.0) { return e2Patch3C(t, conversionFactor * dose, ...PKParams["DOT patch tw"], 3.5, steadystate, T) },
+    "DOT patch ow": function (t, dose, steadystate=false, T=0.0) { return e2Patch3C(t, conversionFactor * dose, ...PKParams["DOT patch ow"], 7.0, steadystate, T) }
 }
 
 const PKRandomFunctions = {
-    "EV im": function(t, dose, steadystate=false, T=0.0) { return e2SingleDose3C(t, dose, ...randomMCMCSample("EV im"), 0.0, 0.0, steadystate, T) },
-    "EEn im": function(t, dose, steadystate=false, T=0.0) { return e2SingleDose3C(t, dose, ...randomMCMCSample("EEn im"), 0.0, 0.0, steadystate, T) },
-    "EC im": function(t, dose, steadystate=false, T=0.0) { return e2SingleDose3C(t, dose, ...randomMCMCSample("EC im"), 0.0, 0.0, steadystate, T) },
-    "EUn im": function(t, dose, steadystate=false, T=0.0) { return e2SingleDose3C(t, dose, ...randomMCMCSample("EUn im"), 0.0, 0.0, steadystate, T) },
-    "EUn csq": function(t, dose, steadystate=false, T=0.0) { return e2SingleDose3C(t, dose, ...randomMCMCSample("EUn csq"), 0.0, 0.0, steadystate, T) },
-    "EB im": function(t, dose, steadystate=false, T=0.0) { return e2SingleDose3C(t, dose, ...randomMCMCSample("EB im"), 0.0, 0.0, steadystate, T) },
-    "DOT patch tw": function(t, dose, steadystate=false, T=0.0) { return e2Patch3C(t, dose, ...randomMCMCSample("DOT patch tw"), 3.5, steadystate, T) },
-    "DOT patch ow": function(t, dose, steadystate=false, T=0.0) { return e2Patch3C(t, dose, ...randomMCMCSample("DOT patch ow"), 7.0, steadystate, T) }
+    "EV im": function(t, dose, steadystate=false, T=0.0) { return e2SingleDose3C(t, conversionFactor * dose, ...randomMCMCSample("EV im"), 0.0, 0.0, steadystate, T) },
+    "EEn im": function(t, dose, steadystate=false, T=0.0) { return e2SingleDose3C(t, conversionFactor * dose, ...randomMCMCSample("EEn im"), 0.0, 0.0, steadystate, T) },
+    "EC im": function(t, dose, steadystate=false, T=0.0) { return e2SingleDose3C(t, conversionFactor * dose, ...randomMCMCSample("EC im"), 0.0, 0.0, steadystate, T) },
+    "EUn im": function(t, dose, steadystate=false, T=0.0) { return e2SingleDose3C(t, conversionFactor * dose, ...randomMCMCSample("EUn im"), 0.0, 0.0, steadystate, T) },
+    "EUn csq": function(t, dose, steadystate=false, T=0.0) { return e2SingleDose3C(t, conversionFactor * dose, ...randomMCMCSample("EUn csq"), 0.0, 0.0, steadystate, T) },
+    "EB im": function(t, dose, steadystate=false, T=0.0) { return e2SingleDose3C(t, conversionFactor * dose, ...randomMCMCSample("EB im"), 0.0, 0.0, steadystate, T) },
+    "DOT patch tw": function(t, dose, steadystate=false, T=0.0) { return e2Patch3C(t, conversionFactor * dose, ...randomMCMCSample("DOT patch tw"), 3.5, steadystate, T) },
+    "DOT patch ow": function(t, dose, steadystate=false, T=0.0) { return e2Patch3C(t, conversionFactor * dose, ...randomMCMCSample("DOT patch ow"), 7.0, steadystate, T) }
 }
 
 

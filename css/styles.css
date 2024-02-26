@@ -50,7 +50,7 @@ input.flat-input {
     border-radius: 4px;
 }
 
-select.dropdown-ester {
+select {
     border: none;
     outline: none;
     background-color: var(--standout-color);
@@ -64,7 +64,7 @@ select.dropdown-ester {
     text-align: right;
     font-family: monospace;
     border-radius: 4px;
-    height: 1.84em;
+    /* height: 1.84em; */
     /* width: 73px; */
     /* width: 6em; */
 }

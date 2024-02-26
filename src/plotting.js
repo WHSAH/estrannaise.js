@@ -20,7 +20,7 @@ function plotCurves(uncertainty = "cloud") {
 
     let dotmarks = [];
     let linemarks = [];
-    let ulinemarks = [];
+    // let ulinemarks = [];
     let rulemarks = [];
     let tipmarks = [];
 
@@ -93,7 +93,7 @@ function plotCurves(uncertainty = "cloud") {
             
             tipmarks.push(Plot.tip(multiDoseCurve, Plot.pointerX({
                 x: "Time", y: "E2",
-                title: p => `multi-dose\n\ntime: ${numberToDayHour(p.Time)}\n  e₂: ${p.E2.toFixed(0)} pg/ml`,
+                title: p => `multi-dose\n\ntime: ${numberToDayHour(p.Time)}\n  e₂: ${p.E2.toFixed(0)} ${units}`,
                 fontFamily: "monospace", fill: colorBackground(0.618), stroke: colorThePink()
             })))
         }
@@ -126,7 +126,7 @@ function plotCurves(uncertainty = "cloud") {
             tipmarks.push(Plot.tip(ssEsterCurve, Plot.pointerX({
                 x: "Time", y: "E2",
                 // title: p => `${p.type.toLowerCase()}\n\ntime: ${numberToDayHour(p.Time)}\n  e₂: ${p.E2.toFixed(0)} pg/ml\n  tr: ${PKFunctions[ssTypes[i]](0.0, ssDoses[i], true, ssEveries[i]).toFixed(0)} pg/ml\n  av: ${e2ssAverage3C(ssDoses[i], ssEveries[i], ...PKParams[ssTypes[i]]).toFixed(0)} pg/ml`,
-                title: p => `${p.type.toLowerCase()}\n\n  time: ${numberToDayHour(p.Time)}\n    e₂: ${p.E2.toFixed(0)} pg/ml\ntrough: ${PKFunctions[ssTypes[i]](0.0, ssDoses[i], true, ssEveries[i]).toFixed(0)} pg/ml`,
+                title: p => `${p.type.toLowerCase()}\n\n  time: ${numberToDayHour(p.Time)}\n    e₂: ${p.E2.toFixed(0)} ${units}\ntrough: ${PKFunctions[ssTypes[i]](0.0, ssDoses[i], true, ssEveries[i]).toFixed(0)} ${units}`,
                 fontFamily: "monospace", fill: colorBackground(0.618), stroke: colorThePink()
             })));
         }
@@ -136,7 +136,7 @@ function plotCurves(uncertainty = "cloud") {
         width: 848,
         // height: 500,
         x: { label: "time (days)" },
-        y: { domain: [0, 1.25 * e2max], label: "serum e₂ (pg/ml)" },
+        y: { domain: [0, 1.25 * e2max], label: `serum e₂ (${units})` },
         marks: [
             Plot.gridX({ stroke: "grey" }),
             Plot.gridY({ stroke: "grey" }),
