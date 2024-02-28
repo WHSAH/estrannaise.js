@@ -140,31 +140,46 @@
         <!-- someone tell me why github pages don't render <footer> correctly? -->
         <div id="footer">
             <div style="width: 58em;">
-                <p>remember <span style="color: var(--the-pink)">the line is a lie!</span> the cloud a little less so yet it still underestimates the uncertainty
+                
+                <p>remember <span style="color: var(--the-pink)">the line is a lie!</span> the cloud a little less so
                 </p>
                 
-                <p>the inferences for the estradiol benzoate, valerate, and cypionate intramuscular depot models (eb im, ev im, ec im) 
+                <p>the cloud of blue points does not represent data points but is rather a visual representation of the uncertainty in model predictions
+                </p>
+                
+                <p>it is important to emphasis that the cloud underestimates the total uncertainty in model predictions.
+                    it only captures the uncertainty of something akin to a population mean rather than the full distribution of outcomes 
+                    in the population at large. this is bound to change in the future when a better representation of this uncertainty is implemented
+                </p>
+                
+                <p>inferences for the estradiol benzoate, valerate, and cypionate intramuscular depot models 
+                    (<span style="color: var(--the-pink)">eb im</span>, <span style="color: var(--the-pink)">ev im</span>, <span style="color: var(--the-pink)">ec im</span>) 
                     use part of the data collected and made available by the amazing people behind the 
                     <a href="https://transfemscience.org/articles/injectable-e2-meta-analysis/" target="_blank">tfs meta-analysis</a>
+                    but will be reprocessed in the future to generate a better quantification of uncertainty
                 </p>
                 
-                <p>the data behind the estradiol undecylate model for intramuscular depot using castor oil (eun im) was entirely reprocessed from 
-                    scratch using the per-patient dataset from geppert 1975 and the dataset from vermeulen 1975 including 
+                <p>the data behind the estradiol undecylate model for intramuscular depot using castor oil (<span style="color: var(--the-pink)">eun im</span>) 
+                    was entirely reprocessed from scratch using the per-patient data found in geppert 1975 and the dataset from vermeulen 1975 including 
                     the original reported uncertainty. this data is extremely sparse and incomplete and thus the model is highly uncertain 
                 </p>    
                 
-                <p>the data behind the estradiol undecylate model for subcutaneous depots using castor oil (eun casubq) was infered on 
-                    top of the eun im model by augmenting it with very sparse community data and is highly uncertain
+                <p>the data behind the estradiol undecylate model for subcutaneous depots using castor oil 
+                    (<span style="color: var(--the-pink)">eun casubq</span>) was infered on 
+                    top of the eun im model by augmenting it with very sparse self-reported community data and is also highly uncertain
                 </p>
                 
-                <p>the data behind the estradiol enanthate model for intramuscular depots using sunflower oil (een im)
-                    was reprocessed from scratch using the data from studies with perlutan done in the 80s and 90s. this data
+                <p>the data behind the estradiol enanthate model for intramuscular depots using sunflower oil (<span style="color: var(--the-pink)">een im</span>)
+                    was reprocessed from scratch using studies with perlutan done in the 80s and 90s. this data
                     is also extremely sparse and incomplete and the model highly uncertain
                 </p>
 
-                <p>the once- and twice-weekly patch models (patch ow, patch tw) were infered using data found in drug labels
-                    of once-weekly climara and menostar patches, and from two 2003 studies by houssain et al concerning
-                    twice-weekly estradot and menorest patch together with data found in the drug label of twice-weekly mylan patches
+                <p>the once-weekly patch model (<span style="color: var(--the-pink)">patch ow</span>) was infered using data found in drug labels
+                    of once-weekly climara and menostar patches. the twice-weekly patch model (<span style="color: var(--the-pink)">patch tw</span>) was infered 
+                    using data taken from two 2003 studies by houssain et al looking at
+                    twice-weekly estradot and menorest patches, and in the drug label of twice-weekly mylan patches.
+                    there is now way to change the wearing period of the patch in the interface yet 
+                    (i.e. 3&frac12; and 7 days) but it is planned for the future
                 </p>
                 
                 <p>with help encouragements and entertainment from emily torble lea annie izzy meringue photino
