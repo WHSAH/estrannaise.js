@@ -92,7 +92,6 @@
                 <br>
                 <div id="dragndrop-zone">
                     <table id="multidose-table">
-                        <!-- <caption style="text-align: left; margin: 0.3em; font-weight: bold;">multi-doses</caption> -->
                         <thead>
                             <tr>
                                 <th style="text-align: center;">v</th>
@@ -106,7 +105,6 @@
                         <tbody>
                         </tbody>
                     </table>
-                    <!-- <span style="font-weight: normal; font-size: 9px; padding-left: 6em;">drag-n-drop csv on table to -->
                     <span style="font-weight: normal; font-size: 9px; display: block; text-align: center;">drag-n-drop
                         csv on table to import</span>
                 </div>
@@ -121,7 +119,6 @@
                 </div>
                 <br>
                 <table id="steadystate-table">
-                    <!-- <caption style="text-align: left; margin: 0.25em; font-weight: bold;">steady-states</caption> -->
                     <thead>
                         <tr>
                             <th style="text-align: center;">v</th>
@@ -143,14 +140,34 @@
         <!-- someone tell me why github pages don't render <footer> correctly? -->
         <div id="footer">
             <div style="width: 58em;">
-                <p>remember <span style="color: var(--the-pink)">the line is a lie!</span> the cloud a little less so</p>
-                <p>our inferences use the data collected by the amazing people behind the <a
-                        href="https://transfemscience.org/articles/injectable-e2-meta-analysis/" target="_blank">tfs
-                        meta-analysis</a>
+                <p>remember <span style="color: var(--the-pink)">the line is a lie!</span> the cloud a little less so yet it still underestimates the uncertainty
                 </p>
-                <p>estradiol undecylate data was reprocessed from scratch using the original geppert 1975 and vermeulen
-                    1975 datasets.</p>
-                <p>with help encouragements and entertainment from emily torble lea annie izzy meringue photino
+                
+                <p>the inferences for the estradiol benzoate, valerate, and cypionate intramuscular depot models (eb im, ev im, ec im) 
+                    use part of the data collected and made available by the amazing people behind the 
+                    <a href="https://transfemscience.org/articles/injectable-e2-meta-analysis/" target="_blank">tfs meta-analysis</a>
+                </p>
+                
+                <p>the data behind the estradiol undecylate model for intramuscular depot using castor oil (eun im) was entirely reprocessed from 
+                    scratch using the per-patient dataset from geppert 1975 and the dataset from vermeulen 1975 dataset including 
+                    the original reported uncertainty. this data is extremely sparse and incomplete and thus the model is highly uncertain 
+                </p>    
+                
+                <p>the data behind the estradiol undecylate model for subcutaneous depots using castor oil (eun casubq) was infered on 
+                    top of the eun im model by augmenting it with very sparse community data and is also highly uncertain
+                </p>
+                
+                <p>the data behind the estradiol enanthate model for intramuscular depots using sunflower oil (een im)
+                    was reprocessed from scratch using the data from studies with perlutan done in the 80s and 90s. this data
+                    is also extremely sparse and incomplete and the model highly uncertain
+                </p>
+
+                <p>the once- and twice-weekly patch models (patch ow, patch tw) were infered using data found in drug labels
+                    of once-weekly climara and menostar patches, and from two 2003 studies by houssain et al concerning
+                    twice-weekly estradot and menorest patch together with data found in the drug label of twice-weekly mylan patches
+                </p>
+                
+                <p>made with help encouragements and entertainment from emily torble lea annie izzy meringue photino
                     <br>and let's be honest github copilot
                 </p>
                 <br>
