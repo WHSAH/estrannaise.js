@@ -3,6 +3,10 @@
 
 <head>
     <title>estrannaise.js</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
     <link rel="icon" type="image/png" sizes="96x96" href="img/favicon-96x96.png">
     <link rel="icon" type="image/png" sizes="48x48" href="img/favicon-48x48.png">
     <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32x32.png">
@@ -28,13 +32,13 @@
     <div id="container">
         <header>
             <!-- Good god this css is gory. -->
-            <div id="header-div", style="display: flex; align-items: flex-start;">
+            <div id="header-div" style="display: flex; align-items: flex-start;">
                 <div id="logo">
                     <img src="img/favicon-96x96.png" alt="estrannaise.js logo">
                 </div>
                 <div style="height: 100%; width: 100%; display: flex; flex-direction: column; justify-content: space-between; margin-top: 1.2em;">
                     
-                    <h1 style="margin-top: auto; margin-bottom: 0em;">estrannaise.js</h1>
+                    <!-- <h1 style="margin-top: auto; margin-bottom: 0em;">estrannaise.js</h1> -->
                     
                     <div id="subtitle" style="display: flex; justify-content: space-between; width: 100%; align-items: flex-end;">
 
@@ -98,7 +102,7 @@
                                 <th style="text-align: center;">u</th>
                                 <th style="text-align: center;">time (days)</th>
                                 <th style="text-align: center;">dose (mg)</th>
-                                <th style="text-align: center;">ester</th>
+                                <th style="text-align: center;">method</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -125,7 +129,7 @@
                             <th style="text-align: center;">u</th>
                             <th style="text-align: center;">every (days)</th>
                             <th style="text-align: center;">dose (mg)</th>
-                            <th style="text-align: center;">ester</th>
+                            <th style="text-align: center;">method</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -141,68 +145,64 @@
         <div id="footer">
             <div style="width: 58em;">
                 
-                <p>remember <span style="color: var(--the-pink)">the line is a lie!</span> the cloud a little less so
+                <p>Remember, <span style="color: var(--the-pink)">the line is a lie!</span> The cloud a little less so.
                 </p>
                 
-                <p>the cloud of blue points does not represent data points but is rather a visual representation of the uncertainty in model predictions
+                <p>The cloud of blue points does not represent data points, it is a visual representation of the uncertainty in model predictions.
                 </p>
                 
-                <p>it is important to emphasis that the cloud underestimates the total uncertainty in model predictions.
-                    it only captures the uncertainty of something akin to a population mean rather than the full distribution of outcomes 
-                    in the population at large. this is bound to change in the future when a better representation of this uncertainty is implemented
+                <p>It is important to emphasis that the cloud underestimates the total uncertainty in model predictions.
+                    It only captures the uncertainty of something akin to a population mean rather than the full distribution of outcomes 
+                    in the population at large. This is bound to change in the future when a better representation of this uncertainty is implemented.
                 </p>
                 
-                <p>inferences for the estradiol benzoate, valerate, and cypionate intramuscular depot models 
+                <p>Inferences for the estradiol benzoate, valerate, and cypionate intramuscular depot models 
                     (<span style="color: var(--the-pink)">eb im</span>, <span style="color: var(--the-pink)">ev im</span>, <span style="color: var(--the-pink)">ec im</span>) 
                     use part of the data collected and made available by the amazing people behind the 
                     <a href="https://transfemscience.org/articles/injectable-e2-meta-analysis/" target="_blank">tfs meta-analysis</a>
-                    but will be reprocessed in the future to generate a better quantification of uncertainty
+                    but will be reprocessed in the future to allow for a better quantification of uncertainty.
                 </p>
                 
-                <p>the data behind the estradiol undecylate model for intramuscular depot using castor oil (<span style="color: var(--the-pink)">eun im</span>) 
-                    was entirely reprocessed from scratch using the per-patient data found in geppert 1975 and the dataset from vermeulen 1975 including 
-                    the original reported uncertainty. this data is extremely sparse and incomplete and thus the model is highly uncertain 
+                <p>The data behind the estradiol undecylate model for intramuscular depots using castor oil (<span style="color: var(--the-pink)">eun im</span>) 
+                    was entirely reprocessed from scratch using the per-patient data found in Geppert 1975 together with the dataset from Vermeulen 1975, including 
+                    the original reported uncertainty. This data is extremely sparse and incomplete and thus the model is highly uncertain.
                 </p>    
                 
-                <p>the data behind the estradiol undecylate model for subcutaneous depots using castor oil 
+                <p>The data behind the estradiol undecylate model for subcutaneous depots using castor oil 
                     (<span style="color: var(--the-pink)">eun casubq</span>) was infered on 
-                    top of the eun im model by augmenting it with very sparse self-reported community data and is also highly uncertain
+                    top of the <span style="color: var(--the-pink)">eun im</span> model by augmenting it with very sparse self-reported community data.
+                    Its predictions are also highly uncertain.
                 </p>
                 
-                <p>the data behind the estradiol enanthate model for intramuscular depots using sunflower oil (<span style="color: var(--the-pink)">een im</span>)
-                    was reprocessed from scratch using studies with perlutan done in the 80s and 90s. this data
-                    is also extremely sparse and incomplete and the model highly uncertain
+                <p>The data behind the estradiol enanthate model for intramuscular depots using sunflower oil (<span style="color: var(--the-pink)">een im</span>)
+                    was reprocessed from scratch using studies with Perlutan from the 80s and 90s. This data
+                    is also extremely sparse and incomplete and the model highly uncertain.
                 </p>
 
-                <p>the once-weekly patch model (<span style="color: var(--the-pink)">patch ow</span>) was infered using data found in drug labels
-                    of once-weekly climara and menostar patches. the twice-weekly patch model (<span style="color: var(--the-pink)">patch tw</span>) was infered 
-                    using data taken from two 2003 studies by houssain et al looking at
-                    twice-weekly estradot and menorest patches, and in the drug label of twice-weekly mylan patches.
-                    there is no way to change the wearing period of the patch in the interface yet 
-                    (i.e. 3&frac12; and 7 days) but it is planned for the future
+                <p>The once-weekly patch model (<span style="color: var(--the-pink)">patch ow</span>) was infered using data found in drug labels
+                    of once-weekly Climara and Menostar patches. The twice-weekly patch model (<span style="color: var(--the-pink)">patch tw</span>) was infered 
+                    using data taken from two 2003 studies by Houssain et al. looking at
+                    twice-weekly Estradot and Menorest patches, and in the drug label of twice-weekly Mylan patches.
+                    Currently there is no way to change the wearing period of the patch in the interface 
+                    (i.e. they are fixed at 3&frac12; and 7 days) but it is planned for the future.
                 </p>
                 
-                <p>with help encouragements and entertainment from emily torble lea annie izzy meringue photino
-                    <br>and let's be honest github copilot
+                <p>With help encouragements and entertainment from emily torble lea annie izzy meringue photino
+                    <br>and let's be honest github copilot.
                 </p>
                 <br>
                 <p>
-                    <span style="font-weight: bold;">disclaimer</span><br>
-                    this page, designed as a playground to explore estradiol pharmacokinetics, provides a simulation
-                    for informational and entertainment purposes only. the developer(s) cannot guarantee the accuracy of
-                    the
-                    predictions generated by the simulator. users acknowledge that the software is offered "as is,"
-                    without
-                    any warranties.
-                    the developer(s) assume no liability for direct or indirect damages, either physical, psychological,
-                    or
-                    otherwise, resulting from the use of the simulator.
-                    users are strongly advised to exercise caution and seek professional medical advice for
-                    health-related
-                    queries.
+                    <span style="font-weight: bold;">DISCLAIMER</span><br>
+                    This page, designed as a playground to explore estradiol pharmacokinetics, provides a simulation
+                    for informational and entertainment purposes only. The developer(s) cannot guarantee the accuracy of
+                    the predictions generated by the simulator. Users acknowledge that the software is offered "as is,"
+                    without any warranties. The developer(s) assume no liability for direct or indirect damages, 
+                    either physical, psychological, or otherwise, resulting from the use of the simulator.
+                    Users are strongly advised to exercise caution and seek professional medical advice for
+                    health-related queries.
                 </p>
                 <p>
-                    estrannaise.js is entirely client-side. your data, whether entered, imported, or stashed,
+                    estrannaise.js is entirely client-side. Your data, whether entered, imported, or stashed,
                     remains exclusively within your browser and will never be transmitted to the developer(s) or any
                     third-party.
                 </p>
