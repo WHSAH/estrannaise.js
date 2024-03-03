@@ -519,7 +519,7 @@ function attachMultidoseButtonsEvents() {
         document.getElementById('share-button').innerHTML = 'copied!';
 
         setTimeout(() => {
-            document.getElementById('share-button').innerHTML = 'share';
+            document.getElementById('share-button').innerHTML = 'share url';
         }, 1000);
     });
 
@@ -649,11 +649,14 @@ function loadFromURL() {
     let multiDoseTable = JSON.parse(hashParams.get('multiDoseTable'));
     let steadyStateTable = JSON.parse(hashParams.get('steadyStateTable'));
 
+    let dataLoaded = false;
+
     if (multiDoseTable) {
         deleteAllRows('multidose-table');
         for (let i = 0; i < multiDoseTable[0].length; i++) {
             addTDERow('multidose-table', multiDoseTable[0][i], multiDoseTable[1][i], multiDoseTable[2][i], multiDoseTable[3][i], multiDoseTable[4][i]);
         }
+        dataLoaded = true;
     }
 
     if (steadyStateTable) {
@@ -661,5 +664,9 @@ function loadFromURL() {
         for (let i = 0; i < steadyStateTable[0].length; i++) {
             addTDERow('steadystate-table', steadyStateTable[0][i], steadyStateTable[1][i], steadyStateTable[2][i], steadyStateTable[3][i], steadyStateTable[4][i]);
         }
+        dataLoaded = true;
     }
+
+    return dataLoaded;
+
 }
