@@ -23,6 +23,7 @@
     <script src="lib/plot.min.js"></script>
     <script src="lib/math.min.js"></script>
     <script src="lib/papaparse.min.js"></script>
+    <script src="lib/cubic-spline.js"></script>
     <script src="data/modeldata.js"></script>
     <script src="src/models.js"></script>
     <script src="src/core.js"></script>
@@ -33,18 +34,18 @@
         <header>
             <!-- Good god this css is gory. -->
             <div id="header-div" style="display: flex; align-items: flex-start;">
-                <div id="logo">
+                <!-- <div id="logo">
                     <img src="img/favicon-96x96.png" alt="estrannaise.js logo">
-                </div>
+                </div> -->
                 <div style="height: 100%; width: 100%; display: flex; flex-direction: column; justify-content: space-between; margin-top: 1.2em;">
                     
                     <!-- <h1 style="margin-top: auto; margin-bottom: 0em;">estrannaise.js</h1> -->
                     
                     <div id="subtitle" style="display: flex; justify-content: space-between; width: 100%; align-items: flex-end;">
 
-                        <h2 style="margin-right: auto; margin-bottom: 0em;">estradiol <a href="docs/">pharmacokinetics</a> playground</h2>
+                        <img src="img/favicon-48x48.png" alt="estrannaise.js logo" style="margin-bottom: 0em;"><h1 style="margin-right: auto; margin-bottom: 0em;">estradiol <a href="docs/">pharmacokinetics</a> playground</h2>
                         
-                        <label class="switch" style="margin-left: 5em;">
+                        <label class="switch">
                             <input type="checkbox" id="nightday-slider">
                             <span class="slider round"></span>
                         </label>
@@ -145,15 +146,15 @@
         <div id="footer">
             <div style="width: 58em;">
                 
-                <p>Remember, <span style="color: var(--the-pink)">the line is a lie!</span> The cloud a little less so.
+                <p>Remember, <span style="color: var(--the-pink)">the line is a lie!</span> The blue cloud a little less so.
                 </p>
                 
-                <p>The cloud of blue points does not represent data points, it is a visual representation of the uncertainty in model predictions.
+                <p>This cloud does not represent data points, it is a visual representation of the uncertainty in model predictions.
                 </p>
                 
-                <p>It is important to emphasis that the cloud underestimates the total uncertainty in model predictions.
+                <p>It is important to emphasis that the cloud still underestimates the total uncertainty in model predictions.
                     It only captures the uncertainty of something akin to a population mean rather than the full distribution of outcomes 
-                    in the population at large. This is bound to change in the future when a better representation of this uncertainty is implemented.
+                    in the population at large. This is bound to change in the future when I implement a better representation of this uncertainty.
                 </p>
                 
                 <p>Inferences for the estradiol benzoate, valerate, and cypionate intramuscular depot models 
@@ -223,7 +224,7 @@
                 </p>
             </div>
             <br>
-            <p>estrannaise.js (v0.2.19)</p>
+            <p>estrannaise.js (v0.2.20)</p>
             <p>mit license (c) 2024 alix</p>
             <br>
             <p><span id="tipjar-text">xmr tip jar</span><br><span

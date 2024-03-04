@@ -641,32 +641,44 @@ function getShareURL() {
     params.set('multiDoseTable', JSON.stringify(multiDoseTable));
     params.set('steadyStateTable', JSON.stringify(steadyStateTable));
 
-    return window.location.origin + window.location.pathname + '#' + params.toString();
+    // return window.location.origin + window.location.pathname + '#' + params.toString();
+    return window.location.origin + window.location.pathname + '#' + btoa(params.toString());
+
+}
+
+function isValidBase64(str) {
+    const base64Regex = /^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/;
+    return base64Regex.test(str);
 }
 
 function loadFromURL() {
-    let hashParams = new URLSearchParams(window.location.hash.substring(1));
-    let multiDoseTable = JSON.parse(hashParams.get('multiDoseTable'));
-    let steadyStateTable = JSON.parse(hashParams.get('steadyStateTable'));
+
+    let hashString = window.location.hash.substring(1);
 
     let dataLoaded = false;
 
-    if (multiDoseTable) {
-        deleteAllRows('multidose-table');
-        for (let i = 0; i < multiDoseTable[0].length; i++) {
-            addTDERow('multidose-table', multiDoseTable[0][i], multiDoseTable[1][i], multiDoseTable[2][i], multiDoseTable[3][i], multiDoseTable[4][i]);
-        }
-        dataLoaded = true;
-    }
+    if (isValidBase64(hashString)) {
 
-    if (steadyStateTable) {
-        deleteAllRows('steadystate-table');
-        for (let i = 0; i < steadyStateTable[0].length; i++) {
-            addTDERow('steadystate-table', steadyStateTable[0][i], steadyStateTable[1][i], steadyStateTable[2][i], steadyStateTable[3][i], steadyStateTable[4][i]);
-        }
-        dataLoaded = true;
-    }
+        let hashParams = new URLSearchParams(atob(hashString));
 
+        let multiDoseTable = JSON.parse(hashParams.get('multiDoseTable'));
+        let steadyStateTable = JSON.parse(hashParams.get('steadyStateTable'));
+
+        if (multiDoseTable) {
+            deleteAllRows('multidose-table');
+            for (let i = 0; i < multiDoseTable[0].length; i++) {
+                addTDERow('multidose-table', multiDoseTable[0][i], multiDoseTable[1][i], multiDoseTable[2][i], multiDoseTable[3][i], multiDoseTable[4][i]);
+            }
+            dataLoaded = true;
+        }
+
+        if (steadyStateTable) {
+            deleteAllRows('steadystate-table');
+            for (let i = 0; i < steadyStateTable[0].length; i++) {
+                addTDERow('steadystate-table', steadyStateTable[0][i], steadyStateTable[1][i], steadyStateTable[2][i], steadyStateTable[3][i], steadyStateTable[4][i]);
+            }
+            dataLoaded = true;
+        }
+    }
     return dataLoaded;
-
 }

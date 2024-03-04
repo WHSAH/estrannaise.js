@@ -43,19 +43,18 @@ function plotCurves(uncertainty = "cloud") {
     
     if (mdCVisib || mdUVisib) {
         if (daysAsIntervals) {
-            xmax = Math.max(xmax, 1.618 * (math.sum(mdTimes) - mdTimes[0]))
+            xmax = Math.max(xmax, 1.618 * (math.sum(mdTimes) - (mdTimes[0] ? mdTimes[0] : 0)))
         } else {
             xmax = Math.max(xmax, 1.618 * Math.max(...mdTimes));
         }
     }
-
+    
     for (let i = 0; i < ssEveries.length; i++) {
         if (ssUVisibs[i] || ssCVisibs[i]) {
             xmax = Math.max(xmax, 5 * ssEveries[i]);
         }
     }
-
-
+    
     // track the max e2 across all multi-dose curves
     // to set the y-axis limit. uncertainty clouds ignored.
     let e2max = 0;
@@ -74,17 +73,13 @@ function plotCurves(uncertainty = "cloud") {
                 e2max = Math.max(e2max, ...probeMultiDoseCurve.map(p => p.E2));
             }
 
-            if (uncertainty === "cloud") {
-                let mdUncertaintyCloud = [];
-                for (let i = 0; i < NB_CLOUD_POINTS; i++) {
-                    let randx = Math.random() * (xmax - xmin) + xmin;
-                    let y = e2MultiDose3C(randx, mdDoses, mdTimes, mdTypes, true, daysAsIntervals);
-                    mdUncertaintyCloud.push({ Time: randx, E2: y });
-                }
-                dotmarks.push(Plot.dot(mdUncertaintyCloud, { x: "Time", y: "E2", r: CLOUD_POINT_SIZE, fill: colorTheBlue(CLOUD_POINT_OPACITY) }))
-            } else if (uncertainty = "lines") {
-
+            let mdUncertaintyCloud = [];
+            for (let i = 0; i < NB_CLOUD_POINTS; i++) {
+                let randx = Math.random() * (xmax - xmin) + xmin;
+                let y = e2MultiDose3C(randx, mdDoses, mdTimes, mdTypes, true, daysAsIntervals);
+                mdUncertaintyCloud.push({ Time: randx, E2: y });
             }
+            dotmarks.push(Plot.dot(mdUncertaintyCloud, { x: "Time", y: "E2", r: CLOUD_POINT_SIZE, fill: colorTheBlue(CLOUD_POINT_OPACITY) }))
         }
 
 

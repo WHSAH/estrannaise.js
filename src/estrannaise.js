@@ -31,10 +31,7 @@ window.onload = function () {
 
     attachTipJarEvent();
 
-    let hashParams = new URLSearchParams(window.location.hash.substring(1));
-    if (hashParams.has('multiDoseTable') || hashParams.has('steadyStateTable')) {
-        loadFromURL();
-    } else {
+    if (!loadFromURL()) {
         loadFromLocalStorage();
     }
 
