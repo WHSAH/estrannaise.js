@@ -107,6 +107,7 @@ button.delete-button {
     display: block;
     position: relative;
     padding: 0;
+    margin-top: 2em;
     background-color: var(--background-color);
 }
 
