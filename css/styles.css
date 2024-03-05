@@ -9,6 +9,7 @@ body {
 
 a {
     text-decoration: none;
+    font-weight: bold;
     background-color: var(--standout-color);
 }
 
