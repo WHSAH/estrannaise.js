@@ -686,6 +686,46 @@ function attachPresetsDropdown() {
             addTDERow('multidose-table', 4, 4, 'EV im');
             addTDERow('multidose-table', 4, 4, 'EV im');
             addTDERow('multidose-table', 4, 4, 'EV im');
+            addTDERow('multidose-table', 4, 4, 'EV im');
+            addTDERow('multidose-table', 4, 4, 'EV im');
+            addTDERow('multidose-table', 4, 4, 'EV im');
+            addTDERow('multidose-table', 4, 4, 'EV im');
+            refresh();
+        } else if (this.value == 'silly-wpath8-14') {
+            turnMenstrualCycleOff();
+            deleteAllRows('multidose-table');
+            deleteAllRows('steadystate-table');
+            document.getElementById('dropdown-daysinput').value = 'intervals';
+            daysAsIntervals = true;
+            addTDERow('steadystate-table', 14, 30, 'EV im', true, true);
+            addTDERow('multidose-table');
+            refresh();
+        } else if (this.value == 'very-silly-wpath8-14') {
+            turnMenstrualCycleOff();
+            deleteAllRows('multidose-table');
+            deleteAllRows('steadystate-table');
+            document.getElementById('dropdown-daysinput').value = 'intervals';
+            daysAsIntervals = true;
+            addTDERow('steadystate-table', 14, 5, 'EV im', true, true);
+            addTDERow('multidose-table');
+            refresh();
+        }  else if (this.value == 'silly-wpath8-7') {
+            turnMenstrualCycleOff();
+            deleteAllRows('multidose-table');
+            deleteAllRows('steadystate-table');
+            document.getElementById('dropdown-daysinput').value = 'intervals';
+            daysAsIntervals = true;
+            addTDERow('steadystate-table', 7, 10, 'EC im', true, true);
+            addTDERow('multidose-table');
+            refresh();
+        } else if (this.value == 'very-silly-wpath8-7') {
+            turnMenstrualCycleOff();
+            deleteAllRows('multidose-table');
+            deleteAllRows('steadystate-table');
+            document.getElementById('dropdown-daysinput').value = 'intervals';
+            daysAsIntervals = true;
+            addTDERow('steadystate-table', 7, 2, 'EC im', true, true);
+            addTDERow('multidose-table');
             refresh();
         }
     });
