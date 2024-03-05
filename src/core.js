@@ -430,6 +430,23 @@ function deleteAllRows(tableID) {
     }
 }
 
+function menstrualCycleButtonAttachOnOff() {
+    let mcButton = document.getElementById('menstrual-cycle-button');
+    
+    mcButton.addEventListener('mousedown', function () {
+        if (menstrualCycleVisible) {
+            mcButton.style.setProperty('background-color', 'var(--standout-color)');
+            mcButton.style.setProperty('color', 'var(--the-pink)');
+            menstrualCycleVisible = false;
+        } else {
+            mcButton.style.setProperty('background-color', 'var(--the-pink)');
+            mcButton.style.setProperty('color', 'var(--standout-color)');
+            menstrualCycleVisible = true;
+        }
+        refresh();
+    });
+}
+
 function attachDragNDropImport() {
 
     let dragNDropZone = document.getElementById('dragndrop-zone');

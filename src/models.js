@@ -1,5 +1,26 @@
 // function lngamma(x) { return ieee754gamma.lngamma(x) }
 
+const Spline = require('cubic-spline');
+
+const menstrualCycleSpline = new Spline(menstrualCycleData["t"], menstrualCycleData["E2"])
+const menstrualCycleSplineP05 = new Spline(menstrualCycleData["t"], menstrualCycleData["E2p5"])
+const menstrualCycleSplineP95 = new Spline(menstrualCycleData["t"], menstrualCycleData["E2p95"])
+
+function menstrualCycle(time) {
+    let t = ((time % 28) + 28) % 28; // end of day 28 = day 0
+    return conversionFactor * menstrualCycleSpline.at(t);
+}
+
+function menstrualCycleP05(time) {
+    let t = ((time % 28) + 28) % 28;
+    return conversionFactor * menstrualCycleSplineP05.at(t);
+}
+
+function menstrualCycleP95(time) {
+    let t = ((time % 28) + 28) % 28;
+    return conversionFactor * menstrualCycleSplineP95.at(t);
+}
+
 const methodList = ["EV im", "EEn im", "EC im", "EUn im", "EB im", "DOT patch tw", "DOT patch ow"];
 
 // lil bit of ravioli code, but then if we wanted
@@ -349,4 +370,8 @@ function logsumsignedexp(exponents, signs) {
     let logsumexpNegative = negative.length ? _logsumexp(negative) : -Infinity;
 
     return _logsubexp(logsumexpPositive, logsumexpNegative);
+}
+
+function menstrualcycle(t) {
+
 }

@@ -3,6 +3,7 @@ let conversionFactor = 1.0;
 let units = "pg/mL";
 let daysAsIntervals = false;
 // let uncertaintyViz = "cloud";
+let menstrualCycleVisible = false;
 
 window.onload = function () {
 
@@ -26,6 +27,8 @@ window.onload = function () {
 
     attachMultidoseButtonsEvents();
     attachSteadyStateButtonsEvents();
+    
+    menstrualCycleButtonAttachOnOff();
 
     themeSetup();
 

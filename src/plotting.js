@@ -1,7 +1,9 @@
 const NB_CLOUD_POINTS = 3500;
 const NB_CLOUDPOINTS_PER_SAMPLE = 10;
 const NB_UCURVES = 200;
-const NB_LINE_POINTS = 1500;
+
+const PLOT_WIDTH = 848;
+const NB_LINE_POINTS = PLOT_WIDTH;
 
 const CLOUD_POINT_SIZE = 1.3;
 const CLOUD_POINT_OPACITY = 0.5;
@@ -13,6 +15,15 @@ function fillCurve(func, xmin, xmax, nbsteps) {
         curve.push({ Time: i, E2: func(i) });
     }
     return curve;
+}
+
+function fillMenstrualCycleCurve(xmin, xmax, nbsteps) {
+    let curve = [];
+    for (let i = xmin; i <= xmax; i += (xmax - xmin) / (nbsteps - 1)) {
+        curve.push({ Time: i, E2: menstrualCycle(i), E2p5: menstrualCycleP05(i), E2p95: menstrualCycleP95(i)});
+    }
+    return curve;
+
 }
 
 
@@ -134,6 +145,21 @@ function plotCurves(uncertainty = "cloud") {
         }
     }
 
+    let msmarks = []
+    if (menstrualCycleVisible) {
+        let _menstrualCycle = fillMenstrualCycleCurve(xmin, xmax, NB_LINE_POINTS);
+        msmarks = [
+            Plot.line(_menstrualCycle, { x: "Time", y: "E2", strokeWidth: 2, stroke: colorThePink()}),
+            Plot.areaY(_menstrualCycle, { x: "Time", y1: "E2p5", y2:"E2p95" , fill: colorTheBlue(0.2)}),
+            Plot.tip(_menstrualCycle, Plot.pointerX({
+                x: "Time", y: "E2",
+                title: p => `menstrual cycle\ntime: ${numberToDayHour(p.Time)}\n  e₂: ${p.E2.toFixed(0)} ${units}\n  CI: ${p.E2p5.toFixed(0)}-${p.E2p95.toFixed(0)} ${units}`,
+                fontFamily: "monospace", fill: colorBackground(0.618), stroke: colorThePink()
+            }))
+        ];
+        e2max = Math.max(e2max, conversionFactor * 450);
+    }
+
     let e2curve = Plot.plot({
         width: 848,
         // height: 500,
@@ -144,7 +170,7 @@ function plotCurves(uncertainty = "cloud") {
             Plot.gridY({ stroke: "grey" }),
             Plot.ruleX([xmin]),
             Plot.ruleY([0]),
-        ].concat(rulemarks).concat(dotmarks).concat(linemarks).concat(tipmarks)
+        ].concat(rulemarks).concat(dotmarks).concat(linemarks).concat(tipmarks).concat(msmarks)
     })
 
     // Select all text elements in the plot and set their font weight to bold
