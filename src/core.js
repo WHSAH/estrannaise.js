@@ -565,6 +565,24 @@ function attachPresetsDropdown() {
             addTDERow('multidose-table', 30, 40, 'EUn casubq');
             addTDERow('multidose-table', 30, 40, 'EUn casubq');
             refresh();
+        } else if (this.value == 'patch-monotherapy-tw') {
+            turnMenstrualCycleOff();
+            deleteAllRows('multidose-table');
+            deleteAllRows('steadystate-table');
+            document.getElementById('dropdown-daysinput').value = 'intervals';
+            daysAsIntervals = true;
+            addTDERow('steadystate-table', 3.5, 0.4, 'patch tw', true, true);
+            addTDERow('multidose-table');
+            refresh();
+        }  else if (this.value == 'patch-monotherapy-ow') {
+            turnMenstrualCycleOff();
+            deleteAllRows('multidose-table');
+            deleteAllRows('steadystate-table');
+            document.getElementById('dropdown-daysinput').value = 'intervals';
+            daysAsIntervals = true;
+            addTDERow('steadystate-table', 7, 0.3, 'patch ow', true, true);
+            addTDERow('multidose-table');
+            refresh();
         } else if (this.value == 'mimick-menstrual-cycle') {
             deleteAllRows('multidose-table');
             deleteAllRows('steadystate-table');
@@ -691,6 +709,24 @@ function attachPresetsDropdown() {
             addTDERow('multidose-table', 4, 4, 'EV im');
             addTDERow('multidose-table', 4, 4, 'EV im');
             refresh();
+        } else if (this.value == 'eun-monotherapy-speedrun-30') {
+            turnMenstrualCycleOff();
+            deleteAllRows('multidose-table');
+            deleteAllRows('steadystate-table');
+            document.getElementById('dropdown-daysinput').value = 'intervals';
+            daysAsIntervals = true;
+            addTDERow('steadystate-table', 30, 40, 'EUn casubq', true, false);
+            addTDERow('multidose-table', 30, 100, 'EUn casubq');
+            addTDERow('multidose-table', 30, 40, 'EUn casubq');
+            addTDERow('multidose-table', 30, 40, 'EUn casubq');
+            addTDERow('multidose-table', 30, 40, 'EUn casubq');
+            addTDERow('multidose-table', 30, 40, 'EUn casubq');
+            addTDERow('multidose-table', 30, 40, 'EUn casubq');
+            addTDERow('multidose-table', 30, 40, 'EUn casubq');
+            addTDERow('multidose-table', 30, 40, 'EUn casubq');
+            addTDERow('multidose-table', 30, 40, 'EUn casubq');
+            addTDERow('multidose-table', 30, 40, 'EUn casubq');
+            refresh();
         } else if (this.value == 'silly-wpath8-14') {
             turnMenstrualCycleOff();
             deleteAllRows('multidose-table');
@@ -709,7 +745,7 @@ function attachPresetsDropdown() {
             addTDERow('steadystate-table', 14, 5, 'EV im', true, true);
             addTDERow('multidose-table');
             refresh();
-        }  else if (this.value == 'silly-wpath8-7') {
+        } else if (this.value == 'silly-wpath8-7') {
             turnMenstrualCycleOff();
             deleteAllRows('multidose-table');
             deleteAllRows('steadystate-table');
