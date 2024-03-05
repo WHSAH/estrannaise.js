@@ -1,21 +1,27 @@
 :root {
 
     /* Night colors */
-    --background-color-night: #2a2a2a;
+    /* --background-color-night: #2a2a2a;
     --standout-color-night: #343434;
     --the-blue-night: #A1CBF6;
-    --the-pink-night: #DBBAE6;
+    --the-pink-night: #DBBAE6; */
+    
+    --background-color-night: #2a2a2a;
+    --standout-color-night: #343434;
+    --the-blue-night: #f0f0f0;
+    --the-pink-night: #e8e8e8;
 
     /* Day colors */
-    --background-color-day: #f8f8f8;
-    --standout-color-day: #eeeeee;
-    --the-blue-day: #5148b2;
-    --the-pink-day: #AC489B;
 
     /* --background-color-day: #f8f8f8;
     --standout-color-day: #eeeeee;
+    --the-blue-day: #5148b2;
+    --the-pink-day: #AC489B; */
+
+    --background-color-day: #f8f8f8;
+    --standout-color-day: #eeeeee;
     --the-blue-day: #343434;
-    --the-pink-day: #505050; */
+    --the-pink-day: #525252;
 
     --logo-blue: #9EC5FA;
     --logo-pink: #EAAEB9;

@@ -86,6 +86,15 @@ function numberToDayHour(number, precision = 0) {
     return `${days}d ${hours}h`;
 }
 
+function convertHexToRGBA(hex, alpha = 1.0) {
+    if (hex.startsWith('#')) { hex = hex.slice(1); }
+    let r = parseInt(hex.slice(0, 2), 16);
+    let g = parseInt(hex.slice(2, 4), 16);
+    let b = parseInt(hex.slice(4, 6), 16);
+    let rgb = `${r}, ${g}, ${b}`;
+    return `rgba(${rgb}, ${alpha})`
+}
+
 function convertCustomCSSVarToRGBA(varName, alpha = 1.0) {
     let rootStyle = getComputedStyle(document.documentElement);
     let color = rootStyle.getPropertyValue(varName)
