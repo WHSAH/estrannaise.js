@@ -7,8 +7,6 @@ Under the hood, estrannaise.js uses pharmacokinetic compartments models and MCMC
 
 # TODO
 - Remove "add" button, automatically add empty line
-- Hover boxes for all the things
-- Presets!
 - Remember units/days options when stashing/saving/loading
 - Allow possibility of changing patch wear time
 - Offer different ways to visualize the uncertainty (parallel sigma lines and cloud ensemble of curves)
