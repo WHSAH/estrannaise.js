@@ -155,15 +155,15 @@ function plotCurves(uncertainty = "cloud") {
                 e2max = Math.max(e2max, ...probeSteadyStateCurve.map(p => p.E2));
             }
 
-            dotmarks.push(Plot.dot(ssUncertaintyCloud, { x: "Time", y: "E2", r: CLOUD_POINT_SIZE, fill: wongPalette(colorCycle, CLOUD_POINT_OPACITY) }));
+            dotmarks.unshift(Plot.dot(ssUncertaintyCloud, { x: "Time", y: "E2", r: CLOUD_POINT_SIZE, fill: wongPalette(colorCycle, CLOUD_POINT_OPACITY) }));
         }
 
         if (ssCVisibs[i]) {
             let ssEsterCurve = fillCurve(t => PKFunctions[ssTypes[i]](t, ssDoses[i], true, ssEveries[i]), xmin, xmax, NB_LINE_POINTS);
             ssEsterCurve = ssEsterCurve.map(p => ({ Time: p.Time, E2: p.E2, type: `${ssTypes[i]} ${ssDoses[i]}mg/${ssEveries[i]}day${ssEveries[i] > 1 ? "s" : ""}` }));
             e2max = Math.max(e2max, ...ssEsterCurve.map(p => p.E2));
-            linemarks.push(Plot.line(ssEsterCurve, { x: "Time", y: "E2", strokeWidth: 2, stroke: wongPalette(colorCycle) }));
-            tipmarks.push(Plot.tip(ssEsterCurve, Plot.pointerX({
+            linemarks.unshift(Plot.line(ssEsterCurve, { x: "Time", y: "E2", strokeWidth: 2, stroke: wongPalette(colorCycle) }));
+            tipmarks.unshift(Plot.tip(ssEsterCurve, Plot.pointerX({
                 x: "Time", y: "E2",
                 // title: p => `${p.type.toLowerCase()}\n\ntime: ${numberToDayHour(p.Time)}\n  e₂: ${p.E2.toFixed(0)} pg/ml\n  tr: ${PKFunctions[ssTypes[i]](0.0, ssDoses[i], true, ssEveries[i]).toFixed(0)} pg/ml\n  av: ${e2ssAverage3C(ssDoses[i], ssEveries[i], ...PKParams[ssTypes[i]]).toFixed(0)} pg/ml`,
                 title: p => `${p.type.toLowerCase()}\n\n  time: ${numberToDayHour(p.Time)}\n    e₂: ${p.E2.toFixed(0)} ${units}\ntrough: ${PKFunctions[ssTypes[i]](0.0, ssDoses[i], true, ssEveries[i]).toFixed(0)} ${units}`,
@@ -185,7 +185,7 @@ function plotCurves(uncertainty = "cloud") {
             Plot.gridY({ stroke: "grey" }),
             Plot.ruleX([xmin]),
             Plot.ruleY([0]),
-        ].concat(msmarks).concat(rulemarks).concat(dotmarks).concat(linemarks).concat(tipmarks)
+        ].concat(rulemarks).concat(dotmarks).concat(msmarks).concat(linemarks).concat(tipmarks)
     })
 
     // Select all text elements in the plot and set their font weight to bold
