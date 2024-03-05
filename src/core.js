@@ -531,6 +531,7 @@ function attachPresetsDropdown() {
             daysAsIntervals = true;
             // addTDERow('steadystate-table', 4, 3, 'EV im', true, false);
             // addTDERow('steadystate-table', 7, 4, 'EEn im', true, false);
+            addTDERow('steadystate-table');
             addTDERow('multidose-table', 4, 3, 'EV im');
             addTDERow('multidose-table', 4, 3, 'EV im');
             addTDERow('multidose-table', 4, 3, 'EV im');
