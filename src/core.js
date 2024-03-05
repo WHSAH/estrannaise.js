@@ -523,7 +523,7 @@ function attachPresetsDropdown() {
             addTDERow('multidose-table', 7, 5, 'EC im');
             addTDERow('multidose-table', 7, 5, 'EC im');
             refresh();
-        } else if (this.value == 'ev43-to-een74-monotherapy') {
+        } else if (this.value == 'ev34-to-een47-monotherapy') {
             turnMenstrualCycleOff();
             deleteAllRows('multidose-table');
             deleteAllRows('steadystate-table');
@@ -724,7 +724,7 @@ function attachPresetsDropdown() {
             addTDERow('multidose-table', 7, 5, 'EC im');
             addTDERow('multidose-table', 7, 5, 'EC im');
             refresh();
-        } else if (this.value == 'ev43-to-een74-speedrun') {
+        } else if (this.value == 'ev34-to-een47-speedrun') {
             turnMenstrualCycleOff();
             deleteAllRows('multidose-table');
             deleteAllRows('steadystate-table');
