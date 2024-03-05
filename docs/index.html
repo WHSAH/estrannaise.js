@@ -296,14 +296,14 @@
         the numerators in \eqref{eq:steadystate3C} cancel the steady state factor in the denominators and
         therefore the AUC over one period
         \begin{equation*}\begin{split}
-        \text{AUC} = \int_0^T E_2^{ss3C}(t) dt &= d k_1 k_2\left(\frac{1}{k_1(k_1 - k_2)(k_1-k_3)} - \frac{1}{k_2(k_1-k_2)(k_2-k_3)} + \frac{1}{k_3(k_1-k_3)(k_2-k_3)}\right),\\
+        \text{AUC}_T = \int_0^T E_2^{ss3C}(t) dt &= d k_1 k_2\left(\frac{1}{k_1(k_1 - k_2)(k_1-k_3)} - \frac{1}{k_2(k_1-k_2)(k_2-k_3)} + \frac{1}{k_3(k_1-k_3)(k_2-k_3)}\right),\\
         &= d k_1 k_2\frac{k_2 k_3 (k_2 - k_3) - k_1 k_3(k_1 - k_3) + k_1 k_2(k_1 - k_2)}{k_1 k_2 k_3(k_1 - k_2)(k_1-k_3)(k_2 - k_3)},\\
         & = \frac{d}{k_3}.
         \end{split}\end{equation*}
-        Note how the AUC is independent of the rates \(k_1, k_2\). The average level
+        Note how it is independent of the rates \(k_1, k_2\). The average level
         at steady state is therefore
         \begin{equation*}
-        \overline{E^{ss}_2} = \frac{AUC}{T} = \frac{d}{k_3 T}.
+        \overline{E^{ss}_2} = \frac{\text{AUC}_T}{T} = \frac{d}{k_3 T}.
         \end{equation*}
         This highlights the fact that average levels only depend on the elimination rate of
         estradiol by the body and the dose per-\(T\) and are therefore independent of the
@@ -319,7 +319,7 @@
         E^{tr}_2 = E^{ss}_2(0) = d k_1 k_2\left[\frac{1}{(1 - e^{-k_1T})(k_1 - k_2)(k_1 - k_3)} - \frac{1}{(1 - e^{-k_2T})(k_1 - k_2)(k_2 - k_3)} + \frac{1}{(1 - e^{-k_3T})(k_1 - k_3)(k_2 - k_3)}\right].
         \end{equation*}
         One interesting point to note is that this is not the "true" trough, but a very
-        close approximation. The "true" trough happens a a little after the injection. We do not
+        close approximation. The "true" trough is reached a little after the injection. We do not
         show this but the derivative is indeed always negative or zero at \(t = 0\). One can check
         that at first order in \(k_1, k_2, k_3\) with \(T\) of order 1 the derivative is
         approximately \(-d k_1 k_2 T/12\) which is negative for non-zero rates. Intuitively
@@ -875,8 +875,6 @@
             \end{split}\end{equation}
           </div>
         </div>
-        <h3 id="patchsol">general solution for the dot patch model</h3>
-
 
     </div>
   </body>
