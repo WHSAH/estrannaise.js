@@ -149,43 +149,43 @@
 
         <!-- someone tell me why github pages don't render <footer> correctly? -->
         <div id="footer">
-            <div style="width: 58em;">
+            <div style="width: 65em; font-family: 'Roboto Mono';">
                 
-                <p>Remember, <span style="color: var(--the-pink)">the line is a lie!</span> The blue cloud a little less so.
+                <p style="font-weight: bold;">Remember, <span style="color: var(--the-pink)">the line is a lie!</span> The blue cloud a little less so.
                 </p>
                 
-                <p>This cloud does not represent data points, it is a visual representation of the uncertainty in model predictions.
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;This cloud does not represent data points, it is a visual representation of the uncertainty in model predictions.
+                    It is important to emphasis that it underestimates the total uncertainty in model predictions.
+                    It only captures the uncertainty of something akin to a population mean, or more precisely the uncertainty
+                    of the deterministic estradiol curve. It does not capture the full distribution of outcomes 
+                    in the population at large. This is bound to change in the future when I implement a better representation of this uncertainty
+                    which would include the population variability around the deterministic estradiol curve.
                 </p>
                 
-                <p>It is important to emphasis that the cloud still underestimates the total uncertainty in model predictions.
-                    It only captures the uncertainty of something akin to a population mean rather than the full distribution of outcomes 
-                    in the population at large. This is bound to change in the future when I implement a better representation of this uncertainty.
-                </p>
-                
-                <p>Inferences for the estradiol benzoate, valerate, and cypionate intramuscular depot models 
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;Inferences for the estradiol benzoate, valerate, and cypionate intramuscular depot models 
                     (<span style="color: var(--the-pink)">eb im</span>, <span style="color: var(--the-pink)">ev im</span>, <span style="color: var(--the-pink)">ec im</span>) 
                     use part of the data collected and made available by the amazing people behind the 
                     <a href="https://transfemscience.org/articles/injectable-e2-meta-analysis/" target="_blank">tfs meta-analysis</a>
                     but will be reprocessed in the future to allow for a better quantification of uncertainty.
                 </p>
                 
-                <p>The data behind the estradiol undecylate model for intramuscular depots using castor oil (<span style="color: var(--the-pink)">eun im</span>) 
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;The data behind the estradiol undecylate model for intramuscular depots using castor oil (<span style="color: var(--the-pink)">eun im</span>) 
                     was entirely reprocessed from scratch using the per-patient data found in Geppert 1975 together with the dataset from Vermeulen 1975, including 
                     the original reported uncertainty. This data is extremely sparse and incomplete and thus the model is highly uncertain.
                 </p>    
                 
-                <p>The data behind the estradiol undecylate model for subcutaneous depots using castor oil 
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;The data behind the estradiol undecylate model for subcutaneous depots using castor oil 
                     (<span style="color: var(--the-pink)">eun casubq</span>) was infered on 
                     top of the <span style="color: var(--the-pink)">eun im</span> model by augmenting it with very sparse self-reported community data.
                     Its predictions are also highly uncertain.
                 </p>
                 
-                <p>The data behind the estradiol enanthate model for intramuscular depots using sunflower oil (<span style="color: var(--the-pink)">een im</span>)
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;The data behind the estradiol enanthate model for intramuscular depots using sunflower oil (<span style="color: var(--the-pink)">een im</span>)
                     was reprocessed from scratch using studies with Perlutan from the 80s and 90s. This data
                     is also extremely sparse and incomplete and the model highly uncertain.
                 </p>
 
-                <p>The once-weekly patch model (<span style="color: var(--the-pink)">patch ow</span>) was infered using data found in drug labels
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;The once-weekly patch model (<span style="color: var(--the-pink)">patch ow</span>) was infered using data found in drug labels
                     of once-weekly Climara and Menostar patches. The twice-weekly patch model (<span style="color: var(--the-pink)">patch tw</span>) was infered 
                     using data taken from two 2003 studies by Houssain et al. looking at
                     twice-weekly Estradot and Menorest patches, and in the drug label of twice-weekly Mylan patches.
@@ -193,9 +193,9 @@
                     (i.e. they are fixed at 3&frac12; and 7 days) but it is planned for the future.
                 </p>
 
-                <p>The data for the menstrual cycle comes from <a href="https://doi.org/10.1515/CCLM.2006.160" target="_blank">Stricker et al. 2006</a>.</p>
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;The data for the menstrual cycle comes from <a href="https://doi.org/10.1515/CCLM.2006.160" target="_blank">Stricker et al. 2006</a>. Download the <a href="data/mestrualcycle_E2P_stricker2006.csv">E2/P data</a> and <a href="data/mestrualcycle_LHFSH_stricker2006.csv">LH/FSH data</a>.</p>
                 
-                <p>The emerging consensus is that the pharmacokinetic of estradiol ester depots is highly variable
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;The emerging consensus is that the pharmacokinetic of estradiol ester depots is highly variable
                     and depends on many factors that are not well understood and rarely taken into account.
                     Those factors can lead to vastly different outcomes and are not well represented, if at all, 
                     in the current models. Those include, among others, the ester concentration, the type of oil used, 
@@ -210,6 +210,7 @@
                     always be limited by the data available.
                 </p>
 
+                <br>
                 <p>With help encouragements and entertainment from emily torble lea annie izzy meringue photino
                     <br>(and let's be honest github copilot).
                 </p>
