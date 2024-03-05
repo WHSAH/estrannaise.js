@@ -43,11 +43,11 @@
                     
                     <div id="subtitle" style="display: flex; justify-content: space-between; width: 100%; align-items: flex-end;">
 
-                        <img src="img/favicon-48x48.png" alt="estrannaise.js logo" style="margin-bottom: 0em;"><h1 style="margin-right: auto; margin-bottom: 0em;">estradiol <a href="docs/">pharmacokinetics</a> playground</h2>
+                        <img src="img/favicon-48x48-bw.png" alt="estrannaise.js logo" style="margin-bottom: 0em;"><h1 style="margin-right: auto; margin-bottom: 0em;">estradiol <a href="docs/">pharmacokinetics</a> playground</h2>
                         
                         <label class="switch">
                             <input type="checkbox" id="nightday-slider">
-                            <span class="slider round"></span>
+                            <span class="slider round" title="Switch between night/day theme"></span>
                         </label>
                     </div>
                 </div>
@@ -60,11 +60,16 @@
         
         <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
             <div id="options" style="display: flex; margin-bottom: 1em; margin-right: auto;">
-                <select class="dropdown-units" style="display: inline-block; margin-right: 0.6em;">
+                <select class="dropdown-units" 
+                        title="Change units for the estradiol concentration"
+                        style="display: inline-block; margin-right: 0.6em;">
                     <option value="pg/mL">pg/mL</option> 
                     <option value="pmol/L">pmol/L</option> 
                 </select>
-                <select class="dropdown-daysinput" style="display: inline-block; margin-right: 0.6em;">
+                <select id="dropdown-daysinput" 
+                        class="dropdown-daysinput" 
+                        title="Change the way days are interpreted as inputs in the multi-dose curve"
+                        style="display: inline-block; margin-right: 0.6em;">
                     <option value="absolute">absolute days</option>
                     <option value="intervals">days as intervals</option>
                 </select>
@@ -75,15 +80,39 @@
                 </select> -->
 
                 <!-- <input id="show-menstrualcycle" type="checkbox" class="hidden-checkbox checked-style">
-                <div class="custom-checkbox checked-style" style="width: 10em; margin: 0em;">menstrual cycle</div> -->
-                <button id="menstrual-cycle-button" class="flat-button" style="width: 11em; color: var(--the-pink);">menstrual cycle</button>
+                <div class="custom-checkbox checked-style" style="width: 10em; margin: 0em;">menstrual cycle</div> -->                
+                <select id="dropdown-presets" 
+                        title="Load a preset"
+                        style="display: inline-block; margin-right: 0.6em;">
+                    <option value="" selected disabled>Select a preset</option>
+                    <option value="een-monotherapy-7">een monotherapy (7 days)</option>
+                    <option value="een-monotherapy-10">een monotherapy (10 days)</option>
+                    <option value="ev-monotherapy-4">ev monotherapy (4 days)</option>
+                    <option value="ec-monotherapy-7">ec monotherapy (7 days)</option>
+                    <option value="eun-monotherapy-30">eun monotherapy (30 days)</option>
+                    <option value="ev43-to-een74-monotherapy">ev43 to een74 monotherapy</option>
+                    <option value="missed-een-dose-7">missed een dose</option>
+                    <option value="missed-ev-dose-4">missed ev dose</option>
+                    <option value="preempt-missed-een-dose-7">preempt missed een dose</option>
+                    <option value="preempt-missed-ev-dose-4">preempt missed ev dose</option>
+                    <option value="een-monotherapy-speedrun-7">een monotherapy speedrun</option>
+                    <option value="ev-monotherapy-speedrun-4">ev monotherapy speedrun</option>
+                    <option value="mimick-menstrual-cycle">mimick menstrual cycle</option>
+                </select>
+
+                <button id="menstrual-cycle-button" class="flat-button" 
+                title="Turn on/off the display of the menstrual cycle data"
+                style="width: 11em; color: var(--the-pink); font-weight: normal;">menstrual cycle</button>
+
 
             </div>
             <div id="stashrecall-container" style="margin-bottom: 2em; margin-left: auto;">
-                <button id="stash-button" class="flat-button" style="width: 7.5em;">stash all</button>
+                <!-- <button id="stash-button" class="flat-button" style="width: 7.5em;">stash all</button>
                 <button id="recall-button" class="flat-button" style="width: 5em;">recall</button>
-                <button id="delete-stash-button" class="flat-button" style="width: 9em;">delete stash</button>
-                <button id="share-button" class="flat-button" style="width: 8em;">share url</button>
+                <button id="delete-stash-button" class="flat-button" style="width: 9em;">delete stash</button> -->
+                <button id="share-button" class="flat-button"
+                        title="Share the current state of the simulator as an arcane URL"
+                        style="width: 8em;">share url</button>
             </div>
         </div>
 
@@ -92,12 +121,12 @@
             <div id="multidose-section">
                 <span style="font-weight: bold;">multi-doses</span>
                 <div id="multidose-buttons" style="margin-top: 1em;">
-                    <button id="add-dose-button" class="flat-button">add</button>
-                    <button id="guess-button" class="flat-button">add guess</button>
-                    <button id="clear-doses-button" class="flat-button">clear</button>
-                    <input type="file" id="csv-file" accept=".csv" style="display: none;">
+                    <button id="add-dose-button" class="flat-button" title="Add input line for a new dose">add</button>
+                    <button id="guess-button" class="flat-button" title="Duplicate last entry when in 'days as interval mode'. Guess and autofill next dose given the last two or three entries when in 'absolute days' mode">autofill</button>
+                    <button id="clear-doses-button" class="flat-button" title="Clear all entries in the multi-dose curve">clear</button>
+                    <!-- <input type="file" id="csv-file" accept=".csv" style="display: none;">
                     <button id="import-csv-dialog" class="flat-button">import</button>
-                    <button id="save-csv-button" class="flat-button">export</button>
+                    <button id="save-csv-button" class="flat-button">export</button> -->
                 </div>
                 <br>
                 <div id="dragndrop-zone">
@@ -115,8 +144,8 @@
                         <tbody>
                         </tbody>
                     </table>
-                    <span style="font-weight: normal; font-size: 9px; display: block; text-align: center;">drag-n-drop
-                        csv on table to import</span>
+                    <!-- <span style="font-weight: normal; font-size: 9px; display: block; text-align: center;">drag-n-drop
+                        csv on table to import</span> -->
                 </div>
             </div> <!-- multidose-section -->
 
@@ -124,8 +153,8 @@
             <div id="steadystate-section">
                 <span style="font-weight: bold;">steady-states</span>
                 <div id="bottom-button" style="margin-top: 1em;">
-                    <button id="add-steadystate-button" class="flat-button">add</button>
-                    <button id="clear-steadystates-button" class="flat-button">clear</button>
+                    <button id="add-steadystate-button" class="flat-button" title="Add new steady-state input line">add</button>
+                    <button id="clear-steadystates-button" class="flat-button" title="Clear all steady-state entries">clear</button>
                 </div>
                 <br>
                 <table id="steadystate-table">

@@ -39,7 +39,7 @@ const PKFunctions = {
     "EEn im": function (t, dose, steadystate=false, T=0.0) { return e2Curve3C(t, conversionFactor * dose, ...PKParams["EEn im"], 0.0, 0.0, steadystate, T) },
     "EC im": function (t, dose, steadystate=false, T=0.0) { return e2Curve3C(t, conversionFactor * dose, ...PKParams["EC im"], 0.0, 0.0, steadystate, T) },
     "EUn im": function (t, dose, steadystate=false, T=0.0) { return e2Curve3C(t, conversionFactor * dose, ...PKParams["EUn im"], 0.0, 0.0, steadystate, T) },
-    "EUn csq": function (t, dose, steadystate=false, T=0.0) { return e2Curve3C(t, conversionFactor * dose, ...PKParams["EUn csq"], 0.0, 0.0, steadystate, T) },
+    "EUn casubq": function (t, dose, steadystate=false, T=0.0) { return e2Curve3C(t, conversionFactor * dose, ...PKParams["EUn casubq"], 0.0, 0.0, steadystate, T) },
     "EB im": function (t, dose, steadystate=false, T=0.0) { return e2Curve3C(t, conversionFactor * dose, ...PKParams["EB im"], 0.0, 0.0, steadystate, T) },
     "patch tw": function (t, dose, steadystate=false, T=0.0) { return e2Patch3C(t, conversionFactor * dose, ...PKParams["patch tw"], 3.5, steadystate, T) },
     "patch ow": function (t, dose, steadystate=false, T=0.0) { return e2Patch3C(t, conversionFactor * dose, ...PKParams["patch ow"], 7.0, steadystate, T) }
@@ -50,7 +50,7 @@ const PKRandomFunctions = {
     "EEn im": function(t, dose, steadystate=false, T=0.0, idx=null) { return e2Curve3C(t, conversionFactor * dose, ...randomMCMCSample("EEn im", idx), 0.0, 0.0, steadystate, T) },
     "EC im": function(t, dose, steadystate=false, T=0.0, idx=null) { return e2Curve3C(t, conversionFactor * dose, ...randomMCMCSample("EC im", idx), 0.0, 0.0, steadystate, T) },
     "EUn im": function(t, dose, steadystate=false, T=0.0, idx=null) { return e2Curve3C(t, conversionFactor * dose, ...randomMCMCSample("EUn im", idx), 0.0, 0.0, steadystate, T) },
-    "EUn csq": function(t, dose, steadystate=false, T=0.0, idx=null) { return e2Curve3C(t, conversionFactor * dose, ...randomMCMCSample("EUn csq", idx), 0.0, 0.0, steadystate, T) },
+    "EUn casubq": function(t, dose, steadystate=false, T=0.0, idx=null) { return e2Curve3C(t, conversionFactor * dose, ...randomMCMCSample("EUn casubq", idx), 0.0, 0.0, steadystate, T) },
     "EB im": function(t, dose, steadystate=false, T=0.0, idx=null) { return e2Curve3C(t, conversionFactor * dose, ...randomMCMCSample("EB im", idx), 0.0, 0.0, steadystate, T) },
     "patch tw": function(t, dose, steadystate=false, T=0.0, idx=null) { return e2Patch3C(t, conversionFactor * dose, ...randomMCMCSample("patch tw", idx), 3.5, steadystate, T) },
     "patch ow": function(t, dose, steadystate=false, T=0.0, idx=null) { return e2Patch3C(t, conversionFactor * dose, ...randomMCMCSample("patch ow", idx), 7.0, steadystate, T) }

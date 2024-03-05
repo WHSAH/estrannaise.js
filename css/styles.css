@@ -8,9 +8,13 @@ body {
 }
 
 a {
-    /* text-decoration: none; */
+    text-decoration: none;
+    background-color: var(--standout-color);
 }
 
+a:link, a:visited {
+    color: var(--the-pink);
+}
 
 header {
     display: inline-block;
@@ -30,10 +34,6 @@ header {
     margin-top: 5em;
     font-size: 12px;
     /* padding-left: 1.25em; */
-}
-
-a:link, a:visited {
-    color: var(--the-pink);
 }
 
 input.flat-input {
@@ -171,4 +171,8 @@ button.delete-button {
     margin-top: 1em;
     margin-left: auto;
     width: 100%;
+}
+
+#share-button {
+    cursor: copy;
 }
