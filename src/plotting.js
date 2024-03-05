@@ -77,6 +77,24 @@ function plotCurves(uncertainty = "cloud") {
 
     let colorCycle = 4;
 
+    let msmarks = []
+    if (menstrualCycleVisible) {
+        let _menstrualCycle = fillMenstrualCycleCurve(xmin, xmax, NB_LINE_POINTS);
+        msmarks = [
+            Plot.line(_menstrualCycle, { x: "Time", y: "E2", strokeWidth: 2, stroke: wongPalette(colorCycle)}),
+            Plot.areaY(_menstrualCycle, { x: "Time", y1: "E2p5", y2:"E2p95" , fill: wongPalette(colorCycle, 0.2)}),
+            Plot.tip(_menstrualCycle, Plot.pointerX({
+                x: "Time", y: "E2",
+                title: p => `menstrual cycle\ntime: ${numberToDayHour(p.Time)}\n  e₂: ${p.E2.toFixed(0)} ${units}\n  CI: ${p.E2p5.toFixed(0)}-${p.E2p95.toFixed(0)} ${units}`,
+                fontFamily: "monospace", fill: colorBackground(0.618), stroke: colorThePink()
+            }))
+        ];
+        e2max = Math.max(e2max, conversionFactor * 350);
+        
+        colorCycle += 1;
+    }
+
+
     if (mdTimes.length > 0) {
 
         // Uncertainty cloud
@@ -155,21 +173,6 @@ function plotCurves(uncertainty = "cloud") {
         
         colorCycle += 1
     
-    }
-
-    let msmarks = []
-    if (menstrualCycleVisible) {
-        let _menstrualCycle = fillMenstrualCycleCurve(xmin, xmax, NB_LINE_POINTS);
-        msmarks = [
-            Plot.line(_menstrualCycle, { x: "Time", y: "E2", strokeWidth: 2, stroke: wongPalette(colorCycle)}),
-            Plot.areaY(_menstrualCycle, { x: "Time", y1: "E2p5", y2:"E2p95" , fill: wongPalette(colorCycle, 0.2)}),
-            Plot.tip(_menstrualCycle, Plot.pointerX({
-                x: "Time", y: "E2",
-                title: p => `menstrual cycle\ntime: ${numberToDayHour(p.Time)}\n  e₂: ${p.E2.toFixed(0)} ${units}\n  CI: ${p.E2p5.toFixed(0)}-${p.E2p95.toFixed(0)} ${units}`,
-                fontFamily: "monospace", fill: colorBackground(0.618), stroke: colorThePink()
-            }))
-        ];
-        e2max = Math.max(e2max, conversionFactor * 350);
     }
 
     let e2curve = Plot.plot({

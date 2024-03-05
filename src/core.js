@@ -590,6 +590,7 @@ function attachPresetsDropdown() {
             addTDERow('steadystate-table');
             document.getElementById('dropdown-daysinput').value = 'absolute';
             daysAsIntervals = false;
+            turnMenstrualCycleOn();
             addTDERow('multidose-table', 13.5, 1, 'EB im');
             addTDERow('multidose-table',   16, 4, 'EEn im');
             addTDERow('multidose-table', 41.5, 1, 'EB im');
@@ -598,7 +599,6 @@ function attachPresetsDropdown() {
             addTDERow('multidose-table',   72, 4, 'EEn im');
             addTDERow('multidose-table', 97.5, 1, 'EB im');
             addTDERow('multidose-table',   100, 4, 'EEn im');
-            turnMenstrualCycleOn();
             refresh();
         } else if (this.value == 'missed-een-dose-7') {
             turnMenstrualCycleOff();
