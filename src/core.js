@@ -724,6 +724,30 @@ function attachPresetsDropdown() {
             addTDERow('multidose-table', 7, 5, 'EC im');
             addTDERow('multidose-table', 7, 5, 'EC im');
             refresh();
+        } else if (this.value == 'ev43-to-een74-speedrun') {
+            turnMenstrualCycleOff();
+            deleteAllRows('multidose-table');
+            deleteAllRows('steadystate-table');
+            document.getElementById('dropdown-daysinput').value = 'intervals';
+            daysAsIntervals = true;
+            // addTDERow('steadystate-table', 4, 3, 'EV im', true, false);
+            // addTDERow('steadystate-table', 7, 4, 'EEn im', true, false);
+            addTDERow('steadystate-table');
+            addTDERow('multidose-table', 4, 3, 'EV im');
+            addTDERow('multidose-table', 4, 3, 'EV im');
+            addTDERow('multidose-table', 4, 3, 'EV im');
+            addTDERow('multidose-table', 4, 3, 'EV im');
+            addTDERow('multidose-table', 4, 3, 'EV im');
+            addTDERow('multidose-table', 4, 3, 'EV im');
+            addTDERow('multidose-table', 4, 3, 'EV im');
+            addTDERow('multidose-table', 4, 6, 'EEn im');
+            addTDERow('multidose-table', 7, 4, 'EEn im');
+            addTDERow('multidose-table', 7, 4, 'EEn im');
+            addTDERow('multidose-table', 7, 4, 'EEn im');
+            addTDERow('multidose-table', 7, 4, 'EEn im');
+            addTDERow('multidose-table', 7, 4, 'EEn im');
+            addTDERow('multidose-table', 7, 4, 'EEn im');
+            refresh();
         } else if (this.value == 'eun-monotherapy-speedrun-30') {
             turnMenstrualCycleOff();
             deleteAllRows('multidose-table');
