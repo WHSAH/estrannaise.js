@@ -9,16 +9,17 @@ window.onload = function () {
 
     // Add default curves
     // mentrual cycle mimic
-    addTDERow('multidose-table', -14, 3.7, 'EEn im');
-    addTDERow('multidose-table', 14, 0.8, 'EB im');
-    addTDERow('multidose-table', 19, 3.7, 'EEn im');
-    addTDERow('multidose-table', 42, 0.8, 'EB im');
-    addTDERow('multidose-table', 47, 3.7, 'EEn im');
-    addTDERow('multidose-table', 70, 0.8, 'EB im');
-    addTDERow('multidose-table', 75, 3.7, 'EEn im');
+    addTDERow("multidose-table",-14, 1.0, "EB im");
+    addTDERow("multidose-table",-11, 4.0, "EEn im");
+    addTDERow("multidose-table", 14, 1.0, "EB im");
+    addTDERow("multidose-table", 17, 4.0, "EEn im");
+    addTDERow("multidose-table", 42, 1.0, "EB im");
+    addTDERow("multidose-table", 45, 4.0, "EEn im");
+    addTDERow("multidose-table", 70, 1.0, "EB im");
+    addTDERow("multidose-table", 73, 4.0, "EEn im");
 
     // EEn steady state
-    addTDERow('steadystate-table', 7, 4, 'EEn im');
+    addTDERow("steadystate-table", 7, 4, "EEn im");
 
 
     attachDragNDropImport();

@@ -157,7 +157,7 @@ function plotCurves(uncertainty = "cloud") {
                 fontFamily: "monospace", fill: colorBackground(0.618), stroke: colorThePink()
             }))
         ];
-        e2max = Math.max(e2max, conversionFactor * 450);
+        e2max = Math.max(e2max, conversionFactor * 350);
     }
 
     let e2curve = Plot.plot({
@@ -170,7 +170,7 @@ function plotCurves(uncertainty = "cloud") {
             Plot.gridY({ stroke: "grey" }),
             Plot.ruleX([xmin]),
             Plot.ruleY([0]),
-        ].concat(rulemarks).concat(dotmarks).concat(linemarks).concat(tipmarks).concat(msmarks)
+        ].concat(rulemarks).concat(dotmarks).concat(linemarks).concat(msmarks).concat(tipmarks)
     })
 
     // Select all text elements in the plot and set their font weight to bold
