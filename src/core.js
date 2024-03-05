@@ -710,6 +710,20 @@ function attachPresetsDropdown() {
             addTDERow('multidose-table', 4, 3, 'EV im');
             addTDERow('multidose-table', 4, 3, 'EV im');
             refresh();
+        } else if (this.value == 'ec-monotherapy-speedrun-7') {
+            turnMenstrualCycleOff();
+            deleteAllRows('multidose-table');
+            deleteAllRows('steadystate-table');
+            document.getElementById('dropdown-daysinput').value = 'intervals';
+            daysAsIntervals = true;
+            addTDERow('steadystate-table', 7, 5, 'EC im', true, false);
+            addTDERow('multidose-table', 7, 8, 'EC im');
+            addTDERow('multidose-table', 7, 5, 'EC im');
+            addTDERow('multidose-table', 7, 5, 'EC im');
+            addTDERow('multidose-table', 7, 5, 'EC im');
+            addTDERow('multidose-table', 7, 5, 'EC im');
+            addTDERow('multidose-table', 7, 5, 'EC im');
+            refresh();
         } else if (this.value == 'eun-monotherapy-speedrun-30') {
             turnMenstrualCycleOff();
             deleteAllRows('multidose-table');
