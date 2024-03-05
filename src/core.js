@@ -376,8 +376,8 @@ function addTDERow(tableID, time = null, dose = null, ester = null, cvisible = t
             <option value="EB im">eb im</option> \
             <option value="EUn im">eun im</option> \
             <option value="EUn csq">eun casubq</option> \
-            <option value="DOT patch tw">patch tw</option> \
-            <option value="DOT patch ow">patch ow</option> \
+            <option value="patch tw">patch tw</option> \
+            <option value="patch ow">patch ow</option> \
             </select>');
     if (ester !== null) {
         esterCell.querySelector('select').value = ester;

@@ -9,14 +9,9 @@ window.onload = function () {
 
     // Add default curves
     // mentrual cycle mimic
-    addTDERow("multidose-table",-14, 1.0, "EB im");
-    addTDERow("multidose-table",-11, 4.0, "EEn im");
-    addTDERow("multidose-table", 14, 1.0, "EB im");
-    addTDERow("multidose-table", 17, 4.0, "EEn im");
-    addTDERow("multidose-table", 42, 1.0, "EB im");
-    addTDERow("multidose-table", 45, 4.0, "EEn im");
-    addTDERow("multidose-table", 70, 1.0, "EB im");
-    addTDERow("multidose-table", 73, 4.0, "EEn im");
+    addTDERow("multidose-table",  0, 4, "EV im");
+    addTDERow("multidose-table", 20, 4, "EEn im");
+    addTDERow("multidose-table", 40, 0.1, "patch ow");
 
     // EEn steady state
     addTDERow("steadystate-table", 7, 4, "EEn im");

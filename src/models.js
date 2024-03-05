@@ -21,7 +21,7 @@ function menstrualCycleP95(time) {
     return conversionFactor * menstrualCycleSplineP95.at(t);
 }
 
-const methodList = ["EV im", "EEn im", "EC im", "EUn im", "EB im", "DOT patch tw", "DOT patch ow"];
+const methodList = ["EV im", "EEn im", "EC im", "EUn im", "EB im", "patch tw", "patch ow"];
 
 // lil bit of ravioli code, but then if we wanted
 // to replace this with a more general master PKFunction
@@ -41,8 +41,8 @@ const PKFunctions = {
     "EUn im": function (t, dose, steadystate=false, T=0.0) { return e2Curve3C(t, conversionFactor * dose, ...PKParams["EUn im"], 0.0, 0.0, steadystate, T) },
     "EUn csq": function (t, dose, steadystate=false, T=0.0) { return e2Curve3C(t, conversionFactor * dose, ...PKParams["EUn csq"], 0.0, 0.0, steadystate, T) },
     "EB im": function (t, dose, steadystate=false, T=0.0) { return e2Curve3C(t, conversionFactor * dose, ...PKParams["EB im"], 0.0, 0.0, steadystate, T) },
-    "DOT patch tw": function (t, dose, steadystate=false, T=0.0) { return e2Patch3C(t, conversionFactor * dose, ...PKParams["DOT patch tw"], 3.5, steadystate, T) },
-    "DOT patch ow": function (t, dose, steadystate=false, T=0.0) { return e2Patch3C(t, conversionFactor * dose, ...PKParams["DOT patch ow"], 7.0, steadystate, T) }
+    "patch tw": function (t, dose, steadystate=false, T=0.0) { return e2Patch3C(t, conversionFactor * dose, ...PKParams["patch tw"], 3.5, steadystate, T) },
+    "patch ow": function (t, dose, steadystate=false, T=0.0) { return e2Patch3C(t, conversionFactor * dose, ...PKParams["patch ow"], 7.0, steadystate, T) }
 }
 
 const PKRandomFunctions = {
@@ -52,8 +52,8 @@ const PKRandomFunctions = {
     "EUn im": function(t, dose, steadystate=false, T=0.0, idx=null) { return e2Curve3C(t, conversionFactor * dose, ...randomMCMCSample("EUn im", idx), 0.0, 0.0, steadystate, T) },
     "EUn csq": function(t, dose, steadystate=false, T=0.0, idx=null) { return e2Curve3C(t, conversionFactor * dose, ...randomMCMCSample("EUn csq", idx), 0.0, 0.0, steadystate, T) },
     "EB im": function(t, dose, steadystate=false, T=0.0, idx=null) { return e2Curve3C(t, conversionFactor * dose, ...randomMCMCSample("EB im", idx), 0.0, 0.0, steadystate, T) },
-    "DOT patch tw": function(t, dose, steadystate=false, T=0.0, idx=null) { return e2Patch3C(t, conversionFactor * dose, ...randomMCMCSample("DOT patch tw", idx), 3.5, steadystate, T) },
-    "DOT patch ow": function(t, dose, steadystate=false, T=0.0, idx=null) { return e2Patch3C(t, conversionFactor * dose, ...randomMCMCSample("DOT patch ow", idx), 7.0, steadystate, T) }
+    "patch tw": function(t, dose, steadystate=false, T=0.0, idx=null) { return e2Patch3C(t, conversionFactor * dose, ...randomMCMCSample("patch tw", idx), 3.5, steadystate, T) },
+    "patch ow": function(t, dose, steadystate=false, T=0.0, idx=null) { return e2Patch3C(t, conversionFactor * dose, ...randomMCMCSample("patch ow", idx), 7.0, steadystate, T) }
 }
 
 
