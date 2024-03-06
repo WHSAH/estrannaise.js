@@ -759,7 +759,7 @@ function attachPresetsDropdown() {
             addTDERow('multidose-table', 4, 3, 'EV im');
             addTDERow('multidose-table', 4, 3, 'EV im');
             addTDERow('multidose-table', 4, 3, 'EV im');
-            addTDERow('multidose-table', 4, 6, 'EEn im');
+            addTDERow('multidose-table', 4, 7, 'EEn im');
             addTDERow('multidose-table', 7, 4, 'EEn im');
             addTDERow('multidose-table', 7, 4, 'EEn im');
             addTDERow('multidose-table', 7, 4, 'EEn im');
