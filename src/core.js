@@ -642,7 +642,7 @@ function attachPresetsDropdown() {
             addTDERow('multidose-table', 7, 4, 'EEn im');
             addTDERow('multidose-table', 7, 4, 'EEn im');
             addTDERow('multidose-table', 7, 9, 'EEn im');
-            addTDERow('multidose-table', 14, 4, 'EEn im');
+            addTDERow('multidose-table', 14, 5, 'EEn im');
             addTDERow('multidose-table', 7, 4, 'EEn im');
             addTDERow('multidose-table', 7, 4, 'EEn im');
             addTDERow('multidose-table', 7, 4, 'EEn im');
@@ -662,7 +662,7 @@ function attachPresetsDropdown() {
             addTDERow('multidose-table', 4, 3, 'EV im');
             addTDERow('multidose-table', 4, 3, 'EV im');
             addTDERow('multidose-table', 4, 6, 'EV im');
-            addTDERow('multidose-table', 8, 3, 'EV im');
+            addTDERow('multidose-table', 8, 4, 'EV im');
             addTDERow('multidose-table', 4, 3, 'EV im');
             addTDERow('multidose-table', 4, 3, 'EV im');
             addTDERow('multidose-table', 4, 3, 'EV im');
