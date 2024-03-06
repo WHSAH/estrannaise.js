@@ -15,6 +15,7 @@ window.onload = function () {
 
     // EEn steady state
     addTDERow("steadystate-table", 7, 4, "EEn im");
+    addTDERow("steadystate-table", 10, 4, "EC im", false, true);
 
 
     attachDragNDropImport();
