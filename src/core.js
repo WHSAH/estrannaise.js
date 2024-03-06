@@ -470,15 +470,15 @@ function attachPresetsDropdown() {
             deleteAllRows('steadystate-table');
             document.getElementById('dropdown-daysinput').value = 'intervals';
             daysAsIntervals = true;
-            addTDERow('steadystate-table', 10, 7, 'EEn im', true, false);
-            addTDERow('multidose-table', 10, 7, 'EEn im');
-            addTDERow('multidose-table', 10, 7, 'EEn im');
-            addTDERow('multidose-table', 10, 7, 'EEn im');
-            addTDERow('multidose-table', 10, 7, 'EEn im');
-            addTDERow('multidose-table', 10, 7, 'EEn im');
-            addTDERow('multidose-table', 10, 7, 'EEn im');
-            addTDERow('multidose-table', 10, 7, 'EEn im');
-            addTDERow('multidose-table', 10, 7, 'EEn im');
+            addTDERow('steadystate-table', 10, 6, 'EEn im', true, false);
+            addTDERow('multidose-table', 10, 6, 'EEn im');
+            addTDERow('multidose-table', 10, 6, 'EEn im');
+            addTDERow('multidose-table', 10, 6, 'EEn im');
+            addTDERow('multidose-table', 10, 6, 'EEn im');
+            addTDERow('multidose-table', 10, 6, 'EEn im');
+            addTDERow('multidose-table', 10, 6, 'EEn im');
+            addTDERow('multidose-table', 10, 6, 'EEn im');
+            addTDERow('multidose-table', 10, 6, 'EEn im');
             refresh();
         } else if (this.value == 'ev-monotherapy-4') {
             turnMenstrualCycleOff();
@@ -587,7 +587,7 @@ function attachPresetsDropdown() {
             addTDERow('multidose-table', 69.5, 1, 'EB im');
             addTDERow('multidose-table',   72, 4, 'EEn im');
             addTDERow('multidose-table', 97.5, 1, 'EB im');
-            addTDERow('multidose-table',   100, 4, 'EEn im');
+            addTDERow('multidose-table',  100, 4, 'EEn im');
             refresh();
         } else if (this.value == 'missed-een-dose-7') {
             turnMenstrualCycleOff();
