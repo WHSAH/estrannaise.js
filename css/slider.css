@@ -31,7 +31,7 @@
     right: 0;
     bottom: 0;
     background-color: var(--background-color-day);
-    transition: .4s;
+    transition: 0.4s;
 }
 
 .slider:before {
@@ -41,8 +41,8 @@
     width: 12px;
     left: 4px;
     bottom: 4px;
-    background-color: var(--the-pink-night);
-    transition: .1s;
+    background-color: var(--the-pink-day);
+    transition: 0.1s;
 }
 
 input:checked+.slider {
@@ -51,8 +51,8 @@ input:checked+.slider {
 
 input:checked+.slider:before {
     transform: translateX(16px);
-    transition: .1s;
-    background-color: var(--the-pink-day);
+    transition: 0.1s;
+    background-color: var(--the-pink-night);
 }
 
 .slider.round {
