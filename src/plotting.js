@@ -183,9 +183,7 @@ function plotCurves(uncertainty = "cloud") {
         marks: [
             Plot.gridX({ stroke: "grey" }),
             Plot.gridY({ stroke: "grey" }),
-            Plot.ruleX([xmin]),
-            Plot.ruleY([0]),
-        ].concat(rulemarks).concat(dotmarks).concat(msmarks).concat(linemarks).concat(tipmarks)
+        ].concat(rulemarks).concat(dotmarks).concat(msmarks).concat(linemarks).concat(tipmarks).concat([Plot.ruleX([xmin]), Plot.ruleY([0])])
     })
 
     // Select all text elements in the plot and set their font weight to bold
