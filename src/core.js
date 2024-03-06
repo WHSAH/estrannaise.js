@@ -444,18 +444,7 @@ function deleteAllRows(tableID) {
 
 
 function attachPresetsDropdown() {
-
-// een-monotherapy-7
-// een-monotherapy-10
-// ev-monotherapy-4
-// ev-monotherapy-7
-// euncasubq-monotherapy-30
-// mimick-menstrual-cycle
-// missed-een-dose
-// missed-ev-dose
-// een-monotherapy-speedrun-7
-// ev-monotherapy-speedrun-4
-
+    
     let presetDropdown = document.getElementById('dropdown-presets');
 
     presetDropdown.addEventListener('change', function () {
@@ -634,6 +623,7 @@ function attachPresetsDropdown() {
             addTDERow('multidose-table', 4, 3, 'EV im');
             addTDERow('multidose-table', 4, 3, 'EV im');
             addTDERow('multidose-table', 8, 3, 'EV im');
+            addTDERow('multidose-table', 4, 3, 'EV im');
             addTDERow('multidose-table', 4, 3, 'EV im');
             addTDERow('multidose-table', 4, 3, 'EV im');
             addTDERow('multidose-table', 4, 3, 'EV im');
