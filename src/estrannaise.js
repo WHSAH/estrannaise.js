@@ -17,7 +17,7 @@ window.onload = function () {
     addTDERow("steadystate-table", 7, 4, "EEn im");
 
 
-    // attachDragNDropImport();
+    attachDragNDropImport();
 
     attachOptionsEvents();
 

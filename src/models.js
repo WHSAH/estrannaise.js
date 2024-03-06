@@ -2,6 +2,8 @@
 
 const Spline = require('cubic-spline');
 
+const methodList = ["EB im", "EV im", "EEn im", "EC im", "EUn im", "EUn casubq", "patch tw", "patch ow"];
+
 const menstrualCycleSpline = new Spline(menstrualCycleData["t"], menstrualCycleData["E2"])
 const menstrualCycleSplineP05 = new Spline(menstrualCycleData["t"], menstrualCycleData["E2p5"])
 const menstrualCycleSplineP95 = new Spline(menstrualCycleData["t"], menstrualCycleData["E2p95"])
@@ -20,8 +22,6 @@ function menstrualCycleP95(time) {
     let t = ((time % 28) + 28) % 28;
     return conversionFactor * menstrualCycleSplineP95.at(t);
 }
-
-const methodList = ["EV im", "EEn im", "EC im", "EUn im", "EB im", "patch tw", "patch ow"];
 
 // lil bit of ravioli code, but then if we wanted
 // to replace this with a more general master PKFunction

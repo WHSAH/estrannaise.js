@@ -919,15 +919,15 @@ function attachMultidoseButtonsEvents() {
         }, 1000);
     });
 
-    // document.getElementById('save-csv-button').addEventListener('mousedown', function () {
-    //     exportCSV();
-    // });
-    // document.getElementById('import-csv-dialog').addEventListener('mousedown', function () {
-    //     document.getElementById('csv-file').click();
-    // });
-    // document.getElementById('csv-file').addEventListener('change', function (e) {
-    //     loadCSV(e.target.files);
-    // });
+    document.getElementById('save-csv-button').addEventListener('mousedown', function () {
+        exportCSV();
+    });
+    document.getElementById('import-csv-dialog').addEventListener('mousedown', function () {
+        document.getElementById('csv-file').click();
+    });
+    document.getElementById('csv-file').addEventListener('change', function (e) {
+        loadCSV(e.target.files);
+    });
 }
 
 function attachSteadyStateButtonsEvents() {
