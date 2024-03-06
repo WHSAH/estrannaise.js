@@ -142,6 +142,20 @@ function unitStep(x) {
     }
 }
 
+function allUnique(list) {
+    return list.length === new Set(list).size;
+}
+
+function guessDaysAsIntervals() {
+    if (allUnique(getTDEs('multidose-table')[0])) {
+        document.getElementById('dropdown-daysinput').value = 'absolute';
+        daysAsIntervals = false;
+    } else {
+        document.getElementById('dropdown-daysinput').value = 'intervals';
+        daysAsIntervals = true;
+    }
+}
+
 function loadCSV(files) {
     if (files.length > 0) {
         let file = files[0];
@@ -160,6 +174,7 @@ function loadCSV(files) {
                             }
                         }
                     });
+                    guessDaysAsIntervals();
                     refresh();
                 }
             });
@@ -1133,6 +1148,7 @@ function loadFromURL() {
             for (let i = 0; i < multiDoseTable[0].length; i++) {
                 addTDERow('multidose-table', multiDoseTable[0][i], multiDoseTable[1][i], multiDoseTable[2][i], multiDoseTable[3][i], multiDoseTable[4][i]);
             }
+            guessDaysAsIntervals();
             dataLoaded = true;
         }
 
