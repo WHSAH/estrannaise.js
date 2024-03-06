@@ -2,7 +2,7 @@
 
 const Spline = require('cubic-spline');
 
-const methodList = ["EB im", "EV im", "EEn im", "EC im", "EUn im", "EUn casubq", "patch tw", "patch ow"];
+const methodList = ["EB im", "EV im", "EEn im", "EC im", "EUn im mk2", "EUn im mk1", "EUn casubq", "patch tw", "patch ow"];
 
 const menstrualCycleSpline = new Spline(menstrualCycleData["t"], menstrualCycleData["E2"])
 const menstrualCycleSplineP05 = new Spline(menstrualCycleData["t"], menstrualCycleData["E2p5"])
@@ -38,7 +38,8 @@ const PKFunctions = {
     "EV im": function (t, dose, steadystate=false, T=0.0) { return e2Curve3C(t, conversionFactor * dose, ...PKParams["EV im"], 0.0, 0.0, steadystate, T) },
     "EEn im": function (t, dose, steadystate=false, T=0.0) { return e2Curve3C(t, conversionFactor * dose, ...PKParams["EEn im"], 0.0, 0.0, steadystate, T) },
     "EC im": function (t, dose, steadystate=false, T=0.0) { return e2Curve3C(t, conversionFactor * dose, ...PKParams["EC im"], 0.0, 0.0, steadystate, T) },
-    "EUn im": function (t, dose, steadystate=false, T=0.0) { return e2Curve3C(t, conversionFactor * dose, ...PKParams["EUn im"], 0.0, 0.0, steadystate, T) },
+    "EUn im mk2": function (t, dose, steadystate=false, T=0.0) { return e2Curve3C(t, conversionFactor * dose, ...PKParams["EUn im mk2"], 0.0, 0.0, steadystate, T) },
+    "EUn im mk1": function (t, dose, steadystate=false, T=0.0) { return e2Curve3C(t, conversionFactor * dose, ...PKParams["EUn im mk1"], 0.0, 0.0, steadystate, T) },
     "EUn casubq": function (t, dose, steadystate=false, T=0.0) { return e2Curve3C(t, conversionFactor * dose, ...PKParams["EUn casubq"], 0.0, 0.0, steadystate, T) },
     "EB im": function (t, dose, steadystate=false, T=0.0) { return e2Curve3C(t, conversionFactor * dose, ...PKParams["EB im"], 0.0, 0.0, steadystate, T) },
     "patch tw": function (t, dose, steadystate=false, T=0.0) { return e2Patch3C(t, conversionFactor * dose, ...PKParams["patch tw"], 3.5, steadystate, T) },
@@ -49,7 +50,8 @@ const PKRandomFunctions = {
     "EV im": function(t, dose, steadystate=false, T=0.0, idx=null) { return e2Curve3C(t, conversionFactor * dose, ...randomMCMCSample("EV im", idx), 0.0, 0.0, steadystate, T) },
     "EEn im": function(t, dose, steadystate=false, T=0.0, idx=null) { return e2Curve3C(t, conversionFactor * dose, ...randomMCMCSample("EEn im", idx), 0.0, 0.0, steadystate, T) },
     "EC im": function(t, dose, steadystate=false, T=0.0, idx=null) { return e2Curve3C(t, conversionFactor * dose, ...randomMCMCSample("EC im", idx), 0.0, 0.0, steadystate, T) },
-    "EUn im": function(t, dose, steadystate=false, T=0.0, idx=null) { return e2Curve3C(t, conversionFactor * dose, ...randomMCMCSample("EUn im", idx), 0.0, 0.0, steadystate, T) },
+    "EUn im mk2": function(t, dose, steadystate=false, T=0.0, idx=null) { return e2Curve3C(t, conversionFactor * dose, ...randomMCMCSample("EUn im mk2", idx), 0.0, 0.0, steadystate, T) },
+    "EUn im mk1": function(t, dose, steadystate=false, T=0.0, idx=null) { return e2Curve3C(t, conversionFactor * dose, ...randomMCMCSample("EUn im mk1", idx), 0.0, 0.0, steadystate, T) },
     "EUn casubq": function(t, dose, steadystate=false, T=0.0, idx=null) { return e2Curve3C(t, conversionFactor * dose, ...randomMCMCSample("EUn casubq", idx), 0.0, 0.0, steadystate, T) },
     "EB im": function(t, dose, steadystate=false, T=0.0, idx=null) { return e2Curve3C(t, conversionFactor * dose, ...randomMCMCSample("EB im", idx), 0.0, 0.0, steadystate, T) },
     "patch tw": function(t, dose, steadystate=false, T=0.0, idx=null) { return e2Patch3C(t, conversionFactor * dose, ...randomMCMCSample("patch tw", idx), 3.5, steadystate, T) },

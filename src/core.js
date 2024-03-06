@@ -386,7 +386,8 @@ function addTDERow(tableID, time = null, dose = null, ester = null, cvisible = t
             <option value="EEn im" title="Estradiol enanthate in sunflower oil (intramuscular)">een im</option> \
             <option value="EC im" title="Estradiol cypionate in oil (intramuscular)">ec im</option> \
             <option value="EB im" title="Estradiol benzoate in oil (intramuscular)">eb im</option> \
-            <option value="EUn im" title="Estradiol undecylate in castor oil (intramuscular)">eun im</option> \
+            <option value="EUn im mk2" title="Estradiol undecylate in castor oil (intramuscular, model 2)">eun im mk2</option> \
+            <option value="EUn im mk1" title="Estradiol undecylate in castor oil (intramuscular, model 1)">eun im mk1</option> \
             <option value="EUn casubq" title="Subcutaneous estradiol undecylate in castor oil">eun casubq</option> \
             <option value="patch tw" title="Transdermal estradiol patch (twice-weekly)">patch tw</option> \
             <option value="patch ow" title="Transdermal estradiol patch (once-weekly)">patch ow</option> \
@@ -522,7 +523,8 @@ function attachPresetsDropdown() {
             addTDERow('steadystate-table', 7, 4, 'EEn im', true, false);
             addTDERow('steadystate-table', 10, 6, 'EEn im', true, false);
             addTDERow('steadystate-table', 7, 5, 'EC im', true, false);
-            addTDERow('steadystate-table', 14, 15, 'EUn im', true, false);
+            addTDERow('steadystate-table', 14, 30, 'EUn im mk1', true, false);
+            addTDERow('steadystate-table', 14, 15, 'EUn im mk2', true, false);
             addTDERow('steadystate-table', 30, 40, 'EUn casubq', true, false);
 
             addTDERow('multidose-table');
@@ -576,21 +578,21 @@ function attachPresetsDropdown() {
             deleteAllRows('steadystate-table');
             document.getElementById('dropdown-daysinput').value = 'intervals';
             daysAsIntervals = true;
-            addTDERow('steadystate-table', 14, 15, 'EUn im', true, false);
-            addTDERow('multidose-table', 14, 15, 'EUn im');
-            addTDERow('multidose-table', 14, 15, 'EUn im');
-            addTDERow('multidose-table', 14, 15, 'EUn im');
-            addTDERow('multidose-table', 14, 15, 'EUn im');
-            addTDERow('multidose-table', 14, 15, 'EUn im');
-            addTDERow('multidose-table', 14, 15, 'EUn im');
-            addTDERow('multidose-table', 14, 15, 'EUn im');
-            addTDERow('multidose-table', 14, 15, 'EUn im');
-            addTDERow('multidose-table', 14, 15, 'EUn im');
-            addTDERow('multidose-table', 14, 15, 'EUn im');
-            addTDERow('multidose-table', 14, 15, 'EUn im');
-            addTDERow('multidose-table', 14, 15, 'EUn im');
-            addTDERow('multidose-table', 14, 15, 'EUn im');
-            addTDERow('multidose-table', 14, 15, 'EUn im');
+            addTDERow('steadystate-table', 14, 15, 'EUn im mk2', true, false);
+            addTDERow('multidose-table', 14, 15, 'EUn im mk2');
+            addTDERow('multidose-table', 14, 15, 'EUn im mk2');
+            addTDERow('multidose-table', 14, 15, 'EUn im mk2');
+            addTDERow('multidose-table', 14, 15, 'EUn im mk2');
+            addTDERow('multidose-table', 14, 15, 'EUn im mk2');
+            addTDERow('multidose-table', 14, 15, 'EUn im mk2');
+            addTDERow('multidose-table', 14, 15, 'EUn im mk2');
+            addTDERow('multidose-table', 14, 15, 'EUn im mk2');
+            addTDERow('multidose-table', 14, 15, 'EUn im mk2');
+            addTDERow('multidose-table', 14, 15, 'EUn im mk2');
+            addTDERow('multidose-table', 14, 15, 'EUn im mk2');
+            addTDERow('multidose-table', 14, 15, 'EUn im mk2');
+            addTDERow('multidose-table', 14, 15, 'EUn im mk2');
+            addTDERow('multidose-table', 14, 15, 'EUn im mk2');
             refresh();
         } else if (this.value == 'patch-monotherapy') {
             turnMenstrualCycleOff();
