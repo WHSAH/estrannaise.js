@@ -658,7 +658,46 @@ function attachPresetsDropdown() {
             addTDERow('multidose-table', 4, 3, 'EV im');
             addTDERow('multidose-table', 4, 3, 'EV im');
             refresh();
-        } else if (this.value == 'preempt-missed-een-dose-7') {
+        } else if (this.value == 'correct-missed-een-dose-7') {
+            turnMenstrualCycleOff();
+            deleteAllRows('multidose-table');
+            deleteAllRows('steadystate-table');
+            document.getElementById('dropdown-daysinput').value = 'intervals';
+            daysAsIntervals = true;
+            addTDERow('steadystate-table', 7, 4, 'EEn im', true, false);
+            addTDERow('multidose-table', 7, 4, 'EEn im');
+            addTDERow('multidose-table', 7, 4, 'EEn im');
+            addTDERow('multidose-table', 7, 4, 'EEn im');
+            addTDERow('multidose-table', 7, 4, 'EEn im');
+            addTDERow('multidose-table', 7, 4, 'EEn im');
+            addTDERow('multidose-table', 7, 4, 'EEn im');
+            addTDERow('multidose-table', 14, 6, 'EEn im');
+            addTDERow('multidose-table', 7, 4, 'EEn im');
+            addTDERow('multidose-table', 7, 4, 'EEn im');
+            addTDERow('multidose-table', 7, 4, 'EEn im');
+            addTDERow('multidose-table', 7, 4, 'EEn im');
+            addTDERow('multidose-table', 7, 4, 'EEn im');
+            refresh();
+        } else if (this.value == 'correct-missed-ev-dose-4') {
+            turnMenstrualCycleOff();
+            deleteAllRows('multidose-table');
+            deleteAllRows('steadystate-table');
+            document.getElementById('dropdown-daysinput').value = 'intervals';
+            daysAsIntervals = true;
+            addTDERow('steadystate-table', 4, 3, 'EV im', true, false);
+            addTDERow('multidose-table', 4, 3, 'EV im');
+            addTDERow('multidose-table', 4, 3, 'EV im');
+            addTDERow('multidose-table', 4, 3, 'EV im');
+            addTDERow('multidose-table', 4, 3, 'EV im');
+            addTDERow('multidose-table', 4, 3, 'EV im');
+            addTDERow('multidose-table', 4, 3, 'EV im');
+            addTDERow('multidose-table', 8, 4, 'EV im');
+            addTDERow('multidose-table', 4, 3, 'EV im');
+            addTDERow('multidose-table', 4, 3, 'EV im');
+            addTDERow('multidose-table', 4, 3, 'EV im');
+            addTDERow('multidose-table', 4, 3, 'EV im');
+            refresh();
+        } else if (this.value == 'preemptcorrect-missed-een-dose-7') {
             turnMenstrualCycleOff();
             deleteAllRows('multidose-table');
             deleteAllRows('steadystate-table');
@@ -678,7 +717,7 @@ function attachPresetsDropdown() {
             addTDERow('multidose-table', 7, 4, 'EEn im');
             addTDERow('multidose-table', 7, 4, 'EEn im');
             refresh();
-        } else if (this.value == 'preempt-missed-ev-dose-4') {
+        } else if (this.value == 'preemptcorrect-missed-ev-dose-4') {
             turnMenstrualCycleOff();
             deleteAllRows('multidose-table');
             deleteAllRows('steadystate-table');
