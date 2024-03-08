@@ -55,7 +55,7 @@ function plotCurves(uncertainty = "cloud") {
         xmin = Math.min(0, ...mdTimes)
     }
     
-    let xmax = 66;
+    let xmax = 70;
     
     if (mdCVisib || mdUVisib) {
         if (daysAsIntervals) {
@@ -165,8 +165,7 @@ function plotCurves(uncertainty = "cloud") {
             linemarks.unshift(Plot.line(ssEsterCurve, { x: "Time", y: "E2", strokeWidth: 2, stroke: wongPalette(colorCycle) }));
             tipmarks.unshift(Plot.tip(ssEsterCurve, Plot.pointerX({
                 x: "Time", y: "E2",
-                // title: p => `${p.type.toLowerCase()}\n\ntime: ${numberToDayHour(p.Time)}\n  e₂: ${p.E2.toFixed(0)} pg/ml\n  tr: ${PKFunctions[ssTypes[i]](0.0, ssDoses[i], true, ssEveries[i]).toFixed(0)} pg/ml\n  av: ${e2ssAverage3C(ssDoses[i], ssEveries[i], ...PKParams[ssTypes[i]]).toFixed(0)} pg/ml`,
-                title: p => `${p.type.toLowerCase()}\n\n  time: ${numberToDayHour(p.Time)}\n    e₂: ${p.E2.toFixed(0)} ${units}\ntrough: ${PKFunctions[ssTypes[i]](0.0, ssDoses[i], true, ssEveries[i]).toFixed(0)} ${units}`,
+                title: p => `${p.type.toLowerCase()}\n\n   time: ${numberToDayHour(p.Time)}\n     e₂: ${p.E2.toFixed(0)} ${units}\naverage: ${e2ssAverage3C(conversionFactor * ssDoses[i], ssEveries[i], ...PKParams[ssTypes[i]]).toFixed(0)} ${units}\n trough: ${PKFunctions[ssTypes[i]](0.0, ssDoses[i], true, ssEveries[i]).toFixed(0)} ${units}`,
                 fontFamily: "monospace", fill: colorBackground(0.618), stroke: colorThePink()
             })));
         }
@@ -184,6 +183,17 @@ function plotCurves(uncertainty = "cloud") {
             Plot.gridX({ stroke: "grey" }),
             Plot.gridY({ stroke: "grey" }),
         ].concat(rulemarks).concat(dotmarks).concat(msmarks).concat(linemarks).concat(tipmarks).concat([Plot.ruleX([xmin]), Plot.ruleY([0])])
+        // .concat([
+        //     Plot.dot([
+        //         {x: 5, y: 150},
+        //         {x: 15, y: 150},
+        //         {x: 25, y: 150},
+        //         {x: 35, y: 150},
+        //         {x: 45, y: 150},
+        //         {x: 55, y: 150},
+        //         {x: 65, y: 150},
+        //     ], { x: "x", y: "y", r: 40, fill: WONGHEXES.map(c => convertHexToRGBA(c)) }),
+        // ])
     })
 
     // Select all text elements in the plot and set their font weight to bold
