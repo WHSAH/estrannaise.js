@@ -4,6 +4,7 @@ let units = "pg/mL";
 let daysAsIntervals = false;
 // let uncertaintyViz = "cloud";
 let menstrualCycleVisible = false;
+let currentColorScheme = 'night';
 
 window.onload = function () {
 

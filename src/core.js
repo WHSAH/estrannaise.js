@@ -124,11 +124,13 @@ function setColorScheme(scheme = 'night') {
         document.documentElement.style.setProperty('--standout-color', rootStyle.getPropertyValue('--standout-color-night'));
         document.documentElement.style.setProperty('--the-blue', rootStyle.getPropertyValue('--the-blue-night'));
         document.documentElement.style.setProperty('--the-pink', rootStyle.getPropertyValue('--the-pink-night'));
+        currentColorScheme = 'night';
     } else if (scheme == 'day') {
         document.documentElement.style.setProperty('--background-color', rootStyle.getPropertyValue('--background-color-day'));
         document.documentElement.style.setProperty('--standout-color', rootStyle.getPropertyValue('--standout-color-day'));
         document.documentElement.style.setProperty('--the-blue', rootStyle.getPropertyValue('--the-blue-day'));
         document.documentElement.style.setProperty('--the-pink', rootStyle.getPropertyValue('--the-pink-day'));
+        currentColorScheme = 'day';
     }
     refresh();
 }

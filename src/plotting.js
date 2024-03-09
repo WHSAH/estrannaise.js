@@ -11,9 +11,6 @@ const CLOUD_POINT_OPACITY = 0.4;
 const WONGHEXES = ["#E79F03", "#54ADE1", "#019E73", "#F0E441", "#0072B2", "#D55E00", "#CB79A7"]
 
 function wongPalette(n, alpha=1.0) {
-    if (n < 0) {
-        return convertHexToRGBA("#FFFFFF", alpha);
-    }
     return convertHexToRGBA(WONGHEXES[n % WONGHEXES.length], alpha);
 }
 
@@ -82,8 +79,8 @@ function plotCurves(uncertainty = "cloud") {
     if (menstrualCycleVisible) {
         let _menstrualCycle = fillMenstrualCycleCurve(xmin, xmax, NB_LINE_POINTS);
         msmarks = [
-            Plot.line(_menstrualCycle, { x: "Time", y: "E2", strokeWidth: 2, stroke: wongPalette(-1, 0.6)}),
-            Plot.areaY(_menstrualCycle, { x: "Time", y1: "E2p5", y2:"E2p95" , fill: wongPalette(-1, 0.1)}),
+            Plot.line(_menstrualCycle, { x: "Time", y: "E2", strokeWidth: 2, stroke: currentColorScheme == 'night' ? convertHexToRGBA("#FFFFFF", 0.6) : convertHexToRGBA("#000000", 0.5)}),
+            Plot.areaY(_menstrualCycle, { x: "Time", y1: "E2p5", y2:"E2p95" , fill: currentColorScheme == 'night' ? convertHexToRGBA("#FFFFFF", 0.1) : convertHexToRGBA("#000000", 0.1)}),
             Plot.tip(_menstrualCycle, Plot.pointerX({
                 x: "Time", y: "E2",
                 title: p => `menstrual cycle\ntime: ${numberToDayHour(p.Time)}\n  e₂: ${p.E2.toFixed(0)} ${units}\n  CI: ${p.E2p5.toFixed(0)}-${p.E2p95.toFixed(0)} ${units}`,
