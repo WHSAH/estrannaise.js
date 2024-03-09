@@ -170,8 +170,6 @@ function attachPresetsDropdown() {
             addTDERow('multidose-table',   44, 4, 'EEn im');
             addTDERow('multidose-table', 69.5, 1, 'EB im');
             addTDERow('multidose-table',   72, 4, 'EEn im');
-            addTDERow('multidose-table', 97.5, 1, 'EB im');
-            addTDERow('multidose-table',  100, 4, 'EEn im');
             refresh();
         } else if (this.value == 'missed-een-dose-7') {
             turnMenstrualCycleOff();

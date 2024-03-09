@@ -11,6 +11,9 @@ const CLOUD_POINT_OPACITY = 0.4;
 const WONGHEXES = ["#E79F03", "#54ADE1", "#019E73", "#F0E441", "#0072B2", "#D55E00", "#CB79A7"]
 
 function wongPalette(n, alpha=1.0) {
+    if (n < 0) {
+        return convertHexToRGBA("#FFFFFF", alpha);
+    }
     return convertHexToRGBA(WONGHEXES[n % WONGHEXES.length], alpha);
 }
 
@@ -75,14 +78,12 @@ function plotCurves(uncertainty = "cloud") {
     // to set the y-axis limit. uncertainty clouds ignored.
     let e2max = 0;
 
-    let colorCycle = 4;
-
     let msmarks = []
     if (menstrualCycleVisible) {
         let _menstrualCycle = fillMenstrualCycleCurve(xmin, xmax, NB_LINE_POINTS);
         msmarks = [
-            Plot.line(_menstrualCycle, { x: "Time", y: "E2", strokeWidth: 2, stroke: wongPalette(colorCycle)}),
-            Plot.areaY(_menstrualCycle, { x: "Time", y1: "E2p5", y2:"E2p95" , fill: wongPalette(colorCycle, 0.2)}),
+            Plot.line(_menstrualCycle, { x: "Time", y: "E2", strokeWidth: 2, stroke: wongPalette(-1, 0.6)}),
+            Plot.areaY(_menstrualCycle, { x: "Time", y1: "E2p5", y2:"E2p95" , fill: wongPalette(-1, 0.1)}),
             Plot.tip(_menstrualCycle, Plot.pointerX({
                 x: "Time", y: "E2",
                 title: p => `menstrual cycle\ntime: ${numberToDayHour(p.Time)}\n  e₂: ${p.E2.toFixed(0)} ${units}\n  CI: ${p.E2p5.toFixed(0)}-${p.E2p95.toFixed(0)} ${units}`,
@@ -91,7 +92,7 @@ function plotCurves(uncertainty = "cloud") {
         ];
         e2max = Math.max(e2max, conversionFactor * 350);
         
-        colorCycle += 1;
+        // colorCycle += 1;
     }
 
 
@@ -115,7 +116,7 @@ function plotCurves(uncertainty = "cloud") {
                 let y = e2MultiDose3C(randx, mdDoses, mdTimes, mdTypes, true, daysAsIntervals);
                 mdUncertaintyCloud.push({ Time: randx, E2: y });
             }
-            dotmarks.push(Plot.dot(mdUncertaintyCloud, { x: "Time", y: "E2", r: CLOUD_POINT_SIZE, fill: wongPalette(colorCycle, CLOUD_POINT_OPACITY) }));
+            dotmarks.push(Plot.dot(mdUncertaintyCloud, { x: "Time", y: "E2", r: CLOUD_POINT_SIZE, fill: wongPalette(4, CLOUD_POINT_OPACITY) }));
         }
 
 
@@ -124,7 +125,7 @@ function plotCurves(uncertainty = "cloud") {
             multiDoseCurve = multiDoseCurve.map(p => ({ Time: p.Time, E2: p.E2 }));
 
             e2max = Math.max(e2max, ...multiDoseCurve.map(p => p.E2));
-            linemarks.push(Plot.line(multiDoseCurve, { x: "Time", y: "E2", strokeWidth: 2, stroke: wongPalette(colorCycle), strokeDash: [2, 2]}));
+            linemarks.push(Plot.line(multiDoseCurve, { x: "Time", y: "E2", strokeWidth: 2, stroke: wongPalette(4), strokeDash: [2, 2]}));
             
             // Plot.ruleX(aapl, Plot.pointerX({x: "Date", py: "Close", stroke: "red"})),
             // rulemarks.push(Plot.ruleY(multiDoseCurve, Plot.pointerY({ y: "E2", px: "Time", strokeWidth: 0.3, strokeDash: [2, 2], stroke: colorThePink() })));
@@ -136,8 +137,9 @@ function plotCurves(uncertainty = "cloud") {
             })))
         }
 
-        colorCycle += 1;
     }
+
+    let colorCycle = 5;
 
     for (let i = 0; i < ssEveries.length; i++) {
 
