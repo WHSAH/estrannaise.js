@@ -157,7 +157,7 @@ function attachPresetsDropdown() {
             addTDERow('steadystate-table', 7, 0.3, 'patch ow', true, true);
             addTDERow('multidose-table');
             refresh();
-        } else if (this.value == 'mimick-menstrual-cycle') {
+        } else if (this.value == 'mimic-menstrual-cycle') {
             deleteAllRows('multidose-table');
             deleteAllRows('steadystate-table');
             addTDERow('steadystate-table');
