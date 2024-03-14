@@ -164,7 +164,7 @@ function plotCurves(uncertainty = "cloud") {
             linemarks.unshift(Plot.line(ssEsterCurve, { x: "Time", y: "E2", strokeWidth: 2, stroke: wongPalette(colorCycle) }));
             tipmarks.unshift(Plot.tip(ssEsterCurve, Plot.pointerX({
                 x: "Time", y: "E2",
-                title: p => `${p.type.toLowerCase()}\n\n   time: ${numberToDayHour(p.Time)}\n     e₂: ${p.E2.toFixed(0)} ${units}\naverage: ${e2ssAverage3C(conversionFactor * ssDoses[i], ssEveries[i], ...PKParams[ssTypes[i]]).toFixed(0)} ${units}\n trough: ${PKFunctions[ssTypes[i]](0.0, ssDoses[i], true, ssEveries[i]).toFixed(0)} ${units}`,
+                title: p => `${p.type.toLowerCase()}\n\n   time: ${numberToDayHour(p.Time)}\n     e₂: ${p.E2.toFixed(0)} ${units}\naverage: ${ssTypes[i].includes("patch") ? "unavailable" : e2ssAverage3C(conversionFactor * ssDoses[i], ssEveries[i], ...PKParams[ssTypes[i]]).toFixed(0)} ${ssTypes[i].includes("patch") ? "" : units}\n trough: ${PKFunctions[ssTypes[i]](0.0, ssDoses[i], true, ssEveries[i]).toFixed(0)} ${units}`,
                 fontFamily: "monospace", fill: colorBackground(0.618), stroke: colorThePink()
             })));
         }
