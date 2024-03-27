@@ -1,5 +1,8 @@
+<<<<<<< HEAD
 import Papa from 'papaparse';
 
+=======
+>>>>>>> 32be2a1 (Add webpack and switch to es module imports)
 // FIXME: circular import
 import { plotCurves } from './plotting';
 
