@@ -1,5 +1,4 @@
-function attachPresetsDropdown() {
-    
+export function attachPresetsDropdown() {
     let presetDropdown = document.getElementById('dropdown-presets');
 
     presetDropdown.addEventListener('change', function () {
