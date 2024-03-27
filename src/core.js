@@ -258,12 +258,12 @@ function getTDEs(tableId, getvisibility = false, keepincomplete = false) {
 
 function guessNextRow(tableID) {
     let table = document.getElementById(tableID);
-    if (table.rows.length >= 3 && !daysAsIntervals) {
-        let beforeLastRow = readRow(table.rows[table.rows.length - 2]);
-        let lastRow = readRow(table.rows[table.rows.length - 1]);
+    if (table.rows.length >= 4 && !daysAsIntervals) {
+        let beforeLastRow = readRow(table.rows[table.rows.length - 3]);
+        let lastRow = readRow(table.rows[table.rows.length - 2]);
         if (beforeLastRow && lastRow) {
             if (table.rows.length >= 4) {
-                let beforeBeforeLastRow = readRow(table.rows[table.rows.length - 3]);
+                let beforeBeforeLastRow = readRow(table.rows[table.rows.length - 4]);
                 if (beforeBeforeLastRow
                     && (lastRow.dose === beforeBeforeLastRow.dose)
                     && (lastRow.dose !== beforeLastRow.dose)) {
@@ -292,7 +292,7 @@ function guessNextRow(tableID) {
         }
     } else if (table.rows.length >= 2 && daysAsIntervals) {
         // if days are given as intervals just repeat the last row
-        let lastRow = readRow(table.rows[table.rows.length - 1]);
+        let lastRow = readRow(table.rows[table.rows.length - 2]);
         return lastRow;
     }
     return null;
@@ -375,14 +375,17 @@ function addTDERow(tableID, time = null, dose = null, ester = null, cvisible = t
             rowValidity.set(myRow, currentValidity);
             refresh()
         }
+
+        addRowIfNeeded(tableID);
     });
 
 
     let doseCell = row.insertCell(3)
     doseCell.innerHTML = '<input type="text" class="flat-input dose-cell">';
-    if (dose !== null) {
-        doseCell.querySelector('input').value = dose;
-    }
+
+    // Set given dose or empty string as default value (prevents NaNs)
+    doseCell.querySelector('input').value = dose || "";
+
     doseCell.querySelector('input').addEventListener('input', function () {
 
         let myRow = this.parentElement.parentElement;
@@ -393,6 +396,7 @@ function addTDERow(tableID, time = null, dose = null, ester = null, cvisible = t
             refresh()
         }
 
+        addRowIfNeeded(tableID);
     });
 
 
@@ -440,6 +444,8 @@ function addTDERow(tableID, time = null, dose = null, ester = null, cvisible = t
                 addTDERow(myTable.id);
             }
 
+            addRowIfNeeded(tableID);
+
             refresh();
         });
     } else {
@@ -447,6 +453,9 @@ function addTDERow(tableID, time = null, dose = null, ester = null, cvisible = t
         // the table looking good because I suck at CSS
         deleteCell.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;';
     }
+
+    // Run addRowIfNeeded() after this row has been added
+    setTimeout(() => {addRowIfNeeded(tableID)})
 
     return row;
 }
@@ -526,15 +535,10 @@ function changeBackgroundColor(elementId, color1, color2, delay = 100) {
 }
 
 function attachMultidoseButtonsEvents() {
-
-    document.getElementById('add-dose-button').addEventListener('mousedown', function () {
-        addTDERow('multidose-table');
-    });
-
     document.getElementById('guess-button').addEventListener('mousedown', function () {
         let guess = guessNextRow('multidose-table');
         if (guess) {
-            addTDERow('multidose-table', guess.time, guess.dose, guess.ester);
+            setRowParameters('multidose-table', -1, guess.time, guess.dose, guess.ester);
             refresh();
         } else {
             document.getElementById('guess-button').innerHTML = '&nbsp;?._.)&nbsp;&nbsp;';
@@ -594,9 +598,6 @@ function attachMultidoseButtonsEvents() {
 }
 
 function attachSteadyStateButtonsEvents() {
-    document.getElementById('add-steadystate-button').addEventListener('mousedown', function () {
-        addTDERow('steadystate-table');
-    });
     document.getElementById('clear-steadystates-button').addEventListener('mousedown', function () {
         deleteAllRows('steadystate-table');
         addTDERow('steadystate-table');
@@ -741,4 +742,36 @@ function loadFromURL() {
         }
     }
     return dataLoaded;
+}
+
+function addRowIfNeeded(tableID) {
+    let table = document.getElementById(tableID);
+    let lastRow = readRow(table.rows[table.rows.length - 1]);
+
+    // Add new row if the last row is valid
+    if(lastRow !== null){
+        addTDERow(tableID)
+    }
+}
+
+function setRowParameters(tableID, number, time, dose, ester){
+    let table = document.getElementById(tableID);
+
+    // Treat negative numbers as reverse order
+    rowNumber = number;
+    if(number < 0){
+        rowNumber = table.rows.length + number;
+    }
+
+    row = table.rows[rowNumber];
+
+    let timeInput = row.cells[2].querySelector('input');
+    let doseInput = row.cells[3].querySelector('input');
+    let esterInput = row.cells[4].querySelector('select');
+
+    timeInput.value = time;
+    doseInput.value = dose;
+    esterInput.value = ester;
+
+    addRowIfNeeded(tableID);
 }
