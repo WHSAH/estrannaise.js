@@ -1,3 +1,5 @@
+import Papa from 'papaparse';
+
 // FIXME: circular import
 import { plotCurves } from './plotting';
 
