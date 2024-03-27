@@ -1,0 +1,19 @@
+{
+  "name": "estrannaise",
+  "version": "1.0.0",
+  "description": "An estradiol level simulator",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs",
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "http-server": "^14.1.1",
+    "webserver": "^5.0.1"
+  }
+}
