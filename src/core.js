@@ -553,11 +553,6 @@ export function changeBackgroundColor(elementId, color1, color2, delay = 100) {
 }
 
 export function attachMultidoseButtonsEvents() {
-
-    document.getElementById('add-dose-button').addEventListener('mousedown', function () {
-        addTDERow('multidose-table');
-    });
-
     document.getElementById('guess-button').addEventListener('mousedown', function () {
         let guess = guessNextRow('multidose-table');
         if (guess) {
@@ -621,9 +616,6 @@ export function attachMultidoseButtonsEvents() {
 }
 
 export function attachSteadyStateButtonsEvents() {
-    document.getElementById('add-steadystate-button').addEventListener('mousedown', function () {
-        addTDERow('steadystate-table');
-    });
     document.getElementById('clear-steadystates-button').addEventListener('mousedown', function () {
         deleteAllRows('steadystate-table');
         addTDERow('steadystate-table');

@@ -37,6 +37,14 @@ const CLOUD_POINT_OPACITY = 0.4;
 
 const WONGHEXES = ["#E79F03", "#54ADE1", "#019E73", "#F0E441", "#0072B2", "#D55E00", "#CB79A7"]
 
+function min(...numbers) {
+  return numbers.reduce((min, n) => min < n ? min : n);
+}
+
+function max(...numbers) {
+  return numbers.reduce((max, n) => max > n ? max : n);
+}
+
 function wongPalette(n, alpha=1.0) {
     return convertHexToRGBA(WONGHEXES[n % WONGHEXES.length], alpha);
 }
@@ -77,22 +85,22 @@ export function plotCurves(uncertainty = "cloud") {
 
     let xmin = 0
     if (!daysAsIntervals) {
-        xmin = Math.min(0, ...mdTimes)
+        xmin = min(0, ...mdTimes)
     }
 
     let xmax = 70;
 
     if (mdCVisib || mdUVisib) {
         if (daysAsIntervals) {
-            xmax = Math.max(xmax, 1.618 * (math.sum(mdTimes) - (mdTimes[0] ? mdTimes[0] : 0)))
+            xmax = max(xmax, 1.618 * (math.sum(mdTimes) - (mdTimes[0] ? mdTimes[0] : 0)))
         } else {
-            xmax = Math.max(xmax, 1.618 * Math.max(...mdTimes));
+            xmax = max(xmax, 1.618 * max(...mdTimes));
         }
     }
 
     for (let i = 0; i < ssEveries.length; i++) {
         if (ssUVisibs[i] || ssCVisibs[i]) {
-            xmax = Math.max(xmax, 5 * ssEveries[i]);
+            xmax = max(xmax, 5 * ssEveries[i]);
         }
     }
 
@@ -112,7 +120,7 @@ export function plotCurves(uncertainty = "cloud") {
                 fontFamily: "monospace", fill: colorBackground(0.618), stroke: colorThePink()
             }))
         ];
-        e2max = Math.max(e2max, conversionFactor * 350);
+        e2max = max(e2max, conversionFactor * 350);
 
         // colorCycle += 1;
     }
@@ -129,7 +137,7 @@ export function plotCurves(uncertainty = "cloud") {
             // sometimes are too far up.
             if (!mdCVisib) {
                 let probeMultiDoseCurve = fillCurve(t => e2MultiDose3C(t, mdDoses, mdTimes, mdTypes, false, daysAsIntervals), xmin, xmax, NB_LINE_POINTS);
-                e2max = Math.max(e2max, ...probeMultiDoseCurve.map(p => p.E2));
+                e2max = max(e2max, ...probeMultiDoseCurve.map(p => p.E2));
             }
 
             let mdUncertaintyCloud = [];
@@ -146,7 +154,7 @@ export function plotCurves(uncertainty = "cloud") {
             let multiDoseCurve = fillCurve(t => e2MultiDose3C(t, mdDoses, mdTimes, mdTypes, false, daysAsIntervals), xmin, xmax, NB_LINE_POINTS);
             multiDoseCurve = multiDoseCurve.map(p => ({ Time: p.Time, E2: p.E2 }));
 
-            e2max = Math.max(e2max, ...multiDoseCurve.map(p => p.E2));
+            e2max = max(e2max, ...multiDoseCurve.map(p => p.E2));
             linemarks.push(Plot.line(multiDoseCurve, { x: "Time", y: "E2", strokeWidth: 2, stroke: wongPalette(4), strokeDash: [2, 2]}));
 
             // Plot.ruleX(aapl, Plot.pointerX({x: "Date", py: "Close", stroke: "red"})),
@@ -176,7 +184,7 @@ export function plotCurves(uncertainty = "cloud") {
 
             if (!ssCVisibs[i]) {
                 let probeSteadyStateCurve = fillCurve(t => PKFunctions[ssTypes[i]](t, ssDoses[i], true, ssEveries[i]), xmin, xmax, NB_LINE_POINTS);
-                e2max = Math.max(e2max, ...probeSteadyStateCurve.map(p => p.E2));
+                e2max = max(e2max, ...probeSteadyStateCurve.map(p => p.E2));
             }
 
             dotmarks.unshift(Plot.dot(ssUncertaintyCloud, { x: "Time", y: "E2", r: CLOUD_POINT_SIZE, fill: wongPalette(colorCycle, CLOUD_POINT_OPACITY) }));
@@ -185,7 +193,7 @@ export function plotCurves(uncertainty = "cloud") {
         if (ssCVisibs[i]) {
             let ssEsterCurve = fillCurve(t => PKFunctions[ssTypes[i]](t, ssDoses[i], true, ssEveries[i]), xmin, xmax, NB_LINE_POINTS);
             ssEsterCurve = ssEsterCurve.map(p => ({ Time: p.Time, E2: p.E2, type: `${ssTypes[i]} ${ssDoses[i]}mg/${ssEveries[i]}day${ssEveries[i] > 1 ? "s" : ""}` }));
-            e2max = Math.max(e2max, ...ssEsterCurve.map(p => p.E2));
+            e2max = max(e2max, ...ssEsterCurve.map(p => p.E2));
             linemarks.unshift(Plot.line(ssEsterCurve, { x: "Time", y: "E2", strokeWidth: 2, stroke: wongPalette(colorCycle) }));
             tipmarks.unshift(Plot.tip(ssEsterCurve, Plot.pointerX({
                 x: "Time", y: "E2",
