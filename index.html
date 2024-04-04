@@ -17,19 +17,7 @@
 </head>
 
 <body>
-
-    <!-- <script src="lib/loggamma.js"></script> -->
-    <script src="lib/d3.min.js"></script>
-    <script src="lib/plot.min.js"></script>
-    <script src="lib/math.min.js"></script>
-    <script src="lib/papaparse.min.js"></script>
-    <script src="lib/cubic-spline.js"></script>
-    <script src="data/modeldata.js"></script>
-    <script src="src/presets.js"></script>
-    <script src="src/models.js"></script>
-    <script src="src/core.js"></script>
-    <script src="src/plotting.js"></script>
-    <script src="src/estrannaise.js"></script>
+    <script src="dist/main.js"></script>
 
     <div id="container">
         <header>
@@ -39,13 +27,13 @@
                     <img src="img/favicon-96x96.png" alt="estrannaise.js logo">
                 </div> -->
                 <div style="height: 100%; width: 100%; display: flex; flex-direction: column; justify-content: space-between; margin-top: 1.2em;">
-                    
+
                     <!-- <h1 style="margin-top: auto; margin-bottom: 0em;">estrannaise.js</h1> -->
-                    
+
                     <div id="subtitle" style="display: flex; justify-content: space-between; width: 100%; align-items: flex-end;">
 
                         <img src="img/favicon-48x48-bw.png" alt="estrannaise.js logo" style="margin-bottom: 0em;"><h1 style="margin-right: auto; margin-bottom: 0em;">estradiol <a href="docs/">pharmacokinetics</a> playground</h2>
-                        
+
                         <label class="switch">
                             <input type="checkbox" id="nightday-slider">
                             <span class="slider round" title="Switch between night/day theme"></span>
@@ -58,31 +46,31 @@
         <div id="plot-region">
 
         </div>
-        
+
         <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
             <div id="options" style="display: flex; margin-bottom: 1em; margin-right: auto;">
-                <select class="dropdown-units" 
+                <select class="dropdown-units"
                         title="Change units for the estradiol concentration"
                         style="display: inline-block; margin-right: 0.6em;">
-                    <option value="pg/mL">pg/mL</option> 
-                    <option value="pmol/L">pmol/L</option> 
+                    <option value="pg/mL">pg/mL</option>
+                    <option value="pmol/L">pmol/L</option>
                 </select>
-                <select id="dropdown-daysinput" 
-                        class="dropdown-daysinput" 
+                <select id="dropdown-daysinput"
+                        class="dropdown-daysinput"
                         title="Change the way days are interpreted as inputs in the multi-dose curve"
                         style="display: inline-block; margin-right: 0.6em;">
                     <option value="absolute">absolute days</option>
                     <option value="intervals">days as intervals</option>
                 </select>
                 <!-- <select class="dropdown-uncertaintytype" style="display: inline-block; margin-right: 0.6em;">
-                    <option value="cloud">uncertainty cloud</option> 
-                    <option value="range">uncertainty range</option> 
-                    <option value="curves">uncertainty curves</option> 
+                    <option value="cloud">uncertainty cloud</option>
+                    <option value="range">uncertainty range</option>
+                    <option value="curves">uncertainty curves</option>
                 </select> -->
 
                 <!-- <input id="show-menstrualcycle" type="checkbox" class="hidden-checkbox checked-style">
-                <div class="custom-checkbox checked-style" style="width: 10em; margin: 0em;">menstrual cycle</div> -->                
-                <select id="dropdown-presets" 
+                <div class="custom-checkbox checked-style" style="width: 10em; margin: 0em;">menstrual cycle</div> -->
+                <select id="dropdown-presets"
                         title="Load a preset"
                         style="display: inline-block; margin-right: 0.6em;">
                     <option value="" selected disabled>Select a preset</option>
@@ -115,7 +103,7 @@
                     <option value="very-silly-wpath8-7">WPATH8 Medical Neglect™</option>
                 </select>
 
-                <button id="menstrual-cycle-button" class="flat-button" 
+                <button id="menstrual-cycle-button" class="flat-button"
                 title="Turn on/off the display of the menstrual cycle data"
                 style="width: 11em; color: var(--the-pink); font-weight: normal;">menstrual cycle</button>
 
@@ -192,62 +180,62 @@
         <!-- someone tell me why github pages don't render <footer> correctly? -->
         <div id="footer">
             <div style="width: 55em; font-family: 'Roboto Mono';">
-                
+
                 <p style="font-weight: bold;">
                     Remember, <span style="color: var(--the-pink)">the line is a lie!</span> The cloud a little less so.
                 </p>
-                
+
                 <p>&nbsp;&nbsp;&nbsp;&nbsp;The cloud does not represent data points, it is a visual representation of the uncertainty
                     in the model itself and it underestimates the total uncertainty.
                     It only captures the uncertainty of something akin to a population mean, or more precisely the uncertainty
-                    over the parameters of the deterministic estradiol curve. It does not capture the full distribution of outcomes 
+                    over the parameters of the deterministic estradiol curve. It does not capture the full distribution of outcomes
                     in the population at large. This is bound to change in the future once a better representation of this uncertainty
                     gets implemented (which would include the additional population variability around the deterministic curve).
                 </p>
 
                 <p>&nbsp;&nbsp;&nbsp;&nbsp;The emerging consensus is that the pharmacokinetics of estradiol ester depots is highly variable
                     and depends on many factors that are not well understood and rarely taken into account.
-                    Those factors can lead to vastly different outcomes and are not well represented, if at all, 
-                    in the current models. Those include, among others, the ester concentration, the type of oil used, 
+                    Those factors can lead to vastly different outcomes and are not well represented, if at all,
+                    in the current models. Those include, among others, the ester concentration, the type of oil used,
                     the proportion and type of excipients such as benzyl benzoate that are present in the
-                    formulation, the injection site, whether the depot is injected intramuscularly or subcutaneously, 
-                    the injection depth, individual differences in metabolism, and the presence of other drugs. 
-                    Some of those confounding factors are sometimes captured to an extent in the uncertainty of the models, 
-                    but only when the data is abundant and spans multiple studies done under different conditions. 
-                    This is, of course, generally not the case. Several of those factors also apply to transdermal, 
-                    oral, and sublingual estradiol. I am actively working to improve and generalize the current models 
-                    in ways that will better capture this variability, but ultimately their accuracy and scope will 
+                    formulation, the injection site, whether the depot is injected intramuscularly or subcutaneously,
+                    the injection depth, individual differences in metabolism, and the presence of other drugs.
+                    Some of those confounding factors are sometimes captured to an extent in the uncertainty of the models,
+                    but only when the data is abundant and spans multiple studies done under different conditions.
+                    This is, of course, generally not the case. Several of those factors also apply to transdermal,
+                    oral, and sublingual estradiol. I am actively working to improve and generalize the current models
+                    in ways that will better capture this variability, but ultimately their accuracy and scope will
                     always be limited by the data available.
                 </p>
-                
-                <p>&nbsp;&nbsp;&nbsp;&nbsp;Inferences for the estradiol benzoate, valerate, and cypionate intramuscular depot models 
-                    (<span style="color: var(--the-pink); font-weight: bold;">eb im</span>, <span style="color: var(--the-pink); font-weight: bold;">ev im</span>, <span style="color: var(--the-pink); font-weight: bold;">ec im</span>) 
-                    use part of the data collected and made available by the amazing people behind the 
+
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;Inferences for the estradiol benzoate, valerate, and cypionate intramuscular depot models
+                    (<span style="color: var(--the-pink); font-weight: bold;">eb im</span>, <span style="color: var(--the-pink); font-weight: bold;">ev im</span>, <span style="color: var(--the-pink); font-weight: bold;">ec im</span>)
+                    use part of the data collected and made available by the amazing people behind the
                     <a href="https://transfemscience.org/articles/injectable-e2-meta-analysis/" target="_blank">tfs meta-analysis</a>
                     but will be reprocessed in the future to allow for a better quantification of uncertainty.
                 </p>
-                
-                <p>&nbsp;&nbsp;&nbsp;&nbsp;The data behind the estradiol undecylate model for intramuscular depots using castor oil (<span style="color: var(--the-pink); font-weight: bold;">eun im</span>) 
-                    was entirely reprocessed from scratch using the per-patient data found in Geppert 1975 together with the data and uncertainty reported in Vermeulen 1975. 
+
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;The data behind the estradiol undecylate model for intramuscular depots using castor oil (<span style="color: var(--the-pink); font-weight: bold;">eun im</span>)
+                    was entirely reprocessed from scratch using the per-patient data found in Geppert 1975 together with the data and uncertainty reported in Vermeulen 1975.
                     This data is extremely sparse and incomplete and thus the model is highly uncertain.
-                </p>    
-                
-                <p>&nbsp;&nbsp;&nbsp;&nbsp;The data behind the estradiol undecylate model for subcutaneous depots using castor oil 
-                    (<span style="color: var(--the-pink); font-weight: bold;">eun casubq</span>) was inferred on 
+                </p>
+
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;The data behind the estradiol undecylate model for subcutaneous depots using castor oil
+                    (<span style="color: var(--the-pink); font-weight: bold;">eun casubq</span>) was inferred on
                     top of the <span style="color: var(--the-pink); font-weight: bold;">eun im</span> model by augmenting it with very sparse self-reported community data.
                     Its predictions are also highly uncertain.
                 </p>
-                
+
                 <p>&nbsp;&nbsp;&nbsp;&nbsp;The data behind the estradiol enanthate model for intramuscular depots using sunflower oil (<span style="color: var(--the-pink); font-weight: bold;">een im</span>)
                     was reprocessed from scratch using studies with Perlutan from the 80s and 90s. This data
                     is also extremely sparse and incomplete and the model highly uncertain.
                 </p>
 
                 <p>&nbsp;&nbsp;&nbsp;&nbsp;The once-weekly patch model (<span style="color: var(--the-pink); font-weight: bold;">patch ow</span>) was inferred using data found in drug labels
-                    of once-weekly Climara and Menostar patches. The twice-weekly patch model (<span style="color: var(--the-pink); font-weight: bold;">patch tw</span>) was inferred 
+                    of once-weekly Climara and Menostar patches. The twice-weekly patch model (<span style="color: var(--the-pink); font-weight: bold;">patch tw</span>) was inferred
                     using data taken from two 2003 studies by Houssain et al. looking at
                     twice-weekly Estradot and Menorest patches, and in the drug label of twice-weekly Mylan patches.
-                    Currently there is no way to change the wearing period of the patch in the interface 
+                    Currently there is no way to change the wearing period of the patch in the interface
                     (i.e. they are fixed at 3&frac12; and 7 days) but it is planned for the future.
                 </p>
 
@@ -264,7 +252,7 @@
                     This page, designed as a playground to explore estradiol pharmacokinetics, provides a simulation
                     for informational and entertainment purposes only. The developer(s) cannot guarantee the accuracy of
                     the predictions generated by the simulator. Users acknowledge that the software is offered "as is,"
-                    without any warranties. The developer(s) assume no liability for direct or indirect damages, 
+                    without any warranties. The developer(s) assume no liability for direct or indirect damages,
                     either physical, psychological, or otherwise, resulting from the use of the simulator.
                     Users are strongly advised to exercise caution and seek professional medical advice for
                     health-related queries.

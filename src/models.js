@@ -1,6 +1,13 @@
 // function lngamma(x) { return ieee754gamma.lngamma(x) }
 
-const Spline = require('cubic-spline');
+import Spline from 'cubic-spline';
+import { conversionFactor } from './core';
+
+import {
+  mcmcSamplesPK,
+  PKParams,
+  menstrualCycleData
+} from '../data/modeldata';
 
 const methodList = ["EB im", "EV im", "EEn im", "EC im", "EUn im", "EUn casubq", "patch tw", "patch ow"];
 
@@ -25,7 +32,7 @@ function menstrualCycleP95(time) {
 
 // lil bit of ravioli code, but then if we wanted
 // to replace this with a more general master PKFunction
-// we'd have to add ds=0.0 and d2=0.0 in PKParams of each esters 
+// we'd have to add ds=0.0 and d2=0.0 in PKParams of each esters
 // and W for patches and then do the same in mcmcSamplesPK.
 // This allows for a little bit more flexibility in the future
 // if we want to add more compartments or initial conditions.
@@ -34,7 +41,7 @@ function menstrualCycleP95(time) {
 // ...but I could also move on to using dictionaries as arguments
 // instead of positional arguments, that would be a good idea.
 
-const PKFunctions = {
+export const PKFunctions = {
     "EV im": function (t, dose, steadystate=false, T=0.0) { return e2Curve3C(t, conversionFactor * dose, ...PKParams["EV im"], 0.0, 0.0, steadystate, T) },
     "EEn im": function (t, dose, steadystate=false, T=0.0) { return e2Curve3C(t, conversionFactor * dose, ...PKParams["EEn im"], 0.0, 0.0, steadystate, T) },
     "EC im": function (t, dose, steadystate=false, T=0.0) { return e2Curve3C(t, conversionFactor * dose, ...PKParams["EC im"], 0.0, 0.0, steadystate, T) },
@@ -46,7 +53,7 @@ const PKFunctions = {
     "patch ow": function (t, dose, steadystate=false, T=0.0) { return e2Patch3C(t, conversionFactor * dose, ...PKParams["patch ow"], 7.0, steadystate, T) }
 }
 
-const PKRandomFunctions = {
+export const PKRandomFunctions = {
     "EV im": function(t, dose, steadystate=false, T=0.0, idx=null) { return e2Curve3C(t, conversionFactor * dose, ...randomMCMCSample("EV im", idx), 0.0, 0.0, steadystate, T) },
     "EEn im": function(t, dose, steadystate=false, T=0.0, idx=null) { return e2Curve3C(t, conversionFactor * dose, ...randomMCMCSample("EEn im", idx), 0.0, 0.0, steadystate, T) },
     "EC im": function(t, dose, steadystate=false, T=0.0, idx=null) { return e2Curve3C(t, conversionFactor * dose, ...randomMCMCSample("EC im", idx), 0.0, 0.0, steadystate, T) },
@@ -62,7 +69,7 @@ const PKRandomFunctions = {
 function calculateUncertainty(t, dose, type, steadystate=false, T=0.0) {
     let idx = Array.from({length: mcmcSamplesPK[type].length}, (_, i) => i);
     let values = idx.map(i => PKRandomFunctions[type](t, dose, steadystate, T, i));
-    
+
     let std = math.std(values)
     let q025 = math.quantileSeq(values, 0.025);
     let q975 = math.quantileSeq(values, 0.975);
@@ -89,8 +96,8 @@ function PKD3Symmetries(d, k1, k2, k3) {
 }
 
 // parameters ds and d2 are optional initial conditions
-// Es(0) = ds and E2(0) = d2 for the second and third compartments 
-function e2Curve3C(t, dose, d, k1, k2, k3, Ds = 0.0, D2 = 0.0, steadystate = false, T=1.0) {
+// Es(0) = ds and E2(0) = d2 for the second and third compartments
+export function e2Curve3C(t, dose, d, k1, k2, k3, Ds = 0.0, D2 = 0.0, steadystate = false, T=1.0) {
 
     if (!steadystate) {
         if (t < 0) {
@@ -107,7 +114,7 @@ function e2Curve3C(t, dose, d, k1, k2, k3, Ds = 0.0, D2 = 0.0, steadystate = fal
             if (k2 == k3) {
                 ret += Ds * k2 * t * Math.exp(-k2 * t)
             } else {
-                ret += Ds * k2 / (k2 - k3) * (Math.exp(-k3 * t) - Math.exp(-k2 * t))    
+                ret += Ds * k2 / (k2 - k3) * (Math.exp(-k3 * t) - Math.exp(-k2 * t))
             }
         }
 
@@ -115,7 +122,7 @@ function e2Curve3C(t, dose, d, k1, k2, k3, Ds = 0.0, D2 = 0.0, steadystate = fal
         // is ill-defined because one or more denominators are zero.
         // In these cases we must first take the limit the recover
         // the correct solution.
-        
+
         // ...buuut meh, we could just as well simply
         // perturb the rates by a tiny amount instead of doing
         // this lengthy limit thing.
@@ -164,7 +171,7 @@ function e2Curve3C(t, dose, d, k1, k2, k3, Ds = 0.0, D2 = 0.0, steadystate = fal
     }
 }
 
-function esSingleDose3C(t, dose, d, k1, k2, k3, Ds = 0.0) {
+export function esSingleDose3C(t, dose, d, k1, k2, k3, Ds = 0.0) {
 
     if (t < 0) {
         return 0.0;
@@ -188,7 +195,7 @@ function esSingleDose3C(t, dose, d, k1, k2, k3, Ds = 0.0) {
 }
 
 
-function e2SingleDoseAUC3C(t, dose, d, k1, k2, k3) {
+export function e2SingleDoseAUC3C(t, dose, d, k1, k2, k3) {
     if (t < 0) {
         return 0;
     }
@@ -214,21 +221,21 @@ function e2SingleDoseAUC3C(t, dose, d, k1, k2, k3) {
     }
 }
 
-function e2SteadyState3C(t, dose, T, d, k1, k2, k3) {
+export function e2SteadyState3C(t, dose, T, d, k1, k2, k3) {
     return dose * d * k1 * k2 * (Math.exp(-k1 * (t - T * Math.floor(t / T))) / (1 - Math.exp(-k1 * T)) / (k1 - k2) / (k1 - k3) - Math.exp(-k2 * (t - T * Math.floor(t / T))) / (1 - Math.exp(-k2 * T)) / (k1 - k2) / (k2 - k3) + Math.exp(-k3 * (t - T * Math.floor(t / T))) / (1 - Math.exp(-k3 * T)) / (k1 - k3) / (k2 - k3));
 }
 
-function e2ssTrough3C(dose, T, d, k1, k2, k3) {
+export function e2ssTrough3C(dose, T, d, k1, k2, k3) {
     return e2SteadyState3C(0, dose, T, d, k1, k2, k3)
 }
 
 // Keep k1 and k2 for splatting PKParams
-function e2ssAverage3C(dose, T, d, k1, k2, k3) {
+export function e2ssAverage3C(dose, T, d, k1, k2, k3) {
     return dose * d / k3 / T
 }
 
 
-function e2MultiDose3C(t, doses = [1.0], times = [0.0], types = ["EV im"], random = false, intervals = false) {
+export function e2MultiDose3C(t, doses = [1.0], times = [0.0], types = ["EV im"], random = false, intervals = false) {
     // let exponents = [];
     // for (let i = 0; i < doses.length; i++) {
     //     if (!random) {
@@ -319,15 +326,15 @@ function e2iv3C(t, dose, d, k21, k2e, k12, k1s, k1e, ks1, kse) {
 }
 
 function iv3Cmatrix(k21, k2e, k12, k1s, k1e, ks1, kse) {
-    return [[-(k21 + k2e),                 k12,             0], 
-            [         k21,  -(k12 + k1s + k1e),           ks1], 
+    return [[-(k21 + k2e),                 k12,             0],
+            [         k21,  -(k12 + k1s + k1e),           ks1],
             [           0,                 k1s,  -(ks1 + kse)]];
 }
 
 function slpo4Cmatrix(kp2, k21, k2e, k12, k1s, k1e, ks1, kse) {
     return [[-kp2,             0,                   0,             0]
-            [ kp2,  -(k21 + k2e),                   0,             0], 
-            [   0,           k21,  -(k12 + k1s + k1e),           ks1], 
+            [ kp2,  -(k21 + k2e),                   0,             0],
+            [   0,           k21,  -(k12 + k1s + k1e),           ks1],
             [   0,             0,                 k1s,  -(ks1 + kse)]];
 }
 

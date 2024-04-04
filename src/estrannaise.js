@@ -1,13 +1,19 @@
-let rowValidity = new Map();
-let conversionFactor = 1.0;
-let units = "pg/mL";
-let daysAsIntervals = false;
-// let uncertaintyViz = "cloud";
-let menstrualCycleVisible = false;
-let currentColorScheme = 'night';
+import {
+  addTDERow,
+  attachDragNDropImport,
+  attachOptionsEvents,
+  attachMultidoseButtonsEvents,
+  attachSteadyStateButtonsEvents,
+  menstrualCycleButtonAttachOnOff,
+  themeSetup,
+  attachTipJarEvent,
+  loadFromURL,
+  loadFromLocalStorage,
+  refresh,
+} from './core';
+import { attachPresetsDropdown } from './presets';
 
-window.onload = function () {
-
+export function initializeApp() {
     // Add default curves
     // mentrual cycle mimic
     addTDERow("multidose-table",  0, 4, "EV im");
@@ -18,7 +24,6 @@ window.onload = function () {
     addTDERow("steadystate-table", 7, 4, "EEn im");
     addTDERow("steadystate-table", 10, 4, "EC im", false, true);
 
-
     attachDragNDropImport();
 
     attachOptionsEvents();
@@ -27,7 +32,7 @@ window.onload = function () {
 
     attachMultidoseButtonsEvents();
     attachSteadyStateButtonsEvents();
-    
+
     menstrualCycleButtonAttachOnOff();
 
     themeSetup();
@@ -39,13 +44,4 @@ window.onload = function () {
     }
 
     refresh();
-}
-
-
-function refresh(save = false) {
-
-    if (save) {
-        saveToLocalStorage();
-    }
-    plotCurves();
-}
+};
