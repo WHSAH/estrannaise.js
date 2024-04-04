@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+enum RouteType {
+  UNKNOWN = 1;
+  BENZOATE = 2;
+  VALERATE = 3;
+  CYPIONATE = 4;
+  ENANTHATE = 5;
+  UNDECYLATE = 6;
+};
+
+message EstrannaiseState {
+  repeated Doses multi_doses = 1;
+  repeated Doses steady_state = 2;
+}
+
+message Doses {
+  RouteType type = 1;
+
+  message Value {
+    float dose = 1;
+    float time = 2;
+    bool cvisibility = 3;
+    bool uvisibility = 4;
+  };
+  repeated Value values = 2;
+}
