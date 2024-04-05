@@ -426,9 +426,9 @@ export function addTDERow(tableID, time = null, dose = null, ester = null, cvisi
             <option value="EC im" title="Estradiol cypionate in oil (intramuscular)">ec im</option> \
             <option value="EB im" title="Estradiol benzoate in oil (intramuscular)">eb im</option> \
             <option value="EUn im" title="Estradiol undecylate in castor oil (intramuscular)">eun im</option> \
-            <option value="EUn casubq" title="Subcutaneous estradiol undecylate in castor oil">eun casubq</option> \
-            <option value="patch tw" title="Transdermal estradiol patch (twice-weekly)">patch tw</option> \
-            <option value="patch ow" title="Transdermal estradiol patch (once-weekly)">patch ow</option> \
+            <option value="EUn casubq" title="Estradiol undecylate in castor oil (subcutaneous)">eun casubq</option> \
+            <option value="patch tw" title="Transdermal estradiol patch (twice-weekly) doses are in mg/day">patch tw</option> \
+            <option value="patch ow" title="Transdermal estradiol patch (once-weekly) doses are in mg/day">patch ow</option> \
             </select>');
     if (ester !== null) {
         esterCell.querySelector('select').value = ester;

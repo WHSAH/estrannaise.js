@@ -35,7 +35,7 @@ const NB_LINE_POINTS = PLOT_WIDTH;
 const CLOUD_POINT_SIZE = 1.3;
 const CLOUD_POINT_OPACITY = 0.4;
 
-const WONGHEXES = ["#E79F03", "#54ADE1", "#019E73", "#F0E441", "#0072B2", "#D55E00", "#CB79A7"]
+const WONGHEXES = ["#019E73", "#E79F03", "#54ADE1", "#F0E441", "#0072B2", "#D55E00", "#CB79A7"]
 
 function wongPalette(n, alpha=1.0) {
     return convertHexToRGBA(WONGHEXES[n % WONGHEXES.length], alpha);
