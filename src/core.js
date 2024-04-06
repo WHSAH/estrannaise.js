@@ -2,6 +2,7 @@ import Papa from 'papaparse';
 
 // FIXME: circular import
 import { plotCurves } from './plotting';
+import { convertFromProtoString, convertToProtoString } from './parameters';
 
 const rowValidity = new Map();
 export let conversionFactor = 1.0;
@@ -723,12 +724,12 @@ export function getShareURL() {
     let multiDoseTable = getTDEs('multidose-table', true, true);
     let steadyStateTable = getTDEs('steadystate-table', true, true);
 
-    let params = new URLSearchParams();
-    params.set('multiDoseTable', JSON.stringify(multiDoseTable));
-    params.set('steadyStateTable', JSON.stringify(steadyStateTable));
+    const protoString = convertToProtoString({
+        multiDoseTable,
+        steadyStateTable
+    });
 
-    // return window.location.origin + window.location.pathname + '#' + params.toString();
-    return window.location.origin + window.location.pathname + '#' + btoa(params.toString());
+    return location.origin + location.pathname + '#' + protoString;
 
 }
 
@@ -737,18 +738,29 @@ export function isValidBase64(str) {
     return base64Regex.test(str);
 }
 
-export function loadFromURL() {
+function parseParams(hashString) {
+    try {
+        return convertFromProtoString(hashString);
+    } catch (ex) {
+        // fall back to JSON
+        console.log(ex);
+    }
 
+    const hashParams = new URLSearchParams(atob(hashString));
+
+    return {
+        multiDoseTable: JSON.parse(hashParams.get('multiDoseTable')),
+        steadyStateTable: JSON.parse(hashParams.get('steadyStateTable')),
+    }
+}
+
+export function loadFromURL() {
     let hashString = window.location.hash.substring(1);
 
     let dataLoaded = false;
 
     if (isValidBase64(hashString)) {
-
-        let hashParams = new URLSearchParams(atob(hashString));
-
-        let multiDoseTable = JSON.parse(hashParams.get('multiDoseTable'));
-        let steadyStateTable = JSON.parse(hashParams.get('steadyStateTable'));
+        const { multiDoseTable, steadyStateTable } = parseParams(hashString);
 
         if (multiDoseTable) {
             deleteAllRows('multidose-table');

@@ -24,6 +24,18 @@ var RouteType = exports.RouteType = {
     "UNDECYLATE": {
         "value": 6,
         "options": {}
+    },
+    "UNDECYLATE_CASUBQ": {
+        "value": 7,
+        "options": {}
+    },
+    "PATCH_TW": {
+        "value": 8,
+        "options": {}
+    },
+    "PATCH_OW": {
+        "value": 9,
+        "options": {}
     }
 };
 

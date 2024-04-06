@@ -8,6 +8,7 @@
     "lib": "lib"
   },
   "scripts": {
+    "proto": "pbf src/parameters.proto > src/parameters.gen.js",
     "build": "webpack --mode production",
     "watch": "webpack --mode development --watch"
   },

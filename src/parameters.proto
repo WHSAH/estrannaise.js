@@ -7,6 +7,9 @@ enum RouteType {
   CYPIONATE = 4;
   ENANTHATE = 5;
   UNDECYLATE = 6;
+  UNDECYLATE_CASUBQ = 7;
+  PATCH_TW = 8;
+  PATCH_OW = 9;
 };
 
 message EstrannaiseState {
