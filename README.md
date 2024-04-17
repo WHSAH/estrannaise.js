@@ -6,10 +6,12 @@ Under the hood, estrannaise.js uses pharmacokinetic compartments models and MCMC
 **estrannaise.js is entirely client-side. Your data, whether entered, imported, or stashed, remains exclusively within your browser and will never be transmitted to the developer(s) or any third-party.**
 
 # TODO
-- Remove "add" button, automatically add empty line
-- Remember units/days options when stashing/saving/loading
+- BUG: Plot of multidose curve doesn't refresh the first time you erase the value of a dose
+- Remember units/days type/menstrual cycle visibility options when stashing/saving/loading
+- Allow to manual set x-axis limits
 - Allow possibility of changing patch wear time
 - Offer different ways to visualize the uncertainty (parallel sigma lines and cloud ensemble of curves)
+- Guides at 100, 200, 300 pg/mL ?
 - Oral/sublingual/iv models
 
 # Disclaimer

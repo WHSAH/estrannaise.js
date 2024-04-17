@@ -1,6 +1,24 @@
+import Papa from 'papaparse';
+
+// FIXME: circular import
+import { plotCurves } from './plotting';
+
+const rowValidity = new Map();
+export let conversionFactor = 1.0;
+export let units = "pg/mL";
+export let daysAsIntervals = false;
+export let menstrualCycleVisible = false;
+export let currentColorScheme = 'night';
+
+export function refresh(save = false) {
+    if (save) {
+        saveToLocalStorage();
+    }
+    plotCurves();
+}
 
 // Find the first element in list that contains str or is contained in str (case insensitive)
-function findIntersecting(list, str) {
+export function findIntersecting(list, str) {
     return list.find(el => el.toLowerCase().includes(str.toLowerCase()) || str.toLowerCase().includes(el.toLowerCase()));
 }
 
@@ -9,7 +27,7 @@ function findIntersecting(list, str) {
 // and can be parsed into a valid date object
 // This is so we can mix dates and offsets
 // when we sort and plot the dose table.
-function isValidDateString(dateString) {
+export function isValidDateString(dateString) {
     if (typeof dateString !== 'string') {
         return false;
     }
@@ -21,14 +39,14 @@ function isValidDateString(dateString) {
     return dateParts.length >= 3;
 }
 
-function findEarliestDate(dates) {
+export function findEarliestDate(dates) {
     return dates.reduce((earliest, current) => {
         let current_date = isNaN(current) ? new Date(current) : new Date(earliest.getTime() + current * 24 * 60 * 60 * 1000);
         return current_date < earliest ? current_date : earliest;
     }, new Date());
 }
 
-function transformToDayOffets(dates) {
+export function transformToDayOffets(dates) {
     let earliestDate = findEarliestDate(dates);
     return dates.map(date => {
         if (!isValidDateString(date)) {
@@ -40,7 +58,7 @@ function transformToDayOffets(dates) {
     });
 }
 
-function sortDatesAndOffsets(dates) {
+export function sortDatesAndOffsets(dates) {
     let offsets = transformToDayOffets(dates);
     return dates
         .map((date, index) => ({ date, offset: offsets[index] }))
@@ -48,7 +66,7 @@ function sortDatesAndOffsets(dates) {
         .map(item => item.date);
 }
 
-function isArraySorted(arr) {
+export function isArraySorted(arr) {
     for(let i = 0; i < arr.length - 1; i++) {
         if(arr[i] > arr[i + 1]) {
             return false;
@@ -58,7 +76,7 @@ function isArraySorted(arr) {
 }
 
 
-function getMonospaceWidth() {
+export function getMonospaceWidth() {
     let element = document.createElement('pre');
     element.style.position = 'absolute';
     element.style.left = '-9999px';
@@ -81,13 +99,13 @@ function getMonospaceWidth() {
 }
 
 
-function numberToDayHour(number, precision = 0) {
+export function numberToDayHour(number, precision = 0) {
     let days = Math.floor(number);
     let hours = (Math.round((number - days) * 24)).toFixed(precision);
     return `${days}d ${hours}h`;
 }
 
-function convertHexToRGBA(hex, alpha = 1.0) {
+export function convertHexToRGBA(hex, alpha = 1.0) {
     if (hex.startsWith('#')) { hex = hex.slice(1); }
     let r = parseInt(hex.slice(0, 2), 16);
     let g = parseInt(hex.slice(2, 4), 16);
@@ -96,7 +114,7 @@ function convertHexToRGBA(hex, alpha = 1.0) {
     return `rgba(${rgb}, ${alpha})`
 }
 
-function convertCustomCSSVarToRGBA(varName, alpha = 1.0) {
+export function convertCustomCSSVarToRGBA(varName, alpha = 1.0) {
     let rootStyle = getComputedStyle(document.documentElement);
     let color = rootStyle.getPropertyValue(varName)
     let rgb = '';
@@ -112,12 +130,12 @@ function convertCustomCSSVarToRGBA(varName, alpha = 1.0) {
     return `rgba(${rgb}, ${alpha})`
 }
 
-function colorTheBlue(alpha = 1.0) { return convertCustomCSSVarToRGBA('--the-blue', alpha) }
-function colorThePink(alpha = 1.0) { return convertCustomCSSVarToRGBA('--the-pink', alpha) }
-function colorBackground(alpha = 1.0) { return convertCustomCSSVarToRGBA('--background-color', alpha) }
-function colorStandout(alpha = 1.0) { return convertCustomCSSVarToRGBA('--standout-color', alpha) }
+export function colorTheBlue(alpha = 1.0) { return convertCustomCSSVarToRGBA('--the-blue', alpha) }
+export function colorThePink(alpha = 1.0) { return convertCustomCSSVarToRGBA('--the-pink', alpha) }
+export function colorBackground(alpha = 1.0) { return convertCustomCSSVarToRGBA('--background-color', alpha) }
+export function colorStandout(alpha = 1.0) { return convertCustomCSSVarToRGBA('--standout-color', alpha) }
 
-function setColorScheme(scheme = 'night') {
+export function setColorScheme(scheme = 'night') {
     let rootStyle = getComputedStyle(document.documentElement);
     if (scheme == 'night') {
         document.documentElement.style.setProperty('--background-color', rootStyle.getPropertyValue('--background-color-night'));
@@ -136,7 +154,7 @@ function setColorScheme(scheme = 'night') {
 }
 
 
-function unitStep(x) {
+export function unitStep(x) {
     if (x < 0) {
         return 0;
     } else if (x >= 0) {
@@ -144,11 +162,11 @@ function unitStep(x) {
     }
 }
 
-function allUnique(list) {
+export function allUnique(list) {
     return list.length === new Set(list).size;
 }
 
-function guessDaysAsIntervals() {
+export function guessDaysAsIntervals() {
     if (allUnique(getTDEs('multidose-table')[0])) {
         document.getElementById('dropdown-daysinput').value = 'absolute';
         daysAsIntervals = false;
@@ -158,7 +176,7 @@ function guessDaysAsIntervals() {
     }
 }
 
-function loadCSV(files) {
+export function loadCSV(files) {
     if (files.length > 0) {
         let file = files[0];
         let reader = new FileReader();
@@ -186,7 +204,7 @@ function loadCSV(files) {
     }
 }
 
-function exportCSV() {
+export function exportCSV() {
     let table = document.getElementById('multidose-table');
     let rows = Array.from(table.rows);
     let data = [['time (days)', 'dose (mg)', 'ester']].concat(rows.slice(1).map(row => {
@@ -207,7 +225,7 @@ function exportCSV() {
 }
 
 
-function readRow(row, keepincomplete = false) {
+export function readRow(row, keepincomplete = false) {
 
     let time = row.cells[2].querySelector('input').value;
     let dose = row.cells[3].querySelector('input').value;
@@ -225,7 +243,7 @@ function readRow(row, keepincomplete = false) {
     }
 }
 
-function getTDEs(tableId, getvisibility = false, keepincomplete = false) {
+export function getTDEs(tableId, getvisibility = false, keepincomplete = false) {
     let doseTable = document.getElementById(tableId);
     let times = [];
     let doses = [];
@@ -256,14 +274,14 @@ function getTDEs(tableId, getvisibility = false, keepincomplete = false) {
 
 }
 
-function guessNextRow(tableID) {
+export function guessNextRow(tableID) {
     let table = document.getElementById(tableID);
-    if (table.rows.length >= 3 && !daysAsIntervals) {
-        let beforeLastRow = readRow(table.rows[table.rows.length - 2]);
-        let lastRow = readRow(table.rows[table.rows.length - 1]);
+    if (table.rows.length >= 4 && !daysAsIntervals) {
+        let beforeLastRow = readRow(table.rows[table.rows.length - 3]);
+        let lastRow = readRow(table.rows[table.rows.length - 2]);
         if (beforeLastRow && lastRow) {
-            if (table.rows.length >= 4) {
-                let beforeBeforeLastRow = readRow(table.rows[table.rows.length - 3]);
+            if (table.rows.length >= 5) {
+                let beforeBeforeLastRow = readRow(table.rows[table.rows.length - 4]);
                 if (beforeBeforeLastRow
                     && (lastRow.dose === beforeBeforeLastRow.dose)
                     && (lastRow.dose !== beforeLastRow.dose)) {
@@ -290,16 +308,16 @@ function guessNextRow(tableID) {
                 return { time: lastRow.time + timeDifference, dose: lastRow.dose + doseDifference, ester: ester };
             }
         }
-    } else if (table.rows.length >= 2 && daysAsIntervals) {
+    } else if (table.rows.length >= 3 && daysAsIntervals) {
         // if days are given as intervals just repeat the last row
-        let lastRow = readRow(table.rows[table.rows.length - 1]);
+        let lastRow = readRow(table.rows[table.rows.length - 2]);
         return lastRow;
     }
     return null;
 }
 
 
-function addTDERow(tableID, time = null, dose = null, ester = null, cvisible = true, uvisible = true) {
+export function addTDERow(tableID, time = null, dose = null, ester = null, cvisible = true, uvisible = true) {
 
     let table = document.getElementById(tableID);
     let row = table.insertRow(-1);
@@ -337,7 +355,7 @@ function addTDERow(tableID, time = null, dose = null, ester = null, cvisible = t
     uncertaintyCell.className = 'uncertainty-cell';
     uncertaintyCell.width = '1.7em';
     uncertaintyCell.height = '1.7em';
-    
+
     if (tableID == 'steadystate-table' || ((tableID == 'multidose-table') && (table.rows.length == 2))) {
 
         let uncertaintyCheckbox = document.createElement('input');
@@ -375,14 +393,17 @@ function addTDERow(tableID, time = null, dose = null, ester = null, cvisible = t
             rowValidity.set(myRow, currentValidity);
             refresh()
         }
+
+        addRowIfNeeded(tableID);
     });
 
 
     let doseCell = row.insertCell(3)
     doseCell.innerHTML = '<input type="text" class="flat-input dose-cell">';
-    if (dose !== null) {
-        doseCell.querySelector('input').value = dose;
-    }
+
+    // Set given dose or empty string as default value (prevents NaNs)
+    doseCell.querySelector('input').value = dose || "";
+
     doseCell.querySelector('input').addEventListener('input', function () {
 
         let myRow = this.parentElement.parentElement;
@@ -393,6 +414,7 @@ function addTDERow(tableID, time = null, dose = null, ester = null, cvisible = t
             refresh()
         }
 
+        addRowIfNeeded(tableID);
     });
 
 
@@ -404,9 +426,9 @@ function addTDERow(tableID, time = null, dose = null, ester = null, cvisible = t
             <option value="EC im" title="Estradiol cypionate in oil (intramuscular)">ec im</option> \
             <option value="EB im" title="Estradiol benzoate in oil (intramuscular)">eb im</option> \
             <option value="EUn im" title="Estradiol undecylate in castor oil (intramuscular)">eun im</option> \
-            <option value="EUn casubq" title="Subcutaneous estradiol undecylate in castor oil">eun casubq</option> \
-            <option value="patch tw" title="Transdermal estradiol patch (twice-weekly)">patch tw</option> \
-            <option value="patch ow" title="Transdermal estradiol patch (once-weekly)">patch ow</option> \
+            <option value="EUn casubq" title="Estradiol undecylate in castor oil (subcutaneous)">eun casubq</option> \
+            <option value="patch tw" title="Transdermal estradiol patch (twice-weekly) doses are in mg/day">patch tw</option> \
+            <option value="patch ow" title="Transdermal estradiol patch (once-weekly) doses are in mg/day">patch ow</option> \
             </select>');
     if (ester !== null) {
         esterCell.querySelector('select').value = ester;
@@ -427,7 +449,7 @@ function addTDERow(tableID, time = null, dose = null, ester = null, cvisible = t
     });
 
     let deleteCell = row.insertCell(5);
-    if (tableID == 'steadystate-table' || (tableID == 'multidose-table' && table.rows.length > 2)) {   
+    if (tableID == 'steadystate-table' || (tableID == 'multidose-table' && table.rows.length > 2)) {
         deleteCell.innerHTML = '<button class="flat-button delete-button" title="Delete this entry">-</button>';
         deleteCell.querySelector('.delete-button').addEventListener('click', function () {
             let myRow = this.parentNode.parentNode;
@@ -440,6 +462,8 @@ function addTDERow(tableID, time = null, dose = null, ester = null, cvisible = t
                 addTDERow(myTable.id);
             }
 
+            addRowIfNeeded(tableID);
+
             refresh();
         });
     } else {
@@ -448,10 +472,13 @@ function addTDERow(tableID, time = null, dose = null, ester = null, cvisible = t
         deleteCell.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;';
     }
 
+    // Run addRowIfNeeded() after this row has been added
+    setTimeout(() => {addRowIfNeeded(tableID)})
+
     return row;
 }
 
-function deleteAllRows(tableID) {
+export function deleteAllRows(tableID) {
     let table = document.getElementById(tableID);
     while (table.rows.length > 1) {
         rowValidity.delete(table.rows[table.rows.length - 1]);
@@ -459,8 +486,20 @@ function deleteAllRows(tableID) {
     }
 }
 
+export function setDaysAsIntervals(refreshPlot = true) {
+    daysAsIntervals = true;
+    document.getElementById('dropdown-daysinput').value = 'intervals';
+    refreshPlot && refresh();
+}
 
-function turnMenstrualCycleOn() {
+export function setDaysAsAbsolute(refreshPlot = true) {
+    daysAsIntervals = false;
+    document.getElementById('dropdown-daysinput').value = 'absolute';
+    refreshPlot && refresh();
+}
+
+
+export function turnMenstrualCycleOn() {
     let mcButton = document.getElementById('menstrual-cycle-button');
     mcButton.style.setProperty('background-color', 'var(--the-pink)');
     mcButton.style.setProperty('color', 'var(--standout-color)');
@@ -468,7 +507,7 @@ function turnMenstrualCycleOn() {
     menstrualCycleVisible = true;
 }
 
-function turnMenstrualCycleOff() {
+export function turnMenstrualCycleOff() {
     let mcButton = document.getElementById('menstrual-cycle-button');
     mcButton.style.setProperty('background-color', 'var(--standout-color)');
     mcButton.style.setProperty('color', 'var(--the-pink)');
@@ -476,9 +515,9 @@ function turnMenstrualCycleOff() {
     menstrualCycleVisible = false;
 }
 
-function menstrualCycleButtonAttachOnOff() {
+export function menstrualCycleButtonAttachOnOff() {
     let mcButton = document.getElementById('menstrual-cycle-button');
-    
+
     mcButton.addEventListener('mousedown', function () {
         if (menstrualCycleVisible) {
             turnMenstrualCycleOff();
@@ -489,7 +528,7 @@ function menstrualCycleButtonAttachOnOff() {
     });
 }
 
-function attachDragNDropImport() {
+export function attachDragNDropImport() {
 
     let dragNDropZone = document.getElementById('dragndrop-zone');
 
@@ -516,7 +555,7 @@ function attachDragNDropImport() {
 
 }
 
-function changeBackgroundColor(elementId, color1, color2, delay = 100) {
+export function changeBackgroundColor(elementId, color1, color2, delay = 100) {
     let element = document.getElementById(elementId);
     element.style.backgroundColor = color1;
 
@@ -525,16 +564,16 @@ function changeBackgroundColor(elementId, color1, color2, delay = 100) {
     }, delay);
 }
 
-function attachMultidoseButtonsEvents() {
+export function attachMultidoseButtonsEvents() {
 
-    document.getElementById('add-dose-button').addEventListener('mousedown', function () {
-        addTDERow('multidose-table');
-    });
+    // document.getElementById('add-dose-button').addEventListener('mousedown', function () {
+    //     addTDERow('multidose-table');
+    // });
 
     document.getElementById('guess-button').addEventListener('mousedown', function () {
         let guess = guessNextRow('multidose-table');
         if (guess) {
-            addTDERow('multidose-table', guess.time, guess.dose, guess.ester);
+            setRowParameters('multidose-table', -1, guess.time, guess.dose, guess.ester);
             refresh();
         } else {
             document.getElementById('guess-button').innerHTML = '&nbsp;?._.)&nbsp;&nbsp;';
@@ -593,10 +632,10 @@ function attachMultidoseButtonsEvents() {
     });
 }
 
-function attachSteadyStateButtonsEvents() {
-    document.getElementById('add-steadystate-button').addEventListener('mousedown', function () {
-        addTDERow('steadystate-table');
-    });
+export function attachSteadyStateButtonsEvents() {
+    // document.getElementById('add-steadystate-button').addEventListener('mousedown', function () {
+    //     addTDERow('steadystate-table');
+    // });
     document.getElementById('clear-steadystates-button').addEventListener('mousedown', function () {
         deleteAllRows('steadystate-table');
         addTDERow('steadystate-table');
@@ -604,7 +643,7 @@ function attachSteadyStateButtonsEvents() {
     });
 }
 
-function themeSetup() {
+export function themeSetup() {
 
     let currentHour = new Date().getHours();
 
@@ -626,7 +665,7 @@ function themeSetup() {
 
 }
 
-function attachOptionsEvents() {
+export function attachOptionsEvents() {
     document.querySelector('.dropdown-units').addEventListener('change', function(event) {
         units = event.target.value;
         if (units === 'pg/mL') {
@@ -638,12 +677,11 @@ function attachOptionsEvents() {
     });
 
     document.querySelector('.dropdown-daysinput').addEventListener('change', function(event) {
-        daysAsIntervals = (event.target.value === 'intervals');
-        refresh();
+        (event.target.value === 'intervals') ? setDaysAsIntervals() : setDaysAsAbsolute();
     });
 }
 
-function attachTipJarEvent() {
+export function attachTipJarEvent() {
     document.getElementById('copy-xmr').addEventListener('mousedown', function () {
         navigator.clipboard.writeText(this.innerText);
 
@@ -657,7 +695,7 @@ function attachTipJarEvent() {
     });
 }
 
-function saveToLocalStorage() {
+export function saveToLocalStorage() {
     let multiDoseTable = getTDEs('multidose-table', true, true);
     let steadyStateTable = getTDEs('steadystate-table', true, true);
 
@@ -668,7 +706,7 @@ function saveToLocalStorage() {
     // console.log('saved ss', steadyStateTable);
 }
 
-function loadFromLocalStorage() {
+export function loadFromLocalStorage() {
 
     let multiDoseTable = JSON.parse(localStorage.getItem('multiDoseTable'));
     let steadyStateTable = JSON.parse(localStorage.getItem('steadyStateTable'));
@@ -688,11 +726,11 @@ function loadFromLocalStorage() {
     }
 }
 
-function deleteLocalStorage() {
+export function deleteLocalStorage() {
     localStorage.clear()
 }
 
-function getShareURL() {
+export function getShareURL() {
     let multiDoseTable = getTDEs('multidose-table', true, true);
     let steadyStateTable = getTDEs('steadystate-table', true, true);
 
@@ -705,12 +743,12 @@ function getShareURL() {
 
 }
 
-function isValidBase64(str) {
+export function isValidBase64(str) {
     const base64Regex = /^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/;
     return base64Regex.test(str);
 }
 
-function loadFromURL() {
+export function loadFromURL() {
 
     let hashString = window.location.hash.substring(1);
 
@@ -741,4 +779,36 @@ function loadFromURL() {
         }
     }
     return dataLoaded;
+}
+
+function addRowIfNeeded(tableID) {
+    let table = document.getElementById(tableID);
+    let lastRow = readRow(table.rows[table.rows.length - 1]);
+
+    // Add new row if the last row is valid
+    if(lastRow !== null){
+        addTDERow(tableID)
+    }
+}
+
+function setRowParameters(tableID, number, time, dose, ester){
+    let table = document.getElementById(tableID);
+
+    // Treat negative numbers as reverse order
+    let rowNumber = number;
+    if(number < 0){
+        rowNumber = table.rows.length + number;
+    }
+
+    let row = table.rows[rowNumber];
+
+    let timeInput = row.cells[2].querySelector('input');
+    let doseInput = row.cells[3].querySelector('input');
+    let esterInput = row.cells[4].querySelector('select');
+
+    timeInput.value = time;
+    doseInput.value = dose;
+    esterInput.value = ester;
+
+    addRowIfNeeded(tableID);
 }

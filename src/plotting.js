@@ -1,3 +1,33 @@
+import * as Plot from '@observablehq/plot';
+
+import {
+  colorBackground,
+  colorThePink,
+  colorTheBlue,
+  conversionFactor,
+  convertHexToRGBA,
+  currentColorScheme,
+  menstrualCycleVisible,
+  daysAsIntervals,
+  numberToDayHour,
+  readRow,
+  getTDEs,
+  units,
+} from './core';
+import {
+  e2MultiDose3C,
+  e2SteadyState3C,
+  e2ssAverage3C,
+  menstrualCycle,
+  menstrualCycleP05,
+  menstrualCycleP95,
+  PKFunctions,
+  PKRandomFunctions,
+} from './models';
+import {
+  PKParams
+} from '../data/modeldata';
+
 const NB_CLOUD_POINTS = 3500;
 const NB_CLOUDPOINTS_PER_SAMPLE = 10;
 const NB_UCURVES = 200;
@@ -8,10 +38,14 @@ const NB_LINE_POINTS = PLOT_WIDTH;
 const CLOUD_POINT_SIZE = 1.3;
 const CLOUD_POINT_OPACITY = 0.4;
 
-const WONGHEXES = ["#E79F03", "#54ADE1", "#019E73", "#F0E441", "#0072B2", "#D55E00", "#CB79A7"]
+const WONGHEXES = ["#019E73", "#E79F03", "#54ADE1", "#F0E441", "#0072B2", "#D55E00", "#CB79A7"]
 
 function wongPalette(n, alpha=1.0) {
     return convertHexToRGBA(WONGHEXES[n % WONGHEXES.length], alpha);
+}
+
+function sum(array) {
+    return array.reduce((a, b) => a + b, 0);
 }
 
 function fillCurve(func, xmin, xmax, nbsteps) {
@@ -31,46 +65,44 @@ function fillMenstrualCycleCurve(xmin, xmax, nbsteps) {
 
 }
 
-
-function plotCurves(uncertainty = "cloud") {
-
+export function plotCurves(uncertainty = "cloud") {
     let dotmarks = [];
     let linemarks = [];
     // let ulinemarks = [];
     let rulemarks = [];
     let tipmarks = [];
 
-    // If the first row of the multi-dose table is invalid 
+    // If the first row of the multi-dose table is invalid
     // we won't know about mdCVisib and mdUVisib
     let [mdTimes, mdDoses, mdTypes, [mdCVisib, ...cnulls], [mdUVisib, ...unulls]] = getTDEs('multidose-table', true);
     // So read it again with keepincomplete=true
     let firstRow = readRow(document.getElementById('multidose-table').rows[1], true);
     mdCVisib = firstRow.cvisibility;
     mdUVisib = firstRow.uvisibility;
-    
+
     let [ssEveries, ssDoses, ssTypes, ssCVisibs, ssUVisibs] = getTDEs('steadystate-table', true);
 
     let xmin = 0
     if (!daysAsIntervals) {
         xmin = Math.min(0, ...mdTimes)
     }
-    
+
     let xmax = 70;
-    
+
     if (mdCVisib || mdUVisib) {
         if (daysAsIntervals) {
-            xmax = Math.max(xmax, 1.618 * (math.sum(mdTimes) - (mdTimes[0] ? mdTimes[0] : 0)))
+            xmax = Math.max(xmax, 1.618 * (sum(mdTimes) - (mdTimes[0] ? mdTimes[0] : 0)))
         } else {
             xmax = Math.max(xmax, 1.618 * Math.max(...mdTimes));
         }
     }
-    
+
     for (let i = 0; i < ssEveries.length; i++) {
         if (ssUVisibs[i] || ssCVisibs[i]) {
             xmax = Math.max(xmax, 5 * ssEveries[i]);
         }
     }
-    
+
     // track the max e2 across all multi-dose curves
     // to set the y-axis limit. uncertainty clouds ignored.
     let e2max = 0;
@@ -88,7 +120,7 @@ function plotCurves(uncertainty = "cloud") {
             }))
         ];
         e2max = Math.max(e2max, conversionFactor * 350);
-        
+
         // colorCycle += 1;
     }
 
@@ -123,10 +155,10 @@ function plotCurves(uncertainty = "cloud") {
 
             e2max = Math.max(e2max, ...multiDoseCurve.map(p => p.E2));
             linemarks.push(Plot.line(multiDoseCurve, { x: "Time", y: "E2", strokeWidth: 2, stroke: wongPalette(4), strokeDash: [2, 2]}));
-            
+
             // Plot.ruleX(aapl, Plot.pointerX({x: "Date", py: "Close", stroke: "red"})),
             // rulemarks.push(Plot.ruleY(multiDoseCurve, Plot.pointerY({ y: "E2", px: "Time", strokeWidth: 0.3, strokeDash: [2, 2], stroke: colorThePink() })));
-            
+
             tipmarks.push(Plot.tip(multiDoseCurve, Plot.pointerX({
                 x: "Time", y: "E2",
                 title: p => `multi-dose\n\ntime: ${numberToDayHour(p.Time)}\n  e₂: ${p.E2.toFixed(0)} ${units}`,
@@ -164,13 +196,18 @@ function plotCurves(uncertainty = "cloud") {
             linemarks.unshift(Plot.line(ssEsterCurve, { x: "Time", y: "E2", strokeWidth: 2, stroke: wongPalette(colorCycle) }));
             tipmarks.unshift(Plot.tip(ssEsterCurve, Plot.pointerX({
                 x: "Time", y: "E2",
-                title: p => `${p.type.toLowerCase()}\n\n   time: ${numberToDayHour(p.Time)}\n     e₂: ${p.E2.toFixed(0)} ${units}\naverage: ${ssTypes[i].includes("patch") ? "unavailable" : e2ssAverage3C(conversionFactor * ssDoses[i], ssEveries[i], ...PKParams[ssTypes[i]]).toFixed(0)} ${ssTypes[i].includes("patch") ? "" : units}\n trough: ${PKFunctions[ssTypes[i]](0.0, ssDoses[i], true, ssEveries[i]).toFixed(0)} ${units}`,
+                title: p => `${p.type.toLowerCase()}
+    time: ${numberToDayHour(p.Time)}
+    e₂: ${p.E2.toFixed(0)} ${units}
+    average: ${ssTypes[i].includes("patch")
+        ? "unavailable"
+        : e2ssAverage3C(conversionFactor * ssDoses[i], ssEveries[i], ...PKParams[ssTypes[i]]).toFixed(0)} ${ssTypes[i].includes("patch") ? "" : units}
+    trough: ${PKFunctions[ssTypes[i]](0.0, ssDoses[i], true, ssEveries[i]).toFixed(0)} ${units}`,
                 fontFamily: "monospace", fill: colorBackground(0.618), stroke: colorThePink()
             })));
         }
-        
+
         colorCycle += 1
-    
     }
 
     let e2curve = Plot.plot({

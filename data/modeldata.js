@@ -1,6 +1,5 @@
-// hi there! glad you're snooping around and looking
-// under the hood, you've just found the secret ingredients!
-// isn't it fun? :)
+// hi there! glad you're snooping around and looking under the hood, you've
+// just found the secret ingredients!  isn't it fun? :)
 
 // no, those are not the same parameters as
 // the ones used by the tfs simulator, they are
@@ -30,7 +29,7 @@
 
 // anyway thanks for stopping by and stay tuned!
 
-const menstrualCycleData = {
+export const menstrualCycleData = {
     t:     [    0,     1,     2,     3,     4,     5,     6,     7,     8,     9,    10,     11,     12,     13,     14,     15,     16,     17,     18,     19,     20,     21,     22,     23,     24,     25,     26,     27,     28,     29],
     // median E2
     E2:    [37.99, 40.59, 37.49, 34.99, 35.49, 39.54, 41.99, 44.34, 53.43, 58.58, 71.43,  98.92, 132.31, 177.35, 255.88, 182.80,  85.23,  70.98,  87.97, 109.92, 122.77, 132.56, 150.30, 133.81, 137.16, 134.96,  92.73,  85.68,  46.34,  41.19],
@@ -38,35 +37,35 @@ const menstrualCycleData = {
     E2p95: [52.97, 51.12, 51.58, 54.74, 53.59, 57.08, 61.20, 60.16, 72.79, 85.36, 94.46, 133.70, 218.89, 314.28, 413.41, 388.28, 140.11, 108.52, 135.06, 181.42, 191.73, 196.05, 189.45, 195.64, 208.23, 219.75, 174.38, 148.77, 135.58, 188.92]
 }
 
-const PKParams = {
+export const PKParams = {
     "EV im": [95.0, 1.55, 17.2, 0.21],
-    
-    // New EEn im parameters using gaussian with random weights model 
+
+    // New EEn im parameters using gaussian with random weights model
     // (Wiemeyer 1986's weird data included)
     "EEn im": [49.63, 0.612, 0.554, 0.101],
     // "EEn im mk2": [97.74, 0.165, 2.048, 0.213],
     // "EEn im mk1": [61.71, 0.50, 4.43, 0.108], // older gaussian model
-    
+
     "EC im": [56.77, 0.98, 1.67, 0.15],
-    
+
     "EB im": [383.56, 7.35, 21.79, 0.63],
-    
+
     "EUn im": [23.59, 5.166, 0.0222, 0.101],
     // EUn im parameters using original 1975 data uncertainty and weighted model
     // "EUn im mk1": [45.14, 0.03866, 1.427, 0.4235],
-    
+
     // "EUn csq": [472.5, 0.020, 0.0164, 2.09],
     // "EUn casubq": [15.79, 0.0219, 0.0736, 0.107],
     "EUn casubq": [16.15, 0.0461, 0.0222, 0.101],
-    
+
     "patch tw": [16792, 0.283, 5.592, 4.3],
     "patch ow": [59481, 0.107, 7.842, 5.193],
-    
+
     //             d,   k21    k2e    k12    k1s       k1e     ks1     kse
     "E2 iv": [5065.6, 1.300, 0.537, 0.164, 5.095, 1.540e-7, 0.2714, 0.1025]
 }
 
-let mcmcSamplesPK = {
+export let mcmcSamplesPK = {
     "EV im": [
      [85.99302914657228, 2.887744125934548, 17.520424545627446, 0.17536774552112477],
      [94.86180653085971, 1.5638449235961698, 12.848180238358657, 0.22692939733526693],
