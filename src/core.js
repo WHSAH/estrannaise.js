@@ -280,7 +280,7 @@ export function guessNextRow(tableID) {
         let beforeLastRow = readRow(table.rows[table.rows.length - 3]);
         let lastRow = readRow(table.rows[table.rows.length - 2]);
         if (beforeLastRow && lastRow) {
-            if (table.rows.length >= 4) {
+            if (table.rows.length >= 5) {
                 let beforeBeforeLastRow = readRow(table.rows[table.rows.length - 4]);
                 if (beforeBeforeLastRow
                     && (lastRow.dose === beforeBeforeLastRow.dose)
@@ -308,7 +308,7 @@ export function guessNextRow(tableID) {
                 return { time: lastRow.time + timeDifference, dose: lastRow.dose + doseDifference, ester: ester };
             }
         }
-    } else if (table.rows.length >= 2 && daysAsIntervals) {
+    } else if (table.rows.length >= 3 && daysAsIntervals) {
         // if days are given as intervals just repeat the last row
         let lastRow = readRow(table.rows[table.rows.length - 2]);
         return lastRow;
@@ -484,6 +484,18 @@ export function deleteAllRows(tableID) {
         rowValidity.delete(table.rows[table.rows.length - 1]);
         table.deleteRow(-1);
     }
+}
+
+export function setDaysAsIntervals(refreshPlot = true) {
+    daysAsIntervals = true;
+    document.getElementById('dropdown-daysinput').value = 'intervals';
+    refreshPlot && refresh();
+}
+
+export function setDaysAsAbsolute(refreshPlot = true) {
+    daysAsIntervals = false;
+    document.getElementById('dropdown-daysinput').value = 'absolute';
+    refreshPlot && refresh();
 }
 
 
@@ -665,8 +677,7 @@ export function attachOptionsEvents() {
     });
 
     document.querySelector('.dropdown-daysinput').addEventListener('change', function(event) {
-        daysAsIntervals = (event.target.value === 'intervals');
-        refresh();
+        (event.target.value === 'intervals') ? setDaysAsIntervals() : setDaysAsAbsolute();
     });
 }
 
@@ -784,12 +795,12 @@ function setRowParameters(tableID, number, time, dose, ester){
     let table = document.getElementById(tableID);
 
     // Treat negative numbers as reverse order
-    rowNumber = number;
+    let rowNumber = number;
     if(number < 0){
         rowNumber = table.rows.length + number;
     }
 
-    row = table.rows[rowNumber];
+    let row = table.rows[rowNumber];
 
     let timeInput = row.cells[2].querySelector('input');
     let doseInput = row.cells[3].querySelector('input');

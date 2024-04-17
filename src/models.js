@@ -15,17 +15,17 @@ const menstrualCycleSpline = new Spline(menstrualCycleData["t"], menstrualCycleD
 const menstrualCycleSplineP05 = new Spline(menstrualCycleData["t"], menstrualCycleData["E2p5"])
 const menstrualCycleSplineP95 = new Spline(menstrualCycleData["t"], menstrualCycleData["E2p95"])
 
-function menstrualCycle(time) {
+export function menstrualCycle(time) {
     let t = ((time % 28) + 28) % 28; // end of day 28 = day 0
     return conversionFactor * menstrualCycleSpline.at(t);
 }
 
-function menstrualCycleP05(time) {
+export function menstrualCycleP05(time) {
     let t = ((time % 28) + 28) % 28;
     return conversionFactor * menstrualCycleSplineP05.at(t);
 }
 
-function menstrualCycleP95(time) {
+export function menstrualCycleP95(time) {
     let t = ((time % 28) + 28) % 28;
     return conversionFactor * menstrualCycleSplineP95.at(t);
 }

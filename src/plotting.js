@@ -18,6 +18,9 @@ import {
   e2MultiDose3C,
   e2SteadyState3C,
   e2ssAverage3C,
+  menstrualCycle,
+  menstrualCycleP05,
+  menstrualCycleP95,
   PKFunctions,
   PKRandomFunctions,
 } from './models';
@@ -39,6 +42,10 @@ const WONGHEXES = ["#019E73", "#E79F03", "#54ADE1", "#F0E441", "#0072B2", "#D55E
 
 function wongPalette(n, alpha=1.0) {
     return convertHexToRGBA(WONGHEXES[n % WONGHEXES.length], alpha);
+}
+
+function sum(array) {
+    return array.reduce((a, b) => a + b, 0);
 }
 
 function fillCurve(func, xmin, xmax, nbsteps) {
@@ -84,7 +91,7 @@ export function plotCurves(uncertainty = "cloud") {
 
     if (mdCVisib || mdUVisib) {
         if (daysAsIntervals) {
-            xmax = Math.max(xmax, 1.618 * (math.sum(mdTimes) - (mdTimes[0] ? mdTimes[0] : 0)))
+            xmax = Math.max(xmax, 1.618 * (sum(mdTimes) - (mdTimes[0] ? mdTimes[0] : 0)))
         } else {
             xmax = Math.max(xmax, 1.618 * Math.max(...mdTimes));
         }
