@@ -6,7 +6,7 @@ import { methodList } from './models';
 
 const rowValidity = new Map();
 export let conversionFactor = 1.0;
-export let units = "pg/mL";
+export let units = 'pg/mL';
 export let daysAsIntervals = false;
 export let menstrualCycleVisible = false;
 export let currentColorScheme = 'night';
@@ -91,12 +91,10 @@ export function getMonospaceWidth() {
     // Remove the off-screen element
     document.body.removeChild(element);
 
-    regionWidth = document.getElementById('e2d3-plot').clientWidth;
+    let regionWidth = document.getElementById('e2d3-plot').clientWidth;
 
     // Calculate and log the width of the window in monospace characters
-
     return Math.floor(regionWidth / charWidth);
-
 }
 
 
@@ -112,15 +110,15 @@ export function convertHexToRGBA(hex, alpha = 1.0) {
     let g = parseInt(hex.slice(2, 4), 16);
     let b = parseInt(hex.slice(4, 6), 16);
     let rgb = `${r}, ${g}, ${b}`;
-    return `rgba(${rgb}, ${alpha})`
+    return `rgba(${rgb}, ${alpha})`;
 }
 
 export function convertCustomCSSVarToRGBA(varName, alpha = 1.0) {
     let rootStyle = getComputedStyle(document.documentElement);
-    let color = rootStyle.getPropertyValue(varName)
+    let color = rootStyle.getPropertyValue(varName);
     let rgb = '';
     if (color.startsWith('#')) {
-        rgb = color
+        rgb = color;
         let r = parseInt(rgb.slice(1, 3), 16);
         let g = parseInt(rgb.slice(3, 5), 16);
         let b = parseInt(rgb.slice(5, 7), 16);
@@ -128,13 +126,13 @@ export function convertCustomCSSVarToRGBA(varName, alpha = 1.0) {
     } else {
         rgb = color.substring(4, color.length - 1);
     }
-    return `rgba(${rgb}, ${alpha})`
+    return `rgba(${rgb}, ${alpha})`;
 }
 
-export function colorTheBlue(alpha = 1.0) { return convertCustomCSSVarToRGBA('--the-blue', alpha) }
-export function colorThePink(alpha = 1.0) { return convertCustomCSSVarToRGBA('--the-pink', alpha) }
-export function colorBackground(alpha = 1.0) { return convertCustomCSSVarToRGBA('--background-color', alpha) }
-export function colorStandout(alpha = 1.0) { return convertCustomCSSVarToRGBA('--standout-color', alpha) }
+export function colorTheBlue(alpha = 1.0) { return convertCustomCSSVarToRGBA('--the-blue', alpha); }
+export function colorThePink(alpha = 1.0) { return convertCustomCSSVarToRGBA('--the-pink', alpha); }
+export function colorBackground(alpha = 1.0) { return convertCustomCSSVarToRGBA('--background-color', alpha); }
+export function colorStandout(alpha = 1.0) { return convertCustomCSSVarToRGBA('--standout-color', alpha); }
 
 export function setColorScheme(scheme = 'night') {
     let rootStyle = getComputedStyle(document.documentElement);
@@ -182,16 +180,16 @@ export function loadCSV(files) {
         let file = files[0];
         let reader = new FileReader();
 
-        reader.onload = function (event) {
+        reader.onload = (event) => {
             Papa.parse(event.target.result, {
                 complete: function (results) {
                     deleteAllRows('multidose-table');
-                    results.data.forEach(function (csvrow) {
+                    results.data.forEach((csvrow) => {
                         if (csvrow.length >= 3) {
-                            let delivtype = findIntersecting(methodList, csvrow[2]); //.replace(/\s/g, '').replace(/im/gi, ''));
+                            let delivtype = findIntersecting(methodList, csvrow[2]);
 
                             if (delivtype && (isFinite(csvrow[0]) || isValidDate(csvrow[0])) && isFinite(csvrow[1])) {
-                                addTDERow('multidose-table', csvrow[0], parseFloat(csvrow[1]), delivtype)
+                                addTDERow('multidose-table', csvrow[0], parseFloat(csvrow[1]), delivtype);
                             }
                         }
                     });
@@ -270,7 +268,7 @@ export function getTDEs(tableId, getvisibility = false, keepincomplete = false) 
     if (getvisibility) {
         return [times, doses, esters, cvisibilities, uvisibilities];
     } else {
-        return [times, doses, esters]
+        return [times, doses, esters];
     };
 
 }
@@ -289,11 +287,6 @@ export function guessNextRow(tableID) {
                     let timeDifference = beforeLastRow.time - beforeBeforeLastRow.time;
                     let dose = beforeLastRow.dose;
                     let ester = beforeLastRow.ester;
-                    // if (daysAsIntervals) {
-                    //     return { time: lastRow.time, dose: dose, ester: ester };
-                    // } else {
-                    //     return { time: lastRow.time + timeDifference, dose: dose, ester: ester };
-                    // }
                     return { time: lastRow.time + timeDifference, dose: dose, ester: ester };
                 }
             }
@@ -301,11 +294,6 @@ export function guessNextRow(tableID) {
                 let timeDifference = lastRow.time - beforeLastRow.time;
                 let doseDifference = lastRow.dose - beforeLastRow.dose;
                 let ester = lastRow.ester;
-                // if (daysAsIntervals) {
-                //     return { time: lastRow.time, dose: lastRow.dose + doseDifference, ester: ester };
-                // } else {
-                //     return { time: lastRow.time + timeDifference, dose: lastRow.dose + doseDifference, ester: ester };
-                // };
                 return { time: lastRow.time + timeDifference, dose: lastRow.dose + doseDifference, ester: ester };
             }
         }
@@ -325,7 +313,6 @@ export function addTDERow(tableID, time = null, dose = null, ester = null, cvisi
 
     rowValidity.set(row, false);
 
-    // -----------------------------------------
     // Add visibility and uncertainty checkboxes
     let visibilityCell = row.insertCell(0);
     visibilityCell.className = 'visibility-cell';
@@ -341,13 +328,11 @@ export function addTDERow(tableID, time = null, dose = null, ester = null, cvisi
 
         let visibilityCustomCheckbox = document.createElement('div');
         visibilityCustomCheckbox.className = visibilityCheckbox.checked ? 'custom-checkbox checked-style' : 'custom-checkbox';
-        visibilityCustomCheckbox.title = "Turn visibility of curve on/off"
-        visibilityCustomCheckbox.onmousedown = function () {
+        visibilityCustomCheckbox.title = "Turn visibility of curve on/off";
+        visibilityCustomCheckbox.onmousedown = () => {
             visibilityCheckbox.checked = !visibilityCheckbox.checked;
             this.className = visibilityCheckbox.checked ? 'custom-checkbox checked-style' : 'custom-checkbox';
-            // if (readRow(this.parentElement.parentElement)) {
-                refresh()
-            // }
+            refresh();
         };
         visibilityCell.appendChild(visibilityCustomCheckbox);
     }
@@ -367,59 +352,52 @@ export function addTDERow(tableID, time = null, dose = null, ester = null, cvisi
 
         let uncertaintyCustomCheckbox = document.createElement('div');
         uncertaintyCustomCheckbox.className = uncertaintyCheckbox.checked ? 'custom-checkbox checked-style' : 'custom-checkbox';
-        uncertaintyCustomCheckbox.title = "Turn visibility of uncertainty cloud on/off"
-        uncertaintyCustomCheckbox.onmousedown = function () {
+        uncertaintyCustomCheckbox.title = 'Turn visibility of uncertainty cloud on/off';
+        uncertaintyCustomCheckbox.onmousedown = () => {
             uncertaintyCheckbox.checked = !uncertaintyCheckbox.checked;
             this.className = uncertaintyCheckbox.checked ? 'custom-checkbox checked-style' : 'custom-checkbox';
-            // if (readRow(this.parentElement.parentElement)) {
-                refresh()
-            // }
+            refresh();
         };
         uncertaintyCell.appendChild(uncertaintyCustomCheckbox);
     }
 
-    // -----------------------------------------
-
-
-    let timeCell = row.insertCell(2)
+    let timeCell = row.insertCell(2);
     timeCell.innerHTML = '<input type="text" class="flat-input time-cell">';
     if (time !== null) {
         timeCell.querySelector('input').value = time;
     }
-    timeCell.querySelector('input').addEventListener('input', function () {
+    timeCell.querySelector('input').addEventListener('input', () => {
         let myRow = this.parentElement.parentElement;
         let currentValidity = Boolean(readRow(myRow, false));
 
         if ((currentValidity !== rowValidity.get(myRow)) || currentValidity) {
             rowValidity.set(myRow, currentValidity);
-            refresh()
+            refresh();
         }
 
         addRowIfNeeded(tableID);
     });
 
-
-    let doseCell = row.insertCell(3)
+    let doseCell = row.insertCell(3);
     doseCell.innerHTML = '<input type="text" class="flat-input dose-cell">';
 
     // Set given dose or empty string as default value (prevents NaNs)
-    doseCell.querySelector('input').value = dose || "";
-
-    doseCell.querySelector('input').addEventListener('input', function () {
+    doseCell.querySelector('input').value = dose || '';
+    doseCell.querySelector('input').addEventListener('input', () => {
 
         let myRow = this.parentElement.parentElement;
         let currentValidity = Boolean(readRow(myRow, false));
 
         if ((currentValidity !== rowValidity.get(myRow)) || currentValidity) {
             rowValidity.set(myRow, currentValidity);
-            refresh()
+            refresh();
         }
 
         addRowIfNeeded(tableID);
     });
 
 
-    let esterCell = row.insertCell(4)
+    let esterCell = row.insertCell(4);
     esterCell.innerHTML = (
         '<select class="dropdown-ester"> \
             <option value="EV im" title="Estradiol valerate in oil (intramuscular)">ev im</option> \
@@ -443,16 +421,16 @@ export function addTDERow(tableID, time = null, dose = null, ester = null, cvisi
         }
     }
 
-    esterCell.querySelector('select').addEventListener('change', function () {
+    esterCell.querySelector('select').addEventListener('change', () => {
         if (readRow(this.parentElement.parentElement)) {
-            refresh()
+            refresh();
         }
     });
 
     let deleteCell = row.insertCell(5);
     if (tableID == 'steadystate-table' || (tableID == 'multidose-table' && table.rows.length > 2)) {
         deleteCell.innerHTML = '<button class="flat-button delete-button" title="Delete this entry">-</button>';
-        deleteCell.querySelector('.delete-button').addEventListener('click', function () {
+        deleteCell.querySelector('.delete-button').addEventListener('click', () => {
             let myRow = this.parentNode.parentNode;
             let myTable = myRow.parentNode.parentNode;
 
@@ -474,7 +452,7 @@ export function addTDERow(tableID, time = null, dose = null, ester = null, cvisi
     }
 
     // Run addRowIfNeeded() after this row has been added
-    setTimeout(() => {addRowIfNeeded(tableID)})
+    setTimeout(() => {addRowIfNeeded(tableID)});
 
     return row;
 }
@@ -519,7 +497,7 @@ export function turnMenstrualCycleOff() {
 export function menstrualCycleButtonAttachOnOff() {
     let mcButton = document.getElementById('menstrual-cycle-button');
 
-    mcButton.addEventListener('mousedown', function () {
+    mcButton.addEventListener('mousedown', () => {
         if (menstrualCycleVisible) {
             turnMenstrualCycleOff();
         } else {
@@ -533,25 +511,25 @@ export function attachDragNDropImport() {
 
     let dragNDropZone = document.getElementById('dragndrop-zone');
 
-    dragNDropZone.addEventListener('dragenter', function (event) {
+    dragNDropZone.addEventListener('dragenter', () => {
         dragNDropZone.classList.add('overlay');
     });
 
-    dragNDropZone.addEventListener('dragleave', function (event) {
+    dragNDropZone.addEventListener('dragleave', (event) => {
         if (event.relatedTarget === null || !dragNDropZone.contains(event.relatedTarget)) {
             dragNDropZone.classList.remove('overlay');
         }
     });
 
-    dragNDropZone.addEventListener('dragover', function (event) {
+    dragNDropZone.addEventListener('dragover', (event) => {
         event.preventDefault();
     });
 
-    dragNDropZone.addEventListener('drop', function (event) {
+    dragNDropZone.addEventListener('drop', (event) => {
         event.preventDefault();
         dragNDropZone.classList.remove('overlay');
         let files = event.dataTransfer.files;
-        loadCSV(files)
+        loadCSV(files);
     });
 
 }
@@ -560,18 +538,14 @@ export function changeBackgroundColor(elementId, color1, color2, delay = 100) {
     let element = document.getElementById(elementId);
     element.style.backgroundColor = color1;
 
-    setTimeout(function () {
+    setTimeout(() => {
         element.style.backgroundColor = color2;
     }, delay);
 }
 
 export function attachMultidoseButtonsEvents() {
 
-    // document.getElementById('add-dose-button').addEventListener('mousedown', function () {
-    //     addTDERow('multidose-table');
-    // });
-
-    document.getElementById('guess-button').addEventListener('mousedown', function () {
+    document.getElementById('guess-button').addEventListener('mousedown', () => {
         let guess = guessNextRow('multidose-table');
         if (guess) {
             setRowParameters('multidose-table', -1, guess.time, guess.dose, guess.ester);
@@ -585,34 +559,13 @@ export function attachMultidoseButtonsEvents() {
         }
     });
 
-    document.getElementById('clear-doses-button').addEventListener('mousedown', function () {
+    document.getElementById('clear-doses-button').addEventListener('mousedown', () => {
         deleteAllRows('multidose-table');
         addTDERow('multidose-table');
         refresh();
     });
 
-    // document.getElementById('stash-button').addEventListener('mousedown', function () {
-    //     saveToLocalStorage();
-    //     this.innerHTML = 'stashed!';
-    //     setTimeout(() => {
-    //         this.innerHTML = 'stash all';
-    //     }, 618);
-    // });
-
-    // document.getElementById('recall-button').addEventListener('mousedown', function () {
-    //     loadFromLocalStorage();
-    //     refresh();
-    // });
-
-    // document.getElementById('delete-stash-button').addEventListener('mousedown', function () {
-    //     deleteLocalStorage();
-    //     this.innerHTML = 'deleted!';
-    //     setTimeout(() => {
-    //         this.innerHTML = 'delete stash';
-    //     }, 618);
-    // });
-
-    document.getElementById('share-button').addEventListener('mousedown', function () {
+    document.getElementById('share-button').addEventListener('mousedown', () => {
         navigator.clipboard.writeText(getShareURL());
 
         document.getElementById('share-button').innerHTML = 'copied!';
@@ -622,22 +575,19 @@ export function attachMultidoseButtonsEvents() {
         }, 1000);
     });
 
-    document.getElementById('save-csv-button').addEventListener('mousedown', function () {
+    document.getElementById('save-csv-button').addEventListener('mousedown', () => {
         exportCSV();
     });
-    document.getElementById('import-csv-dialog').addEventListener('mousedown', function () {
+    document.getElementById('import-csv-dialog').addEventListener('mousedown', () => {
         document.getElementById('csv-file').click();
     });
-    document.getElementById('csv-file').addEventListener('change', function (e) {
+    document.getElementById('csv-file').addEventListener('change', (e) => {
         loadCSV(e.target.files);
     });
 }
 
 export function attachSteadyStateButtonsEvents() {
-    // document.getElementById('add-steadystate-button').addEventListener('mousedown', function () {
-    //     addTDERow('steadystate-table');
-    // });
-    document.getElementById('clear-steadystates-button').addEventListener('mousedown', function () {
+    document.getElementById('clear-steadystates-button').addEventListener('mousedown', () => {
         deleteAllRows('steadystate-table');
         addTDERow('steadystate-table');
         refresh();
@@ -656,7 +606,7 @@ export function themeSetup() {
         setColorScheme('night');
     }
 
-    document.getElementById('nightday-slider').addEventListener('change', function (event) {
+    document.getElementById('nightday-slider').addEventListener('change', (event) => {
         if (event.target.checked) {
             setColorScheme('day');
         } else {
@@ -667,7 +617,7 @@ export function themeSetup() {
 }
 
 export function attachOptionsEvents() {
-    document.querySelector('.dropdown-units').addEventListener('change', function(event) {
+    document.querySelector('.dropdown-units').addEventListener('change', (event) => {
         units = event.target.value;
         if (units === 'pg/mL') {
             conversionFactor = 1.0;
@@ -677,13 +627,13 @@ export function attachOptionsEvents() {
         refresh();
     });
 
-    document.querySelector('.dropdown-daysinput').addEventListener('change', function(event) {
+    document.querySelector('.dropdown-daysinput').addEventListener('change', (event) => {
         (event.target.value === 'intervals') ? setDaysAsIntervals() : setDaysAsAbsolute();
     });
 }
 
 export function attachTipJarEvent() {
-    document.getElementById('copy-xmr').addEventListener('mousedown', function () {
+    document.getElementById('copy-xmr').addEventListener('mousedown', () => {
         navigator.clipboard.writeText(this.innerText);
 
         document.getElementById('tipjar-text').innerHTML = 'xmr tip jar address copied, thank you!';
@@ -700,11 +650,8 @@ export function saveToLocalStorage() {
     let multiDoseTable = getTDEs('multidose-table', true, true);
     let steadyStateTable = getTDEs('steadystate-table', true, true);
 
-    // console.log('\n');
     localStorage.setItem('multiDoseTable', JSON.stringify(multiDoseTable));
-    // console.log('saved md', multiDoseTable);
     localStorage.setItem('steadyStateTable', JSON.stringify(steadyStateTable));
-    // console.log('saved ss', steadyStateTable);
 }
 
 export function loadFromLocalStorage() {
@@ -728,7 +675,7 @@ export function loadFromLocalStorage() {
 }
 
 export function deleteLocalStorage() {
-    localStorage.clear()
+    localStorage.clear();
 }
 
 export function getShareURL() {
@@ -739,9 +686,7 @@ export function getShareURL() {
     params.set('multiDoseTable', JSON.stringify(multiDoseTable));
     params.set('steadyStateTable', JSON.stringify(steadyStateTable));
 
-    // return window.location.origin + window.location.pathname + '#' + params.toString();
     return window.location.origin + window.location.pathname + '#' + btoa(params.toString());
-
 }
 
 export function isValidBase64(str) {
@@ -787,17 +732,17 @@ function addRowIfNeeded(tableID) {
     let lastRow = readRow(table.rows[table.rows.length - 1]);
 
     // Add new row if the last row is valid
-    if(lastRow !== null){
-        addTDERow(tableID)
+    if(lastRow !== null) {
+        addTDERow(tableID);
     }
 }
 
-function setRowParameters(tableID, number, time, dose, ester){
+function setRowParameters(tableID, number, time, dose, ester) {
     let table = document.getElementById(tableID);
 
     // Treat negative numbers as reverse order
     let rowNumber = number;
-    if(number < 0){
+    if(number < 0) {
         rowNumber = table.rows.length + number;
     }
 
