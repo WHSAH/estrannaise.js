@@ -8,6 +8,19 @@ import {
     turnMenstrualCycleOff,
   } from './core.js';
 
+/**
+ * Apply default, so the page can show an example of use and data
+ */
+export function initializeDefaultPreset() {
+    addTDERow('multidose-table',  0, 4, 'EV im');
+    addTDERow('multidose-table', 20, 4, 'EEn im');
+    addTDERow('multidose-table', 40, 0.1, 'patch ow');
+
+    // EEn and EC steady state
+    addTDERow('steadystate-table', 7, 4, 'EEn im');
+    addTDERow('steadystate-table', 10, 4, 'EC im', false, true);
+}
+
 export function attachPresetsDropdown() {
     let presetDropdown = document.getElementById('dropdown-presets');
 
