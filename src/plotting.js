@@ -23,7 +23,7 @@ import {
 } from './models.js';
 import {
   PKParams
-} from '../data/modeldata.js';
+} from './modeldata.js';
 
 const NB_CLOUD_POINTS = 3500;
 

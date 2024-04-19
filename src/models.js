@@ -9,6 +9,7 @@ import {
 } from '../data/modeldata';
 
 export const methodList = ["EB im", "EV im", "EEn im", "EC im", "EUn im", "EUn casubq", "patch tw", "patch ow"];
+} from './modeldata.js';
 
 const menstrualCycleSpline = new Spline(menstrualCycleData["t"], menstrualCycleData["E2"]);
 const menstrualCycleSplineP05 = new Spline(menstrualCycleData["t"], menstrualCycleData["E2p5"]);
