@@ -1,5 +1,4 @@
 import {
-  addTDERow,
   attachDragNDropImport,
   attachOptionsEvents,
   attachMultidoseButtonsEvents,

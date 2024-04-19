@@ -60,17 +60,22 @@ function fillMenstrualCycleCurve(xmin, xmax, nbsteps) {
 
 }
 
+/**
+ * Re-draw the graph and all curves
+ * TODO: Take in all arguments instead of stealing them from globals or DOM
+ * @return Plot for insertion into DOM
+ */
 export function plotCurves() {
-    let dotmarks = [],
-        linemarks = [],
-        rulemarks = [],
-        tipmarks = [];
+    let dotMarks  = [],
+        lineMarks = [],
+        ruleMarks = [],
+        tipMarks  = [];
 
     // If the first row of the multi-dose table is invalid
     // we won't know about mdCVisib and mdUVisib
     let [mdTimes, mdDoses, mdTypes, [mdCVisib, ..._cnulls], [mdUVisib, ..._unulls]] = getTDEs('multidose-table', true);
     // So read it again with keepincomplete=true
-    let firstRow = readRow(document.getElementById('multidose-table').rows[1], true);
+    let firstRow = readRow(document.getElementById('multidose-table').rows[1], true); // FIXME: Remove
     mdCVisib = firstRow.cvisibility;
     mdUVisib = firstRow.uvisibility;
 
@@ -81,7 +86,7 @@ export function plotCurves() {
         xmin = Math.min(0, ...mdTimes);
     }
 
-    let xmax = 70;
+    let xmax = 70; // FIXME: Describe what this is
 
     if (mdCVisib || mdUVisib) {
         if (daysAsIntervals) {
@@ -101,10 +106,10 @@ export function plotCurves() {
     // to set the y-axis limit. uncertainty clouds ignored.
     let e2max = 0;
 
-    let msmarks = [];
+    let msMarks = [];
     if (menstrualCycleVisible) {
         let _menstrualCycle = fillMenstrualCycleCurve(xmin, xmax, NB_LINE_POINTS);
-        msmarks = [
+        msMarks = [
             Plot.line(_menstrualCycle, { x: 'Time', y: 'E2', strokeWidth: 2, stroke: currentColorScheme == 'night' ? convertHexToRGBA('#FFFFFF', 0.6) : convertHexToRGBA('#000000', 0.5)}),
             Plot.areaY(_menstrualCycle, { x: 'Time', y1: 'E2p5', y2: 'E2p95' , fill: currentColorScheme == 'night' ? convertHexToRGBA('#FFFFFF', 0.1) : convertHexToRGBA('#000000', 0.1)}),
             Plot.tip(_menstrualCycle, Plot.pointerX({
@@ -115,7 +120,6 @@ export function plotCurves() {
         ];
         e2max = Math.max(e2max, conversionFactor * 350);
     }
-
 
     if (mdTimes.length > 0) {
 
@@ -137,7 +141,7 @@ export function plotCurves() {
                 let y = e2MultiDose3C(randx, mdDoses, mdTimes, mdTypes, true, daysAsIntervals);
                 mdUncertaintyCloud.push({ Time: randx, E2: y });
             }
-            dotmarks.push(Plot.dot(mdUncertaintyCloud, { x: 'Time', y: 'E2', r: CLOUD_POINT_SIZE, fill: wongPalette(4, CLOUD_POINT_OPACITY) }));
+            dotMarks.push(Plot.dot(mdUncertaintyCloud, { x: 'Time', y: 'E2', r: CLOUD_POINT_SIZE, fill: wongPalette(4, CLOUD_POINT_OPACITY) }));
         }
 
 
@@ -146,9 +150,9 @@ export function plotCurves() {
             multiDoseCurve = multiDoseCurve.map(p => ({ Time: p.Time, E2: p.E2 }));
 
             e2max = Math.max(e2max, ...multiDoseCurve.map(p => p.E2));
-            linemarks.push(Plot.line(multiDoseCurve, { x: 'Time', y: 'E2', strokeWidth: 2, stroke: wongPalette(4), strokeDash: [2, 2]}));
+            lineMarks.push(Plot.line(multiDoseCurve, { x: 'Time', y: 'E2', strokeWidth: 2, stroke: wongPalette(4), strokeDash: [2, 2]}));
 
-            tipmarks.push(Plot.tip(multiDoseCurve, Plot.pointerX({
+            tipMarks.push(Plot.tip(multiDoseCurve, Plot.pointerX({
                 x: 'Time', y: 'E2',
                 title: p => `multi-dose\n\ntime: ${numberToDayHour(p.Time)}\n  e₂: ${p.E2.toFixed(0)} ${units}`,
                 fontFamily: 'monospace', fill: colorBackground(0.618), stroke: colorThePink()
@@ -175,21 +179,21 @@ export function plotCurves() {
                 e2max = Math.max(e2max, ...probeSteadyStateCurve.map(p => p.E2));
             }
 
-            dotmarks.unshift(Plot.dot(ssUncertaintyCloud, { x: "Time", y: "E2", r: CLOUD_POINT_SIZE, fill: wongPalette(colorCycle, CLOUD_POINT_OPACITY) }));
+            dotMarks.unshift(Plot.dot(ssUncertaintyCloud, { x: "Time", y: "E2", r: CLOUD_POINT_SIZE, fill: wongPalette(colorCycle, CLOUD_POINT_OPACITY) }));
         }
 
         if (ssCVisibs[i]) {
             let ssEsterCurve = fillCurve(t => PKFunctions[ssTypes[i]](t, ssDoses[i], true, ssEveries[i]), xmin, xmax, NB_LINE_POINTS);
-            ssEsterCurve = ssEsterCurve.map(p => ({ Time: p.Time, E2: p.E2, type: `${ssTypes[i]} ${ssDoses[i]}mg/${ssEveries[i]}day${ssEveries[i] > 1 ? "s" : ""}` }));
+            ssEsterCurve = ssEsterCurve.map(p => ({ Time: p.Time, E2: p.E2, type: `${ssTypes[i]} ${ssDoses[i]}mg/${ssEveries[i]}day${ssEveries[i] > 1 ? 's' : ''}` }));
             e2max = Math.max(e2max, ...ssEsterCurve.map(p => p.E2));
-            linemarks.unshift(Plot.line(ssEsterCurve, { x: 'Time', y: 'E2', strokeWidth: 2, stroke: wongPalette(colorCycle) }));
-            tipmarks.unshift(Plot.tip(ssEsterCurve, Plot.pointerX({
+            lineMarks.unshift(Plot.line(ssEsterCurve, { x: 'Time', y: 'E2', strokeWidth: 2, stroke: wongPalette(colorCycle) }));
+            tipMarks.unshift(Plot.tip(ssEsterCurve, Plot.pointerX({
                 x: 'Time', y: 'E2',
-                title: p => `${p.type.toLowerCase()}
-    time: ${numberToDayHour(p.Time)}
-    e₂: ${p.E2.toFixed(0)} ${units}
-    average: ${ssTypes[i].includes('patch') ? 'unavailable' : e2ssAverage3C(conversionFactor * ssDoses[i], ssEveries[i], ...PKParams[ssTypes[i]]).toFixed(0)} ${ssTypes[i].includes("patch") ? '' : units}
-    trough: ${PKFunctions[ssTypes[i]](0.0, ssDoses[i], true, ssEveries[i]).toFixed(0)} ${units}`,
+                title: p => `${p.type.toLowerCase()},
+                    time: ${numberToDayHour(p.Time)},
+                    e₂: ${p.E2.toFixed(0)} ${units},
+                    average: ${ssTypes[i].includes('patch') ? 'unavailable' : e2ssAverage3C(conversionFactor * ssDoses[i], ssEveries[i], ...PKParams[ssTypes[i]]).toFixed(0)} ${ssTypes[i].includes("patch") ? '' : units}
+                    trough: ${PKFunctions[ssTypes[i]](0.0, ssDoses[i], true, ssEveries[i]).toFixed(0)} ${units}`,
                 fontFamily: 'monospace', fill: colorBackground(0.618), stroke: colorThePink()
             })));
         }
@@ -204,11 +208,11 @@ export function plotCurves() {
         marks: [
             Plot.gridX({ stroke: 'grey' }),
             Plot.gridY({ stroke: 'grey' }),
-        ].concat(rulemarks)
-        .concat(dotmarks)
-        .concat(msmarks)
-        .concat(linemarks)
-        .concat(tipmarks)
+        ].concat(ruleMarks)
+        .concat(dotMarks)
+        .concat(msMarks)
+        .concat(lineMarks)
+        .concat(tipMarks)
         .concat([Plot.ruleX([xmin]), Plot.ruleY([0])])
     });
 
@@ -218,6 +222,7 @@ export function plotCurves() {
         textElement.style.fontFamily = 'monospace';
     });
 
+    // FIXME: Remove DOM manipulation, handle upstream
     let plot = document.getElementById('plot-region');
     plot.innerHTML = '';
     plot.append(e2curve);

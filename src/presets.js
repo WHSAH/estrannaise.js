@@ -21,10 +21,16 @@ export function initializeDefaultPreset() {
     addTDERow('steadystate-table', 10, 4, 'EC im', false, true);
 }
 
+/**
+ * Define a set of preset configurations
+ *
+ * TODO: Remove DOM manipulation
+ */
 export function attachPresetsDropdown() {
     let presetDropdown = document.getElementById('dropdown-presets');
 
     presetDropdown.addEventListener('change', () => {
+        // TODO: Consider harm redux here, are "speedrun" examples appropriate?
         switch(this.value) {
             case 'een-monotherapy-7':
                 turnMenstrualCycleOff();
@@ -517,7 +523,6 @@ export function attachPresetsDropdown() {
             default:
                 break;
         }
-        
 
     });
 
