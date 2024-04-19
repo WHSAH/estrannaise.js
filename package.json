@@ -2,14 +2,9 @@
   "name": "estrannaise",
   "version": "1.0.0",
   "description": "An estradiol level simulator",
-  "main": "index.js",
   "directories": {
     "doc": "docs",
     "lib": "lib"
-  },
-  "scripts": {
-    "build": "webpack --mode production",
-    "watch": "webpack --mode development --watch"
   },
   "author": "",
   "license": "MIT",
@@ -22,10 +17,7 @@
     "eslint-plugin-n": "^16.6.2",
     "eslint-plugin-promise": "^6.1.1",
     "globals": "^15.0.0",
-    "http-server": "^14.1.1",
-    "webpack": "^5.91.0",
-    "webpack-cli": "^5.1.4",
-    "webserver": "^5.0.1"
+    "http-server": "^14.1.1"
   },
   "dependencies": {
     "@observablehq/plot": "^0.6.14",

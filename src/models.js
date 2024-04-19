@@ -1,5 +1,6 @@
-import Spline from 'cubic-spline';
-import { conversionFactor } from './core';
+let Spline = require('cubic-spline');
+
+import { conversionFactor } from './core.js';
 
 import {
   mcmcSamplesPK,

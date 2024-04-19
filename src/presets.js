@@ -6,7 +6,7 @@ import {
     setDaysAsAbsolute,
     turnMenstrualCycleOn,
     turnMenstrualCycleOff,
-  } from './core';
+  } from './core.js';
 
 export function attachPresetsDropdown() {
     let presetDropdown = document.getElementById('dropdown-presets');

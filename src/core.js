@@ -1,8 +1,5 @@
-import Papa from 'papaparse';
 
-// FIXME: circular import
-import { plotCurves } from './plotting';
-import { methodList } from './models';
+import { plotCurves } from './plotting.js';
 
 const rowValidity = new Map();
 export let conversionFactor = 1.0;

@@ -10,10 +10,11 @@ import {
   loadFromURL,
   loadFromLocalStorage,
   refresh,
-} from './core';
-import { attachPresetsDropdown } from './presets';
+} from './core.js';
+import { attachPresetsDropdown } from './presets.js';
 
-export function initializeApp() {
+window.addEventListener('DOMContentLoaded', () => {
+
     // Add default curves
     // mentrual cycle mimic
     addTDERow('multidose-table',  0, 4, 'EV im');
@@ -44,4 +45,4 @@ export function initializeApp() {
     }
 
     refresh();
-};
+});

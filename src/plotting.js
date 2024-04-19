@@ -1,4 +1,3 @@
-import * as Plot from '@observablehq/plot';
 
 import {
   colorBackground,
@@ -12,7 +11,7 @@ import {
   readRow,
   getTDEs,
   units,
-} from './core';
+} from './core.js';
 import {
   e2MultiDose3C,
   e2ssAverage3C,
@@ -21,10 +20,10 @@ import {
   menstrualCycleP95,
   PKFunctions,
   PKRandomFunctions,
-} from './models';
+} from './models.js';
 import {
   PKParams
-} from '../data/modeldata';
+} from '../data/modeldata.js';
 
 const NB_CLOUD_POINTS = 3500;
 
@@ -189,9 +188,7 @@ export function plotCurves() {
                 title: p => `${p.type.toLowerCase()}
     time: ${numberToDayHour(p.Time)}
     e₂: ${p.E2.toFixed(0)} ${units}
-    average: ${ssTypes[i].includes('patch')
-        ? 'unavailable'
-        : e2ssAverage3C(conversionFactor * ssDoses[i], ssEveries[i], ...PKParams[ssTypes[i]]).toFixed(0)} ${ssTypes[i].includes("patch") ? '' : units}
+    average: ${ssTypes[i].includes('patch') ? 'unavailable' : e2ssAverage3C(conversionFactor * ssDoses[i], ssEveries[i], ...PKParams[ssTypes[i]]).toFixed(0)} ${ssTypes[i].includes("patch") ? '' : units}
     trough: ${PKFunctions[ssTypes[i]](0.0, ssDoses[i], true, ssEveries[i]).toFixed(0)} ${units}`,
                 fontFamily: 'monospace', fill: colorBackground(0.618), stroke: colorThePink()
             })));
