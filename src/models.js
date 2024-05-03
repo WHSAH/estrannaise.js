@@ -9,7 +9,7 @@ import {
   menstrualCycleData
 } from '../data/modeldata';
 
-const methodList = ["EB im", "EV im", "EEn im", "EC im", "EUn im", "EUn casubq", "patch tw", "patch ow"];
+export const methodList = ["EB im", "EV im", "EEn im", "EC im", "EUn im", "EUn casubq", "patch tw", "patch ow"];
 
 const menstrualCycleSpline = new Spline(menstrualCycleData["t"], menstrualCycleData["E2"])
 const menstrualCycleSplineP05 = new Spline(menstrualCycleData["t"], menstrualCycleData["E2p5"])
