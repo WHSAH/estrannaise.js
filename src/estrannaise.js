@@ -29,7 +29,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
     themeSetup();
 
-    attachTipJarEvent();
+    // attachTipJarEvent();
 
     if (!loadFromURL()) {
         loadFromLocalStorage();
