@@ -1,6 +1,8 @@
 
 import { plotCurves } from './plotting.js';
 
+import { methodList } from './models.js';
+
 const rowValidity = new Map();
 export let conversionFactor = 1.0;
 export let units = 'pg/mL';
