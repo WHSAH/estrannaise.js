@@ -14,21 +14,21 @@
     <link rel="stylesheet" type="text/css" href="css/colors.css">
     <link rel="stylesheet" type="text/css" href="css/slider.css">
     <link rel="stylesheet" type="text/css" href="css/styles.css">
+    <script src="lib/papaparse.min.js"></script>
+    <script src="lib/cubic-spline.js"></script>
+    <script src="lib/d3.min.js"></script>
+    <script src="lib/plot.min.js"></script>
+    <script type="module" src="src/estrannaise.js"></script>
 </head>
 
 <body>
-    <script src="dist/main.js"></script>
 
     <div id="container">
         <header>
             <!-- Good god this css is gory. -->
             <div id="header-div" style="display: flex; align-items: flex-start;">
-                <!-- <div id="logo">
-                    <img src="img/favicon-96x96.png" alt="estrannaise.js logo">
-                </div> -->
-                <div style="height: 100%; width: 100%; display: flex; flex-direction: column; justify-content: space-between; margin-top: 1.2em;">
 
-                    <!-- <h1 style="margin-top: auto; margin-bottom: 0em;">estrannaise.js</h1> -->
+                <div style="height: 100%; width: 100%; display: flex; flex-direction: column; justify-content: space-between; margin-top: 1.2em;">
 
                     <div id="subtitle" style="display: flex; justify-content: space-between; width: 100%; align-items: flex-end;">
 
@@ -62,14 +62,7 @@
                     <option value="absolute">absolute days</option>
                     <option value="intervals">days as intervals</option>
                 </select>
-                <!-- <select class="dropdown-uncertaintytype" style="display: inline-block; margin-right: 0.6em;">
-                    <option value="cloud">uncertainty cloud</option>
-                    <option value="range">uncertainty range</option>
-                    <option value="curves">uncertainty curves</option>
-                </select> -->
 
-                <!-- <input id="show-menstrualcycle" type="checkbox" class="hidden-checkbox checked-style">
-                <div class="custom-checkbox checked-style" style="width: 10em; margin: 0em;">menstrual cycle</div> -->
                 <select id="dropdown-presets"
                         title="Load a preset"
                         style="display: inline-block; margin-right: 0.6em;">
@@ -96,7 +89,6 @@
                     <option value="ev34-to-een47-speedrun">EV mono to EEn mono speedrun</option>
                     <option value="" disabled>™ inappropriate meme regimens</option>
                     <option value="mimic-menstrual-cycle">Mimic Menstrual Cycle™</option>
-                    <!-- <option value="peak-performance">Comically Perfect Menstrual Cycle™</option> -->
                     <option value="silly-wpath8-14">WPATH8 Rhapsody of Madness™</option>
                     <option value="very-silly-wpath8-14">WPATH8 Melodrama™</option>
                     <option value="silly-wpath8-7">WPATH8 Whimsical Heights™</option>
@@ -110,9 +102,6 @@
 
             </div>
             <div id="stashrecall-container" style="margin-bottom: 2em; margin-left: auto;">
-                <!-- <button id="stash-button" class="flat-button" style="width: 7.5em;">stash all</button>
-                <button id="recall-button" class="flat-button" style="width: 5em;">recall</button>
-                <button id="delete-stash-button" class="flat-button" style="width: 9em;">delete stash</button> -->
                 <button id="share-button" class="flat-button"
                         title="Share the current state of the simulator as an arcane URL"
                         style="width: 8em;">share url</button>

@@ -1,5 +1,4 @@
 import {
-  addTDERow,
   attachDragNDropImport,
   attachOptionsEvents,
   attachMultidoseButtonsEvents,
@@ -10,19 +9,12 @@ import {
   loadFromURL,
   loadFromLocalStorage,
   refresh,
-} from './core';
-import { attachPresetsDropdown } from './presets';
+} from './core.js';
+import { attachPresetsDropdown, initializeDefaultPreset } from './presets.js';
 
-export function initializeApp() {
-    // Add default curves
-    // mentrual cycle mimic
-    addTDERow("multidose-table",  0, 4, "EV im");
-    addTDERow("multidose-table", 20, 4, "EEn im");
-    addTDERow("multidose-table", 40, 0.1, "patch ow");
+window.addEventListener('DOMContentLoaded', () => {
 
-    // EEn steady state
-    addTDERow("steadystate-table", 7, 4, "EEn im");
-    addTDERow("steadystate-table", 10, 4, "EC im", false, true);
+    initializeDefaultPreset();
 
     attachDragNDropImport();
 
@@ -44,4 +36,4 @@ export function initializeApp() {
     }
 
     refresh();
-};
+});

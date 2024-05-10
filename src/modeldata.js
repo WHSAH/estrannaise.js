@@ -1,42 +1,41 @@
-// hi there! glad you're snooping around and looking under the hood, you've
-// just found the secret ingredients!  isn't it fun? :)
+// hi there! glad you're snooping around and looking under the hood, you've just
+// found the secret ingredients!  isn't it fun? :)
 
-// no, those are not the same parameters as
-// the ones used by the tfs simulator, they are
-// my very own. the creators of the tfs simulator have
-// expressely asked people not to reproduce their work
-// and i'm not an asshole or plagiarizer. all of this model
-// data and all of this code and all of the math behind it
-// were made and rederived entirely from scratch and are
-// purely my own.
+// no, those are not the same parameters as the ones used by the tfs simulator,
+// they are my very own. the creators of the tfs simulator have expressely asked
+// people not to reproduce their work and i'm not an asshole or plagiarizer. all
+// of this model data and all of this code and all of the math behind it were
+// made and rederived entirely from scratch and are purely my own.
 
-// no those parameters will not give the exact same
-// predictions as the tfs simulator, but qualitatively
-// our results and curves are similar. just test it out
-// with EV and EEn for example! mines will predict levels
-// that are slightly higher.
+// no those parameters will not give the exact same predictions as the tfs
+// simulator, but qualitatively our results and curves are similar. just test it
+// out with EV and EEn for example! mines will predict levels that are slightly
+// higher.
 
-// i did use part of the data sets they collected though,
-// but i am also working on revisiting and redigitizing
-// all the original data from the papers because
-// i need the original uncertainties, which is essential
-// to include in the inferences in order to improve
-// accuracy and give a better idea of the prediction uncertainty.
-// this is not something the inferences behind the tfs simulator used
-// and kind of a point of pride and one of the main reason
-// why i started this project. i quite dislike point estimates.
-// they give a false sense of certainty.
+// i did use part of the data sets they collected though, but i am also working
+// on revisiting and redigitizing all the original data from the papers because
+// i need the original uncertainties, which is essential to include in the
+// inferences in order to improve accuracy and give a better idea of the
+// prediction uncertainty.  this is not something the inferences behind the tfs
+// simulator used and kind of a point of pride and one of the main reason why i
+// started this project. i quite dislike point estimates.  they give a false
+// sense of certainty.
 
 // anyway thanks for stopping by and stay tuned!
 
+/**
+ * Median menstrual cycle data over 28 days, carrying p5 and p95 values
+ */
 export const menstrualCycleData = {
     t:     [    0,     1,     2,     3,     4,     5,     6,     7,     8,     9,    10,     11,     12,     13,     14,     15,     16,     17,     18,     19,     20,     21,     22,     23,     24,     25,     26,     27,     28,     29],
-    // median E2
     E2:    [37.99, 40.59, 37.49, 34.99, 35.49, 39.54, 41.99, 44.34, 53.43, 58.58, 71.43,  98.92, 132.31, 177.35, 255.88, 182.80,  85.23,  70.98,  87.97, 109.92, 122.77, 132.56, 150.30, 133.81, 137.16, 134.96,  92.73,  85.68,  46.34,  41.19],
     E2p5:  [15.68, 17.99, 20.48, 21.63, 22.60, 23.86, 25.44, 30.64, 33.96, 42.95, 51.88,  50.79,  65.79,  91.89, 137.25, 131.30,  43.55,  42.12,  56.83,  73.49,  79.70,  72.75,  79.46,  76.79,  76.05,  80.22,  57.26,  47.62,  27.77,  25.60],
     E2p95: [52.97, 51.12, 51.58, 54.74, 53.59, 57.08, 61.20, 60.16, 72.79, 85.36, 94.46, 133.70, 218.89, 314.28, 413.41, 388.28, 140.11, 108.52, 135.06, 181.42, 191.73, 196.05, 189.45, 195.64, 208.23, 219.75, 174.38, 148.77, 135.58, 188.92]
-}
+};
 
+/**
+ * 
+ */
 export const PKParams = {
     "EV im": [95.0, 1.55, 17.2, 0.21],
 
@@ -63,7 +62,7 @@ export const PKParams = {
 
     //             d,   k21    k2e    k12    k1s       k1e     ks1     kse
     "E2 iv": [5065.6, 1.300, 0.537, 0.164, 5.095, 1.540e-7, 0.2714, 0.1025]
-}
+};
 
 export let mcmcSamplesPK = {
     "EV im": [
@@ -3862,4 +3861,4 @@ export let mcmcSamplesPK = {
     [56059.923740015394, 0.11496180481858097, 7.905942398302859, 5.334824863459097],
     [100547.22861864447, 0.10411900193388313, 4.8334398122132045, 8.792135334794487]
     ]
-}
+};
