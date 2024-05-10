@@ -7,6 +7,7 @@ Under the hood, estrannaise.js uses pharmacokinetic compartments models and MCMC
 
 # TODO
 - BUG: Plot of multidose curve doesn't refresh the first time you erase the value of a dose
+- Shorten shared url with protobuff
 - Remember units/days type/menstrual cycle visibility options when stashing/saving/loading
 - Allow to manual set x-axis limits
 - Allow possibility of changing patch wear time
