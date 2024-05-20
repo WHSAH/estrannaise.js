@@ -3,6 +3,8 @@ import { plotCurves } from './plotting.js';
 
 import { methodList } from './models.js';
 
+import { Presets } from './presets.js';
+
 const rowValidity = new Map();
 export let conversionFactor = 1.0;
 export let units = 'pg/mL';
@@ -756,4 +758,46 @@ function setRowParameters(tableID, number, time, dose, ester) {
     esterInput.value = ester;
 
     addRowIfNeeded(tableID);
+}
+
+/**
+ * At startup, apply the "default" preset defined so the user isn't presented
+ * with a blank slate and can see what's possible.
+ */
+export function initializeDefaultPreset() {
+    applyPreset(Presets.default);
+}
+
+/**
+ * Provide an event handler whenever the user selects a preset
+ */
+export function attachPresetsDropdown() {
+    let presetDropdown = document.getElementById('dropdown-presets');
+
+    presetDropdown.addEventListener('change', function() {
+        if(!Presets[this.value]) {
+            console.error('Found an unknown preset value!');
+            return;
+        }
+        applyPreset(Presets[this.value]);
+    });
+}
+
+/**
+ * Apply the preset configuration to the tables, and refresh the graph
+ * @param {Object} presetConfig
+ */
+function applyPreset(presetConfig) {
+    deleteAllRows('multidose-table');
+    deleteAllRows('steadystate-table');
+
+    presetConfig.menstrualCycle ? turnMenstrualCycleOn() : turnMenstrualCycleOff();
+    presetConfig.intervalDays ? setDaysAsIntervals(false) : setDaysAsAbsolute(false);
+    presetConfig.steady.forEach(steadyDose => {
+        addTDERow('steadystate-table', ...steadyDose);
+    });
+    presetConfig.multi.forEach(multiDose => {
+        addTDERow('multidose-table', ...multiDose);
+    });
+    refresh();
 }
