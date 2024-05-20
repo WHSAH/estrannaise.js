@@ -9,8 +9,9 @@ import {
   loadFromURL,
   loadFromLocalStorage,
   refresh,
+  attachPresetsDropdown,
+  initializeDefaultPreset
 } from './core.js';
-import { attachPresetsDropdown, initializeDefaultPreset } from './presets.js';
 
 window.addEventListener('DOMContentLoaded', () => {
 
