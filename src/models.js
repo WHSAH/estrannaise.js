@@ -12,6 +12,9 @@ const menstrualCycleSpline = new Spline(menstrualCycleData['t'], menstrualCycleD
 const menstrualCycleSplineP05 = new Spline(menstrualCycleData['t'], menstrualCycleData['E2p5']);
 const menstrualCycleSplineP95 = new Spline(menstrualCycleData['t'], menstrualCycleData['E2p95']);
 
+// Export this value to avoid further upstream importing
+export const PKParameters = PKParams;
+
 export function menstrualCycle(conversionFactor, time) {
     let t = ((time % 28) + 28) % 28; // end of day 28 = day 0
     return conversionFactor * menstrualCycleSpline.at(t);
@@ -197,7 +200,7 @@ export function e2ssAverage3C(dose, T, d, k1, k2, k3) {
     return dose * d / k3 / T;
 }
 
-export function e2MultiDose3C(t, doses = [1.0], times = [0.0], types = ["EV im"], random = false, intervals = false) {
+export function e2MultiDose3C(t, doses = [1.0], times = [0.0], types = ["EV im"], cf = 1.0, random = false, intervals = false) {
 
     if (intervals) {
         times = times.map((sum => value => sum += value)(0));
@@ -208,9 +211,9 @@ export function e2MultiDose3C(t, doses = [1.0], times = [0.0], types = ["EV im"]
     let sum = 0;
     for (let i = 0; i < doses.length; i++) {
         if (!random) {
-            sum += PKFunctions[types[i]](t - times[i], doses[i]);
+            sum += PKFunctions(cf)[types[i]](t - times[i], doses[i]);
         } else {
-            sum += PKRandomFunctions[types[i]](t - times[i], doses[i]);
+            sum += PKRandomFunctions(cf)[types[i]](t - times[i], doses[i]);
         }
     }
     return sum;
