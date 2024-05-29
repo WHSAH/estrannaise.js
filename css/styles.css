@@ -22,6 +22,14 @@ a {
     background-color: var(--standout-color);
 }
 
+p.indent {
+    text-indent: 2em;
+}
+
+p.disclaimer {
+    font-weight: bold;
+}
+
 a:link, a:visited {
     color: var(--the-pink);
 }
