@@ -313,7 +313,7 @@ export const Presets = {
             [4, 3, 'EV im'],
         ]
     },
-    'een-monotherapy-speedrun-7': {
+    'een-monotherapy-loadingdose': {
         'menstrualCycle': false,
         'intervalDays': true,
         'steady': [
@@ -328,7 +328,7 @@ export const Presets = {
             [7, 4, 'EEn im'],
         ]
     },
-    'ev-monotherapy-speedrun-4': {
+    'ev-monotherapy-loadingdose': {
         'menstrualCycle': false,
         'intervalDays': true,
         'steady': [
@@ -347,7 +347,7 @@ export const Presets = {
             [4, 3, 'EV im'],
         ]
     },
-    'ec-monotherapy-speedrun-7': {
+    'ec-monotherapy-loadingdose': {
         'menstrualCycle': false,
         'intervalDays': true,
         'steady': [
@@ -362,7 +362,7 @@ export const Presets = {
             [7, 5, 'EC im'],
         ]
     },
-    'ev34-to-een47-speedrun': {
+    'ev-to-een-loadingdose': {
         'menstrualCycle': false,
         'intervalDays': true,
         'steady': [],
@@ -383,7 +383,7 @@ export const Presets = {
             [7, 4, 'EEn im'],
         ]
     },
-    'eun-monotherapy-speedrun-30': {
+    'eun-monotherapy-loadingdose': {
         'menstrualCycle': false,
         'intervalDays': true,
         'steady': [
@@ -402,7 +402,7 @@ export const Presets = {
             [30, 40, 'EUn casubq']
         ]
     },
-    'silly-wpath8-14': {
+    'wpath-ev-toomuch-toospaced': {
         'menstrualCycle': false,
         'intervalDays': true,
         'steady': [
@@ -410,7 +410,7 @@ export const Presets = {
         ],
         'multi': []
     },
-    'very-silly-wpath8-14': {
+    'wpath-ev-toolittle-toospaced': {
         'menstrualCycle': false,
         'intervalDays': true,
         'steady': [
@@ -418,7 +418,7 @@ export const Presets = {
         ],
         'multi': []
     },
-    'silly-wpath8-7': {
+    'wpath-ec-toomuch': {
         'menstrualCycle': false,
         'intervalDays': true,
         'steady': [
@@ -426,7 +426,7 @@ export const Presets = {
         ],
         'multi': []
     },
-    'very-silly-wpath8-7': {
+    'wpath-ec-toolittle': {
         'menstrualCycle': false,
         'intervalDays': true,
         'steady': [

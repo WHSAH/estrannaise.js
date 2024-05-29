@@ -794,11 +794,22 @@ function applyPreset(presetConfig) {
 
     presetConfig.menstrualCycle ? turnMenstrualCycleOn() : turnMenstrualCycleOff();
     presetConfig.intervalDays ? setDaysAsIntervals(false) : setDaysAsAbsolute(false);
-    presetConfig.steady.forEach(steadyDose => {
-        addTDERow('steadystate-table', ...steadyDose);
-    });
-    presetConfig.multi.forEach(multiDose => {
-        addTDERow('multidose-table', ...multiDose);
-    });
+    
+    if (presetConfig.steady.length) {
+        presetConfig.steady.forEach(steadyDose => {
+            addTDERow('steadystate-table', ...steadyDose);
+        });
+    } else {
+        addTDERow('steadystate-table');
+    }
+
+    if (presetConfig.multi.length) {
+        presetConfig.multi.forEach(multiDose => {
+            addTDERow('multidose-table', ...multiDose);
+        });
+    } else {
+        addTDERow('multidose-table');
+    }
+
     refresh();
 }
