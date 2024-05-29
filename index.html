@@ -4,9 +4,6 @@
 <head>
     <title>estrannaise.js</title>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
     <link rel="icon" type="image/png" sizes="96x96" href="img/favicon-96x96.png">
     <link rel="icon" type="image/png" sizes="48x48" href="img/favicon-48x48.png">
     <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32x32.png">
@@ -60,7 +57,7 @@
                         title="Change the way days are interpreted as inputs in the multi-dose curve"
                         style="display: inline-block; margin-right: 0.6em;">
                     <option value="absolute">absolute days</option>
-                    <option value="intervals">days as intervals</option>
+                    <option value="intervals">relative days</option>
                 </select>
 
                 <select id="dropdown-presets"
@@ -85,17 +82,23 @@
                     <option value="preemptcorrect-missed-een-dose-7">&nbsp;&nbsp;Preempt/correct missed EEn dose</option>
                     <option value="preemptcorrect-missed-ev-dose-4">&nbsp;&nbsp;Preempt/correct missed EV dose</option>
                     <option value="" disabled>monotherapies with loading dose</option>
-                    <option value="een-monotherapy-speedrun-7">&nbsp;&nbsp;EEn monotherapy speedrun</option>
-                    <option value="ev-monotherapy-speedrun-4">&nbsp;&nbsp;EV monotherapy speedrun</option>
-                    <option value="ec-monotherapy-speedrun-7">&nbsp;&nbsp;EC monotherapy speedrun</option>
-                    <option value="eun-monotherapy-speedrun-30">&nbsp;&nbsp;EUn monotherapy speedrun</option>
-                    <option value="ev34-to-een47-speedrun">&nbsp;&nbsp;EV mono to EEn mono speedrun</option>
-                    <option value="" disabled>inappropriate meme regimens</option>
+                    <option value="een-monotherapy-loadingdose">&nbsp;&nbsp;EEn monotherapy, 8 mg ld</option>
+                    <option value="ev-monotherapy-loadingdose">&nbsp;&nbsp;EV monotherapy, 6 mg ld</option>
+                    <option value="ec-monotherapy-loadingdose">&nbsp;&nbsp;EC monotherapy, 8 mg ld</option>
+                    <option value="eun-monotherapy-loadingdose0">&nbsp;&nbsp;EUn monotherapy, 100 mg ld</option>
+                    <option value="ev-to-een-loadingdose">&nbsp;&nbsp;EV to EEn, 7 mg ld</option>
+                    <option value="" disabled>inappropriate WPATH-approved regimens</option>
+                    <option value="wpath-ev-toomuch-toospaced">&nbsp;&nbsp;EV 30mg/14days (extreme)</option>
+                    <option value="wpath-ev-toolittle-toospaced">&nbsp;&nbsp;EV 5mg/14days (variability too large)</option>
+                    <option value="wpath-ec-toomuch">&nbsp;&nbsp;EC 10mg/7days (too much)</option>
+                    <option value="wpath-ec-toolittle">&nbsp;&nbsp;EC 2mg/7days (too little without AA)</option>
+                    <option value="" disabled>inappropriate regimens</option>
                     <option value="mimic-menstrual-cycle">&nbsp;&nbsp;Mimic Menstrual Cycle™</option>
-                    <option value="silly-wpath8-14">&nbsp;&nbsp;WPATH8 Rhapsody of Madness™</option>
+                    <!-- <option value="silly-wpath8-14">&nbsp;&nbsp;WPATH8 Rhapsody of Madness™</option>
                     <option value="very-silly-wpath8-14">&nbsp;&nbsp;WPATH8 Melodrama™</option>
                     <option value="silly-wpath8-7">&nbsp;&nbsp;WPATH8 Whimsical Heights™</option>
                     <option value="very-silly-wpath8-7">&nbsp;&nbsp;WPATH8 Medical Neglect™</option>
+                    <option value="mimic-menstrual-cycle">&nbsp;&nbsp;Mimic Menstrual Cycle™</option> -->
                 </select>
 
                 <button id="menstrual-cycle-button" class="flat-button"
@@ -234,9 +237,8 @@
                 <p>&nbsp;&nbsp;&nbsp;&nbsp;The data for the menstrual cycle comes from <a href="https://doi.org/10.1515/CCLM.2006.160" target="_blank">Stricker et al. 2006</a>. Download the <a href="data/menstrualcycle_stricker2006.csv">E2/P/LH/FSH data</a>.</p>
 
                 <br>
-                <p>With help encouragements and entertainment from
-                    <br>emily torble lea annie izzy meringue photino ashley
-                    <br>(and let's be honest github copilot).
+                <p>With help, encouragements, and entertainment from
+                    <br>emily torble lea annie izzy meringue photino ashley jess cassandra sapphira
                 </p>
                 <br>
                 <p>
@@ -252,7 +254,7 @@
                 <p>
                     estrannaise.js is entirely client-side. Your data, whether entered, imported, or stashed,
                     remains exclusively within your browser and will never be transmitted to the developer(s) or any
-                    third-party.
+                    third-party by our application.
                 </p>
             </div>
             <br>
