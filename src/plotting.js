@@ -80,7 +80,26 @@ function fillMenstrualCycleCurve(xmin, xmax, nbsteps) {
         });
     }
     return curve;
+}
 
+/**
+ * Generate the "curve" for target mean levels for transfeminine HRT,
+ * based on WPATH SOC 8 + Endocrine Society Guidelines.
+ * @param {number} xmin
+ * @param {number} xmax
+ * @param {number} nbSteps
+ * @returns
+ */
+function fillTargetRange(xmin, xmax, nbSteps, cf) {
+    let curve = [];
+    for (let i = xmin; i <= xmax; i += (xmax - xmin) / (nbSteps - 1)) {
+        curve.push({
+            time: i,
+            lower: cf * 100,
+            upper: cf * 200
+        });
+    }
+    return curve;
 }
 
 /**
@@ -93,6 +112,7 @@ function fillMenstrualCycleCurve(xmin, xmax, nbsteps) {
  * * `currentColorScheme`: String
  * * `daysAsIntervals`: boolean,
  * * `menstrualCycleVisible`: boolean,
+ * * `targetRangeVisible`: boolean,
  * * `units`: String
  * @return Plot for insertion into the page
  */
@@ -104,9 +124,10 @@ export function plotCurves(firstRow, multiDoses, steadyDoses, options) {
     let colorCycle = 5;
     let dotMarks  = [],
         lineMarks = [],
+        msMarks   = [],
         ruleMarks = [],
         tipMarks  = [],
-        msMarks   = [];
+        targetMarks = [];
 
     // If the first row of the multi-dose table is invalid
     // we won't know about mdCVisib and mdUVisib
@@ -159,6 +180,25 @@ export function plotCurves(firstRow, multiDoses, steadyDoses, options) {
             }))
         ];
         e2max = Math.max(e2max, options.conversionFactor * 350);
+    }
+
+    if(options.targetRangeVisible) {
+        let targetRange = fillTargetRange(xmin, xmax, NB_LINE_POINTS, options.conversionFactor);
+        targetMarks = [
+            Plot.areaY(targetRange, {
+                x: 'time', y1: 'lower', y2: 'upper',
+                fill: options.currentColorScheme == 'night' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
+            }),
+            Plot.text(['Target Range'], {
+                x: 30,
+                y: 150 * options.conversionFactor,
+                fontSize: 48,
+                fill: options.currentColorScheme == 'night' ? 'rgba(255, 255, 255, 0.3)' : 'rgba(0, 0, 0, 0.3)',
+                frameAnchor: 'middle',
+                textAnchor: 'start',
+                lineAnchor: 'middle'
+              })
+        ];
     }
 
     if (mdTimes.length > 0) {
@@ -263,6 +303,7 @@ export function plotCurves(firstRow, multiDoses, steadyDoses, options) {
         .concat(dotMarks)
         .concat(msMarks)
         .concat(lineMarks)
+        .concat(targetMarks)
         .concat(tipMarks)
         .concat([Plot.ruleX([xmin]), Plot.ruleY([0])])
     });
