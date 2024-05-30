@@ -48,7 +48,7 @@ export function refresh(save = false) {
         readRow(document.getElementById('multidose-table').rows[1], true),
         getTDEs('multidose-table', true),
         getTDEs('steadystate-table', true),
-        options = {
+        {
             conversionFactor: conversionFactor,
             currentColorScheme: currentColorScheme,
             daysAsIntervals: daysAsIntervals,
