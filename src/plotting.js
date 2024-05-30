@@ -87,19 +87,12 @@ function fillMenstrualCycleCurve(xmin, xmax, nbsteps) {
  * based on WPATH SOC 8 + Endocrine Society Guidelines.
  * @param {number} xmin
  * @param {number} xmax
- * @param {number} nbSteps
+ * @param {number} cf Conversion factor between units
  * @returns
  */
-function fillTargetRange(xmin, xmax, nbSteps, cf) {
-    let curve = [];
-    for (let i = xmin; i <= xmax; i += (xmax - xmin) / (nbSteps - 1)) {
-        curve.push({
-            time: i,
-            lower: cf * 100,
-            upper: cf * 200
-        });
-    }
-    return curve;
+function fillTargetRange(xmin, xmax, cf) {
+    return [{ time: xmin, lower: cf * 100, upper: cf * 200},
+            { time: xmax, lower: cf * 100, upper: cf * 200}];
 }
 
 /**
@@ -183,7 +176,7 @@ export function plotCurves(firstRow, multiDoses, steadyDoses, options) {
     }
 
     if(options.targetRangeVisible) {
-        let targetRange = fillTargetRange(xmin, xmax, NB_LINE_POINTS, options.conversionFactor);
+        let targetRange = fillTargetRange(xmin, xmax, options.conversionFactor);
         targetMarks = [
             Plot.areaY(targetRange, {
                 x: 'time', y1: 'lower', y2: 'upper',
@@ -299,11 +292,11 @@ export function plotCurves(firstRow, multiDoses, steadyDoses, options) {
         marks: [
             Plot.gridX({ stroke: 'grey' }),
             Plot.gridY({ stroke: 'grey' }),
-        ].concat(ruleMarks)
+        ].concat(targetMarks)
+        .concat(ruleMarks)
         .concat(dotMarks)
         .concat(msMarks)
         .concat(lineMarks)
-        .concat(targetMarks)
         .concat(tipMarks)
         .concat([Plot.ruleX([xmin]), Plot.ruleY([0])])
     });
