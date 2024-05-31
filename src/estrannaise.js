@@ -147,13 +147,13 @@ function setColorScheme(scheme = 'night') {
     let rootStyle = getComputedStyle(document.documentElement);
     if (scheme == 'night') {
         document.documentElement.style.setProperty('--background-color', rootStyle.getPropertyValue('--background-color-night'));
-        document.documentElement.style.setProperty('--standout-color', rootStyle.getPropertyValue('--standout-color-night'));
+        document.documentElement.style.setProperty('--standout-background-color', rootStyle.getPropertyValue('--standout-background-color-night'));
         document.documentElement.style.setProperty('--strong-foreground', rootStyle.getPropertyValue('--strong-foreground-night'));
         document.documentElement.style.setProperty('--light-foreground', rootStyle.getPropertyValue('--light-foreground-night'));
         currentColorScheme = 'night';
     } else if (scheme == 'day') {
         document.documentElement.style.setProperty('--background-color', rootStyle.getPropertyValue('--background-color-day'));
-        document.documentElement.style.setProperty('--standout-color', rootStyle.getPropertyValue('--standout-color-day'));
+        document.documentElement.style.setProperty('--standout-background-color', rootStyle.getPropertyValue('--standout-background-color-day'));
         document.documentElement.style.setProperty('--strong-foreground', rootStyle.getPropertyValue('--strong-foreground-day'));
         document.documentElement.style.setProperty('--light-foreground', rootStyle.getPropertyValue('--light-foreground-day'));
         currentColorScheme = 'day';
@@ -486,14 +486,14 @@ function setDaysAsAbsolute(refreshPlot = true) {
 function turnMenstrualCycleOn() {
     let mcButton = document.getElementById('menstrual-cycle-button');
     mcButton.style.setProperty('background-color', 'var(--light-foreground)');
-    mcButton.style.setProperty('color', 'var(--standout-color)');
+    mcButton.style.setProperty('color', 'var(--standout-background-color)');
     mcButton.style.setProperty('font-weight', 'bold');
     menstrualCycleVisible = true;
 }
 
 function turnMenstrualCycleOff() {
     let mcButton = document.getElementById('menstrual-cycle-button');
-    mcButton.style.setProperty('background-color', 'var(--standout-color)');
+    mcButton.style.setProperty('background-color', 'var(--standout-background-color)');
     mcButton.style.setProperty('color', 'var(--light-foreground)');
     mcButton.style.setProperty('font-weight', 'normal');
     menstrualCycleVisible = false;
@@ -516,13 +516,13 @@ function targetRangeButtonAttachOnOff() {
     let button = document.getElementById('target-range-button');
     button.addEventListener('mousedown', () => {
         if (targetRangeVisible) {
-            button.style.setProperty('background-color', 'var(--standout-color)');
+            button.style.setProperty('background-color', 'var(--standout-background-color)');
             button.style.setProperty('color', 'var(--light-foreground)');
             button.style.setProperty('font-weight', 'normal');
             targetRangeVisible = false;
         } else {
             button.style.setProperty('background-color', 'var(--light-foreground)');
-            button.style.setProperty('color', 'var(--standout-color)');
+            button.style.setProperty('color', 'var(--standout-background-color)');
             button.style.setProperty('font-weight', 'bold');
             targetRangeVisible = true;
         }

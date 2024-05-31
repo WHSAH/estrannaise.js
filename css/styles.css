@@ -19,7 +19,7 @@ body {
 a {
     text-decoration: none;
     font-weight: bold;
-    background-color: var(--standout-color);
+    background-color: var(--standout-background-color);
 }
 
 p.indent {
@@ -57,7 +57,7 @@ header {
 input.flat-input {
     border: none;
     outline: none;
-    background-color: var(--standout-color);
+    background-color: var(--standout-background-color);
     color: var(--light-foreground);
     padding: 4px;
     font-size: 12px;
@@ -71,7 +71,7 @@ input.flat-input {
 select {
     border: none;
     outline: none;
-    background-color: var(--standout-color);
+    background-color: var(--standout-background-color);
     /* Light gray */
     color: var(--light-foreground);
     padding-top: 4px;
@@ -90,7 +90,7 @@ select {
 button.flat-button {
     border: none;
     outline: none;
-    background-color: var(--standout-color);
+    background-color: var(--standout-background-color);
     /* Light gray */
     padding: 4px;
     padding-left: 10px;
@@ -163,7 +163,7 @@ button.delete-button {
     display: inline-block;
     width: 1.5em;
     height: 1.5em;
-    background-color: var(--standout-color);
+    background-color: var(--standout-background-color);
     cursor: pointer;
     border-radius: 4px;
     transform: translate(0px, 0.15em);
