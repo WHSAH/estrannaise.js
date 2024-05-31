@@ -402,34 +402,38 @@ export const Presets = {
             [30, 40, 'EUn casubq']
         ]
     },
-    'wpath-ev-toomuch-toospaced': {
+    'wpath-toomuch-toospaced': {
         'menstrualCycle': false,
         'intervalDays': true,
         'steady': [
-            [14, 30, 'EV im', true, true]
+            [14, 30, 'EV im', true, true],
+            [14, 30, 'EC im', true, true]
         ],
         'multi': []
     },
-    'wpath-ev-toolittle-toospaced': {
+    'wpath-toolittle-toospaced': {
         'menstrualCycle': false,
         'intervalDays': true,
         'steady': [
-            [14, 5, 'EV im', true, true]
+            [14, 5, 'EV im', true, true],
+            [14, 5, 'EC im', true, true]
         ],
         'multi': []
     },
-    'wpath-ec-toomuch': {
+    'wpath-toomuch': {
         'menstrualCycle': false,
         'intervalDays': true,
         'steady': [
+            [7, 10, 'EV im', true, true],
             [7, 10, 'EC im', true, true]
         ],
         'multi': []
     },
-    'wpath-ec-toolittle': {
+    'wpath-toolittle': {
         'menstrualCycle': false,
         'intervalDays': true,
         'steady': [
+            [7, 2, 'EV im', true, true],
             [7, 2, 'EC im', true, true]
         ],
         'multi': []

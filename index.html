@@ -87,11 +87,11 @@
                     <option value="ec-monotherapy-loadingdose">&nbsp;&nbsp;EC mono with 8mg loading dose</option>
                     <option value="eun-monotherapy-loadingdose">&nbsp;&nbsp;EUn mono with 100mg loading dose</option>
                     <option value="ev-to-een-loadingdose">&nbsp;&nbsp;EV to EEn with 7 mg loading dose</option>
-                    <option value="" disabled>inappropriate WPATH regimens</option>
-                    <option value="wpath-ev-toomuch-toospaced">&nbsp;&nbsp;EV 30mg/14days (extreme)</option>
-                    <option value="wpath-ev-toolittle-toospaced">&nbsp;&nbsp;EV 5mg/14days (too variable)</option>
-                    <option value="wpath-ec-toomuch">&nbsp;&nbsp;EC 10mg/7days (too much)</option>
-                    <option value="wpath-ec-toolittle">&nbsp;&nbsp;EC 2mg/7days (low & needs AA)</option>
+                    <option value="" disabled>inappropriate WPATH regimens (see text)</option>
+                    <option value="wpath-toolittle-toospaced">&nbsp;&nbsp;EV/EC 5mg/14days (too variable)</option>
+                    <option value="wpath-toomuch-toospaced">&nbsp;&nbsp;EV/EC 30mg/14days (extreme)</option>
+                    <option value="wpath-toolittle">&nbsp;&nbsp;EV/EC 2mg/7days (low & needs AA)</option>
+                    <option value="wpath-toomuch">&nbsp;&nbsp;EV/EC 10mg/7days (too much)</option>
                     <option value="" disabled>inappropriate regimens</option>
                     <option value="mimic-menstrual-cycle">&nbsp;&nbsp;Mimic Menstrual Cycle™</option>
                 </select>
@@ -233,8 +233,37 @@
                 </p>
 
                 <p class="indent">The data for the menstrual cycle comes from <a href="https://doi.org/10.1515/CCLM.2006.160" target="_blank">Stricker et al. 2006</a>. Download the <a href="data/mestrualcycle_stricker2006.csv">E2/P data</a> and <a href="data/mestrualcycle_LHFSH_stricker2006.csv">LH/FSH data</a>.</p>
-
+                
                 <p class="indent">Data for target ranges is based on guidance from <a href="https://doi.org/10.1080/26895269.2022.2100644" target="_blank">WPATH Standards of Care, Version 8</a> in addition to the <a href="https://doi.org/10.1210/jc.2017-01658" target="_blank">Endocrine Society's Clinical Practice Guideline</a>.</p>
+                
+                <p><strong>Note regarding "inapproprite WPATH regimens" presets</strong>
+                    <br>In the WPATH Standards of Care (Appendix C, page S254), several hormone replacement therapy (HRT) regimens for transfeminine people are listed. However, some of these recommendations might not align with their own guidelines and could even be harmful. Here’s a breakdown of the issues.
+                    <ol>
+                        <li><strong>Problem with recommended 5-30 mg intramuscular injections every 2 weeks:</strong></li>
+                        <ul>
+                            <li>The half-life of estradiol valerate and cypionate are about 4 and 8 days, respectively. Injecting every 2 weeks can cause large fluctuations in hormone levels, leading to very high levels shortly after the injection and very low levels before the next injection. This can cause mood swings and potentially restart testosterone production in the last few days before the next injection.</li>
+                            <li>Using the lower dose limit (5 mg every 2 weeks), hormone levels may drop too low for monotherapy after about 7 days, potentially allowing testosterone production to restart, and further down below 100 pg/mL at odd with WPATH's own recommended levels.</li>
+                            <li>Using the upper dose limit (30 mg every 2 weeks), hormone levels could spike dangerously high (upwards of 2,000 pg/mL with EV and 1,000 pg/mL with EC), increasing the risk of blood clots for those predisposed to thrombotic events.</li>
+                        </ul>
+                        <li><strong>Problem with recommended 2 to 10 mg intramuscular injections every week:</strong></li>
+                        <ul>
+                            <li>Using the lower dose limit (2 mg every week), hormone levels may consistently stay below 150 pg/mL throughout the week with EC and during the second half of the week with EV, and below 100 pg/mL in the last 2 days of the week for both, which might necessitate using an anti-androgen to suppress testosterone.</li>
+                            <li>Using the upper dose limit (10 mg every week), hormone levels may consistently stay above 300-400 pg/mL, which is much higher than WPATH’s own recommended levels.</li>
+                        </ul>
+                    </ol>
+
+                    <!-- In the section on parenteral methods, i.e. injections with estradiol esters, the listed order appears
+                    to suggest that estradiol valerate should be administered intramuscularly every 2 weeks at a dose between 5 and 30 mg, and estradiol cypionate
+                    should be administered intramuscularly every weeks at a dose between 2 and 10 mg. Taken literally, the lower and upper limits of those ranges
+                    and spacing between injections are altogether innapropriate and may lead to suboptimal outcomes or even harm. -->
+                    <!-- <ul>
+                        <li>The half-life of estradiol valerate in oil is roughly 4 days. Spacing injections at 2 weeks intervals is inappropriate and leads to both very high and very low peak-trough serum levels. This could lead to mood swings in sensitive people and failure of HPG suppression during the last few days of an injection cycle, i.e. restart of the gonadal production of testosterone, at lower doses.</li>
+                        <li>The lower limit of the suggested dose for estradiol valerate is 5 mg every 2 weeks. This will cause serum levels to fall below 150 pg/mL around the 7 days mark, leading to the potential restart of gonadal production of tesosterone, and below 100 pg/mL around the 9 days mark in contradition with their own guidance.</li>
+                        <li>The upper limit of the suggested dose for estradiol valerate is an incredible 30 mg every 2 weeks. This will cause serum levels to vary between 200 pg/mL at trough and above 2,000 pg/mL at peak, a potentially hazardous situation in people predisposed to thrombotic events.</li>
+                        <li>The lower limit of the suggested dose for estradiol cypionate is 2 mg every 7 days. Serum levels under this regimen are expected to remain well below 150 pg/mL throughout the injection cycle, and to fall below 100 pg/mL during the last 2 days of the cycle. Although safe and not unreasonable, this regimen therefore requires the concommitent use of an antiandrogen.</li>
+                        <li>The upper limit of the suggested dose for estradiol cypionate is 10 mg every 7 days. Serum levels under this regimen are expected to remain above 400 pg/mL throughout the cycle, which is far above WPATH's own recommended guidances.</li>
+                    </ul> -->
+                </p>
 
                 <br>
                 <p>With help, encouragements, and entertainment from
