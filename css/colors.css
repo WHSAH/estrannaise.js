@@ -3,32 +3,32 @@
     /* Night colors */
     /* --background-color-night: #2a2a2a;
     --standout-color-night: #343434;
-    --the-blue-night: #A1CBF6;
-    --the-pink-night: #DBBAE6; */
+    --strong-foreground-night: #A1CBF6;
+    --light-foreground-night: #DBBAE6; */
     
     --background-color-night: #2a2a2a;
     --standout-color-night: #343434;
-    --the-blue-night: #f0f0f0;
-    --the-pink-night: #e8e8e8;
+    --strong-foreground-night: #f0f0f0;
+    --light-foreground-night: #e8e8e8;
 
     /* Day colors */
 
     /* --background-color-day: #f8f8f8;
     --standout-color-day: #eeeeee;
-    --the-blue-day: #5148b2;
-    --the-pink-day: #AC489B; */
+    --strong-foreground-day: #5148b2;
+    --light-foreground-day: #AC489B; */
 
     --background-color-day: #f8f8f8;
     --standout-color-day: #eeeeee;
-    --the-blue-day: #343434;
-    --the-pink-day: #525252;
+    --strong-foreground-day: #343434;
+    --light-foreground-day: #525252;
 
     --logo-blue: #9EC5FA;
     --logo-pink: #EAAEB9;
 
     --background-color: var(--background-color-night);
     --standout-color: var(--standout-color-night);
-    --the-pink: var(--the-pink-night);
-    --the-blue: var(--the-blue-night);
+    --light-foreground: var(--light-foreground-night);
+    --strong-foreground: var(--strong-foreground-night);
 
 }

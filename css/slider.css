@@ -41,7 +41,7 @@
     width: 12px;
     left: 4px;
     bottom: 4px;
-    background-color: var(--the-pink-day);
+    background-color: var(--light-foreground-day);
     transition: 0.1s;
 }
 
@@ -52,7 +52,7 @@ input:checked+.slider {
 input:checked+.slider:before {
     transform: translateX(16px);
     transition: 0.1s;
-    background-color: var(--the-pink-night);
+    background-color: var(--light-foreground-night);
 }
 
 .slider.round {

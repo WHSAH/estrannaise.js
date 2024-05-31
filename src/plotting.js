@@ -47,9 +47,9 @@ function convertCustomCSSVarToRGBA(varName, alpha = 1.0) {
     return `rgba(${rgb}, ${alpha})`;
 }
 
-function colorThePink(alpha = 1.0) { return convertCustomCSSVarToRGBA('--the-pink', alpha); }
+function colorLightForeground(alpha = 1.0) { return convertCustomCSSVarToRGBA('--light-foreground', alpha); }
 
-function colorTheBlue(alpha = 1.0) { return convertCustomCSSVarToRGBA('--the-blue', alpha); }
+function colorStrongForeground(alpha = 1.0) { return convertCustomCSSVarToRGBA('--strong-foreground', alpha); }
 
 function colorBackground(alpha = 1.0) { return convertCustomCSSVarToRGBA('--background-color', alpha); }
 
@@ -171,7 +171,7 @@ export function plotCurves(firstRow, multiDoses, steadyDoses, options) {
                 title: p => `menstrual cycle\ntime: ${numberToDayHour(p.Time)}\n  e₂: ${p.E2.toFixed(0)} ${options.units}\n  CI: ${p.E2p5.toFixed(0)}-${p.E2p95.toFixed(0)} ${options.units}`,
                 fontFamily: 'monospace',
                 fill: colorBackground(0.618),
-                stroke: colorThePink()
+                stroke: colorLightForeground()
             }))
         ];
         e2max = Math.max(e2max, options.conversionFactor * 350);
@@ -188,7 +188,7 @@ export function plotCurves(firstRow, multiDoses, steadyDoses, options) {
                 x: 1.006 * xmax,
                 y: 150 * options.conversionFactor,
                 rotate: 90,
-                fill: colorTheBlue(),
+                fill: colorStrongForeground(),
                 frameAnchor: 'middle',
                 textAnchor: 'middle',
                 lineAnchor: 'bottom'
@@ -234,7 +234,7 @@ export function plotCurves(firstRow, multiDoses, steadyDoses, options) {
             tipMarks.push(Plot.tip(multiDoseCurve, Plot.pointerX({
                 x: 'Time', y: 'E2',
                 title: p => `multi-dose\n\ntime: ${numberToDayHour(p.Time)}\n  e₂: ${p.E2.toFixed(0)} ${options.units}`,
-                fontFamily: 'monospace', fill: colorBackground(0.618), stroke: colorThePink()
+                fontFamily: 'monospace', fill: colorBackground(0.618), stroke: colorLightForeground()
             })));
         }
 
@@ -280,7 +280,7 @@ export function plotCurves(firstRow, multiDoses, steadyDoses, options) {
                     e₂: ${p.E2.toFixed(0)} ${options.units},
                     average: ${ssTypes[i].includes('patch') ? 'unavailable' : e2ssAverage3C(options.conversionFactor * ssDoses[i], ssEveries[i], ...PKParameters[ssTypes[i]]).toFixed(0)} ${ssTypes[i].includes("patch") ? '' : options.units}
                     trough: ${PKFunctions(options.conversionFactor)[ssTypes[i]](0.0, ssDoses[i], true, ssEveries[i]).toFixed(0)} ${options.units}`,
-                fontFamily: 'monospace', fill: colorBackground(0.618), stroke: colorThePink()
+                fontFamily: 'monospace', fill: colorBackground(0.618), stroke: colorLightForeground()
             })));
         }
 

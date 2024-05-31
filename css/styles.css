@@ -9,7 +9,7 @@
 
 body {
     background-color: var(--background-color);
-    color: var(--the-blue);
+    color: var(--strong-foreground);
     font-family: monospace;
     display: flex;
     flex-direction: column;
@@ -31,7 +31,7 @@ p.disclaimer {
 }
 
 a:link, a:visited {
-    color: var(--the-pink);
+    color: var(--light-foreground);
 }
 
 header {
@@ -58,7 +58,7 @@ input.flat-input {
     border: none;
     outline: none;
     background-color: var(--standout-color);
-    color: var(--the-pink);
+    color: var(--light-foreground);
     padding: 4px;
     font-size: 12px;
     margin: 0px;
@@ -73,7 +73,7 @@ select {
     outline: none;
     background-color: var(--standout-color);
     /* Light gray */
-    color: var(--the-pink);
+    color: var(--light-foreground);
     padding-top: 4px;
     padding-bottom: 4px;
     padding-left: 10px;
@@ -99,7 +99,7 @@ button.flat-button {
     text-align: center;
     font-family: monospace;
     font-weight: bold;
-    color: var(--the-blue);
+    color: var(--strong-foreground);
     border-radius: 4px;
 }
 
@@ -146,7 +146,7 @@ button.delete-button {
 }
 
 #dragndrop-zone.overlay {
-    background-color: var(--the-pink);
+    background-color: var(--light-foreground);
 }
 
 #copy-xmr {
@@ -170,7 +170,7 @@ button.delete-button {
 }
 
 .custom-checkbox.checked-style {
-    background-color: var(--the-pink)
+    background-color: var(--light-foreground)
 }
 
 .visibility-cell .uncertainty-cell {
