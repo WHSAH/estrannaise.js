@@ -656,7 +656,7 @@ function attachOptionsEvents() {
 }
 
 function attachTipJarEvent() {
-    document.getElementById('copy-xmr').addEventListener('mousedown', () => {
+    document.getElementById('copy-xmr').addEventListener('mousedown', function() {
         navigator.clipboard.writeText(this.innerText);
 
         document.getElementById('tipjar-text').innerHTML = 'xmr tip jar address copied, thank you!';
