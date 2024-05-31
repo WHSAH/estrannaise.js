@@ -10,6 +10,7 @@ export let conversionFactor = 1.0;
 export let units = 'pg/mL';
 export let daysAsIntervals = false;
 export let menstrualCycleVisible = false;
+let targetRangeVisible = false;
 export let currentColorScheme = 'night';
 
 window.addEventListener('DOMContentLoaded', () => {
@@ -26,6 +27,7 @@ window.addEventListener('DOMContentLoaded', () => {
     attachSteadyStateButtonsEvents();
 
     menstrualCycleButtonAttachOnOff();
+    targetRangeButtonAttachOnOff();
 
     themeSetup();
 
@@ -53,6 +55,7 @@ export function refresh(save = false) {
             currentColorScheme: currentColorScheme,
             daysAsIntervals: daysAsIntervals,
             menstrualCycleVisible: menstrualCycleVisible,
+            targetRangeVisible: targetRangeVisible,
             units: units
     });
     let plot = document.getElementById('plot-region');
@@ -504,6 +507,24 @@ function menstrualCycleButtonAttachOnOff() {
             turnMenstrualCycleOff();
         } else {
             turnMenstrualCycleOn();
+        }
+        refresh();
+    });
+}
+
+function targetRangeButtonAttachOnOff() {
+    let button = document.getElementById('target-range-button');
+    button.addEventListener('mousedown', () => {
+        if (targetRangeVisible) {
+            button.style.setProperty('background-color', 'var(--standout-color)');
+            button.style.setProperty('color', 'var(--the-pink)');
+            button.style.setProperty('font-weight', 'normal');
+            targetRangeVisible = false;
+        } else {
+            button.style.setProperty('background-color', 'var(--the-pink)');
+            button.style.setProperty('color', 'var(--standout-color)');
+            button.style.setProperty('font-weight', 'bold');
+            targetRangeVisible = true;
         }
         refresh();
     });
