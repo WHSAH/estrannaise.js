@@ -183,7 +183,7 @@ export function plotCurves(firstRow, multiDoses, steadyDoses, options) {
                 x: 'time', y1: 'lower', y2: 'upper',
                 fill: options.currentColorScheme == 'night' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
             }),
-            Plot.text(['target Range'], {
+            Plot.text(['target range'], {
                 x: 1.006 * xmax,
                 y: 150 * options.conversionFactor,
                 rotate: 90,
