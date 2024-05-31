@@ -665,7 +665,7 @@ function attachTipJarEvent() {
             document.getElementById('tipjar-text').innerHTML = 'xmr tip jar';
         }, 350);
 
-        changeBackgroundColor('copy-xmr', colorThePink(), null, 150);
+        changeBackgroundColor('copy-xmr', colorLightForeground(), null, 150);
     });
 }
 
