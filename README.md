@@ -12,7 +12,6 @@ Under the hood, estrannaise.js uses pharmacokinetic compartments models and MCMC
 - Allow to manual set x-axis limits
 - Allow possibility of changing patch wear time
 - Offer different ways to visualize the uncertainty (parallel sigma lines and cloud ensemble of curves)
-- Guides at 100, 200, 300 pg/mL ?
 - Oral/sublingual/iv models
 
 # Disclaimer
