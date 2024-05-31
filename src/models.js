@@ -15,17 +15,17 @@ const menstrualCycleSplineP95 = new Spline(menstrualCycleData['t'], menstrualCyc
 // Export this value to avoid further upstream importing
 export const PKParameters = PKParams;
 
-export function menstrualCycle(conversionFactor, time) {
+export function menstrualCycle(time, conversionFactor = 1.0) {
     let t = ((time % 28) + 28) % 28; // end of day 28 = day 0
     return conversionFactor * menstrualCycleSpline.at(t);
 }
 
-export function menstrualCycleP05(conversionFactor, time) {
+export function menstrualCycleP05(time, conversionFactor = 1.0) {
     let t = ((time % 28) + 28) % 28;
     return conversionFactor * menstrualCycleSplineP05.at(t);
 }
 
-export function menstrualCycleP95(conversionFactor, time) {
+export function menstrualCycleP95(time, conversionFactor = 1.0) {
     let t = ((time % 28) + 28) % 28;
     return conversionFactor * menstrualCycleSplineP95.at(t);
 }
@@ -41,7 +41,7 @@ export function menstrualCycleP95(conversionFactor, time) {
 // ...but I could also move on to using dictionaries as arguments
 // instead of positional arguments, that would be a good idea.
 
-export function PKFunctions(conversionFactor) {
+export function PKFunctions(conversionFactor = 1.0) {
     return {
         'EV im': (t, dose, steadystate=false, T=0.0) => { return e2Curve3C(t, conversionFactor * dose, ...PKParams['EV im'], 0.0, 0.0, steadystate, T); },
         'EEn im': (t, dose, steadystate=false, T=0.0) => { return e2Curve3C(t, conversionFactor * dose, ...PKParams['EEn im'], 0.0, 0.0, steadystate, T); },
@@ -54,7 +54,7 @@ export function PKFunctions(conversionFactor) {
     };
 }
 
-export function PKRandomFunctions(conversionFactor) {
+export function PKRandomFunctions(conversionFactor = 1.0) {
     return {
         'EV im': (t, dose, steadystate=false, T=0.0, idx=null) => { return e2Curve3C(t, conversionFactor * dose, ...randomMCMCSample('EV im', idx), 0.0, 0.0, steadystate, T); },
         'EEn im': (t, dose, steadystate=false, T=0.0, idx=null) => { return e2Curve3C(t, conversionFactor * dose, ...randomMCMCSample('EEn im', idx), 0.0, 0.0, steadystate, T); },

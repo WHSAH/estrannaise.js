@@ -48,6 +48,7 @@ function convertCustomCSSVarToRGBA(varName, alpha = 1.0) {
 }
 
 function colorThePink(alpha = 1.0) { return convertCustomCSSVarToRGBA('--the-pink', alpha); }
+
 function colorTheBlue(alpha = 1.0) { return convertCustomCSSVarToRGBA('--the-blue', alpha); }
 
 function colorBackground(alpha = 1.0) { return convertCustomCSSVarToRGBA('--background-color', alpha); }
@@ -70,14 +71,14 @@ function fillCurve(func, xmin, xmax, nbsteps) {
     return curve;
 }
 
-function fillMenstrualCycleCurve(xmin, xmax, nbSteps, conversionFactor) {
+function fillMenstrualCycleCurve(xmin, xmax, nbSteps, conversionFactor = 1.0) {
     let curve = [];
     for (let t = xmin; t <= xmax; t += (xmax - xmin) / (nbSteps - 1)) {
         curve.push({
             Time: t,
-            E2: menstrualCycle(conversionFactor, t),
-            E2p5: menstrualCycleP05(conversionFactor, t),
-            E2p95: menstrualCycleP95(conversionFactor, t)
+            E2: menstrualCycle(t, conversionFactor),
+            E2p5: menstrualCycleP05(t, conversionFactor),
+            E2p95: menstrualCycleP95(t, conversionFactor)
         });
     }
     return curve;
@@ -88,12 +89,12 @@ function fillMenstrualCycleCurve(xmin, xmax, nbSteps, conversionFactor) {
  * based on WPATH SOC 8 + Endocrine Society Guidelines.
  * @param {number} xmin
  * @param {number} xmax
- * @param {number} cf Conversion factor between units
+ * @param {number} conversionFactor Conversion factor between units
  * @returns
  */
-function fillTargetRange(xmin, xmax, cf) {
-    return [{ time: xmin, lower: cf * 100, upper: cf * 200},
-            { time: xmax, lower: cf * 100, upper: cf * 200}];
+function fillTargetRange(xmin, xmax, conversionFactor = 1.0) {
+    return [{ time: xmin, lower: conversionFactor * 100, upper: conversionFactor * 200},
+            { time: xmax, lower: conversionFactor * 100, upper: conversionFactor * 200}];
 }
 
 /**
