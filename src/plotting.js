@@ -48,6 +48,7 @@ function convertCustomCSSVarToRGBA(varName, alpha = 1.0) {
 }
 
 function colorThePink(alpha = 1.0) { return convertCustomCSSVarToRGBA('--the-pink', alpha); }
+function colorTheBlue(alpha = 1.0) { return convertCustomCSSVarToRGBA('--the-blue', alpha); }
 
 function colorBackground(alpha = 1.0) { return convertCustomCSSVarToRGBA('--background-color', alpha); }
 
@@ -69,14 +70,14 @@ function fillCurve(func, xmin, xmax, nbsteps) {
     return curve;
 }
 
-function fillMenstrualCycleCurve(xmin, xmax, nbsteps) {
+function fillMenstrualCycleCurve(xmin, xmax, nbSteps, conversionFactor) {
     let curve = [];
-    for (let i = xmin; i <= xmax; i += (xmax - xmin) / (nbsteps - 1)) {
+    for (let t = xmin; t <= xmax; t += (xmax - xmin) / (nbSteps - 1)) {
         curve.push({
-            Time: i,
-            E2: menstrualCycle(options.conversionFactor, i),
-            E2p5: menstrualCycleP05(options.conversionFactor, i),
-            E2p95: menstrualCycleP95(options.conversionFactor, i)
+            Time: t,
+            E2: menstrualCycle(conversionFactor, t),
+            E2p5: menstrualCycleP05(conversionFactor, t),
+            E2p95: menstrualCycleP95(conversionFactor, t)
         });
     }
     return curve;
@@ -151,7 +152,7 @@ export function plotCurves(firstRow, multiDoses, steadyDoses, options) {
     }
 
     if (options.menstrualCycleVisible) {
-        let _menstrualCycle = fillMenstrualCycleCurve(xmin, xmax, NB_LINE_POINTS);
+        let _menstrualCycle = fillMenstrualCycleCurve(xmin, xmax, NB_LINE_POINTS, options.conversionFactor);
         msMarks = [
             Plot.line(_menstrualCycle, {
                 x: 'Time',
@@ -175,7 +176,7 @@ export function plotCurves(firstRow, multiDoses, steadyDoses, options) {
         e2max = Math.max(e2max, options.conversionFactor * 350);
     }
 
-    if(options.targetRangeVisible) {
+    if (options.targetRangeVisible) {
         let targetRange = fillTargetRange(xmin, xmax, options.conversionFactor);
         targetMarks = [
             Plot.areaY(targetRange, {
@@ -183,13 +184,13 @@ export function plotCurves(firstRow, multiDoses, steadyDoses, options) {
                 fill: options.currentColorScheme == 'night' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
             }),
             Plot.text(['Target Range'], {
-                x: 30,
+                x: 1.006 * xmax,
                 y: 150 * options.conversionFactor,
-                fontSize: 48,
-                fill: options.currentColorScheme == 'night' ? 'rgba(255, 255, 255, 0.3)' : 'rgba(0, 0, 0, 0.3)',
+                rotate: 90,
+                fill: colorTheBlue(),
                 frameAnchor: 'middle',
-                textAnchor: 'start',
-                lineAnchor: 'middle'
+                textAnchor: 'middle',
+                lineAnchor: 'bottom'
               })
         ];
     }
@@ -293,9 +294,9 @@ export function plotCurves(firstRow, multiDoses, steadyDoses, options) {
             Plot.gridX({ stroke: 'grey' }),
             Plot.gridY({ stroke: 'grey' }),
         ].concat(targetMarks)
+        .concat(msMarks)
         .concat(ruleMarks)
         .concat(dotMarks)
-        .concat(msMarks)
         .concat(lineMarks)
         .concat(tipMarks)
         .concat([Plot.ruleX([xmin]), Plot.ruleY([0])])
