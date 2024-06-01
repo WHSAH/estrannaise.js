@@ -69,6 +69,7 @@ input.flat-input {
 }
 
 select {
+    appearance: none;
     border: none;
     outline: none;
     background-color: var(--standout-background-color);
