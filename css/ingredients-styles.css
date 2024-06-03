@@ -46,3 +46,8 @@ figcaption {
     padding-bottom: 0em; 
     padding-left: 1em;
 }
+
+.MathJax_ref {
+    fill: var(--light-foreground);
+    stroke: var(--light-foreground);
+}
