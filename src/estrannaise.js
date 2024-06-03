@@ -68,81 +68,6 @@ function findIntersecting(list, str) {
     return list.find(el => el.toLowerCase().includes(str.toLowerCase()) || str.toLowerCase().includes(el.toLowerCase()));
 }
 
-// For our purposes, a valid date string
-// is a string that contains at least year-month-day
-// and can be parsed into a valid date object
-// This is so we can mix dates and offsets
-// when we sort and plot the dose table.
-function isValidDateString(dateString) {
-    if (typeof dateString !== 'string') {
-        return false;
-    }
-    let date = new Date(dateString);
-    if (isNaN(date)) {
-        return false;
-    }
-    let dateParts = dateString.split('-');
-    return dateParts.length >= 3;
-}
-
-function findEarliestDate(dates) {
-    return dates.reduce((earliest, current) => {
-        let current_date = isNaN(current) ? new Date(current) : new Date(earliest.getTime() + current * 24 * 60 * 60 * 1000);
-        return current_date < earliest ? current_date : earliest;
-    }, new Date());
-}
-
-function transformToDayOffsets(dates) {
-    let earliestDate = findEarliestDate(dates);
-    return dates.map(date => {
-        if (!isValidDateString(date)) {
-            return date;
-        }
-        let currentDate = new Date(date);
-        let differenceInTime = currentDate.getTime() - earliestDate.getTime();
-        return differenceInTime / (1000 * 3600 * 24);  // Convert milliseconds to days
-    });
-}
-
-function sortDatesAndOffsets(dates) {
-    let offsets = transformToDayOffsets(dates);
-    return dates
-        .map((date, index) => ({ date, offset: offsets[index] }))
-        .sort((a, b) => a.offset - b.offset)
-        .map(item => item.date);
-}
-
-function isArraySorted(arr) {
-    for(let i = 0; i < arr.length - 1; i++) {
-        if(arr[i] > arr[i + 1]) {
-            return false;
-        }
-    }
-    return true;
-}
-
-
-function getMonospaceWidth() {
-    let element = document.createElement('pre');
-    element.style.position = 'absolute';
-    element.style.left = '-9999px';
-    element.style.fontFamily = 'monospace';
-    element.textContent = '_';  // 'm' is often used because it's wide
-    document.body.appendChild(element);
-
-    // Measure the width of a single monospace character
-    let charWidth = element.getBoundingClientRect().width;
-
-    // Remove the off-screen element
-    document.body.removeChild(element);
-
-    let regionWidth = document.getElementById('e2d3-plot').clientWidth;
-
-    // Calculate and log the width of the window in monospace characters
-    return Math.floor(regionWidth / charWidth);
-}
-
-
 function setColorScheme(scheme = 'night') {
     let rootStyle = getComputedStyle(document.documentElement);
     if (scheme == 'night') {
@@ -159,14 +84,6 @@ function setColorScheme(scheme = 'night') {
         currentColorScheme = 'day';
     }
     refresh();
-}
-
-function unitStep(x) {
-    if (x < 0) {
-        return 0;
-    } else if (x >= 0) {
-        return 1;
-    }
 }
 
 function allUnique(list) {
@@ -652,20 +569,6 @@ function attachOptionsEvents() {
 
     document.querySelector('.dropdown-daysinput').addEventListener('change', (event) => {
         (event.target.value === 'intervals') ? setDaysAsIntervals() : setDaysAsAbsolute();
-    });
-}
-
-function attachTipJarEvent() {
-    document.getElementById('copy-xmr').addEventListener('mousedown', function() {
-        navigator.clipboard.writeText(this.innerText);
-
-        document.getElementById('tipjar-text').innerHTML = 'xmr tip jar address copied, thank you!';
-
-        setTimeout(() => {
-            document.getElementById('tipjar-text').innerHTML = 'xmr tip jar';
-        }, 350);
-
-        changeBackgroundColor('copy-xmr', colorLightForeground(), null, 150);
     });
 }
 
