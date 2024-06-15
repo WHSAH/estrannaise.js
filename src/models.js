@@ -8,26 +8,45 @@ import {
 
 export const methodList = ['EB im', 'EV im', 'EEn im', 'EC im', 'EUn im', 'EUn casubq', 'patch tw', 'patch ow'];
 
+// Export this value to avoid further upstream importing
+export const PKParameters = PKParams;
+
 const menstrualCycleSpline = new Spline(menstrualCycleData['t'], menstrualCycleData['E2']);
 const menstrualCycleSplineP05 = new Spline(menstrualCycleData['t'], menstrualCycleData['E2p5']);
 const menstrualCycleSplineP95 = new Spline(menstrualCycleData['t'], menstrualCycleData['E2p95']);
 
-// Export this value to avoid further upstream importing
-export const PKParameters = PKParams;
-
-export function menstrualCycle(time, conversionFactor = 1.0) {
-    let t = ((time % 28) + 28) % 28; // end of day 28 = day 0
-    return conversionFactor * menstrualCycleSpline.at(t);
+/**
+ * Generate a curve representing average menstrual cycle with 5th and 95 percentiles
+ * @param {number} xmin
+ * @param {number} xmax
+ * @param {number} nbSteps
+ * @param {number} conversionFactor
+ * @returns {Object}
+ */
+export function fillMenstrualCycleCurve(xmin, xmax, nbSteps, conversionFactor = 1.0) {
+    let curve = [];
+    for (let t = xmin; t <= xmax; t += (xmax - xmin) / (nbSteps - 1)) {
+        curve.push({
+            Time: t,
+            E2: conversionFactor * menstrualCycleSpline.at(((t % 28) + 28) % 28),
+            E2p5: conversionFactor * menstrualCycleSplineP05.at(((t % 28) + 28) % 28),
+            E2p95: conversionFactor * menstrualCycleSplineP95.at(((t % 28) + 28) % 28)
+        });
+    }
+    return curve;
 }
 
-export function menstrualCycleP05(time, conversionFactor = 1.0) {
-    let t = ((time % 28) + 28) % 28;
-    return conversionFactor * menstrualCycleSplineP05.at(t);
-}
-
-export function menstrualCycleP95(time, conversionFactor = 1.0) {
-    let t = ((time % 28) + 28) % 28;
-    return conversionFactor * menstrualCycleSplineP95.at(t);
+/**
+ * Generate the "curve" for target mean levels for transfeminine HRT,
+ * based on WPATH SOC 8 + Endocrine Society Guidelines.
+ * @param {number} xmin
+ * @param {number} xmax
+ * @param {number} conversionFactor Conversion factor between units
+ * @returns
+ */
+export function fillTargetRange(xmin, xmax, conversionFactor = 1.0) {
+    return [{ time: xmin, lower: conversionFactor * 100, upper: conversionFactor * 200},
+            { time: xmax, lower: conversionFactor * 100, upper: conversionFactor * 200}];
 }
 
 // lil bit of ravioli code, but then if we wanted
@@ -262,4 +281,12 @@ function _logsubexp(x, y) {
     else {
         return x + Math.log(1 - Math.exp(y - x));
     }
+}
+
+export function fillCurve(func, xmin, xmax, nbsteps) {
+    let curve = [];
+    for (let i = xmin; i <= xmax; i += (xmax - xmin) / (nbsteps - 1)) {
+        curve.push({ Time: i, E2: func(i) });
+    }
+    return curve;
 }
