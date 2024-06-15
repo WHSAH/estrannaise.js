@@ -52,7 +52,6 @@ export function fillMenstrualCycleCurve(xMin, xMax, nbSteps, conversionFactor = 
  * @param {number} xMin
  * @param {number} xMax
  * @param {number} conversionFactor Conversion factor between units
- * @returns
  */
 export function fillTargetRange(xMin, xMax, conversionFactor = 1.0) {
     return [{ time: xMin, lower: conversionFactor * 100, upper: conversionFactor * 200},
@@ -65,7 +64,6 @@ export function fillTargetRange(xMin, xMax, conversionFactor = 1.0) {
  * @param {number} xMin
  * @param {number} xMax
  * @param {number} nbSteps
- * @returns
  */
 export function fillCurve(func, xMin, xMax, nbSteps) {
     let curve = [];
@@ -86,6 +84,10 @@ export function fillCurve(func, xMin, xMax, nbSteps) {
 // ...but I could also move on to using dictionaries as arguments
 // instead of positional arguments, that would be a good idea.
 
+/**
+ * Accessor function for each method
+ * @param {number} conversionFactor Conversion factor between units
+ */
 export function PKFunctions(conversionFactor = 1.0) {
     return {
         'EV im': (t, dose, steadystate=false, T=0.0) => { return e2Curve3C(t, conversionFactor * dose, ...PKParams['EV im'], 0.0, 0.0, steadystate, T); },
@@ -99,6 +101,10 @@ export function PKFunctions(conversionFactor = 1.0) {
     };
 }
 
+/**
+ * Accessor function for random (uncertainty) values
+ * @param {number} conversionFactor Conversion factor between units
+ */
 export function PKRandomFunctions(conversionFactor = 1.0) {
     return {
         'EV im': (t, dose, steadystate=false, T=0.0, idx=null) => { return e2Curve3C(t, conversionFactor * dose, ...randomMCMCSample('EV im', idx), 0.0, 0.0, steadystate, T); },
@@ -112,12 +118,18 @@ export function PKRandomFunctions(conversionFactor = 1.0) {
     };
 }
 
-// Keep k1 and k2 for splatting PKParams
-export function e2ssAverage3C(dose, T, d, _k1, _k2, k3) {
-    return dose * d / k3 / T;
-}
-
-export function e2MultiDose3C(t, doses = [1.0], times = [0.0], types = ["EV im"], cf = 1.0, random = false, intervals = false) {
+/**
+ * Calculate a given set of multi-doses
+ * Offset values of `doses`, `times`, and `types` need to match.
+ * @param {number} t time offset for dose calculation
+ * @param {Array} doses Dose amounts, in mg
+ * @param {Array} times Dosing intervals, in days
+ * @param {Array} types Ester/types, see `methodList` for values
+ * @param {number} cf conversion factor for conversion from pg/mL to other
+ * @param {boolean} random if values need uncertainty applied
+ * @param {boolean} intervals true if days are set as interval
+ */
+export function e2MultiDose3C(t, doses = [1.0], times = [0.0], types = ['EV im'], cf = 1.0, random = false, intervals = false) {
 
     if (intervals) {
         times = times.map((sum => value => sum += value)(0));
@@ -136,6 +148,11 @@ export function e2MultiDose3C(t, doses = [1.0], times = [0.0], types = ["EV im"]
     return sum;
 }
 
+// Keep k1 and k2 for splatting PKParams
+export function e2ssAverage3C(dose, T, d, _k1, _k2, k3) {
+    return dose * d / k3 / T;
+}
+
 function randomMCMCSample(type, idx=null) {
     if (idx === null) {
         idx = Math.floor(Math.random() * mcmcSamplesPK[type].length);
@@ -145,7 +162,7 @@ function randomMCMCSample(type, idx=null) {
 
 // parameters ds and d2 are optional initial conditions
 // Es(0) = ds and E2(0) = d2 for the second and third compartments
-function e2Curve3C(t, dose, d, k1, k2, k3, Ds = 0.0, D2 = 0.0, steadystate = false, T=1.0) {
+function e2Curve3C(t, dose, d, k1, k2, k3, Ds = 0.0, D2 = 0.0, steadystate = false, T = 1.0) {
 
     if (!steadystate) {
         if (t < 0) {
@@ -198,7 +215,7 @@ function e2Curve3C(t, dose, d, k1, k2, k3, Ds = 0.0, D2 = 0.0, steadystate = fal
     }
 }
 
-function esSingleDose3C(t, dose, d, k1, k2, k3, Ds = 0.0) {
+function esSingleDose3C(t, dose, d, k1, k2, _k3, Ds = 0.0) {
 
     if (t < 0) {
         return 0.0;
