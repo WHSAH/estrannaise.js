@@ -1,9 +1,9 @@
 import {
   e2MultiDose3C,
   e2ssAverage3C,
-  menstrualCycle,
-  menstrualCycleP05,
-  menstrualCycleP95,
+  fillCurve,
+  fillMenstrualCycleCurve,
+  fillTargetRange,
   PKFunctions,
   PKParameters,
   PKRandomFunctions,
@@ -61,40 +61,6 @@ function numberToDayHour(number, precision = 0) {
 
 function sum(array) {
     return array.reduce((a, b) => a + b, 0);
-}
-
-function fillCurve(func, xmin, xmax, nbsteps) {
-    let curve = [];
-    for (let i = xmin; i <= xmax; i += (xmax - xmin) / (nbsteps - 1)) {
-        curve.push({ Time: i, E2: func(i) });
-    }
-    return curve;
-}
-
-function fillMenstrualCycleCurve(xmin, xmax, nbSteps, conversionFactor = 1.0) {
-    let curve = [];
-    for (let t = xmin; t <= xmax; t += (xmax - xmin) / (nbSteps - 1)) {
-        curve.push({
-            Time: t,
-            E2: menstrualCycle(t, conversionFactor),
-            E2p5: menstrualCycleP05(t, conversionFactor),
-            E2p95: menstrualCycleP95(t, conversionFactor)
-        });
-    }
-    return curve;
-}
-
-/**
- * Generate the "curve" for target mean levels for transfeminine HRT,
- * based on WPATH SOC 8 + Endocrine Society Guidelines.
- * @param {number} xmin
- * @param {number} xmax
- * @param {number} conversionFactor Conversion factor between units
- * @returns
- */
-function fillTargetRange(xmin, xmax, conversionFactor = 1.0) {
-    return [{ time: xmin, lower: conversionFactor * 100, upper: conversionFactor * 200},
-            { time: xmax, lower: conversionFactor * 100, upper: conversionFactor * 200}];
 }
 
 /**

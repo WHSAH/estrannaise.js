@@ -6,28 +6,71 @@ import {
   menstrualCycleData,
 } from './modeldata.js';
 
-export const methodList = ['EB im', 'EV im', 'EEn im', 'EC im', 'EUn im', 'EUn casubq', 'patch tw', 'patch ow'];
+
+export const methodList = [
+    'EB im',        // Estradiol Benzoate, Intramuscular
+    'EV im',        // Estradiol Valerate, Intramuscular
+    'EEn im',       // Estradiol Enanthate, Intramuscular
+    'EC im',        // Estradiol Cypionate, Intramuscular
+    'EUn im',       // Estradiol Undecylate, Intramuscular
+    'EUn casubq',   // Estradiol Undecylate, Subcutaneous, Castor oil suspension
+    'patch tw',     // Patch, twice weekly application
+    'patch ow'      // Patch, once weekly application
+];
+
+// Export this value to avoid further upstream importing
+export const PKParameters = PKParams;
 
 const menstrualCycleSpline = new Spline(menstrualCycleData['t'], menstrualCycleData['E2']);
 const menstrualCycleSplineP05 = new Spline(menstrualCycleData['t'], menstrualCycleData['E2p5']);
 const menstrualCycleSplineP95 = new Spline(menstrualCycleData['t'], menstrualCycleData['E2p95']);
 
-// Export this value to avoid further upstream importing
-export const PKParameters = PKParams;
-
-export function menstrualCycle(time, conversionFactor = 1.0) {
-    let t = ((time % 28) + 28) % 28; // end of day 28 = day 0
-    return conversionFactor * menstrualCycleSpline.at(t);
+/**
+ * Generate a curve representing average menstrual cycle with 5th and 95 percentiles
+ * @param {number} xMin
+ * @param {number} xMax
+ * @param {number} nbSteps
+ * @param {number} conversionFactor
+ * @returns {Object}
+ */
+export function fillMenstrualCycleCurve(xMin, xMax, nbSteps, conversionFactor = 1.0) {
+    let curve = [];
+    for (let t = xMin; t <= xMax; t += (xMax - xMin) / (nbSteps - 1)) {
+        curve.push({
+            Time: t,
+            E2: conversionFactor * menstrualCycleSpline.at(((t % 28) + 28) % 28),
+            E2p5: conversionFactor * menstrualCycleSplineP05.at(((t % 28) + 28) % 28),
+            E2p95: conversionFactor * menstrualCycleSplineP95.at(((t % 28) + 28) % 28)
+        });
+    }
+    return curve;
 }
 
-export function menstrualCycleP05(time, conversionFactor = 1.0) {
-    let t = ((time % 28) + 28) % 28;
-    return conversionFactor * menstrualCycleSplineP05.at(t);
+/**
+ * Generate the "curve" for target mean levels for transfeminine HRT,
+ * based on WPATH SOC 8 + Endocrine Society Guidelines.
+ * @param {number} xMin
+ * @param {number} xMax
+ * @param {number} conversionFactor Conversion factor between units
+ */
+export function fillTargetRange(xMin, xMax, conversionFactor = 1.0) {
+    return [{ time: xMin, lower: conversionFactor * 100, upper: conversionFactor * 200},
+            { time: xMax, lower: conversionFactor * 100, upper: conversionFactor * 200}];
 }
 
-export function menstrualCycleP95(time, conversionFactor = 1.0) {
-    let t = ((time % 28) + 28) % 28;
-    return conversionFactor * menstrualCycleSplineP95.at(t);
+/**
+ * Convenience function for when iterating over model functions
+ * @param {function} func
+ * @param {number} xMin
+ * @param {number} xMax
+ * @param {number} nbSteps
+ */
+export function fillCurve(func, xMin, xMax, nbSteps) {
+    let curve = [];
+    for (let i = xMin; i <= xMax; i += (xMax - xMin) / (nbSteps - 1)) {
+        curve.push({ Time: i, E2: func(i) });
+    }
+    return curve;
 }
 
 // lil bit of ravioli code, but then if we wanted
@@ -41,6 +84,10 @@ export function menstrualCycleP95(time, conversionFactor = 1.0) {
 // ...but I could also move on to using dictionaries as arguments
 // instead of positional arguments, that would be a good idea.
 
+/**
+ * Accessor function for each method
+ * @param {number} conversionFactor Conversion factor between units
+ */
 export function PKFunctions(conversionFactor = 1.0) {
     return {
         'EV im': (t, dose, steadystate=false, T=0.0) => { return e2Curve3C(t, conversionFactor * dose, ...PKParams['EV im'], 0.0, 0.0, steadystate, T); },
@@ -54,6 +101,10 @@ export function PKFunctions(conversionFactor = 1.0) {
     };
 }
 
+/**
+ * Accessor function for random (uncertainty) values
+ * @param {number} conversionFactor Conversion factor between units
+ */
 export function PKRandomFunctions(conversionFactor = 1.0) {
     return {
         'EV im': (t, dose, steadystate=false, T=0.0, idx=null) => { return e2Curve3C(t, conversionFactor * dose, ...randomMCMCSample('EV im', idx), 0.0, 0.0, steadystate, T); },
@@ -67,6 +118,41 @@ export function PKRandomFunctions(conversionFactor = 1.0) {
     };
 }
 
+/**
+ * Calculate a given set of multi-doses
+ * Offset values of `doses`, `times`, and `types` need to match.
+ * @param {number} t time offset for dose calculation
+ * @param {Array} doses Dose amounts, in mg
+ * @param {Array} times Dosing intervals, in days
+ * @param {Array} types Ester/types, see `methodList` for values
+ * @param {number} cf conversion factor for conversion from pg/mL to other
+ * @param {boolean} random if values need uncertainty applied
+ * @param {boolean} intervals true if days are set as interval
+ */
+export function e2MultiDose3C(t, doses = [1.0], times = [0.0], types = ['EV im'], cf = 1.0, random = false, intervals = false) {
+
+    if (intervals) {
+        times = times.map((sum => value => sum += value)(0));
+        let initialTime = times[0];
+        times = times.map(t => t - initialTime);
+    };
+
+    let sum = 0;
+    for (let i = 0; i < doses.length; i++) {
+        if (!random) {
+            sum += PKFunctions(cf)[types[i]](t - times[i], doses[i]);
+        } else {
+            sum += PKRandomFunctions(cf)[types[i]](t - times[i], doses[i]);
+        }
+    }
+    return sum;
+}
+
+// Keep k1 and k2 for splatting PKParams
+export function e2ssAverage3C(dose, T, d, _k1, _k2, k3) {
+    return dose * d / k3 / T;
+}
+
 function randomMCMCSample(type, idx=null) {
     if (idx === null) {
         idx = Math.floor(Math.random() * mcmcSamplesPK[type].length);
@@ -76,7 +162,7 @@ function randomMCMCSample(type, idx=null) {
 
 // parameters ds and d2 are optional initial conditions
 // Es(0) = ds and E2(0) = d2 for the second and third compartments
-export function e2Curve3C(t, dose, d, k1, k2, k3, Ds = 0.0, D2 = 0.0, steadystate = false, T=1.0) {
+function e2Curve3C(t, dose, d, k1, k2, k3, Ds = 0.0, D2 = 0.0, steadystate = false, T = 1.0) {
 
     if (!steadystate) {
         if (t < 0) {
@@ -108,21 +194,13 @@ export function e2Curve3C(t, dose, d, k1, k2, k3, Ds = 0.0, D2 = 0.0, steadystat
 
         if (dose > 0 && d > 0) {
             if (k1 == k2 && k2 == k3) {
-
                 ret += dose * d * k1 * k1 * t * t * Math.exp(-k1 * t) / 2;
-
             } else if (k1 == k2 && k2 != k3) {
-
                 ret += dose * d * k1 * k1 * (Math.exp(-k3 * t) - Math.exp(-k1 * t) * (1 + (k1 - k3) * t)) / (k1 - k3) / (k1 - k3);
-
             } else if (k1 != k2 && k1 == k3) {
-
                 ret += dose * d * k1 * k2 * (Math.exp(-k2 * t) - Math.exp(-k1 * t) * (1 + (k1 - k2) * t)) / (k1 - k2) / (k1 - k2);
-
             } else if (k1 != k2 && k2 == k3) {
-
                 ret += dose * d * k1 * k2 * (Math.exp(-k1 * t) - Math.exp(-k2 * t) * (1 - (k1 - k2) * t)) / (k1 - k2) / (k1 - k2);
-
             } else {
                 ret += dose * d * k1 * k2 * (Math.exp(-k1 * t) / (k1 - k2) / (k1 - k3) - Math.exp(-k2 * t) / (k1 - k2) / (k2 - k3) + Math.exp(-k3 * t) / (k1 - k3) / (k2 - k3));
             }
@@ -137,7 +215,7 @@ export function e2Curve3C(t, dose, d, k1, k2, k3, Ds = 0.0, D2 = 0.0, steadystat
     }
 }
 
-export function esSingleDose3C(t, dose, d, k1, k2, k3, Ds = 0.0) {
+function esSingleDose3C(t, dose, d, k1, k2, _k3, Ds = 0.0) {
 
     if (t < 0) {
         return 0.0;
@@ -156,67 +234,12 @@ export function esSingleDose3C(t, dose, d, k1, k2, k3, Ds = 0.0) {
             ret += dose * d * k1 / (k1 - k2) * (Math.exp(-k2 * t) - Math.exp(-k1 * t));
         }
     }
-
     return ret;
 }
 
 
-export function e2SingleDoseAUC3C(t, dose, d, k1, k2, k3) {
-    if (t < 0) {
-        return 0;
-    }
-
-    if (k1 == k2 && k2 == k3) {
-
-        return dose * d / k1 * (1 - Math.exp(-k1 * t) * (1 + k1 * t + k1 * k1 * t * t / 2));
-
-    } else if (k1 == k2 && k2 != k3) {
-
-        return dose * d * k1 * k1 / (k1 - k3) / (k1 - k3) * ((1 - Math.exp(-k3 * t)) / k3 - 2 / k1 + k3 / k1 / k1 + Math.exp(-k1 * t) * (2 * k1 - k3 + k1 * (k1 - k3) * t) / k1 / k1);
-
-    } else if (k1 != k2 && k1 == k3) {
-
-        // missing because I got distracted
-
-    } else if (k1 != k3 && k2 == k3) {
-
-        // missing
-
-    } else {
-        return dose * d * k1 * k2 * ((1 - Math.exp(-k1 * t)) / k1 / (k1 - k2) / (k1 - k3) - (1 - Math.exp(-k2 * t)) / k2 / (k1 - k2) / (k2 - k3) + (1 - Math.exp(-k3 * t)) / k3 / (k1 - k3) / (k2 - k3));
-    }
-}
-
-export function e2SteadyState3C(t, dose, T, d, k1, k2, k3) {
+function e2SteadyState3C(t, dose, T, d, k1, k2, k3) {
     return dose * d * k1 * k2 * (Math.exp(-k1 * (t - T * Math.floor(t / T))) / (1 - Math.exp(-k1 * T)) / (k1 - k2) / (k1 - k3) - Math.exp(-k2 * (t - T * Math.floor(t / T))) / (1 - Math.exp(-k2 * T)) / (k1 - k2) / (k2 - k3) + Math.exp(-k3 * (t - T * Math.floor(t / T))) / (1 - Math.exp(-k3 * T)) / (k1 - k3) / (k2 - k3));
-}
-
-export function e2ssTrough3C(dose, T, d, k1, k2, k3) {
-    return e2SteadyState3C(0, dose, T, d, k1, k2, k3);
-}
-
-// Keep k1 and k2 for splatting PKParams
-export function e2ssAverage3C(dose, T, d, k1, k2, k3) {
-    return dose * d / k3 / T;
-}
-
-export function e2MultiDose3C(t, doses = [1.0], times = [0.0], types = ["EV im"], cf = 1.0, random = false, intervals = false) {
-
-    if (intervals) {
-        times = times.map((sum => value => sum += value)(0));
-        let initialTime = times[0];
-        times = times.map(t => t - initialTime);
-    };
-
-    let sum = 0;
-    for (let i = 0; i < doses.length; i++) {
-        if (!random) {
-            sum += PKFunctions(cf)[types[i]](t - times[i], doses[i]);
-        } else {
-            sum += PKRandomFunctions(cf)[types[i]](t - times[i], doses[i]);
-        }
-    }
-    return sum;
 }
 
 function e2Patch3C(t, dose, d, k1, k2, k3, W, steadystate = false, T = 0.0) {
@@ -254,7 +277,7 @@ function e2SteadyStatePatch3C(t, dose, T, d, k1, k2, k3, W) {
 
 function _logsubexp(x, y) {
     if (y > x) {
-        throw new Error("Invalid input: y should be less than or equal to x");
+        throw new Error('Invalid input: y should be less than or equal to x');
     }
     else if (x === y) {
         return -Infinity;
