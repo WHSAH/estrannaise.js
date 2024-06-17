@@ -135,7 +135,6 @@ export function plotCurves(firstRow, multiDoses, steadyDoses, options) {
                 x: 'Time',
                 y: 'E2',
                 title: p => `menstrual cycle\ntime: ${numberToDayHour(p.Time)}\n  e₂: ${p.E2.toFixed(0)} ${options.units}\n  CI: ${p.E2p5.toFixed(0)}-${p.E2p95.toFixed(0)} ${options.units}`,
-                fontFamily: 'monospace',
                 fill: colorBackground(0.618),
                 stroke: colorLightForeground()
             }))
@@ -200,7 +199,7 @@ export function plotCurves(firstRow, multiDoses, steadyDoses, options) {
             tipMarks.push(Plot.tip(multiDoseCurve, Plot.pointerX({
                 x: 'Time', y: 'E2',
                 title: p => `multi-dose\n\ntime: ${numberToDayHour(p.Time)}\n  e₂: ${p.E2.toFixed(0)} ${options.units}`,
-                fontFamily: 'monospace', fill: colorBackground(0.618), stroke: colorLightForeground()
+                fill: colorBackground(0.618), stroke: colorLightForeground()
             })));
         }
 
@@ -246,7 +245,7 @@ export function plotCurves(firstRow, multiDoses, steadyDoses, options) {
                     e₂: ${p.E2.toFixed(0)} ${options.units},
                     average: ${ssTypes[i].includes('patch') ? 'unavailable' : e2ssAverage3C(options.conversionFactor * ssDoses[i], ssEveries[i], ...PKParameters[ssTypes[i]]).toFixed(0)} ${ssTypes[i].includes("patch") ? '' : options.units}
                     trough: ${PKFunctions(options.conversionFactor)[ssTypes[i]](0.0, ssDoses[i], true, ssEveries[i]).toFixed(0)} ${options.units}`,
-                fontFamily: 'monospace', fill: colorBackground(0.618), stroke: colorLightForeground()
+                fill: colorBackground(0.618), stroke: colorLightForeground()
             })));
         }
 
@@ -257,6 +256,7 @@ export function plotCurves(firstRow, multiDoses, steadyDoses, options) {
         width: NB_LINE_POINTS,
         x: { label: 'time (days)' },
         y: { domain: [0, 1.25 * e2max], label: `serum e₂ (${options.units})` },
+        style: { fontFamily: 'monospace' },
         marks: [
             Plot.gridX({ stroke: 'grey' }),
             Plot.gridY({ stroke: 'grey' }),
@@ -267,12 +267,6 @@ export function plotCurves(firstRow, multiDoses, steadyDoses, options) {
         .concat(lineMarks)
         .concat(tipMarks)
         .concat([Plot.ruleX([xmin]), Plot.ruleY([0])])
-    });
-
-    // Select all text elements in the plot and set their font weight to bold
-    let textElements = e2curve.querySelectorAll('text');
-    textElements.forEach(textElement => {
-        textElement.style.fontFamily = 'monospace';
     });
 
     return e2curve;
