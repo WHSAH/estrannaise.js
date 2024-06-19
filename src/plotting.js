@@ -79,8 +79,9 @@ function sum(array) {
  */
 export function plotCurves(firstRow, multiDoses, steadyDoses, options) {
     // track the max e2 across all multi-dose curves
-    // to set the y-axis limit. uncertainty clouds ignored.
-    let e2max = 0;
+    // to set the y-axis limit. uncertainty clouds ignored
+    // because of potential stray dots.
+    let e2max = 300;
     let xmax = 70; // FIXME: Describe what this is
     let colorCycle = 5;
     let dotMarks  = [],
@@ -150,7 +151,7 @@ export function plotCurves(firstRow, multiDoses, steadyDoses, options) {
                 fill: options.currentColorScheme == 'night' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
             }),
             Plot.text(['target range'], {
-                x: 1.006 * xmax,
+                x: 0.99 * xmax,
                 y: 150 * options.conversionFactor,
                 rotate: 90,
                 fill: colorStrongForeground(),
