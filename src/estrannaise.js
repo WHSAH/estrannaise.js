@@ -113,7 +113,7 @@ function loadCSV(files) {
                         if (csvrow.length >= 3) {
                             let delivtype = findIntersecting(methodList, csvrow[2]);
 
-                            if (delivtype && (isFinite(csvrow[0]) || isValidDate(csvrow[0])) && isFinite(csvrow[1])) {
+                            if (delivtype && (isFinite(csvrow[1]) || isValidDate(csvrow[1])) && isFinite(csvrow[0])) {
                                 addTDERow('multidose-table', csvrow[0], parseFloat(csvrow[1]), delivtype);
                             }
                         }
@@ -131,9 +131,9 @@ function loadCSV(files) {
 function exportCSV() {
     let table = document.getElementById('multidose-table');
     let rows = Array.from(table.rows);
-    let data = [['time (days)', 'dose (mg)', 'ester']].concat(rows.slice(1).map(row => {
-        let doseValue = row.cells[2].querySelector('input').value;
-        let timeValue = row.cells[3].querySelector('input').value;
+    let data = [['dose (mg)', 'time (days)', 'ester']].concat(rows.slice(1).map(row => {
+        let timeValue = row.cells[2].querySelector('input').value;
+        let doseValue = row.cells[3].querySelector('input').value;
         let esterValue = row.cells[4].querySelector('select').value;
         return [timeValue, doseValue, esterValue];
     }));
@@ -474,15 +474,6 @@ function attachDragNDropImport() {
 
 }
 
-function changeBackgroundColor(elementId, color1, color2, delay = 100) {
-    let element = document.getElementById(elementId);
-    element.style.backgroundColor = color1;
-
-    setTimeout(() => {
-        element.style.backgroundColor = color2;
-    }, delay);
-}
-
 function attachMultidoseButtonsEvents() {
 
     document.getElementById('guess-button').addEventListener('mousedown', () => {
@@ -674,8 +665,8 @@ function setRowParameters(tableID, number, time, dose, ester) {
 
     let row = table.rows[rowNumber];
 
-    let timeInput = row.cells[2].querySelector('input');
-    let doseInput = row.cells[3].querySelector('input');
+    let doseInput = row.cells[2].querySelector('input');
+    let timeInput = row.cells[3].querySelector('input');
     let esterInput = row.cells[4].querySelector('select');
 
     timeInput.value = time;
