@@ -132,8 +132,8 @@ function exportCSV() {
     let table = document.getElementById('multidose-table');
     let rows = Array.from(table.rows);
     let data = [['time (days)', 'dose (mg)', 'ester']].concat(rows.slice(1).map(row => {
-        let timeValue = row.cells[2].querySelector('input').value;
-        let doseValue = row.cells[3].querySelector('input').value;
+        let doseValue = row.cells[2].querySelector('input').value;
+        let timeValue = row.cells[3].querySelector('input').value;
         let esterValue = row.cells[4].querySelector('select').value;
         return [timeValue, doseValue, esterValue];
     }));
@@ -151,8 +151,8 @@ function exportCSV() {
 
 export function readRow(row, keepIncomplete = false) {
 
-    let time = row.cells[2].querySelector('input').value;
-    let dose = row.cells[3].querySelector('input').value;
+    let dose = row.cells[2].querySelector('input').value;
+    let time = row.cells[3].querySelector('input').value;
     let ester = row.cells[4].querySelector('select').value;
 
     let cv = row.cells[0].querySelector('input');
@@ -636,7 +636,7 @@ function loadFromURL() {
         if (multiDoseTable) {
             deleteAllRows('multidose-table');
             for (let i = 0; i < multiDoseTable[0].length; i++) {
-                addTDERow('multidose-table', multiDoseTable[0][i], multiDoseTable[1][i], multiDoseTable[2][i], multiDoseTable[3][i], multiDoseTable[4][i]);
+                addTDERow('multidose-table', multiDoseTable[1][i], multiDoseTable[0][i], multiDoseTable[2][i], multiDoseTable[3][i], multiDoseTable[4][i]);
             }
             guessDaysAsIntervals();
             dataLoaded = true;
@@ -645,7 +645,7 @@ function loadFromURL() {
         if (steadyStateTable) {
             deleteAllRows('steadystate-table');
             for (let i = 0; i < steadyStateTable[0].length; i++) {
-                addTDERow('steadystate-table', steadyStateTable[0][i], steadyStateTable[1][i], steadyStateTable[2][i], steadyStateTable[3][i], steadyStateTable[4][i]);
+                addTDERow('steadystate-table', steadyStateTable[1][i], steadyStateTable[0][i], steadyStateTable[2][i], steadyStateTable[3][i], steadyStateTable[4][i]);
             }
             dataLoaded = true;
         }
