@@ -7,16 +7,16 @@ import {
 } from './modeldata.js';
 
 
-export const methodList = [
-    'EB im',        // Estradiol Benzoate, Intramuscular
-    'EV im',        // Estradiol Valerate, Intramuscular
-    'EEn im',       // Estradiol Enanthate, Intramuscular
-    'EC im',        // Estradiol Cypionate, Intramuscular
-    'EUn im',       // Estradiol Undecylate, Intramuscular
-    'EUn casubq',   // Estradiol Undecylate, Subcutaneous, Castor oil suspension
-    'patch tw',     // Patch, twice weekly application
-    'patch ow'      // Patch, once weekly application
-];
+export const methodList = {
+    'EB im': {units: 'mg', description: 'Estradiol Benzoate, Intramuscular'},
+    'EV im': {units: 'mg', description: 'Estradiol Valerate, Intramuscular'},
+    'EEn im': {units: 'mg', description: 'Estradiol Enanthate, Intramuscular'},
+    'EC im': {units: 'mg', description: 'Estradiol Cypionate, Intramuscular'},
+    'EUn im': {units: 'mg', description: 'Estradiol Undecylate, Intramuscular'},
+    'EUn casubq': {units: 'mg', description: 'Estradiol Undecylate in Castor oil, Subcutaneous'},
+    'patch tw': {units: 'mcg/day', description: 'Patch, twice weekly application'}, 
+    'patch ow': {units: 'mcg/day', description: 'Patch, once weekly application'}
+};
 
 // Export this value to avoid further upstream importing
 export const PKParameters = PKParams;

@@ -16,37 +16,25 @@ export let menstrualCycleVisible = false;
 let targetRangeVisible = false;
 export let currentColorScheme = 'night';
 
-let dropDownMethodHTML = (
-    '<select class="dropdown-method"> \
-    <option value="EV im" title="Estradiol valerate in oil (intramuscular)">ev im</option> \
-    <option value="EEn im" title="Estradiol enanthate in sunflower oil (intramuscular)">een im</option> \
-    <option value="EC im" title="Estradiol cypionate in oil (intramuscular)">ec im</option> \
-    <option value="EB im" title="Estradiol benzoate in oil (intramuscular)">eb im</option> \
-    <option value="EUn im" title="Estradiol undecylate in castor oil (intramuscular)">eun im</option> \
-    <option value="EUn casubq" title="Estradiol undecylate in castor oil (subcutaneous)">eun casubq</option> \
-    <option value="patch tw" title="Transdermal estradiol patch (twice-weekly) doses are in mg/day">patch tw</option> \
-    <option value="patch ow" title="Transdermal estradiol patch (once-weekly) doses are in mg/day">patch ow</option> \
-    </select>'
-)
 
 window.addEventListener('DOMContentLoaded', () => {
-
+    
     initializeDefaultPreset();
-
+    
     attachDragNDropImport();
-
+    
     attachOptionsEvents();
-
+    
     attachPresetsDropdown();
-
+    
     attachMultidoseButtonsEvents();
     attachSteadyStateButtonsEvents();
-
+    
     attachMenstrualCycleButtonEvent();
     attachTargetRangeButtonEvent();
-
+    
     themeSetup();
-
+    
     if (!loadFromURL()) {
         loadFromLocalStorage();
     }
@@ -125,16 +113,15 @@ function loadCSV(files) {
             Papa.parse(event.target.result, {
                 complete: function (results) {
                     deleteAllRows('multidose-table');
-                    results.data.forEach((csvrow) => {
-                        if (csvrow.length >= 3) {
-                            let delivtype = findIntersecting(methodList, csvrow[2]);
-                            if (isValidInput(csvrow[1], csvrow[0], delivtype)) {
-                                addTDMRow('multidose-table', csvrow[0], parseFloat(csvrow[1]), delivtype);
-                            }
+                    results.data.forEach(([dose, time, method]) => {
+                        let delivtype = findIntersecting(Object.keys(methodList), method);
+                        console.log(delivtype)
+                        if (isValidInput(dose, time, delivtype)) {
+                            addTDMRow('multidose-table', dose, parseFloat(time), delivtype);
                         }
                     });
-                    addRowIfNeeded('multidose-table');
                     guessDaysAsIntervals();
+                    addRowIfNeeded('multidose-table');
                     refresh();
                 }
             });
@@ -147,9 +134,9 @@ function loadCSV(files) {
 function exportCSV() {
     let table = document.getElementById('multidose-table');
     let rows = Array.from(table.rows);
-    let data = [['dose (mg)', 'time (days)', 'method']].concat(rows.slice(1).map(row => {
-        let timeValue = row.cells[2].querySelector('input').value;
-        let doseValue = row.cells[3].querySelector('input').value;
+    let data = [['dose', 'time (days)', 'method']].concat(rows.slice(1).map(row => {
+        let doseValue = row.cells[2].querySelector('input').value;
+        let timeValue = row.cells[3].querySelector('input').value;
         let methodValue = row.cells[4].querySelector('select').value;
         return [timeValue, doseValue, methodValue];
     }));
@@ -165,7 +152,12 @@ function exportCSV() {
 }
 
 function isValidInput(dose, time, method) {
-    return (!isNaN(parseFloat(dose)) && !isNaN(parseFloat(time)) && parseFloat(dose) > 0 && findIntersecting(methodList, method));
+    return (
+        !isNaN(parseFloat(dose)) 
+     && !isNaN(parseFloat(time)) 
+     && parseFloat(dose) > 0 
+     && findIntersecting(Object.keys(methodList), method)
+    );
 }
 
 export function readRow(row, keepInvalid = false) {
@@ -198,8 +190,8 @@ function getTDMs(tableId, getVisibility = false, keepInvalid = false) {
         let row = doseTable.rows[i];
         let rowData = readRow(row, keepInvalid);
         if (rowData) {
-            times.push(rowData.time);
             doses.push(rowData.dose);
+            times.push(rowData.time);
             methods.push(rowData.method);
             if (getVisibility) {
                 cVisibilities.push(rowData.cVisibility);
@@ -220,7 +212,7 @@ function guessNextRow(tableID) {
         let beforeLastRow = readRow(table.rows[table.rows.length - 3]);
         let lastRow = readRow(table.rows[table.rows.length - 2]);
         if (beforeLastRow && lastRow) {
-            if (table.rows.length >= 5) {
+            if (table.rows.length >= 5) { 
                 let beforeBeforeLastRow = readRow(table.rows[table.rows.length - 4]);
                 if (beforeBeforeLastRow
                     && (lastRow.dose === beforeBeforeLastRow.dose)
@@ -247,7 +239,7 @@ function guessNextRow(tableID) {
 }
 
 
-function addTDMRow(tableID, time = null, dose = null, method = null, cvisible = true, uvisible = true) {
+function addTDMRow(tableID, dose = null, time = null, method = null, cvisible = true, uvisible = true) {
 
     let table = document.getElementById(tableID);
     let row = table.insertRow(-1);
@@ -302,7 +294,24 @@ function addTDMRow(tableID, time = null, dose = null, method = null, cvisible = 
         uncertaintyCell.appendChild(uncertaintyCustomCheckbox);
     }
 
-    let timeCell = row.insertCell(2);
+    let doseCell = row.insertCell(2);
+    doseCell.innerHTML = '<input type="text" class="flat-input dose-cell">';
+    // Set given dose or empty string as default value (prevents NaNs)
+    doseCell.querySelector('input').value = dose || '';
+    doseCell.querySelector('input').addEventListener('input', function() {
+
+        let myRow = this.parentElement.parentElement;
+        let currentValidity = Boolean(readRow(myRow, false));
+
+        if ((currentValidity !== rowValidity.get(myRow)) || currentValidity) {
+            rowValidity.set(myRow, currentValidity);
+            refresh();
+        }
+
+        addRowIfNeeded(tableID);
+    });
+
+    let timeCell = row.insertCell(3);
     timeCell.innerHTML = '<input type="text" class="flat-input time-cell">';
     if (time !== null) {
         timeCell.querySelector('input').value = time;
@@ -319,29 +328,21 @@ function addTDMRow(tableID, time = null, dose = null, method = null, cvisible = 
         addRowIfNeeded(tableID);
     });
 
-    let doseCell = row.insertCell(3);
-    doseCell.innerHTML = '<input type="text" class="flat-input dose-cell">';
-
-    // Set given dose or empty string as default value (prevents NaNs)
-    doseCell.querySelector('input').value = dose || '';
-    doseCell.querySelector('input').addEventListener('input', function() {
-
-        let myRow = this.parentElement.parentElement;
-        let currentValidity = Boolean(readRow(myRow, false));
-
-        if ((currentValidity !== rowValidity.get(myRow)) || currentValidity) {
-            rowValidity.set(myRow, currentValidity);
-            refresh();
-        }
-
-        addRowIfNeeded(tableID);
-    });
-
-
     let methodCell = row.insertCell(4);
-    methodCell.innerHTML = dropDownMethodHTML;
+    let methodSelect = document.createElement('select');
+    methodSelect.className = 'dropdown-method';
+    Object.entries(methodList).forEach(([key, {units, description}]) => {
+        let option = document.createElement('option');
+        option.value = key;
+        option.text = key.toLowerCase();
+        option.title = description;
+        methodSelect.appendChild(option);
+    });
+    methodCell.appendChild(methodSelect);
+
     if (method !== null) {
         methodCell.querySelector('select').value = method;
+        doseCell.querySelector('input').placeholder = methodList[method].units;
     } else {
         // If no method is specified and there are
         // more than one row in the table, add
@@ -349,8 +350,10 @@ function addTDMRow(tableID, time = null, dose = null, method = null, cvisible = 
         if (table.rows.length > 2) {
             method = table.rows[table.rows.length - 2].cells[4].querySelector('select').value;
             methodCell.querySelector('select').value = method;
+            doseCell.querySelector('input').placeholder = methodList[method].units;
         }
     }
+    
 
     methodCell.querySelector('select').addEventListener('change', function() {
         if (readRow(this.parentElement.parentElement)) {
@@ -387,7 +390,7 @@ function addTDMRow(tableID, time = null, dose = null, method = null, cvisible = 
 
     return row;
 }
-
+    
 function deleteAllRows(tableID) {
     let table = document.getElementById(tableID);
     while (table.rows.length > 1) {
@@ -407,7 +410,6 @@ function setDaysAsAbsolute(refreshPlot = true) {
     document.getElementById('dropdown-daysinput').value = 'absolute';
     refreshPlot && refresh();
 }
-
 
 function turnMenstrualCycleOn() {
     let mcButton = document.getElementById('menstrual-cycle-button');

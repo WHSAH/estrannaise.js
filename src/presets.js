@@ -19,7 +19,7 @@ export const Presets = {
         'multi': [
             [4, 0, 'EV im'],
             [4, 20, 'EEn im'],
-            [0.1, 40, 'patch ow']
+            [100, 40, 'patch ow']
         ]
     },
     'een-monotherapy-7': {
@@ -171,8 +171,8 @@ export const Presets = {
         'menstrualCycle': false,
         'intervalDays': true,
         'steady': [
-            [0.4, 3.5, 'patch tw', true, true],
-            [0.3, 7, 'patch ow', true, true]
+            [400, 3.5, 'patch tw', true, true],
+            [300, 7, 'patch ow', true, true]
         ],
         'multi': []
     },
