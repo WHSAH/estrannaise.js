@@ -82,7 +82,7 @@ export function plotCurves(firstRow, multiDoses, steadyDoses, options) {
     // to set the y-axis limit. uncertainty clouds ignored
     // because of potential stray dots.
     let e2max = 300;
-    let xmax = 70; // FIXME: Describe what this is
+    let xMax = 70.1; // Initialize minimum right limit for the time axis
     let colorCycle = 5;
     let dotMarks  = [],
         lineMarks = [],
@@ -100,27 +100,27 @@ export function plotCurves(firstRow, multiDoses, steadyDoses, options) {
 
     let [ssEveries, ssDoses, ssTypes, ssCVisibs, ssUVisibs] = steadyDoses;
 
-    let xmin = 0;
+    let xMin = 0;
     if (!options.daysAsIntervals) {
-        xmin = Math.min(0, ...mdTimes);
+        xMin = Math.min(0, ...mdTimes);
     }
 
     if (mdCVisib || mdUVisib) {
         if (options.daysAsIntervals) {
-            xmax = Math.max(xmax, 1.618 * (sum(mdTimes) - (mdTimes[0] ? mdTimes[0] : 0)));
+            xMax = Math.max(xMax, 1.618 * (sum(mdTimes) - (mdTimes[0] ? mdTimes[0] : 0)));
         } else {
-            xmax = Math.max(xmax, 1.618 * Math.max(...mdTimes));
+            xMax = Math.max(xMax, 1.618 * Math.max(...mdTimes));
         }
     }
 
     for (let i = 0; i < ssEveries.length; i++) {
         if (ssUVisibs[i] || ssCVisibs[i]) {
-            xmax = Math.max(xmax, 5 * ssEveries[i]);
+            xMax = Math.max(xMax, 5 * ssEveries[i]);
         }
     }
 
     if (options.menstrualCycleVisible) {
-        let _menstrualCycle = fillMenstrualCycleCurve(xmin, xmax, NB_LINE_POINTS, options.conversionFactor);
+        let _menstrualCycle = fillMenstrualCycleCurve(xMin, xMax, NB_LINE_POINTS, options.conversionFactor);
         msMarks = [
             Plot.line(_menstrualCycle, {
                 x: 'Time',
@@ -144,14 +144,14 @@ export function plotCurves(firstRow, multiDoses, steadyDoses, options) {
     }
 
     if (options.targetRangeVisible) {
-        let targetRange = fillTargetRange(xmin, xmax, options.conversionFactor);
+        let targetRange = fillTargetRange(xMin, xMax, options.conversionFactor);
         targetMarks = [
             Plot.areaY(targetRange, {
                 x: 'time', y1: 'lower', y2: 'upper',
                 fill: options.currentColorScheme == 'night' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
             }),
             Plot.text(['target range'], {
-                x: 0.99 * xmax,
+                x: 0.99 * xMax,
                 y: 150 * options.conversionFactor,
                 rotate: 90,
                 fill: colorStrongForeground(),
@@ -172,13 +172,13 @@ export function plotCurves(firstRow, multiDoses, steadyDoses, options) {
             // The cloud points are not used to set it since they
             // sometimes are too far up.
             if (!mdCVisib) {
-                let probeMultiDoseCurve = fillCurve(t => e2MultiDose3C(t, mdDoses, mdTimes, mdTypes, options.conversionFactor, false, options.daysAsIntervals), xmin, xmax, NB_LINE_POINTS);
+                let probeMultiDoseCurve = fillCurve(t => e2MultiDose3C(t, mdDoses, mdTimes, mdTypes, options.conversionFactor, false, options.daysAsIntervals), xMin, xMax, NB_LINE_POINTS);
                 e2max = Math.max(e2max, ...probeMultiDoseCurve.map(p => p.E2));
             }
 
             let mdUncertaintyCloud = [];
             for (let i = 0; i < NB_CLOUD_POINTS; i++) {
-                let randx = Math.random() * (xmax - xmin) + xmin;
+                let randx = Math.random() * (xMax - xMin) + xMin;
                 let y = e2MultiDose3C(randx, mdDoses, mdTimes, mdTypes, options.conversionFactor, true, options.daysAsIntervals);
                 mdUncertaintyCloud.push({ Time: randx, E2: y });
             }
@@ -186,7 +186,7 @@ export function plotCurves(firstRow, multiDoses, steadyDoses, options) {
         }
 
         if (mdCVisib) {
-            let multiDoseCurve = fillCurve(t => e2MultiDose3C(t, mdDoses, mdTimes, mdTypes, options.conversionFactor, false, options.daysAsIntervals), xmin, xmax, NB_LINE_POINTS);
+            let multiDoseCurve = fillCurve(t => e2MultiDose3C(t, mdDoses, mdTimes, mdTypes, options.conversionFactor, false, options.daysAsIntervals), xMin, xMax, NB_LINE_POINTS);
             multiDoseCurve = multiDoseCurve.map(p => ({ Time: p.Time, E2: p.E2 }));
 
             e2max = Math.max(e2max, ...multiDoseCurve.map(p => p.E2));
@@ -212,13 +212,13 @@ export function plotCurves(firstRow, multiDoses, steadyDoses, options) {
 
             let ssUncertaintyCloud = [];
             for (let j = 0; j < NB_CLOUD_POINTS; j++) {
-                let randx = Math.random() * (xmax - xmin) + xmin;
+                let randx = Math.random() * (xMax - xMin) + xMin;
                 let y = PKRandomFunctions(options.conversionFactor)[ssTypes[i]](randx, ssDoses[i], true, ssEveries[i]);
                 ssUncertaintyCloud.push({ Time: randx, E2: y });
             }
 
             if (!ssCVisibs[i]) {
-                let probeSteadyStateCurve = fillCurve(t => PKFunctions(options.conversionFactor)[ssTypes[i]](t, ssDoses[i], true, ssEveries[i]), xmin, xmax, NB_LINE_POINTS);
+                let probeSteadyStateCurve = fillCurve(t => PKFunctions(options.conversionFactor)[ssTypes[i]](t, ssDoses[i], true, ssEveries[i]), xMin, xMax, NB_LINE_POINTS);
                 e2max = Math.max(e2max, ...probeSteadyStateCurve.map(p => p.E2));
             }
 
@@ -231,15 +231,15 @@ export function plotCurves(firstRow, multiDoses, steadyDoses, options) {
         }
 
         if (ssCVisibs[i]) {
-            let ssEsterCurve = fillCurve(t => PKFunctions(options.conversionFactor)[ssTypes[i]](t, ssDoses[i], true, ssEveries[i]), xmin, xmax, NB_LINE_POINTS);
-            ssEsterCurve = ssEsterCurve.map(p => ({
+            let ssMethodCurve = fillCurve(t => PKFunctions(options.conversionFactor)[ssTypes[i]](t, ssDoses[i], true, ssEveries[i]), xMin, xMax, NB_LINE_POINTS);
+            ssMethodCurve = ssMethodCurve.map(p => ({
                 Time: p.Time,
                 E2: p.E2,
                 type: `${ssTypes[i]} ${ssDoses[i]}mg/${ssEveries[i]}day${ssEveries[i] > 1 ? 's' : ''}`
             }));
-            e2max = Math.max(e2max, ...ssEsterCurve.map(p => p.E2));
-            lineMarks.unshift(Plot.line(ssEsterCurve, { x: 'Time', y: 'E2', strokeWidth: 2, stroke: wongPalette(colorCycle) }));
-            tipMarks.unshift(Plot.tip(ssEsterCurve, Plot.pointerX({
+            e2max = Math.max(e2max, ...ssMethodCurve.map(p => p.E2));
+            lineMarks.unshift(Plot.line(ssMethodCurve, { x: 'Time', y: 'E2', strokeWidth: 2, stroke: wongPalette(colorCycle) }));
+            tipMarks.unshift(Plot.tip(ssMethodCurve, Plot.pointerX({
                 x: 'Time', y: 'E2',
                 title: p => `${p.type.toLowerCase()},
                     time: ${numberToDayHour(p.Time)},
@@ -267,7 +267,7 @@ export function plotCurves(firstRow, multiDoses, steadyDoses, options) {
         .concat(dotMarks)
         .concat(lineMarks)
         .concat(tipMarks)
-        .concat([Plot.ruleX([xmin]), Plot.ruleY([0])])
+        .concat([Plot.ruleX([xMin]), Plot.ruleY([0])])
     });
 
     return e2curve;

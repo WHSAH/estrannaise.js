@@ -5,7 +5,10 @@ import { methodList } from './models.js';
 
 import { Presets } from './presets.js';
 
+// This is used to determine whether to refresh after each input event
+// Only refresh when a row goes from invalid to valid or vis-versa
 const rowValidity = new Map();
+
 export let conversionFactor = 1.0;
 export let units = 'pg/mL';
 export let daysAsIntervals = false;
@@ -39,8 +42,8 @@ window.addEventListener('DOMContentLoaded', () => {
     attachMultidoseButtonsEvents();
     attachSteadyStateButtonsEvents();
 
-    menstrualCycleButtonAttachOnOff();
-    targetRangeButtonAttachOnOff();
+    attachMenstrualCycleButtonEvent();
+    attachTargetRangeButtonEvent();
 
     themeSetup();
 
@@ -249,7 +252,7 @@ function addTDMRow(tableID, time = null, dose = null, method = null, cvisible = 
     let table = document.getElementById(tableID);
     let row = table.insertRow(-1);
 
-    rowValidity.set(row, true);
+    rowValidity.set(row, isValidInput(dose, time, method));
 
     // Add visibility and uncertainty checkboxes
     let visibilityCell = row.insertCell(0);
@@ -422,7 +425,7 @@ function turnMenstrualCycleOff() {
     menstrualCycleVisible = false;
 }
 
-function menstrualCycleButtonAttachOnOff() {
+function attachMenstrualCycleButtonEvent() {
     let mcButton = document.getElementById('menstrual-cycle-button');
 
     mcButton.addEventListener('mousedown', () => {
@@ -435,7 +438,7 @@ function menstrualCycleButtonAttachOnOff() {
     });
 }
 
-function targetRangeButtonAttachOnOff() {
+function attachTargetRangeButtonEvent() {
     let button = document.getElementById('target-range-button');
     button.addEventListener('mousedown', () => {
         if (targetRangeVisible) {
