@@ -134,7 +134,6 @@ export function e2MultiDose3C(t, doses = [1.0], times = [0.0], types = ['EV im']
     if (intervals) {
         times = times.map((sum => value => sum += value)(0));
         let initialTime = times[0];
-        times = times.map(t => t - initialTime);
     };
 
     let sum = 0;
