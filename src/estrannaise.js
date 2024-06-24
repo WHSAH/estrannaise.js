@@ -13,6 +13,19 @@ export let menstrualCycleVisible = false;
 let targetRangeVisible = false;
 export let currentColorScheme = 'night';
 
+let dropDownMethodHTML = (
+    '<select class="dropdown-method"> \
+    <option value="EV im" title="Estradiol valerate in oil (intramuscular)">ev im</option> \
+    <option value="EEn im" title="Estradiol enanthate in sunflower oil (intramuscular)">een im</option> \
+    <option value="EC im" title="Estradiol cypionate in oil (intramuscular)">ec im</option> \
+    <option value="EB im" title="Estradiol benzoate in oil (intramuscular)">eb im</option> \
+    <option value="EUn im" title="Estradiol undecylate in castor oil (intramuscular)">eun im</option> \
+    <option value="EUn casubq" title="Estradiol undecylate in castor oil (subcutaneous)">eun casubq</option> \
+    <option value="patch tw" title="Transdermal estradiol patch (twice-weekly) doses are in mg/day">patch tw</option> \
+    <option value="patch ow" title="Transdermal estradiol patch (once-weekly) doses are in mg/day">patch ow</option> \
+    </select>'
+)
+
 window.addEventListener('DOMContentLoaded', () => {
 
     initializeDefaultPreset();
@@ -48,8 +61,8 @@ export function refresh(save = false) {
     }
     let graph = plotCurves(
         readRow(document.getElementById('multidose-table').rows[1], true),
-        getTDEs('multidose-table', true),
-        getTDEs('steadystate-table', true),
+        getTDMs('multidose-table', true),
+        getTDMs('steadystate-table', true),
         {
             conversionFactor: conversionFactor,
             currentColorScheme: currentColorScheme,
@@ -91,7 +104,7 @@ function allUnique(list) {
 }
 
 function guessDaysAsIntervals() {
-    if (allUnique(getTDEs('multidose-table')[0])) {
+    if (allUnique(getTDMs('multidose-table')[0])) {
         document.getElementById('dropdown-daysinput').value = 'absolute';
         daysAsIntervals = false;
     } else {
@@ -112,12 +125,12 @@ function loadCSV(files) {
                     results.data.forEach((csvrow) => {
                         if (csvrow.length >= 3) {
                             let delivtype = findIntersecting(methodList, csvrow[2]);
-
-                            if (delivtype && (isFinite(csvrow[1]) || isValidDate(csvrow[1])) && isFinite(csvrow[0])) {
-                                addTDERow('multidose-table', csvrow[0], parseFloat(csvrow[1]), delivtype);
+                            if (isValidInput(csvrow[1], csvrow[0], delivtype)) {
+                                addTDMRow('multidose-table', csvrow[0], parseFloat(csvrow[1]), delivtype);
                             }
                         }
                     });
+                    addRowIfNeeded('multidose-table');
                     guessDaysAsIntervals();
                     refresh();
                 }
@@ -131,11 +144,11 @@ function loadCSV(files) {
 function exportCSV() {
     let table = document.getElementById('multidose-table');
     let rows = Array.from(table.rows);
-    let data = [['dose (mg)', 'time (days)', 'ester']].concat(rows.slice(1).map(row => {
+    let data = [['dose (mg)', 'time (days)', 'method']].concat(rows.slice(1).map(row => {
         let timeValue = row.cells[2].querySelector('input').value;
         let doseValue = row.cells[3].querySelector('input').value;
-        let esterValue = row.cells[4].querySelector('select').value;
-        return [timeValue, doseValue, esterValue];
+        let methodValue = row.cells[4].querySelector('select').value;
+        return [timeValue, doseValue, methodValue];
     }));
     let csvContent = Papa.unparse(data);
 
@@ -148,40 +161,43 @@ function exportCSV() {
     document.body.removeChild(downloadLink);
 }
 
+function isValidInput(dose, time, method) {
+    return (!isNaN(parseFloat(dose)) && !isNaN(parseFloat(time)) && parseFloat(dose) > 0 && findIntersecting(methodList, method));
+}
 
-export function readRow(row, keepIncomplete = false) {
+export function readRow(row, keepInvalid = false) {
 
     let dose = row.cells[2].querySelector('input').value;
     let time = row.cells[3].querySelector('input').value;
-    let ester = row.cells[4].querySelector('select').value;
+    let method = row.cells[4].querySelector('select').value;
 
     let cv = row.cells[0].querySelector('input');
     let cVisibility = cv ? cv.checked : null;
     let uv = row.cells[1].querySelector('input');
     let uVisibility = uv ? uv.checked : null;
 
-    if ((!isNaN(parseFloat(time)) && !isNaN(parseFloat(dose)) && parseFloat(dose) > 0) || keepIncomplete) {
-        return { time: parseFloat(time), dose: parseFloat(dose), ester: ester, cVisibility: cVisibility, uVisibility: uVisibility };
+    if (isValidInput(dose, time, method) || keepInvalid) {
+        return { time: parseFloat(time), dose: parseFloat(dose), method: method, cVisibility: cVisibility, uVisibility: uVisibility };
     } else {
         return null;
     }
 }
 
-function getTDEs(tableId, getVisibility = false, keepIncomplete = false) {
+function getTDMs(tableId, getVisibility = false, keepInvalid = false) {
     let doseTable = document.getElementById(tableId),
         times = [],
         doses = [],
-        esters = [],
+        methods = [],
         cVisibilities = [],
         uVisibilities = [];
 
     for (let i = 1; i < doseTable.rows.length; i++) {
         let row = doseTable.rows[i];
-        let rowData = readRow(row, keepIncomplete);
+        let rowData = readRow(row, keepInvalid);
         if (rowData) {
             times.push(rowData.time);
             doses.push(rowData.dose);
-            esters.push(rowData.ester);
+            methods.push(rowData.method);
             if (getVisibility) {
                 cVisibilities.push(rowData.cVisibility);
                 uVisibilities.push(rowData.uVisibility);
@@ -190,9 +206,9 @@ function getTDEs(tableId, getVisibility = false, keepIncomplete = false) {
     };
 
     if (getVisibility) {
-        return [times, doses, esters, cVisibilities, uVisibilities];
+        return [times, doses, methods, cVisibilities, uVisibilities];
     }
-    return [times, doses, esters];
+    return [times, doses, methods];
 }
 
 function guessNextRow(tableID) {
@@ -208,15 +224,15 @@ function guessNextRow(tableID) {
                     && (lastRow.dose !== beforeLastRow.dose)) {
                     let timeDifference = beforeLastRow.time - beforeBeforeLastRow.time;
                     let dose = beforeLastRow.dose;
-                    let ester = beforeLastRow.ester;
-                    return { time: lastRow.time + timeDifference, dose: dose, ester: ester };
+                    let method = beforeLastRow.method;
+                    return { time: lastRow.time + timeDifference, dose: dose, method: method };
                 }
             }
-            if (lastRow.ester == beforeLastRow.ester) {
+            if (lastRow.method == beforeLastRow.method) {
                 let timeDifference = lastRow.time - beforeLastRow.time;
                 let doseDifference = lastRow.dose - beforeLastRow.dose;
-                let ester = lastRow.ester;
-                return { time: lastRow.time + timeDifference, dose: lastRow.dose + doseDifference, ester: ester };
+                let method = lastRow.method;
+                return { time: lastRow.time + timeDifference, dose: lastRow.dose + doseDifference, method: method };
             }
         }
     } else if (table.rows.length >= 3 && daysAsIntervals) {
@@ -228,12 +244,12 @@ function guessNextRow(tableID) {
 }
 
 
-function addTDERow(tableID, time = null, dose = null, ester = null, cvisible = true, uvisible = true) {
+function addTDMRow(tableID, time = null, dose = null, method = null, cvisible = true, uvisible = true) {
 
     let table = document.getElementById(tableID);
     let row = table.insertRow(-1);
 
-    rowValidity.set(row, false);
+    rowValidity.set(row, true);
 
     // Add visibility and uncertainty checkboxes
     let visibilityCell = row.insertCell(0);
@@ -319,31 +335,21 @@ function addTDERow(tableID, time = null, dose = null, ester = null, cvisible = t
     });
 
 
-    let esterCell = row.insertCell(4);
-    esterCell.innerHTML = (
-        '<select class="dropdown-ester"> \
-            <option value="EV im" title="Estradiol valerate in oil (intramuscular)">ev im</option> \
-            <option value="EEn im" title="Estradiol enanthate in sunflower oil (intramuscular)">een im</option> \
-            <option value="EC im" title="Estradiol cypionate in oil (intramuscular)">ec im</option> \
-            <option value="EB im" title="Estradiol benzoate in oil (intramuscular)">eb im</option> \
-            <option value="EUn im" title="Estradiol undecylate in castor oil (intramuscular)">eun im</option> \
-            <option value="EUn casubq" title="Estradiol undecylate in castor oil (subcutaneous)">eun casubq</option> \
-            <option value="patch tw" title="Transdermal estradiol patch (twice-weekly) doses are in mg/day">patch tw</option> \
-            <option value="patch ow" title="Transdermal estradiol patch (once-weekly) doses are in mg/day">patch ow</option> \
-            </select>');
-    if (ester !== null) {
-        esterCell.querySelector('select').value = ester;
+    let methodCell = row.insertCell(4);
+    methodCell.innerHTML = dropDownMethodHTML;
+    if (method !== null) {
+        methodCell.querySelector('select').value = method;
     } else {
-        // If no ester is specified and there are
+        // If no method is specified and there are
         // more than one row in the table, add
-        // the same ester as the one before
+        // the same method as the one before
         if (table.rows.length > 2) {
-            ester = table.rows[table.rows.length - 2].cells[4].querySelector('select').value;
-            esterCell.querySelector('select').value = ester;
+            method = table.rows[table.rows.length - 2].cells[4].querySelector('select').value;
+            methodCell.querySelector('select').value = method;
         }
     }
 
-    esterCell.querySelector('select').addEventListener('change', function() {
+    methodCell.querySelector('select').addEventListener('change', function() {
         if (readRow(this.parentElement.parentElement)) {
             refresh();
         }
@@ -360,7 +366,7 @@ function addTDERow(tableID, time = null, dose = null, ester = null, cvisible = t
             myRow.remove();
 
             if (myTable.rows.length < 2) {
-                addTDERow(myTable.id);
+                addTDMRow(myTable.id);
             }
 
             addRowIfNeeded(tableID);
@@ -479,7 +485,7 @@ function attachMultidoseButtonsEvents() {
     document.getElementById('guess-button').addEventListener('mousedown', () => {
         let guess = guessNextRow('multidose-table');
         if (guess) {
-            setRowParameters('multidose-table', -1, guess.time, guess.dose, guess.ester);
+            setRowParameters('multidose-table', -1, guess.time, guess.dose, guess.method);
             refresh();
         } else {
             document.getElementById('guess-button').innerHTML = '&nbsp;?._.)&nbsp;&nbsp;';
@@ -492,7 +498,7 @@ function attachMultidoseButtonsEvents() {
 
     document.getElementById('clear-doses-button').addEventListener('mousedown', () => {
         deleteAllRows('multidose-table');
-        addTDERow('multidose-table');
+        addTDMRow('multidose-table');
         refresh();
     });
 
@@ -520,7 +526,7 @@ function attachMultidoseButtonsEvents() {
 function attachSteadyStateButtonsEvents() {
     document.getElementById('clear-steadystates-button').addEventListener('mousedown', () => {
         deleteAllRows('steadystate-table');
-        addTDERow('steadystate-table');
+        addTDMRow('steadystate-table');
         refresh();
     });
 }
@@ -564,8 +570,8 @@ function attachOptionsEvents() {
 }
 
 function saveToLocalStorage() {
-    let multiDoseTable = getTDEs('multidose-table', true, true);
-    let steadyStateTable = getTDEs('steadystate-table', true, true);
+    let multiDoseTable = getTDMs('multidose-table', true, true);
+    let steadyStateTable = getTDMs('steadystate-table', true, true);
 
     localStorage.setItem('multiDoseTable', JSON.stringify(multiDoseTable));
     localStorage.setItem('steadyStateTable', JSON.stringify(steadyStateTable));
@@ -579,14 +585,14 @@ function loadFromLocalStorage() {
     if (multiDoseTable) {
         deleteAllRows('multidose-table');
         for (let i = 0; i < multiDoseTable[0].length; i++) {
-            addTDERow('multidose-table', multiDoseTable[0][i], multiDoseTable[1][i], multiDoseTable[2][i], multiDoseTable[3][i], multiDoseTable[4][i]);
+            addTDMRow('multidose-table', multiDoseTable[0][i], multiDoseTable[1][i], multiDoseTable[2][i], multiDoseTable[3][i], multiDoseTable[4][i]);
         }
     }
 
     if (steadyStateTable) {
         deleteAllRows('steadystate-table');
         for (let i = 0; i < steadyStateTable[0].length; i++) {
-            addTDERow('steadystate-table', steadyStateTable[0][i], steadyStateTable[1][i], steadyStateTable[2][i], steadyStateTable[3][i], steadyStateTable[4][i]);
+            addTDMRow('steadystate-table', steadyStateTable[0][i], steadyStateTable[1][i], steadyStateTable[2][i], steadyStateTable[3][i], steadyStateTable[4][i]);
         }
     }
 }
@@ -596,8 +602,8 @@ function deleteLocalStorage() {
 }
 
 function getShareURL() {
-    let multiDoseTable = getTDEs('multidose-table', true, true);
-    let steadyStateTable = getTDEs('steadystate-table', true, true);
+    let multiDoseTable = getTDMs('multidose-table', true, true);
+    let steadyStateTable = getTDMs('steadystate-table', true, true);
 
     let params = new URLSearchParams();
     params.set('multiDoseTable', JSON.stringify(multiDoseTable));
@@ -627,7 +633,7 @@ function loadFromURL() {
         if (multiDoseTable) {
             deleteAllRows('multidose-table');
             for (let i = 0; i < multiDoseTable[0].length; i++) {
-                addTDERow('multidose-table', multiDoseTable[1][i], multiDoseTable[0][i], multiDoseTable[2][i], multiDoseTable[3][i], multiDoseTable[4][i]);
+                addTDMRow('multidose-table', multiDoseTable[1][i], multiDoseTable[0][i], multiDoseTable[2][i], multiDoseTable[3][i], multiDoseTable[4][i]);
             }
             guessDaysAsIntervals();
             dataLoaded = true;
@@ -636,7 +642,7 @@ function loadFromURL() {
         if (steadyStateTable) {
             deleteAllRows('steadystate-table');
             for (let i = 0; i < steadyStateTable[0].length; i++) {
-                addTDERow('steadystate-table', steadyStateTable[1][i], steadyStateTable[0][i], steadyStateTable[2][i], steadyStateTable[3][i], steadyStateTable[4][i]);
+                addTDMRow('steadystate-table', steadyStateTable[1][i], steadyStateTable[0][i], steadyStateTable[2][i], steadyStateTable[3][i], steadyStateTable[4][i]);
             }
             dataLoaded = true;
         }
@@ -650,11 +656,11 @@ function addRowIfNeeded(tableID) {
 
     // Add new row if the last row is valid
     if(lastRow !== null) {
-        addTDERow(tableID);
+        addTDMRow(tableID);
     }
 }
 
-function setRowParameters(tableID, number, time, dose, ester) {
+function setRowParameters(tableID, number, time, dose, method) {
     let table = document.getElementById(tableID);
 
     // Treat negative numbers as reverse order
@@ -667,11 +673,11 @@ function setRowParameters(tableID, number, time, dose, ester) {
 
     let doseInput = row.cells[2].querySelector('input');
     let timeInput = row.cells[3].querySelector('input');
-    let esterInput = row.cells[4].querySelector('select');
+    let methodInput = row.cells[4].querySelector('select');
 
     timeInput.value = time;
     doseInput.value = dose;
-    esterInput.value = ester;
+    methodInput.value = method;
 
     addRowIfNeeded(tableID);
 }
@@ -712,18 +718,18 @@ function applyPreset(presetConfig) {
     
     if (presetConfig.steady.length) {
         presetConfig.steady.forEach(steadyDose => {
-            addTDERow('steadystate-table', ...steadyDose);
+            addTDMRow('steadystate-table', ...steadyDose);
         });
     } else {
-        addTDERow('steadystate-table');
+        addTDMRow('steadystate-table');
     }
 
     if (presetConfig.multi.length) {
         presetConfig.multi.forEach(multiDose => {
-            addTDERow('multidose-table', ...multiDose);
+            addTDMRow('multidose-table', ...multiDose);
         });
     } else {
-        addTDERow('multidose-table');
+        addTDMRow('multidose-table');
     }
 
     refresh();
