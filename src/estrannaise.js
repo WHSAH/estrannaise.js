@@ -115,7 +115,6 @@ function loadCSV(files) {
                     deleteAllRows('multidose-table');
                     results.data.forEach(([dose, time, method]) => {
                         let delivtype = findIntersecting(Object.keys(methodList), method);
-                        console.log(delivtype)
                         if (isValidInput(dose, time, delivtype)) {
                             addTDMRow('multidose-table', dose, parseFloat(time), delivtype);
                         }
@@ -354,7 +353,6 @@ function addTDMRow(tableID, dose = null, time = null, method = null, cvisible = 
         }
     }
     
-
     methodCell.querySelector('select').addEventListener('change', function() {
         if (readRow(this.parentElement.parentElement)) {
             refresh();
