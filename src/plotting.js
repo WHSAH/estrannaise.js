@@ -18,17 +18,17 @@ const CLOUD_POINT_SIZE = 1.3;
 const CLOUD_POINT_OPACITY = 0.4;
 
 const WONG_PALETTE = [
-    'rgba(1, 158, 115, {})',   // #019E73
-    'rgba(231, 159, 3, {})',   // #E79F03
-    'rgba(84, 173, 225, {})',  // #54ADE1
-    'rgba(240, 228, 65, {})',  // #F0E441
-    'rgba(0, 114, 178, {})',   // #0072B2
-    'rgba(213, 94, 0, {})',    // #D55E00
-    'rgba(203, 121, 167, {})', // #CB79A7
+    'rgba(1, 158, 115, alpha)',   // #019E73
+    'rgba(231, 159, 3, alpha)',   // #E79F03
+    'rgba(84, 173, 225, alpha)',  // #54ADE1
+    'rgba(240, 228, 65, alpha)',  // #F0E441
+    'rgba(0, 114, 178, alpha)',   // #0072B2
+    'rgba(213, 94, 0, alpha)',    // #D55E00
+    'rgba(203, 121, 167, alpha)', // #CB79A7
 ];
 
 function wongPalette(n, alpha = 1.0) {
-    return WONG_PALETTE[n % WONG_PALETTE.length].replace('{}', alpha);
+    return WONG_PALETTE[n % WONG_PALETTE.length].replace('alpha', alpha);
 }
 
 function convertCustomCSSVarToRGBA(varName, alpha = 1.0) {
@@ -82,7 +82,7 @@ export function plotCurves(firstRow, multiDoses, steadyDoses, options) {
     // to set the y-axis limit. uncertainty clouds ignored
     // because of potential stray dots.
     let e2max = 300;
-    let xMax = 70.1; // Initialize minimum right limit for the time axis
+    let xMax = 50.1; // Initialize minimum right limit for the time axis
     let colorCycle = 5;
     let dotMarks  = [],
         lineMarks = [],
