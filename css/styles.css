@@ -100,7 +100,7 @@ button.flat-button {
     text-align: center;
     font-family: monospace;
     font-weight: bold;
-    color: var(--strong-foreground);
+    color: var(--light-foreground);
     border-radius: 4px;
 }
 

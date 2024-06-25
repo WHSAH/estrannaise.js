@@ -1,30 +1,16 @@
 :root {
 
     /* Night colors */
-    /* --background-color-night: #2a2a2a;
-    --standout-background-color-night: #343434;
-    --strong-foreground-night: #A1CBF6;
-    --light-foreground-night: #DBBAE6; */
-    
     --background-color-night: #2a2a2a;
     --standout-background-color-night: #343434;
     --strong-foreground-night: #b5b5b5;
     --light-foreground-night: #e8e8e8;
 
     /* Day colors */
-
-    /* --background-color-day: #f8f8f8;
-    --standout-background-color-day: #eeeeee;
-    --strong-foreground-day: #5148b2;
-    --light-foreground-day: #AC489B; */
-
     --background-color-day: #f8f8f8;
     --standout-background-color-day: #eeeeee;
     --strong-foreground-day: #343434;
     --light-foreground-day: #525252;
-
-    --logo-blue: #9EC5FA;
-    --logo-pink: #EAAEB9;
 
     --background-color: var(--background-color-night);
     --standout-background-color: var(--standout-background-color-night);
