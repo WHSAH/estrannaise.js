@@ -46,18 +46,17 @@
 
         <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
             <div id="options" style="display: flex; margin-bottom: 1em; margin-right: auto;">
-                <select class="dropdown-units"
+                <select id="dropdown-units"
                         title="Change units for the estradiol concentration"
                         style="display: inline-block; margin-right: 0.6em;">
                     <option value="pg/mL">pg/mL</option>
                     <option value="pmol/L">pmol/L</option>
                 </select>
                 <select id="dropdown-daysinput"
-                        class="dropdown-daysinput"
                         title="Change the way days are interpreted as inputs in the multi-dose curve"
                         style="display: inline-block; margin-right: 0.6em;">
                     <option value="absolute">absolute days</option>
-                    <option value="intervals">relative days</option>
+                    <option value="intervals">interval days</option>
                 </select>
 
                 <select id="dropdown-presets"
@@ -131,7 +130,7 @@
                                 <th>v</th>
                                 <th>u</th>
                                 <th>dose</th>
-                                <th>time (days)</th>
+                                <th>days</th>
                                 <th>method</th>
                                 <th></th>
                             </tr>

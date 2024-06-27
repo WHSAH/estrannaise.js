@@ -9,13 +9,12 @@ import { Presets } from './presets.js';
 // Only refresh when a row goes from invalid to valid or vis-versa
 const rowValidity = new Map();
 
-export let conversionFactor = 1.0;
-export let units = 'pg/mL';
-export let daysAsIntervals = false;
-export let menstrualCycleVisible = false;
-let targetRangeVisible = false;
-export let currentColorScheme = 'night';
-
+let global_conversionFactor = 1.0;
+let global_units = 'pg/mL';
+let global_daysAsIntervals = false;
+let global_menstrualCycleVisible = false;
+let global_targetRangeVisible = false;
+let global_currentColorScheme = 'night';
 
 window.addEventListener('DOMContentLoaded', () => {
     
@@ -55,12 +54,12 @@ export function refresh(save = false) {
         getTDMs('multidose-table', true),
         getTDMs('steadystate-table', true),
         {
-            conversionFactor: conversionFactor,
-            currentColorScheme: currentColorScheme,
-            daysAsIntervals: daysAsIntervals,
-            menstrualCycleVisible: menstrualCycleVisible,
-            targetRangeVisible: targetRangeVisible,
-            units: units
+            conversionFactor: global_conversionFactor,
+            currentColorScheme: global_currentColorScheme,
+            daysAsIntervals: global_daysAsIntervals,
+            menstrualCycleVisible: global_menstrualCycleVisible,
+            targetRangeVisible: global_targetRangeVisible,
+            units: global_units
     });
     let plot = document.getElementById('plot-region');
     plot.innerHTML = '';
@@ -79,13 +78,13 @@ function setColorScheme(scheme = 'night') {
         document.documentElement.style.setProperty('--standout-background-color', rootStyle.getPropertyValue('--standout-background-color-night'));
         document.documentElement.style.setProperty('--strong-foreground', rootStyle.getPropertyValue('--strong-foreground-night'));
         document.documentElement.style.setProperty('--light-foreground', rootStyle.getPropertyValue('--light-foreground-night'));
-        currentColorScheme = 'night';
+        global_currentColorScheme = 'night';
     } else if (scheme == 'day') {
         document.documentElement.style.setProperty('--background-color', rootStyle.getPropertyValue('--background-color-day'));
         document.documentElement.style.setProperty('--standout-background-color', rootStyle.getPropertyValue('--standout-background-color-day'));
         document.documentElement.style.setProperty('--strong-foreground', rootStyle.getPropertyValue('--strong-foreground-day'));
         document.documentElement.style.setProperty('--light-foreground', rootStyle.getPropertyValue('--light-foreground-day'));
-        currentColorScheme = 'day';
+        global_currentColorScheme = 'day';
     }
     refresh();
 }
@@ -97,10 +96,10 @@ function allUnique(list) {
 function guessDaysAsIntervals() {
     if (allUnique(getTDMs('multidose-table')[0])) {
         document.getElementById('dropdown-daysinput').value = 'absolute';
-        daysAsIntervals = false;
+        global_daysAsIntervals = false;
     } else {
         document.getElementById('dropdown-daysinput').value = 'intervals';
-        daysAsIntervals = true;
+        global_daysAsIntervals = true;
     }
 }
 
@@ -207,7 +206,7 @@ function getTDMs(tableId, getVisibility = false, keepInvalid = false) {
 
 function guessNextRow(tableID) {
     let table = document.getElementById(tableID);
-    if (table.rows.length >= 4 && !daysAsIntervals) {
+    if (table.rows.length >= 4 && !global_daysAsIntervals) {
         let beforeLastRow = readRow(table.rows[table.rows.length - 3]);
         let lastRow = readRow(table.rows[table.rows.length - 2]);
         if (beforeLastRow && lastRow) {
@@ -229,7 +228,7 @@ function guessNextRow(tableID) {
                 return { time: lastRow.time + timeDifference, dose: lastRow.dose + doseDifference, method: method };
             }
         }
-    } else if (table.rows.length >= 3 && daysAsIntervals) {
+    } else if (table.rows.length >= 3 && global_daysAsIntervals) {
         // if days are given as intervals just repeat the last row
         let lastRow = readRow(table.rows[table.rows.length - 2]);
         return lastRow;
@@ -295,8 +294,9 @@ function addTDMRow(tableID, dose = null, time = null, method = null, cvisible = 
 
     let doseCell = row.insertCell(2);
     let doseInput = document.createElement('input');
-    doseInput.classList.add('flat-input', 'dose-cell');
+    doseInput.classList.add('flat-input', 'dose-input');
     doseInput.setAttribute('type', 'text');
+    
 
     doseCell.appendChild(doseInput);
     // Set given dose or empty string as default value (prevents NaNs)
@@ -316,9 +316,18 @@ function addTDMRow(tableID, dose = null, time = null, method = null, cvisible = 
 
     let timeCell = row.insertCell(3);
     let timeInput = document.createElement('input');
-    timeInput.classList.add('flat-input', 'time-cell');
+    timeInput.classList.add('flat-input')
     timeInput.setAttribute('type', 'text');
     
+    if (tableID == 'multidose-table') {
+        timeInput.classList.add('time-input-multidose');
+        timeInput.placeholder = global_daysAsIntervals ? 'since last' : 'since first';
+    }
+    else if (tableID == 'steadystate-table') {
+        timeInput.classList.add('time-input-steadystate');
+        timeInput.placeholder = 'dose interval';
+    };
+
     timeCell.appendChild(timeInput);
     
     if (time !== null) {
@@ -366,10 +375,9 @@ function addTDMRow(tableID, dose = null, time = null, method = null, cvisible = 
     
     methodSelect.addEventListener('change', function() {
 
-        let row = this.parentElement.parentElement;
         let newMethod = this.value;
         let newUnits = methodList[newMethod].units;
-        row.cells[2].querySelector('input').placeholder = newUnits;
+        doseInput.placeholder = newUnits;
 
         if (readRow(row)) {
             refresh();
@@ -421,64 +429,91 @@ function deleteAllRows(tableID) {
     }
 }
 
+function setUnits(units, refreshPlot = true) {
+    if (units === 'pg/mL') {
+        global_units = units
+        global_conversionFactor = 1.0;
+        document.getElementById('dropdown-units').value = 'pg/mL';
+    } else if (units === 'pmol/L') {
+        global_units = units
+        global_conversionFactor = 3.6713;
+        document.getElementById('dropdown-units').value = 'pmol/L';
+    }
+    refreshPlot && refresh();
+}
+
 function setDaysAsIntervals(refreshPlot = true) {
-    daysAsIntervals = true;
+    global_daysAsIntervals = true;
     document.getElementById('dropdown-daysinput').value = 'intervals';
+
+    let timeInputs = document.querySelectorAll('.time-input-multidose');
+    timeInputs.forEach(input => {
+        input.placeholder = 'since last';
+    });
+
     refreshPlot && refresh();
 }
 
 function setDaysAsAbsolute(refreshPlot = true) {
-    daysAsIntervals = false;
+    global_daysAsIntervals = false;
     document.getElementById('dropdown-daysinput').value = 'absolute';
+
+    let timeInputs = document.querySelectorAll('.time-input-multidose');
+    timeInputs.forEach(input => {
+        input.placeholder = 'since first';
+    });
+
     refreshPlot && refresh();
 }
 
-function turnMenstrualCycleOn() {
+function turnMenstrualCycleOn(refreshPlot = true) {
     let mcButton = document.getElementById('menstrual-cycle-button');
     mcButton.classList.add('button-on');
-    menstrualCycleVisible = true;
+    global_menstrualCycleVisible = true;
+    refreshPlot && refresh();
 }
 
-function turnMenstrualCycleOff() {
+function turnMenstrualCycleOff(refreshPlot = true) {
     let mcButton = document.getElementById('menstrual-cycle-button');
     mcButton.classList.remove('button-on');
-    menstrualCycleVisible = false;
+    global_menstrualCycleVisible = false;
+    refreshPlot && refresh();
 }
 
-function turnTargetRangeOn() {
+function turnTargetRangeOn(refreshPlot = true) {
     let trButton = document.getElementById('target-range-button');
     trButton.classList.add('button-on');
-    targetRangeVisible = true;
+    global_targetRangeVisible = true;
+    refreshPlot && refresh();
 }
 
-function turnTargetRangeOff() {
+function turnTargetRangeOff(refreshPlot = true) {
     let trButton = document.getElementById('target-range-button');
     trButton.classList.remove('button-on');
-    targetRangeVisible = false;
+    global_targetRangeVisible = false;
+    refreshPlot && refresh();
 }
 
 function attachMenstrualCycleButtonEvent() {
     let mcButton = document.getElementById('menstrual-cycle-button');
 
     mcButton.addEventListener('mousedown', () => {
-        if (menstrualCycleVisible) {
+        if (global_menstrualCycleVisible) {
             turnMenstrualCycleOff();
         } else {
             turnMenstrualCycleOn();
         }
-        refresh();
     });
 }
 
 function attachTargetRangeButtonEvent() {
     let button = document.getElementById('target-range-button');
     button.addEventListener('mousedown', () => {
-        if (targetRangeVisible) {
+        if (global_targetRangeVisible) {
             turnTargetRangeOff();
         } else {
             turnTargetRangeOn();
         }
-        refresh();
     });
 }
 
@@ -621,17 +656,12 @@ function themeSetup() {
 }
 
 function attachOptionsEvents() {
-    document.querySelector('.dropdown-units').addEventListener('change', (event) => {
-        units = event.target.value;
-        if (units === 'pg/mL') {
-            conversionFactor = 1.0;
-        } else if (units === 'pmol/L') {
-            conversionFactor = 3.6713;
-        }
-        refresh();
+
+    document.getElementById('dropdown-units').addEventListener('change', (event) => {
+        setUnits(event.target.value)
     });
 
-    document.querySelector('.dropdown-daysinput').addEventListener('change', (event) => {
+    document.getElementById('dropdown-daysinput').addEventListener('change', (event) => {
         (event.target.value === 'intervals') ? setDaysAsIntervals() : setDaysAsAbsolute();
     });
 }
@@ -675,7 +705,12 @@ function getShareURL() {
     let params = new URLSearchParams();
     params.set('multiDoseTable', JSON.stringify(multiDoseTable));
     params.set('steadyStateTable', JSON.stringify(steadyStateTable));
+    params.set('menstrualCycleVisible', global_menstrualCycleVisible);
+    params.set('targetRangeVisible', global_targetRangeVisible);
+    params.set('units', global_units);
+    params.set('daysAsIntervals', global_daysAsIntervals);
 
+    console.log(params.toString());
     return window.location.origin + window.location.pathname + '#' + btoa(params.toString());
 }
 
@@ -702,7 +737,6 @@ function loadFromURL() {
             for (let i = 0; i < multiDoseTable[0].length; i++) {
                 addTDMRow('multidose-table', multiDoseTable[1][i], multiDoseTable[0][i], multiDoseTable[2][i], multiDoseTable[3][i], multiDoseTable[4][i]);
             }
-            guessDaysAsIntervals();
             dataLoaded = true;
         }
 
@@ -713,6 +747,31 @@ function loadFromURL() {
             }
             dataLoaded = true;
         }
+
+        if (hashParams.get('menstrualCycleVisible') === 'true') {
+            turnMenstrualCycleOn(false);
+        } else {
+            turnMenstrualCycleOff(false);
+        }
+
+        if (hashParams.get('targetRangeVisible') === 'true') {
+            turnTargetRangeOn(false);
+        } else {
+            turnTargetRangeOff(false);
+        }
+
+        if (hashParams.has('daysAsIntervals')) {
+            if (hashParams.get('daysAsIntervals') === 'true') {
+                setDaysAsIntervals(false);
+            } else {
+                setDaysAsAbsolute(false);
+            };
+        } else {
+            guessDaysAsIntervals();
+        }
+
+        hashParams.has('units') && setUnits(hashParams.get('units'), false);
+
     }
     return dataLoaded;
 }
@@ -763,7 +822,7 @@ function initializeDefaultPreset() {
 function attachPresetsDropdown() {
     let presetDropdown = document.getElementById('dropdown-presets');
 
-    presetDropdown.addEventListener('change', function() {
+    presetDropdown.addEventListener('change', function(event) {
         if(!Presets[this.value]) {
             console.error('Found an unknown preset value!');
             return;
@@ -780,7 +839,7 @@ function applyPreset(presetConfig) {
     deleteAllRows('multidose-table');
     deleteAllRows('steadystate-table');
 
-    presetConfig.menstrualCycle ? turnMenstrualCycleOn() : turnMenstrualCycleOff();
+    presetConfig.menstrualCycle ? turnMenstrualCycleOn(false) : turnMenstrualCycleOff(false);
     presetConfig.intervalDays ? setDaysAsIntervals(false) : setDaysAsAbsolute(false);
     
     if (presetConfig.steady.length) {
