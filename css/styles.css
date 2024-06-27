@@ -44,14 +44,9 @@ header {
 
 /* fake footer because github pages is weird */
 #footer {
-    /* display: flex; */
-    /* flex-direction: column; */
-    /* align-items: right; */
-    /* text-align: right; */
     display: inline-block;
     margin-top: 5em;
     font-size: 12px;
-    /* padding-left: 1.25em; */
 }
 
 input.flat-input {
@@ -113,12 +108,6 @@ button.flat-button {
     background-color: var(--standout-background-color);
     color: var(--light-foreground);
 }
-
-/* button.button-off {
-    font-weight: normal; 
-    background-color: var(--standout-background-color);
-    color: var(--light-foreground);
-} */
 
 button.button-on {
     font-weight: bold;

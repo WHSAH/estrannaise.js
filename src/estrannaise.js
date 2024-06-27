@@ -205,38 +205,6 @@ function getTDMs(tableId, getVisibility = false, keepInvalid = false) {
     return [times, doses, methods];
 }
 
-function _getTDMs(tableId, getVisibility = false, keepInvalid = false) {
-    let entriesTable = document.getElementById(tableId)
-
-    let entries = [];
-
-    // doses = [],
-    // times = [],
-    // methods = [],
-    // cVisibilities = [],
-    // uVisibilities = [];
-
-    for (let i = 1; i < doseTable.rows.length; i++) {
-        let row = doseTable.rows[i];
-        let rowData = readRow(row, keepInvalid);
-        if (rowData) {
-            doses.push(rowData.dose);
-            times.push(rowData.time);
-            methods.push(rowData.method);
-            if (getVisibility) {
-                cVisibilities.push(rowData.cVisibility);
-                uVisibilities.push(rowData.uVisibility);
-            }
-        }
-    };
-
-    if (getVisibility) {
-        return [times, doses, methods, cVisibilities, uVisibilities];
-    }
-    return [times, doses, methods];
-}
-
-
 function guessNextRow(tableID) {
     let table = document.getElementById(tableID);
     if (table.rows.length >= 4 && !daysAsIntervals) {
@@ -343,11 +311,16 @@ function addTDMRow(tableID, dose = null, time = null, method = null, cvisible = 
     });
 
     let timeCell = row.insertCell(3);
-    timeCell.innerHTML = '<input type="text" class="flat-input time-cell">';
+    let timeInput = document.createElement('input');
+    timeInput.classList.add('flat-input', 'time-cell');
+    timeInput.setAttribute('type', 'text');
+    
+    timeCell.appendChild(timeInput);
+    
     if (time !== null) {
-        timeCell.querySelector('input').value = time;
+        timeInput.value = time;
     }
-    timeCell.querySelector('input').addEventListener('input', function() {
+    timeInput.addEventListener('input', function() {
         let myRow = this.parentElement.parentElement;
         let currentValidity = Boolean(readRow(myRow, false));
 
@@ -361,7 +334,9 @@ function addTDMRow(tableID, dose = null, time = null, method = null, cvisible = 
 
     let methodCell = row.insertCell(4);
     let methodSelect = document.createElement('select');
-    methodSelect.className = 'dropdown-method';
+    methodSelect.classList.add('dropdown-method');
+
+    // Fill method dropdown with models
     Object.entries(methodList).forEach(([key, {units, description}]) => {
         let option = document.createElement('option');
         option.value = key;
@@ -393,8 +368,15 @@ function addTDMRow(tableID, dose = null, time = null, method = null, cvisible = 
 
     let deleteCell = row.insertCell(5);
     if (tableID == 'steadystate-table' || (tableID == 'multidose-table' && table.rows.length > 2)) {
-        deleteCell.innerHTML = '<button class="flat-button delete-button" title="Delete this entry">-</button>';
-        deleteCell.querySelector('.delete-button').addEventListener('click', function() {
+
+        let deleteButton = document.createElement('button');
+        deleteButton.classList.add('flat-button', 'delete-button');
+        deleteButton.setAttribute('title', 'Delete this entry');
+        deleteButton.textContent = '-';
+        
+        deleteCell.appendChild(deleteButton);
+        
+        deleteButton.addEventListener('click', function() {
             let myRow = this.parentNode.parentNode;
             let myTable = myRow.parentNode.parentNode;
 
@@ -412,7 +394,7 @@ function addTDMRow(tableID, dose = null, time = null, method = null, cvisible = 
     } else {
         // yo this is janky, but it's the only way I found to keep
         // the table looking good because I suck at CSS
-        deleteCell.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;';
+        deleteCell.textcontent = '&nbsp;&nbsp;&nbsp;&nbsp;';
     }
 
     // Run addRowIfNeeded() after this row has been added
