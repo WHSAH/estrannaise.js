@@ -540,13 +540,11 @@ function attachMultidoseButtonsEvents() {
     shareButton.addEventListener('mousedown', () => {
         navigator.clipboard.writeText(getShareURL());
         
-        shareButton.classList.remove('button-off');
         shareButton.classList.add('button-on');
         shareButton.innerHTML = 'copied!';
 
         setTimeout(() => {
             shareButton.classList.remove('button-on');
-            shareButton.classList.add('button-off');    
             shareButton.innerHTML = 'share url';
         }, 500);
     });
