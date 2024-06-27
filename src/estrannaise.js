@@ -294,10 +294,14 @@ function addTDMRow(tableID, dose = null, time = null, method = null, cvisible = 
     }
 
     let doseCell = row.insertCell(2);
-    doseCell.innerHTML = '<input type="text" class="flat-input dose-cell">';
+    let doseInput = document.createElement('input');
+    doseInput.classList.add('flat-input', 'dose-cell');
+    doseInput.setAttribute('type', 'text');
+
+    doseCell.appendChild(doseInput);
     // Set given dose or empty string as default value (prevents NaNs)
-    doseCell.querySelector('input').value = dose || '';
-    doseCell.querySelector('input').addEventListener('input', function() {
+    doseInput.value = dose || '';
+    doseInput.addEventListener('input', function() {
 
         let myRow = this.parentElement.parentElement;
         let currentValidity = Boolean(readRow(myRow, false));
@@ -347,21 +351,27 @@ function addTDMRow(tableID, dose = null, time = null, method = null, cvisible = 
     methodCell.appendChild(methodSelect);
 
     if (method !== null) {
-        methodCell.querySelector('select').value = method;
-        doseCell.querySelector('input').placeholder = methodList[method].units;
+        methodSelect.value = method;
+        doseInput.placeholder = methodList[method].units;
     } else {
         // If no method is specified and there are
         // more than one row in the table, add
         // the same method as the one before
         if (table.rows.length > 2) {
             method = table.rows[table.rows.length - 2].cells[4].querySelector('select').value;
-            methodCell.querySelector('select').value = method;
-            doseCell.querySelector('input').placeholder = methodList[method].units;
+            methodSelect.value = method;
+            doseInput.placeholder = methodList[method].units;
         }
     }
     
-    methodCell.querySelector('select').addEventListener('change', function() {
-        if (readRow(this.parentElement.parentElement)) {
+    methodSelect.addEventListener('change', function() {
+
+        let row = this.parentElement.parentElement;
+        let newMethod = this.value;
+        let newUnits = methodList[newMethod].units;
+        row.cells[2].querySelector('input').placeholder = newUnits;
+
+        if (readRow(row)) {
             refresh();
         }
     });
