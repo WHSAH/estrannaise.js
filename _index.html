@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>estrannaise.js</title>
+
+    <link rel="icon" type="image/png" sizes="96x96" href="img/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="img/favicon-48x48.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32x32.png">
+
+    <link rel="stylesheet" type="text/css" href="css/colors.css">
+    <link rel="stylesheet" type="text/css" href="css/slider.css">
+    <link rel="stylesheet" type="text/css" href="css/_styles.css">
+    <script src="lib/papaparse.js"></script>
+    <script src="lib/cubic-spline.js"></script>
+    <script src="lib/d3.js"></script>
+    <script src="lib/plot.js"></script>
+    <!-- <script type="module" src="src/estrannaise.js"></script> -->
+</head>
+
+<body>
+    <div id="everything">
+        <div id="ui-container">
+            <header>
+                <!-- Good god this css is gory. -->
+                <div id="header-div" style="display: flex; align-items: flex-start;">
+
+                    <div style="height: 100%; width: 100%; display: flex; flex-direction: column; justify-content: space-between; margin-top: 1.2em;">
+
+                        <div id="subtitle" style="display: flex; justify-content: space-between; width: 100%; align-items: flex-end;">
+
+                            <img src="img/favicon-48x48-bw.png" alt="estrannaise.js logo" style="margin-bottom: 0em;"><h1 style="margin-right: auto; margin-bottom: 0em;">estradiol <a href="docs/">pharmacokinetics</a> playground</h1>
+
+                            <label class="switch">
+                                <input type="checkbox" id="nightday-slider">
+                                <span class="slider round" title="Switch between night/day theme"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <div id="plot-region">
+
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                <div id="options" style="display: flex; margin-bottom: 1em; margin-right: auto;">
+                    <select id="dropdown-units"
+                            title="Change units for the estradiol concentration"
+                            style="display: inline-block; margin-right: 0.6em;">
+                        <option value="pg/mL">pg/mL</option>
+                        <option value="pmol/L">pmol/L</option>
+                    </select>
+                    <select id="dropdown-daysinput"
+                            title="Change the way days are interpreted as inputs in the multi-dose curve"
+                            style="display: inline-block; margin-right: 0.6em;">
+                        <option value="absolute">absolute days</option>
+                        <option value="intervals">interval days</option>
+                    </select>
+
+                    <select id="dropdown-presets"
+                            title="Load a preset"
+                            style="display: inline-block; margin-right: 0.6em; width: 23em;">
+                        <option value="" selected disabled>Select a preset</option>
+                        <option value="" disabled>monotherapies</option>
+                        <option value="ester-monotherapies">&nbsp;&nbsp;Ester monotherapies comparison</option>
+                        <option value="een-monotherapy-7">&nbsp;&nbsp;EEn monotherapy (7 days)</option>
+                        <option value="een-monotherapy-10">&nbsp;&nbsp;EEn monotherapy (10 days)</option>
+                        <option value="ev-monotherapy-4">&nbsp;&nbsp;EV monotherapy (4 days)</option>
+                        <option value="ec-monotherapy-7">&nbsp;&nbsp;EC monotherapy (7 days)</option>
+                        <option value="eun-monotherapy-14">&nbsp;&nbsp;EUn monotherapy (14 days)</option>
+                        <option value="eun-monotherapy-30">&nbsp;&nbsp;EUn monotherapy (subq 30 days)</option>
+                        <option value="patch-monotherapy">&nbsp;&nbsp;Patch mono (once/twice weekly)</option>
+                        <option value="ev34-to-een47-monotherapy">&nbsp;&nbsp;EV (4 days) to EEn (7 days)</option>
+                        <option value="" disabled>missed doses</option>
+                        <option value="missed-een-dose-7">&nbsp;&nbsp;Missed EEn dose</option>
+                        <option value="missed-ev-dose-4">&nbsp;&nbsp;Missed EV dose</option>
+                        <option value="correct-missed-een-dose-7">&nbsp;&nbsp;Correct missed EEn dose</option>
+                        <option value="correct-missed-ev-dose-4">&nbsp;&nbsp;Correct missed EV dose</option>
+                        <option value="preemptcorrect-missed-een-dose-7">&nbsp;&nbsp;Preempt/correct missed EEn dose</option>
+                        <option value="preemptcorrect-missed-ev-dose-4">&nbsp;&nbsp;Preempt/correct missed EV dose</option>
+                        <option value="" disabled>monotherapies with loading dose</option>
+                        <option value="een-monotherapy-loadingdose">&nbsp;&nbsp;EEn mono with 8mg loading dose</option>
+                        <option value="ev-monotherapy-loadingdose">&nbsp;&nbsp;EV mono with 6mg loading dose</option>
+                        <option value="ec-monotherapy-loadingdose">&nbsp;&nbsp;EC mono with 8mg loading dose</option>
+                        <option value="eun-monotherapy-loadingdose">&nbsp;&nbsp;EUn mono with 100mg loading dose</option>
+                        <option value="ev-to-een-loadingdose">&nbsp;&nbsp;EV to EEn with 7 mg loading dose</option>
+                        <option value="" disabled>inappropriate WPATH regimens (see text)</option>
+                        <option value="wpath-toolittle-toospaced">&nbsp;&nbsp;EV/EC 5mg/14days (too variable)</option>
+                        <option value="wpath-toomuch-toospaced">&nbsp;&nbsp;EV/EC 30mg/14days (extreme)</option>
+                        <option value="wpath-toolittle">&nbsp;&nbsp;EV/EC 2mg/7days (low & needs AA)</option>
+                        <option value="wpath-toomuch">&nbsp;&nbsp;EV/EC 10mg/7days (too much)</option>
+                        <option value="" disabled>inappropriate regimens</option>
+                        <option value="mimic-menstrual-cycle">&nbsp;&nbsp;Mimic Menstrual Cycle™</option>
+                    </select>
+
+                    <button id="menstrual-cycle-button" class="flat-button button-off"
+                    title="Turn on/off the display of the menstrual cycle data"
+                    style="width: 11em; margin-right: 0.6em;">menstrual cycle</button>
+
+                    <button id="target-range-button" class="flat-button button-off"
+                    title="Turn on/off the display of target mean estradiol range"
+                    style="width: 9em; margin-right: 0.6em;">target range</button>
+
+                </div>
+                <div id="stashrecall-container" style="margin-bottom: 2em; margin-left: auto;">
+                    <button id="share-button" class="flat-button button-off"
+                            title="Share the current state of the simulator as an arcane URL"
+                            style="width: 8em;">share url</button>
+                </div>
+            </div>
+
+            <div class="sections-container" id="sections-container">
+
+                <div id="multidose-section">
+                    <span style="font-weight: bold;">multi-doses</span>
+                    <div id="multidose-buttons" style="margin-top: 1em;">
+                        <button id="guess-button" class="flat-button" title="Duplicate last entry when in 'days as interval mode'. Guess and autofill next dose given the last two or three entries when in 'absolute days' mode">autofill</button>
+                        <button id="clear-doses-button" class="flat-button" title="Clear all entries in the multi-dose curve">clear</button>
+                        <input type="file" id="csv-file" accept=".csv" style="display: none;">
+                        <button id="import-csv-dialog" class="flat-button">import</button>
+                        <button id="export-csv-button" class="flat-button">export</button>
+                    </div>
+                    <br>
+                    <div id="dragndrop-zone">
+                        <table id="multidose-table">
+                            <thead>
+                                <tr style="text-align: center;">
+                                    <th>v</th>
+                                    <th>u</th>
+                                    <th>dose</th>
+                                    <th>days</th>
+                                    <th>method</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                        <span class="small-text">drag-n-drop
+                            csv on table to import</span>
+                    </div>
+                </div> <!-- multidose-section -->
+
+
+                <div id="steadystate-section">
+                    <span style="font-weight: bold;">steady-states</span>
+                    <div id="bottom-button" style="margin-top: 1em;">
+                        <button id="clear-steadystates-button" class="flat-button" title="Clear all steady-state entries">clear</button>
+                    </div>
+                    <br>
+                    <table id="steadystate-table">
+                        <thead>
+                            <tr style="text-align: center;">
+                                <th>v</th>
+                                <th>u</th>
+                                <th>dose</th>
+                                <th>every</th>
+                                <th>method</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                    <span style="font-weight: normal; font-size: 9px;">&nbsp;</span>
+                </div>
+
+            </div> <!-- tables-container -->
+        </div> <!-- ui-container -->
+
+        <!-- someone tell me why github pages don't render <footer> correctly? -->
+        <div id="footer" style="max-width: 55em; width: 100%; font-family: 'Roboto Mono';">
+            <div>
+            <!-- <div style="width: 55em; font-family: 'Roboto Mono';"> -->
+
+                <p class="disclaimer">
+                    Remember, <span style="color: var(--light-foreground)">the line is a lie!</span> The cloud a little less so.
+                </p>
+
+                <p class="indent">The cloud does not represent data points, it is a visual representation of the uncertainty
+                    in the model itself and it underestimates the total uncertainty.
+                    It only captures the uncertainty of something akin to a population mean, or more precisely the uncertainty
+                    over the parameters of the deterministic estradiol curve. It does not capture the full distribution of outcomes
+                    in the population at large. This is bound to change in the future once a better representation of this uncertainty
+                    gets implemented (which would include the additional population variability around the deterministic curve).
+                </p>
+
+                <p class="indent">The emerging consensus is that the pharmacokinetics of estradiol ester depots is highly variable
+                    and depends on many factors that are not well understood and rarely taken into account.
+                    Those factors can lead to vastly different outcomes and are not well represented, if at all,
+                    in the current models. Those include, among others, the ester concentration, the type of oil used,
+                    the proportion and type of excipients such as benzyl benzoate that are present in the
+                    formulation, the injection site, whether the depot is injected intramuscularly or subcutaneously,
+                    the injection depth, individual differences in metabolism, and the presence of other drugs.
+                    Some of those confounding factors are sometimes captured to an extent in the uncertainty of the models,
+                    but only when the data is abundant and spans multiple studies done under different conditions.
+                    This is, of course, generally not the case. Several of those factors also apply to transdermal,
+                    oral, and sublingual estradiol. I am actively working to improve and generalize the current models
+                    in ways that will better capture this variability, but ultimately their accuracy and scope will
+                    always be limited by the data available.
+                </p>
+
+                <p class="indent">Inferences for the estradiol benzoate, valerate, and cypionate intramuscular depot models
+                    (<span class="standout-text">eb im</span>, <span class="standout-text">ev im</span>, <span class="standout-text">ec im</span>)
+                    use part of the data collected and made available by the amazing people behind the
+                    <a href="https://transfemscience.org/articles/injectable-e2-meta-analysis/" target="_blank">tfs meta-analysis</a>
+                    but will be reprocessed in the future to allow for a better quantification of uncertainty.
+                </p>
+
+                <p class="indent">The data behind the estradiol undecylate model for intramuscular depots using castor oil (<span class="standout-text">eun im</span>)
+                    was entirely reprocessed from scratch using the per-patient data found in Geppert 1975 together with the data and uncertainty reported in Vermeulen 1975.
+                    This data is extremely sparse and incomplete and thus the model is highly uncertain.
+                </p>
+
+                <p class="indent">The data behind the estradiol undecylate model for subcutaneous depots using castor oil
+                    (<span class="standout-text">eun casubq</span>) was inferred on
+                    top of the <span class="standout-text">eun im</span> model by augmenting it with very sparse self-reported community data.
+                    Its predictions are also highly uncertain.
+                </p>
+
+                <p class="indent">The data behind the estradiol enanthate model for intramuscular depots using sunflower oil (<span class="standout-text">een im</span>)
+                    was reprocessed from scratch using studies with Perlutan from the 80s and 90s. This data
+                    is also extremely sparse and incomplete and the model highly uncertain.
+                </p>
+
+                <p class="indent">The once-weekly patch model (<span class="standout-text">patch ow</span>) was inferred using data found in drug labels
+                    of once-weekly Climara and Menostar patches. The twice-weekly patch model (<span class="standout-text">patch tw</span>) was inferred
+                    using data taken from two 2003 studies by Houssain et al. looking at
+                    twice-weekly Estradot and Menorest patches, and in the drug label of twice-weekly Mylan patches.
+                    Currently there is no way to change the wearing period of the patch in the interface
+                    (i.e. they are fixed at 3&frac12; and 7 days) but it is planned for the future.
+                </p>
+
+                <p class="indent">The data for the menstrual cycle comes from <a href="https://doi.org/10.1515/CCLM.2006.160" target="_blank">Stricker et al. 2006</a>. Download the <a href="data/menstrualcycle_stricker2006.csv">E2/P/LH/FSH data</a>.</p>
+                
+                <p class="indent">Data for target ranges is based on guidance from <a href="https://doi.org/10.1080/26895269.2022.2100644" target="_blank">WPATH Standards of Care, Version 8</a> in addition to the <a href="https://doi.org/10.1210/jc.2017-01658" target="_blank">Endocrine Society's Clinical Practice Guideline</a>.</p>
+                
+                <p><strong>Note regarding "inapproprite WPATH regimens" presets</strong>
+                    <p class="indent">In the WPATH Standards of Care (Appendix C, page S254), several hormone replacement therapy (HRT) regimens for transfeminine people are listed. However, some of these recommendations might not align with WPATH's own guidelines and could even be harmful. Here's a breakdown of the issues.</p>
+                    <ol>
+                        <li><strong>Problem with recommended 5-30 mg intramuscular injections every 2 weeks:</strong></li>
+                        <ul>
+                            <li>The half-life of estradiol valerate and cypionate are about 4 and 8 days, respectively. Injecting every 2 weeks can cause large fluctuations in hormone levels, leading to very high levels shortly after the injection and very low levels before the next injection. This can cause mood swings and potentially restart testosterone production in the last few days before the next injection.</li>
+                            <li>Using the lower dose limit (5 mg every 2 weeks), hormone levels may drop too low for monotherapy after about 7 days, potentially allowing testosterone production to restart, and further down below 100 pg/mL at odd with WPATH's own recommended levels.</li>
+                            <li>Using the upper dose limit (30 mg every 2 weeks), hormone levels could spike dangerously high (upwards of 2,000 pg/mL with EV and 1,000 pg/mL with EC), increasing the risk of blood clots for those predisposed to thrombotic events.</li>
+                        </ul>
+                        <li><strong>Problem with recommended 2 to 10 mg intramuscular injections every week:</strong></li>
+                        <ul>
+                            <li>Using the lower dose limit (2 mg every week), hormone levels may consistently stay below 150 pg/mL throughout the week with EC and during the second half of the week with EV, and below 100 pg/mL in the last 2 days of the week for both, which might necessitate using an anti-androgen to suppress testosterone.</li>
+                            <li>Using the upper dose limit (10 mg every week), hormone levels may consistently stay above 300-400 pg/mL, which is much higher than WPATH’s own recommended levels.</li>
+                        </ul>
+                    </ol>
+                </p>
+
+                <br>
+                <p>With help, encouragements, and entertainment from
+                    <br>emily torble lea annie izzy meringue photino ashley jess cassandra sapphira
+                </p>
+                <br>
+                <p>
+                    <strong>DISCLAIMER</strong><br>
+                    This page, designed as a playground to explore estradiol pharmacokinetics, provides a simulation
+                    for informational and entertainment purposes only. The developer(s) cannot guarantee the accuracy of
+                    the predictions generated by the simulator. Users acknowledge that the software is offered "as is,"
+                    without any warranties. The developer(s) assume no liability for direct or indirect damages,
+                    either physical, psychological, or otherwise, resulting from the use of the simulator.
+                    Users are strongly advised to exercise caution and seek professional medical advice for
+                    health-related queries.
+                </p>
+                <p>
+                    estrannaise.js is entirely client-side. Your data, whether entered, imported, or stashed,
+                    remains exclusively within your browser and will never be transmitted to the developer(s) or any
+                    third-party by our application.
+                </p>
+            </div>
+            <br>
+            <p>estrannaise.js (v0.3.1)</p>
+            <p>mit license (c) 2024 alix</p>
+            <p><a href="javascript_licenses.html" data-jslicense="1">JavaScript license information</a></p>
+        </div>
+    </div>
+</body>
+
+</html>
