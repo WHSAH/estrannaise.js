@@ -1,7 +1,7 @@
 # estrannaise.js
 estrannaise.js is a small playground for estradiol pharmacokinetics. It can simulate estradiol blood levels under arbitrary dosing regimes and schedules. In the near future it will allow users to infer model parameters from outside sources, including their own personal blood levels.
 
-Under the hood, estrannaise.js uses pharmacokinetic compartments models and MCMC inference using either a flat Gaussian model or our very own homebrewed hierarchical Bayesian amodel called Emix.
+Under the hood, estrannaise.js uses pharmacokinetic compartments models and MCMC inference using a simple Gaussian model with mixed effects or for more complicated pooled dataset our very own homebrewed hierarchical Bayesian model called Emix.
 
 **estrannaise.js is entirely client-side. Your data, whether entered, imported, or stashed, remains exclusively within your browser and will never be transmitted to the developer(s) or any third-party.**
 
