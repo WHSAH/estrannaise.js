@@ -7,7 +7,6 @@ Under the hood, estrannaise.js uses pharmacokinetic compartments models and MCMC
 
 # TODO
 - Shorten shared url
-- Remember units/days type/menstrual cycle visibility options when stashing/saving/loading
 - Allow to manual set x-axis limits
 - Allow possibility of changing patch wear time
 - Offer different ways to visualize the uncertainty (parallel sigma lines and cloud ensemble of curves)
