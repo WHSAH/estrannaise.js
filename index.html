@@ -19,118 +19,144 @@
 </head>
 
 <body>
+    <div id="everything">
+        <div id="ui-container">
+            <header>
+                <!-- Good god this css is gory. -->
+                <div id="header-div" style="display: flex; align-items: flex-start;">
 
-    <div id="container">
-        <header>
-            <!-- Good god this css is gory. -->
-            <div id="header-div" style="display: flex; align-items: flex-start;">
+                    <div style="height: 100%; width: 100%; display: flex; flex-direction: column; justify-content: space-between; margin-top: 1.2em;">
 
-                <div style="height: 100%; width: 100%; display: flex; flex-direction: column; justify-content: space-between; margin-top: 1.2em;">
+                        <div id="subtitle" style="display: flex; justify-content: space-between; width: 100%; align-items: flex-end;">
 
-                    <div id="subtitle" style="display: flex; justify-content: space-between; width: 100%; align-items: flex-end;">
+                            <img src="img/favicon-48x48-bw.png" alt="estrannaise.js logo" style="margin-bottom: 0em;"><h1 style="margin-right: auto; margin-bottom: 0em;">estradiol <a href="docs/">pharmacokinetics</a> playground</h2>
 
-                        <img src="img/favicon-48x48-bw.png" alt="estrannaise.js logo" style="margin-bottom: 0em;"><h1 style="margin-right: auto; margin-bottom: 0em;">estradiol <a href="docs/">pharmacokinetics</a> playground</h2>
-
-                        <label class="switch">
-                            <input type="checkbox" id="nightday-slider">
-                            <span class="slider round" title="Switch between night/day theme"></span>
-                        </label>
+                            <label class="switch">
+                                <input type="checkbox" id="nightday-slider">
+                                <span class="slider round" title="Switch between night/day theme"></span>
+                            </label>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </header>
+            </header>
 
-        <div id="plot-region">
-
-        </div>
-
-        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-            <div id="options" style="display: flex; margin-bottom: 1em; margin-right: auto;">
-                <select id="dropdown-units"
-                        title="Change units for the estradiol concentration"
-                        style="display: inline-block; margin-right: 0.6em;">
-                    <option value="pg/mL">pg/mL</option>
-                    <option value="pmol/L">pmol/L</option>
-                </select>
-                <select id="dropdown-daysinput"
-                        title="Change the way days are interpreted as inputs in the multi-dose curve"
-                        style="display: inline-block; margin-right: 0.6em;">
-                    <option value="absolute">absolute days</option>
-                    <option value="intervals">interval days</option>
-                </select>
-
-                <select id="dropdown-presets"
-                        title="Load a preset"
-                        style="display: inline-block; margin-right: 0.6em; width: 23em;">
-                    <option value="" selected disabled>Select a preset</option>
-                    <option value="" disabled>monotherapies</option>
-                    <option value="ester-monotherapies">&nbsp;&nbsp;Ester monotherapies comparison</option>
-                    <option value="een-monotherapy-7">&nbsp;&nbsp;EEn monotherapy (7 days)</option>
-                    <option value="een-monotherapy-10">&nbsp;&nbsp;EEn monotherapy (10 days)</option>
-                    <option value="ev-monotherapy-4">&nbsp;&nbsp;EV monotherapy (4 days)</option>
-                    <option value="ec-monotherapy-7">&nbsp;&nbsp;EC monotherapy (7 days)</option>
-                    <option value="eun-monotherapy-14">&nbsp;&nbsp;EUn monotherapy (14 days)</option>
-                    <option value="eun-monotherapy-30">&nbsp;&nbsp;EUn monotherapy (subq 30 days)</option>
-                    <option value="patch-monotherapy">&nbsp;&nbsp;Patch mono (once/twice weekly)</option>
-                    <option value="ev34-to-een47-monotherapy">&nbsp;&nbsp;EV (4 days) to EEn (7 days)</option>
-                    <option value="" disabled>missed doses</option>
-                    <option value="missed-een-dose-7">&nbsp;&nbsp;Missed EEn dose</option>
-                    <option value="missed-ev-dose-4">&nbsp;&nbsp;Missed EV dose</option>
-                    <option value="correct-missed-een-dose-7">&nbsp;&nbsp;Correct missed EEn dose</option>
-                    <option value="correct-missed-ev-dose-4">&nbsp;&nbsp;Correct missed EV dose</option>
-                    <option value="preemptcorrect-missed-een-dose-7">&nbsp;&nbsp;Preempt/correct missed EEn dose</option>
-                    <option value="preemptcorrect-missed-ev-dose-4">&nbsp;&nbsp;Preempt/correct missed EV dose</option>
-                    <option value="" disabled>monotherapies with loading dose</option>
-                    <option value="een-monotherapy-loadingdose">&nbsp;&nbsp;EEn mono with 8mg loading dose</option>
-                    <option value="ev-monotherapy-loadingdose">&nbsp;&nbsp;EV mono with 6mg loading dose</option>
-                    <option value="ec-monotherapy-loadingdose">&nbsp;&nbsp;EC mono with 8mg loading dose</option>
-                    <option value="eun-monotherapy-loadingdose">&nbsp;&nbsp;EUn mono with 100mg loading dose</option>
-                    <option value="ev-to-een-loadingdose">&nbsp;&nbsp;EV to EEn with 7 mg loading dose</option>
-                    <option value="" disabled>inappropriate WPATH regimens (see text)</option>
-                    <option value="wpath-toolittle-toospaced">&nbsp;&nbsp;EV/EC 5mg/14days (too variable)</option>
-                    <option value="wpath-toomuch-toospaced">&nbsp;&nbsp;EV/EC 30mg/14days (extreme)</option>
-                    <option value="wpath-toolittle">&nbsp;&nbsp;EV/EC 2mg/7days (low & needs AA)</option>
-                    <option value="wpath-toomuch">&nbsp;&nbsp;EV/EC 10mg/7days (too much)</option>
-                    <option value="" disabled>inappropriate regimens</option>
-                    <option value="mimic-menstrual-cycle">&nbsp;&nbsp;Mimic Menstrual Cycle™</option>
-                </select>
-
-                <button id="menstrual-cycle-button" class="flat-button button-off"
-                title="Turn on/off the display of the menstrual cycle data"
-                style="width: 11em; margin-right: 0.6em;">menstrual cycle</button>
-
-                <button id="target-range-button" class="flat-button button-off"
-                title="Turn on/off the display of target mean estradiol range"
-                style="width: 9em; margin-right: 0.6em;">target range</button>
+            <div id="plot-region">
 
             </div>
-            <div id="stashrecall-container" style="margin-bottom: 2em; margin-left: auto;">
-                <button id="share-button" class="flat-button button-off"
-                        title="Share the current state of the simulator as an arcane URL"
-                        style="width: 8em;">share url</button>
-            </div>
-        </div>
 
-        <div class="sections-container" id="sections-container">
+            <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                <div id="options" style="display: flex; margin-bottom: 1em; margin-right: auto;">
+                    <select id="dropdown-units"
+                            title="Change units for the estradiol concentration"
+                            style="display: inline-block; margin-right: 0.6em;">
+                        <option value="pg/mL">pg/mL</option>
+                        <option value="pmol/L">pmol/L</option>
+                    </select>
+                    <select id="dropdown-daysinput"
+                            title="Change the way days are interpreted as inputs in the multi-dose curve"
+                            style="display: inline-block; margin-right: 0.6em;">
+                        <option value="absolute">absolute days</option>
+                        <option value="intervals">interval days</option>
+                    </select>
 
-            <div id="multidose-section">
-                <span style="font-weight: bold;">multi-doses</span>
-                <div id="multidose-buttons" style="margin-top: 1em;">
-                    <button id="guess-button" class="flat-button" title="Duplicate last entry when in 'days as interval mode'. Guess and autofill next dose given the last two or three entries when in 'absolute days' mode">autofill</button>
-                    <button id="clear-doses-button" class="flat-button" title="Clear all entries in the multi-dose curve">clear</button>
-                    <input type="file" id="csv-file" accept=".csv" style="display: none;">
-                    <button id="import-csv-dialog" class="flat-button">import</button>
-                    <button id="export-csv-button" class="flat-button">export</button>
+                    <select id="dropdown-presets"
+                            title="Load a preset"
+                            style="display: inline-block; margin-right: 0.6em; width: 23em;">
+                        <option value="" selected disabled>Select a preset</option>
+                        <option value="" disabled>monotherapies</option>
+                        <option value="ester-monotherapies">&nbsp;&nbsp;Ester monotherapies comparison</option>
+                        <option value="een-monotherapy-7">&nbsp;&nbsp;EEn monotherapy (7 days)</option>
+                        <option value="een-monotherapy-10">&nbsp;&nbsp;EEn monotherapy (10 days)</option>
+                        <option value="ev-monotherapy-4">&nbsp;&nbsp;EV monotherapy (4 days)</option>
+                        <option value="ec-monotherapy-7">&nbsp;&nbsp;EC monotherapy (7 days)</option>
+                        <option value="eun-monotherapy-14">&nbsp;&nbsp;EUn monotherapy (14 days)</option>
+                        <option value="eun-monotherapy-30">&nbsp;&nbsp;EUn monotherapy (subq 30 days)</option>
+                        <option value="patch-monotherapy">&nbsp;&nbsp;Patch mono (once/twice weekly)</option>
+                        <option value="ev34-to-een47-monotherapy">&nbsp;&nbsp;EV (4 days) to EEn (7 days)</option>
+                        <option value="" disabled>missed doses</option>
+                        <option value="missed-een-dose-7">&nbsp;&nbsp;Missed EEn dose</option>
+                        <option value="missed-ev-dose-4">&nbsp;&nbsp;Missed EV dose</option>
+                        <option value="correct-missed-een-dose-7">&nbsp;&nbsp;Correct missed EEn dose</option>
+                        <option value="correct-missed-ev-dose-4">&nbsp;&nbsp;Correct missed EV dose</option>
+                        <option value="preemptcorrect-missed-een-dose-7">&nbsp;&nbsp;Preempt/correct missed EEn dose</option>
+                        <option value="preemptcorrect-missed-ev-dose-4">&nbsp;&nbsp;Preempt/correct missed EV dose</option>
+                        <option value="" disabled>monotherapies with loading dose</option>
+                        <option value="een-monotherapy-loadingdose">&nbsp;&nbsp;EEn mono with 8mg loading dose</option>
+                        <option value="ev-monotherapy-loadingdose">&nbsp;&nbsp;EV mono with 6mg loading dose</option>
+                        <option value="ec-monotherapy-loadingdose">&nbsp;&nbsp;EC mono with 8mg loading dose</option>
+                        <option value="eun-monotherapy-loadingdose">&nbsp;&nbsp;EUn mono with 100mg loading dose</option>
+                        <option value="ev-to-een-loadingdose">&nbsp;&nbsp;EV to EEn with 7 mg loading dose</option>
+                        <option value="" disabled>inappropriate WPATH regimens (see text)</option>
+                        <option value="wpath-toolittle-toospaced">&nbsp;&nbsp;EV/EC 5mg/14days (too variable)</option>
+                        <option value="wpath-toomuch-toospaced">&nbsp;&nbsp;EV/EC 30mg/14days (extreme)</option>
+                        <option value="wpath-toolittle">&nbsp;&nbsp;EV/EC 2mg/7days (low & needs AA)</option>
+                        <option value="wpath-toomuch">&nbsp;&nbsp;EV/EC 10mg/7days (too much)</option>
+                        <option value="" disabled>inappropriate regimens</option>
+                        <option value="mimic-menstrual-cycle">&nbsp;&nbsp;Mimic Menstrual Cycle™</option>
+                    </select>
+
+                    <button id="menstrual-cycle-button" class="flat-button button-off"
+                    title="Turn on/off the display of the menstrual cycle data"
+                    style="width: 11em; margin-right: 0.6em;">menstrual cycle</button>
+
+                    <button id="target-range-button" class="flat-button button-off"
+                    title="Turn on/off the display of target mean estradiol range"
+                    style="width: 9em; margin-right: 0.6em;">target range</button>
+
                 </div>
-                <br>
-                <div id="dragndrop-zone">
-                    <table id="multidose-table">
+                <div id="stashrecall-container" style="margin-bottom: 2em; margin-left: auto;">
+                    <button id="share-button" class="flat-button button-off"
+                            title="Share the current state of the simulator as an arcane URL"
+                            style="width: 8em;">share url</button>
+                </div>
+            </div>
+
+            <div class="sections-container" id="sections-container">
+
+                <div id="multidose-section">
+                    <span style="font-weight: bold;">multi-doses</span>
+                    <div id="multidose-buttons" style="margin-top: 1em;">
+                        <button id="guess-button" class="flat-button" title="Duplicate last entry when in 'days as interval mode'. Guess and autofill next dose given the last two or three entries when in 'absolute days' mode">autofill</button>
+                        <button id="clear-doses-button" class="flat-button" title="Clear all entries in the multi-dose curve">clear</button>
+                        <input type="file" id="csv-file" accept=".csv" style="display: none;">
+                        <button id="import-csv-dialog" class="flat-button">import</button>
+                        <button id="export-csv-button" class="flat-button">export</button>
+                    </div>
+                    <br>
+                    <div id="dragndrop-zone">
+                        <table id="multidose-table">
+                            <thead>
+                                <tr style="text-align: center;">
+                                    <th>v</th>
+                                    <th>u</th>
+                                    <th>dose</th>
+                                    <th>days</th>
+                                    <th>method</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                        <span class="small-text">drag-n-drop
+                            csv on table to import</span>
+                    </div>
+                </div> <!-- multidose-section -->
+
+
+                <div id="steadystate-section">
+                    <span style="font-weight: bold;">steady-states</span>
+                    <div id="bottom-button" style="margin-top: 1em;">
+                        <button id="clear-steadystates-button" class="flat-button" title="Clear all steady-state entries">clear</button>
+                    </div>
+                    <br>
+                    <table id="steadystate-table">
                         <thead>
                             <tr style="text-align: center;">
                                 <th>v</th>
                                 <th>u</th>
                                 <th>dose</th>
-                                <th>days</th>
+                                <th>every</th>
                                 <th>method</th>
                                 <th></th>
                             </tr>
@@ -138,40 +164,16 @@
                         <tbody>
                         </tbody>
                     </table>
-                    <span class="small-text">drag-n-drop
-                        csv on table to import</span>
+                    <span style="font-weight: normal; font-size: 9px;">&nbsp;</span>
                 </div>
-            </div> <!-- multidose-section -->
 
-
-            <div id="steadystate-section">
-                <span style="font-weight: bold;">steady-states</span>
-                <div id="bottom-button" style="margin-top: 1em;">
-                    <button id="clear-steadystates-button" class="flat-button" title="Clear all steady-state entries">clear</button>
-                </div>
-                <br>
-                <table id="steadystate-table">
-                    <thead>
-                        <tr style="text-align: center;">
-                            <th>v</th>
-                            <th>u</th>
-                            <th>dose</th>
-                            <th>every (days)</th>
-                            <th>method</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
-                <span style="font-weight: normal; font-size: 9px;">&nbsp;</span>
-            </div>
-
-        </div> <!-- tables-container -->
+            </div> <!-- tables-container -->
+        </div> <!-- ui-container -->
 
         <!-- someone tell me why github pages don't render <footer> correctly? -->
-        <div id="footer">
-            <div style="width: 55em; font-family: 'Roboto Mono';">
+        <div id="footer" style="max-width: 55em; width: 100%; font-family: 'Roboto Mono';">
+            <div>
+            <!-- <div style="width: 55em; font-family: 'Roboto Mono';"> -->
 
                 <p class="disclaimer">
                     Remember, <span style="color: var(--light-foreground)">the line is a lie!</span> The cloud a little less so.
@@ -279,7 +281,6 @@
             <p><a href="javascript_licenses.html" data-jslicense="1">JavaScript license information</a></p>
         </div>
     </div>
-
 </body>
 
 </html>

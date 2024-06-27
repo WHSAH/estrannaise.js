@@ -325,7 +325,7 @@ function addTDMRow(tableID, dose = null, time = null, method = null, cvisible = 
     }
     else if (tableID == 'steadystate-table') {
         timeInput.classList.add('time-input-steadystate');
-        timeInput.placeholder = 'dose interval';
+        timeInput.placeholder = 'days';
     };
 
     timeCell.appendChild(timeInput);
