@@ -68,6 +68,18 @@ input.flat-input {
     border-radius: 4px;
 }
 
+.small-text {
+    font-weight: normal;
+    font-size: 9px;
+    display: block;
+    text-align: center;
+}
+
+.standout-text {
+    color: var(--light-foreground); 
+    font-weight: bold;
+}
+
 select {
     appearance: none;
     border: none;
@@ -91,25 +103,35 @@ select {
 button.flat-button {
     border: none;
     outline: none;
-    background-color: var(--standout-background-color);
-    /* Light gray */
     padding: 4px;
     padding-left: 10px;
     padding-right: 10px;
     font-size: 12px;
     text-align: center;
     font-family: monospace;
-    font-weight: bold;
-    color: var(--light-foreground);
     border-radius: 4px;
+    background-color: var(--standout-background-color);
+    color: var(--light-foreground);
 }
+
+/* button.button-off {
+    font-weight: normal; 
+    background-color: var(--standout-background-color);
+    color: var(--light-foreground);
+} */
+
+button.button-on {
+    font-weight: bold;
+    background-color: var(--light-foreground);
+    color: var(--standout-background-color);
+}
+
 
 button.delete-button {
     padding: 4px;
     padding-left: 10px;
     padding-right: 10px;
     transform: translate(0px, 0px);
-    border: none;
 }
 
 #container {

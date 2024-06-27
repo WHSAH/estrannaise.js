@@ -205,6 +205,38 @@ function getTDMs(tableId, getVisibility = false, keepInvalid = false) {
     return [times, doses, methods];
 }
 
+function _getTDMs(tableId, getVisibility = false, keepInvalid = false) {
+    let entriesTable = document.getElementById(tableId)
+
+    let entries = [];
+
+    // doses = [],
+    // times = [],
+    // methods = [],
+    // cVisibilities = [],
+    // uVisibilities = [];
+
+    for (let i = 1; i < doseTable.rows.length; i++) {
+        let row = doseTable.rows[i];
+        let rowData = readRow(row, keepInvalid);
+        if (rowData) {
+            doses.push(rowData.dose);
+            times.push(rowData.time);
+            methods.push(rowData.method);
+            if (getVisibility) {
+                cVisibilities.push(rowData.cVisibility);
+                uVisibilities.push(rowData.uVisibility);
+            }
+        }
+    };
+
+    if (getVisibility) {
+        return [times, doses, methods, cVisibilities, uVisibilities];
+    }
+    return [times, doses, methods];
+}
+
+
 function guessNextRow(tableID) {
     let table = document.getElementById(tableID);
     if (table.rows.length >= 4 && !daysAsIntervals) {
@@ -411,18 +443,26 @@ function setDaysAsAbsolute(refreshPlot = true) {
 
 function turnMenstrualCycleOn() {
     let mcButton = document.getElementById('menstrual-cycle-button');
-    mcButton.style.setProperty('background-color', 'var(--light-foreground)');
-    mcButton.style.setProperty('color', 'var(--standout-background-color)');
-    mcButton.style.setProperty('font-weight', 'bold');
+    mcButton.classList.add('button-on');
     menstrualCycleVisible = true;
 }
 
 function turnMenstrualCycleOff() {
     let mcButton = document.getElementById('menstrual-cycle-button');
-    mcButton.style.setProperty('background-color', 'var(--standout-background-color)');
-    mcButton.style.setProperty('color', 'var(--light-foreground)');
-    mcButton.style.setProperty('font-weight', 'normal');
+    mcButton.classList.remove('button-on');
     menstrualCycleVisible = false;
+}
+
+function turnTargetRangeOn() {
+    let trButton = document.getElementById('target-range-button');
+    trButton.classList.add('button-on');
+    targetRangeVisible = true;
+}
+
+function turnTargetRangeOff() {
+    let trButton = document.getElementById('target-range-button');
+    trButton.classList.remove('button-on');
+    targetRangeVisible = false;
 }
 
 function attachMenstrualCycleButtonEvent() {
@@ -442,15 +482,9 @@ function attachTargetRangeButtonEvent() {
     let button = document.getElementById('target-range-button');
     button.addEventListener('mousedown', () => {
         if (targetRangeVisible) {
-            button.style.setProperty('background-color', 'var(--standout-background-color)');
-            button.style.setProperty('color', 'var(--light-foreground)');
-            button.style.setProperty('font-weight', 'normal');
-            targetRangeVisible = false;
+            turnTargetRangeOff();
         } else {
-            button.style.setProperty('background-color', 'var(--light-foreground)');
-            button.style.setProperty('color', 'var(--standout-background-color)');
-            button.style.setProperty('font-weight', 'bold');
-            targetRangeVisible = true;
+            turnTargetRangeOn();
         }
         refresh();
     });
@@ -485,52 +519,92 @@ function attachDragNDropImport() {
 
 function attachMultidoseButtonsEvents() {
 
-    document.getElementById('guess-button').addEventListener('mousedown', () => {
+    let guessButton = document.getElementById('guess-button');
+
+    guessButton.addEventListener('mousedown', () => {
         let guess = guessNextRow('multidose-table');
+
         if (guess) {
+            guessButton.classList.add('button-on');
             setRowParameters('multidose-table', -1, guess.time, guess.dose, guess.method);
             refresh();
         } else {
-            document.getElementById('guess-button').innerHTML = '&nbsp;?._.)&nbsp;&nbsp;';
+            guessButton.innerHTML = '&nbsp;?._.)&nbsp;&nbsp;';
 
             setTimeout(() => {
-                document.getElementById('guess-button').innerHTML = 'autofill';
+                guessButton.innerHTML = 'autofill';
+                guessButton.classList.remove('button-on');
             }, 500);
         }
     });
+    guessButton.addEventListener('mouseup', () => {
+        guessButton.classList.remove('button-on');
+    });
 
-    document.getElementById('clear-doses-button').addEventListener('mousedown', () => {
+    let clearDoseButton = document.getElementById('clear-doses-button');
+
+    clearDoseButton.addEventListener('mousedown', () => {
+        clearDoseButton.classList.add('button-on');
         deleteAllRows('multidose-table');
         addTDMRow('multidose-table');
         refresh();
     });
+    clearDoseButton.addEventListener('mouseup', () => {
+        clearDoseButton.classList.remove('button-on');
+    });
 
-    document.getElementById('share-button').addEventListener('mousedown', () => {
+    let shareButton = document.getElementById('share-button');
+
+    shareButton.addEventListener('mousedown', () => {
         navigator.clipboard.writeText(getShareURL());
-
-        document.getElementById('share-button').innerHTML = 'copied!';
+        
+        shareButton.classList.remove('button-off');
+        shareButton.classList.add('button-on');
+        shareButton.innerHTML = 'copied!';
 
         setTimeout(() => {
-            document.getElementById('share-button').innerHTML = 'share url';
-        }, 1000);
+            shareButton.classList.remove('button-on');
+            shareButton.classList.add('button-off');    
+            shareButton.innerHTML = 'share url';
+        }, 500);
     });
 
-    document.getElementById('save-csv-button').addEventListener('mousedown', () => {
+    let exportCSVButton = document.getElementById('export-csv-button');
+
+    exportCSVButton.addEventListener('mousedown', () => {
+        exportCSVButton.classList.add('button-on');
         exportCSV();
     });
-    document.getElementById('import-csv-dialog').addEventListener('mousedown', () => {
+    exportCSVButton.addEventListener('mouseup', () => {
+        exportCSVButton.classList.remove('button-on');
+    }); 
+
+    // No toggle-on/off style. Makes it compatible with safari
+    // and the dialog acts as feedback anyway so it's ok.
+    let importCSVButton = document.getElementById('import-csv-dialog')
+
+    importCSVButton .addEventListener('mousedown', () => {
         document.getElementById('csv-file').click();
     });
+
     document.getElementById('csv-file').addEventListener('change', (e) => {
         loadCSV(e.target.files);
     });
 }
 
 function attachSteadyStateButtonsEvents() {
-    document.getElementById('clear-steadystates-button').addEventListener('mousedown', () => {
+
+    let clearSteadyStateButton = document.getElementById('clear-steadystates-button')
+
+    clearSteadyStateButton.addEventListener('mousedown', () => {
+        clearSteadyStateButton.classList.add('button-on');
         deleteAllRows('steadystate-table');
         addTDMRow('steadystate-table');
         refresh();
+    });
+
+    clearSteadyStateButton.addEventListener('mouseup', () => {
+        clearSteadyStateButton.classList.remove('button-on');
     });
 }
 

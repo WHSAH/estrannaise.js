@@ -96,17 +96,17 @@
                     <option value="mimic-menstrual-cycle">&nbsp;&nbsp;Mimic Menstrual Cycle™</option>
                 </select>
 
-                <button id="menstrual-cycle-button" class="flat-button"
+                <button id="menstrual-cycle-button" class="flat-button toggle-button-off"
                 title="Turn on/off the display of the menstrual cycle data"
-                style="width: 11em; font-weight: normal; margin-right: 0.6em;">menstrual cycle</button>
+                style="width: 11em; margin-right: 0.6em;">menstrual cycle</button>
 
-                <button id="target-range-button" class="flat-button"
+                <button id="target-range-button" class="flat-button toggle-button-off"
                 title="Turn on/off the display of target mean estradiol range"
-                style="width: 9em; font-weight: normal; margin-right: 0.6em;">target range</button>
+                style="width: 9em; margin-right: 0.6em;">target range</button>
 
             </div>
             <div id="stashrecall-container" style="margin-bottom: 2em; margin-left: auto;">
-                <button id="share-button" class="flat-button"
+                <button id="share-button" class="flat-button toggle-button-off"
                         title="Share the current state of the simulator as an arcane URL"
                         style="width: 8em;">share url</button>
             </div>
@@ -121,25 +121,25 @@
                     <button id="clear-doses-button" class="flat-button" title="Clear all entries in the multi-dose curve">clear</button>
                     <input type="file" id="csv-file" accept=".csv" style="display: none;">
                     <button id="import-csv-dialog" class="flat-button">import</button>
-                    <button id="save-csv-button" class="flat-button">export</button>
+                    <button id="export-csv-button" class="flat-button">export</button>
                 </div>
                 <br>
                 <div id="dragndrop-zone">
                     <table id="multidose-table">
                         <thead>
-                            <tr>
-                                <th style="text-align: center;">v</th>
-                                <th style="text-align: center;">u</th>
-                                <th style="text-align: center;">dose</th>
-                                <th style="text-align: center;">time (days)</th>
-                                <th style="text-align: center;">method</th>
+                            <tr style="text-align: center;">
+                                <th>v</th>
+                                <th>u</th>
+                                <th>dose</th>
+                                <th>time (days)</th>
+                                <th>method</th>
                                 <th></th>
                             </tr>
                         </thead>
                         <tbody>
                         </tbody>
                     </table>
-                    <span style="font-weight: normal; font-size: 9px; display: block; text-align: center;">drag-n-drop
+                    <span class="small-text">drag-n-drop
                         csv on table to import</span>
                 </div>
             </div> <!-- multidose-section -->
@@ -153,12 +153,12 @@
                 <br>
                 <table id="steadystate-table">
                     <thead>
-                        <tr>
-                            <th style="text-align: center;">v</th>
-                            <th style="text-align: center;">u</th>
-                            <th style="text-align: center;">dose</th>
-                            <th style="text-align: center;">every (days)</th>
-                            <th style="text-align: center;">method</th>
+                        <tr style="text-align: center;">
+                            <th>v</th>
+                            <th>u</th>
+                            <th>dose</th>
+                            <th>every (days)</th>
+                            <th>method</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -202,30 +202,30 @@
                 </p>
 
                 <p class="indent">Inferences for the estradiol benzoate, valerate, and cypionate intramuscular depot models
-                    (<span style="color: var(--light-foreground); font-weight: bold;">eb im</span>, <span style="color: var(--light-foreground); font-weight: bold;">ev im</span>, <span style="color: var(--light-foreground); font-weight: bold;">ec im</span>)
+                    (<span class="standout-text">eb im</span>, <span class="standout-text">ev im</span>, <span class="standout-text">ec im</span>)
                     use part of the data collected and made available by the amazing people behind the
                     <a href="https://transfemscience.org/articles/injectable-e2-meta-analysis/" target="_blank">tfs meta-analysis</a>
                     but will be reprocessed in the future to allow for a better quantification of uncertainty.
                 </p>
 
-                <p class="indent">The data behind the estradiol undecylate model for intramuscular depots using castor oil (<span style="color: var(--light-foreground); font-weight: bold;">eun im</span>)
+                <p class="indent">The data behind the estradiol undecylate model for intramuscular depots using castor oil (<span class="standout-text">eun im</span>)
                     was entirely reprocessed from scratch using the per-patient data found in Geppert 1975 together with the data and uncertainty reported in Vermeulen 1975.
                     This data is extremely sparse and incomplete and thus the model is highly uncertain.
                 </p>
 
                 <p class="indent">The data behind the estradiol undecylate model for subcutaneous depots using castor oil
-                    (<span style="color: var(--light-foreground); font-weight: bold;">eun casubq</span>) was inferred on
-                    top of the <span style="color: var(--light-foreground); font-weight: bold;">eun im</span> model by augmenting it with very sparse self-reported community data.
+                    (<span class="standout-text">eun casubq</span>) was inferred on
+                    top of the <span class="standout-text">eun im</span> model by augmenting it with very sparse self-reported community data.
                     Its predictions are also highly uncertain.
                 </p>
 
-                <p class="indent">The data behind the estradiol enanthate model for intramuscular depots using sunflower oil (<span style="color: var(--light-foreground); font-weight: bold;">een im</span>)
+                <p class="indent">The data behind the estradiol enanthate model for intramuscular depots using sunflower oil (<span class="standout-text">een im</span>)
                     was reprocessed from scratch using studies with Perlutan from the 80s and 90s. This data
                     is also extremely sparse and incomplete and the model highly uncertain.
                 </p>
 
-                <p class="indent">The once-weekly patch model (<span style="color: var(--light-foreground); font-weight: bold;">patch ow</span>) was inferred using data found in drug labels
-                    of once-weekly Climara and Menostar patches. The twice-weekly patch model (<span style="color: var(--light-foreground); font-weight: bold;">patch tw</span>) was inferred
+                <p class="indent">The once-weekly patch model (<span class="standout-text">patch ow</span>) was inferred using data found in drug labels
+                    of once-weekly Climara and Menostar patches. The twice-weekly patch model (<span class="standout-text">patch tw</span>) was inferred
                     using data taken from two 2003 studies by Houssain et al. looking at
                     twice-weekly Estradot and Menorest patches, and in the drug label of twice-weekly Mylan patches.
                     Currently there is no way to change the wearing period of the patch in the interface
