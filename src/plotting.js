@@ -11,7 +11,7 @@ import {
 
 const NB_CLOUD_POINTS = 3500;
 
-const NB_LINE_POINTS = 848;
+const NB_LINE_POINTS = 900;
 
 const CLOUD_POINT_SIZE = 1.3;
 

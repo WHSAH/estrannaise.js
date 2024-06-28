@@ -638,14 +638,14 @@ function themeSetup() {
     let currentHour = new Date().getHours();
 
     if (currentHour >= 6 && currentHour < 18) {
-        document.getElementById('nightday-slider').checked = true;
+        document.getElementById('nightday-state').checked = true;
         setColorScheme('day');
     } else {
-        document.getElementById('nightday-slider').checked = false;
+        document.getElementById('nightday-state').checked = false;
         setColorScheme('night');
     }
 
-    document.getElementById('nightday-slider').addEventListener('change', (event) => {
+    document.getElementById('nightday-state').addEventListener('change', (event) => {
         if (event.target.checked) {
             setColorScheme('day');
         } else {
@@ -710,7 +710,6 @@ function getShareURL() {
     params.set('units', global_units);
     params.set('daysAsIntervals', global_daysAsIntervals);
 
-    console.log(params.toString());
     return window.location.origin + window.location.pathname + '#' + btoa(params.toString());
 }
 

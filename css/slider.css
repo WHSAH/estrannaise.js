@@ -2,12 +2,13 @@
 /* night/day switch */
 /*------------------*/
 
-.switch {
+.slider-box {
     position: relative;
     display: inline-block;
+    
     width: 38px;
     height: 20px;
-    margin-left: auto;
+    /* margin-left: auto; */
     margin-bottom: 0.39em; 
     /* Yes, exactly 0.39em. Not 0.4em. Not 0.38em. It's 0.39em otherwise 
        it's driving me crazy The real problem is that I need to mess with 
@@ -17,7 +18,7 @@
     */
 }
 
-.switch input {
+#nightday-state {
     opacity: 0;
     width: 0;
     height: 0;
