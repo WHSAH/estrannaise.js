@@ -409,10 +409,6 @@ function addTDMRow(tableID, dose = null, time = null, method = null, cvisible = 
 
             refresh();
         });
-    } else {
-        // yo this is janky, but it's the only way I found to keep
-        // the table looking good because I suck at CSS
-        deleteCell.textcontent = '&nbsp;&nbsp;&nbsp;&nbsp;';
     }
 
     // Run addRowIfNeeded() after this row has been added
