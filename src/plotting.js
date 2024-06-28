@@ -193,7 +193,7 @@ export function plotCurves(firstRow, multiDoses, steadyDoses, options) {
             lineMarks.push(Plot.line(multiDoseCurve, {
                 x: 'Time',
                 y: 'E2',
-                strokeWidth: 2, 
+                strokeWidth: 2,
                 stroke: wongPalette(4), strokeDash: [2, 2]
             }));
 

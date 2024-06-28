@@ -17,23 +17,23 @@ let global_targetRangeVisible = false;
 let global_currentColorScheme = 'night';
 
 window.addEventListener('DOMContentLoaded', () => {
-    
+
     initializeDefaultPreset();
-    
+
     attachDragNDropImport();
-    
+
     attachOptionsEvents();
-    
+
     attachPresetsDropdown();
-    
+
     attachMultidoseButtonsEvents();
     attachSteadyStateButtonsEvents();
-    
+
     attachMenstrualCycleButtonEvent();
     attachTargetRangeButtonEvent();
-    
+
     themeSetup();
-    
+
     if (!loadFromURL()) {
         loadFromLocalStorage();
     }
@@ -43,7 +43,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
 /**
  * Re-draw the graph
- * @param {boolean} save 
+ * @param {boolean} save
  */
 export function refresh(save = false) {
     if (save) {
@@ -151,9 +151,9 @@ function exportCSV() {
 
 function isValidInput(dose, time, method) {
     return (
-        !isNaN(parseFloat(dose)) 
-     && !isNaN(parseFloat(time)) 
-     && parseFloat(dose) > 0 
+        !isNaN(parseFloat(dose))
+     && !isNaN(parseFloat(time))
+     && parseFloat(dose) > 0
      && findIntersecting(Object.keys(methodList), method)
     );
 }
@@ -210,7 +210,7 @@ function guessNextRow(tableID) {
         let beforeLastRow = readRow(table.rows[table.rows.length - 3]);
         let lastRow = readRow(table.rows[table.rows.length - 2]);
         if (beforeLastRow && lastRow) {
-            if (table.rows.length >= 5) { 
+            if (table.rows.length >= 5) {
                 let beforeBeforeLastRow = readRow(table.rows[table.rows.length - 4]);
                 if (beforeBeforeLastRow
                     && (lastRow.dose === beforeBeforeLastRow.dose)
@@ -296,7 +296,7 @@ function addTDMRow(tableID, dose = null, time = null, method = null, cvisible = 
     let doseInput = document.createElement('input');
     doseInput.classList.add('flat-input', 'dose-input');
     doseInput.setAttribute('type', 'text');
-    
+
 
     doseCell.appendChild(doseInput);
     // Set given dose or empty string as default value (prevents NaNs)
@@ -318,7 +318,7 @@ function addTDMRow(tableID, dose = null, time = null, method = null, cvisible = 
     let timeInput = document.createElement('input');
     timeInput.classList.add('flat-input')
     timeInput.setAttribute('type', 'text');
-    
+
     if (tableID == 'multidose-table') {
         timeInput.classList.add('time-input-multidose');
         timeInput.placeholder = global_daysAsIntervals ? 'since last' : 'since first';
@@ -329,7 +329,7 @@ function addTDMRow(tableID, dose = null, time = null, method = null, cvisible = 
     };
 
     timeCell.appendChild(timeInput);
-    
+
     if (time !== null) {
         timeInput.value = time;
     }
@@ -370,11 +370,9 @@ function addTDMRow(tableID, dose = null, time = null, method = null, cvisible = 
             methodSelect.value = method;
         }
     }
-    
-    doseInput.placeholder = methodList[methodSelect.value].units;
-    // doseInput.placeholder = methodList[method].units;
 
-    
+    doseInput.placeholder = methodList[methodSelect.value].units;
+
     methodSelect.addEventListener('change', function() {
 
         let newMethod = this.value;
@@ -393,9 +391,9 @@ function addTDMRow(tableID, dose = null, time = null, method = null, cvisible = 
         deleteButton.classList.add('flat-button', 'delete-button');
         deleteButton.setAttribute('title', 'Delete this entry');
         deleteButton.textContent = '-';
-        
+
         deleteCell.appendChild(deleteButton);
-        
+
         deleteButton.addEventListener('click', function() {
             let myRow = this.parentNode.parentNode;
             let myTable = myRow.parentNode.parentNode;
@@ -422,7 +420,7 @@ function addTDMRow(tableID, dose = null, time = null, method = null, cvisible = 
 
     return row;
 }
-    
+
 function deleteAllRows(tableID) {
     let table = document.getElementById(tableID);
     while (table.rows.length > 1) {
@@ -586,7 +584,7 @@ function attachMultidoseButtonsEvents() {
 
     shareButton.addEventListener('mousedown', () => {
         navigator.clipboard.writeText(getShareURL());
-        
+
         shareButton.classList.add('button-on');
         shareButton.innerHTML = 'copied!';
 
@@ -604,7 +602,7 @@ function attachMultidoseButtonsEvents() {
     });
     exportCSVButton.addEventListener('mouseup', () => {
         exportCSVButton.classList.remove('button-on');
-    }); 
+    });
 
     // No toggle-on/off style. Makes it compatible with safari
     // and the dialog acts as feedback anyway so it's ok.
@@ -842,7 +840,7 @@ function applyPreset(presetConfig) {
 
     presetConfig.menstrualCycle ? turnMenstrualCycleOn(false) : turnMenstrualCycleOff(false);
     presetConfig.intervalDays ? setDaysAsIntervals(false) : setDaysAsAbsolute(false);
-    
+
     if (presetConfig.steady.length) {
         presetConfig.steady.forEach(steadyDose => {
             addTDMRow('steadystate-table', ...steadyDose);

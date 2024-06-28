@@ -7,21 +7,19 @@
     unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
   }
 
-.container {  display: grid;
+.container {
+    display: grid;
     grid-template-columns: 1fr auto 1fr;
     grid-template-rows: 1fr auto auto;
     gap: 10px 0px;
     grid-auto-flow: row;
     grid-template-areas:
-      "left-pad header-container right-pad"
-      "left-pad ui-container right-pad"
-      "left-pad bottom-text right-pad";
+      ". header-container ."
+      ". ui-container ."
+      ". bottom-text .";
 }
 
-.left-pad { grid-area: left-pad; }
-.right-pad { grid-area: right-pad; }
-  
-.header {  
+.header {
     display: grid;
     grid-area: header-container;
     grid-template-columns: 0.1fr 2.4fr 0.1fr;
@@ -31,24 +29,24 @@
     grid-template-areas:
         "logo title theme-slider";
 }
-    
-.logo { 
-    grid-area: logo; 
+
+.logo {
+    grid-area: logo;
     align-self: end;
 }
 
-.title { 
-    grid-area: title; 
+.title {
+    grid-area: title;
     align-self: end;
 }
 
-.theme-slider { 
+.theme-slider {
     grid-area: theme-slider;
     align-self: end;
     justify-self: start;
 }
 
-.ui-container {  
+.ui-container {
     display: grid;
     grid-area: ui-container;
     grid-template-columns: auto auto;
@@ -61,33 +59,30 @@
         "multidose-container steadystate-container";
     }
 
-.plot-region { 
-    grid-area: plot-region; 
+.plot-region {
+    grid-area: plot-region;
 }
 
 #plot-region {
-    display: block;
-    /* position: relative; */
-    padding: 0;
     margin-top: 1em;
     background-color: var(--background-color);
 }
 
 
-.options-container { 
-    grid-area: options-container; 
+.options-container {
+    grid-area: options-container;
 }
 
-.multidose-container { 
-    grid-area: multidose-container; 
+.multidose-container {
+    grid-area: multidose-container;
 }
 
-.steadystate-container { 
-    grid-area: steadystate-container; 
+.steadystate-container {
+    grid-area: steadystate-container;
 }
 
-.bottom-text { 
-    grid-area: bottom-text; 
+.bottom-text {
+    grid-area: bottom-text;
     max-width: 55em;
 }
 
@@ -106,9 +101,6 @@ a {
     background-color: var(--standout-background-color);
 }
 
-p {
-    font-family: 'Roboto Mono', monospace;
-}
 
 p.indent {
     text-indent: 2em;
@@ -126,7 +118,7 @@ a:link, a:visited {
 }
 
 .standout-text {
-    color: var(--light-foreground); 
+    color: var(--light-foreground);
     font-weight: bold;
 }
 
@@ -135,7 +127,6 @@ select {
     border: none;
     outline: none;
     background-color: var(--standout-background-color);
-    /* Light gray */
     color: var(--light-foreground);
     padding-top: 4px;
     padding-bottom: 4px;
