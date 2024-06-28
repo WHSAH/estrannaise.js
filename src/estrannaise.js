@@ -247,13 +247,11 @@ function addTDMRow(tableID, dose = null, time = null, method = null, cvisible = 
     // Add visibility and uncertainty checkboxes
     let visibilityCell = row.insertCell(0);
     visibilityCell.className = 'visibility-cell';
-    visibilityCell.width = '1.7em';
-    visibilityCell.height = '1.7em';
 
     if (tableID == 'steadystate-table' || ((tableID == 'multidose-table') && (table.rows.length == 2))) {
         let visibilityCheckbox = document.createElement('input');
         visibilityCheckbox.type = 'checkbox';
-        visibilityCheckbox.className = 'hidden-checkbox checked-style';
+        visibilityCheckbox.className = 'hidden-checkbox-state';
         visibilityCheckbox.checked = cvisible;
         visibilityCell.appendChild(visibilityCheckbox);
 
@@ -270,14 +268,12 @@ function addTDMRow(tableID, dose = null, time = null, method = null, cvisible = 
 
     let uncertaintyCell = row.insertCell(1);
     uncertaintyCell.className = 'uncertainty-cell';
-    uncertaintyCell.width = '1.7em';
-    uncertaintyCell.height = '1.7em';
 
     if (tableID == 'steadystate-table' || ((tableID == 'multidose-table') && (table.rows.length == 2))) {
 
         let uncertaintyCheckbox = document.createElement('input');
         uncertaintyCheckbox.type = 'checkbox';
-        uncertaintyCheckbox.className = 'hidden-checkbox checked-style';
+        uncertaintyCheckbox.className = 'hidden-checkbox-state';
         uncertaintyCheckbox.checked = uvisible;
         uncertaintyCell.appendChild(uncertaintyCheckbox);
 
@@ -296,7 +292,6 @@ function addTDMRow(tableID, dose = null, time = null, method = null, cvisible = 
     let doseInput = document.createElement('input');
     doseInput.classList.add('flat-input', 'dose-input');
     doseInput.setAttribute('type', 'text');
-
 
     doseCell.appendChild(doseInput);
     // Set given dose or empty string as default value (prevents NaNs)
@@ -579,7 +574,7 @@ function attachMultidoseButtonsEvents() {
     let shareButton = document.getElementById('share-button');
 
     shareButton.addEventListener('mousedown', () => {
-        navigator.clipboard.writeText(getShareURL());
+        navigator.clipboard.writeText(generateShareURL());
 
         shareButton.classList.add('button-on');
         shareButton.innerHTML = '&nbsp;copied!&nbsp;';
@@ -694,7 +689,7 @@ function deleteLocalStorage() {
     localStorage.clear();
 }
 
-function getShareURL() {
+function generateShareURL() {
     let multiDoseTable = getTDMs('multidose-table', true, true);
     let steadyStateTable = getTDMs('steadystate-table', true, true);
 

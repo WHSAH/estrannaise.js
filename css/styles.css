@@ -60,7 +60,7 @@
         "multidose-container steadystate-container";
 }
 
-@media (max-width: 50em) {
+@media (max-width: 40em) {
     .ui-container {
         grid-template-areas:
             "plot-region plot-region"
@@ -113,7 +113,6 @@ a {
     background-color: var(--standout-background-color);
 }
 
-
 p.indent {
     text-indent: 2em;
 }
@@ -157,10 +156,9 @@ input.flat-input {
     color: var(--light-foreground);
     padding: 4px;
     font-size: 12px;
-    margin: 0px;
     text-align: center;
     font-family: monospace;
-    max-width: 10em;
+    max-width: 9.5em;
     width: 100%;
     border-radius: 4px;
 }
@@ -197,23 +195,20 @@ button.delete-button {
     transform: translate(0px, 0px);
 }
 
-.custom-checkbox {
-    margin: auto;
-}
 
-.hidden-checkbox {
+.hidden-checkbox-state {
     display: none;
 }
 
 .custom-checkbox {
     margin: auto;
-    display: inline-block;
-    width: 1.5em;
-    height: 1.5em;
+    width: 1em;
+    height: 1em;
     background-color: var(--standout-background-color);
     cursor: pointer;
     border-radius: 4px;
-    transform: translate(0px, 0.15em);
+    padding: 3px;
+    transform: translate(0px, 0px);
 }
 
 .custom-checkbox.checked-style {
