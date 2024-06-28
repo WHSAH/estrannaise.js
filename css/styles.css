@@ -192,7 +192,6 @@ button.delete-button {
     padding: 4px;
     padding-left: 10px;
     padding-right: 10px;
-    transform: translate(0px, 0px);
 }
 
 
@@ -208,7 +207,6 @@ button.delete-button {
     cursor: pointer;
     border-radius: 4px;
     padding: 3px;
-    transform: translate(0px, 0px);
 }
 
 .custom-checkbox.checked-style {
