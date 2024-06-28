@@ -361,7 +361,6 @@ function addTDMRow(tableID, dose = null, time = null, method = null, cvisible = 
 
     if (method !== null) {
         methodSelect.value = method;
-        doseInput.placeholder = methodList[method].units;
     } else {
         // If no method is specified and there are
         // more than one row in the table, add
@@ -369,9 +368,12 @@ function addTDMRow(tableID, dose = null, time = null, method = null, cvisible = 
         if (table.rows.length > 2) {
             method = table.rows[table.rows.length - 2].cells[4].querySelector('select').value;
             methodSelect.value = method;
-            doseInput.placeholder = methodList[method].units;
         }
     }
+    
+    doseInput.placeholder = methodList[methodSelect.value].units;
+    // doseInput.placeholder = methodList[method].units;
+
     
     methodSelect.addEventListener('change', function() {
 
