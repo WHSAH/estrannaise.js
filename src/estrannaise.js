@@ -582,7 +582,7 @@ function attachMultidoseButtonsEvents() {
         navigator.clipboard.writeText(getShareURL());
 
         shareButton.classList.add('button-on');
-        shareButton.innerHTML = 'copied!';
+        shareButton.innerHTML = '&nbsp;copied!&nbsp;';
 
         setTimeout(() => {
             shareButton.classList.remove('button-on');

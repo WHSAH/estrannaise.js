@@ -11,7 +11,7 @@
     display: grid;
     grid-template-columns: 1fr auto 1fr;
     grid-template-rows: 1fr auto auto;
-    gap: 10px 0px;
+    gap: 1em 0px;
     grid-auto-flow: row;
     grid-template-areas:
       ". header-container ."
@@ -68,16 +68,17 @@
     background-color: var(--background-color);
 }
 
-
 .options-container {
     grid-area: options-container;
 }
 
 .multidose-container {
+    margin-top: 1.5em;
     grid-area: multidose-container;
 }
 
 .steadystate-container {
+    margin-top: 1.5em;
     grid-area: steadystate-container;
 }
 
@@ -153,8 +154,8 @@ input.flat-input {
     border-radius: 4px;
 }
 
-.option-reflow {
-    margin-bottom: 0.5em;
+.element-reflow {
+    margin-bottom: 0.3em;
 }
 
 button.flat-button {

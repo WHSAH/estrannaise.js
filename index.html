@@ -48,19 +48,19 @@
 
             <div class="options-container">
 
-                <select id="dropdown-units" class="option-reflow"
+                <select id="dropdown-units" class="element-reflow"
                         title="Change units for the estradiol concentration">
                     <option value="pg/mL">pg/mL</option>
                     <option value="pmol/L">pmol/L</option>
                 </select>
 
-                <select id="dropdown-daysinput" class="option-reflow"
+                <select id="dropdown-daysinput" class="element-reflow"
                         title="Change the way days are interpreted as inputs in the multi-dose curve">
                     <option value="absolute">absolute days</option>
                     <option value="intervals">interval days</option>
                 </select>
 
-                <select id="dropdown-presets" class="option-reflow"
+                <select id="dropdown-presets" class="element-reflow"
                         title="Load a preset">
                     <option value="" selected disabled>Select a preset</option>
                     <option value="" disabled>monotherapies</option>
@@ -95,17 +95,17 @@
                     <option value="mimic-menstrual-cycle">&nbsp;&nbsp;Mimic Menstrual Cycle™</option>
                 </select>
 
-                <button id="menstrual-cycle-button" class="flat-button button-off option-reflow"
+                <button id="menstrual-cycle-button" class="flat-button button-off element-reflow"
                         title="Turn on/off the display of the menstrual cycle data">
                     menstrual cycle
                 </button>
 
-                <button id="target-range-button" class="flat-button button-off option-reflow"
+                <button id="target-range-button" class="flat-button button-off element-reflow"
                         title="Turn on/off the display of target mean estradiol range">
                     target range
                 </button>
 
-                <button id="share-button" class="flat-button button-off option-reflow"
+                <button id="share-button" class="flat-button button-off element-reflow"
                         title="Share the current state of the simulator as an arcane URL">
                     share url
                 </button>
@@ -116,12 +116,12 @@
 
                 <span style="font-weight: bold;">multi-doses</span>
 
-                <div id="multidose-buttons" style="margin-top: 1em;">
-                    <button id="guess-button" class="flat-button" title="Duplicate last entry when in 'days as interval mode'. Guess and autofill next dose given the last two or three entries when in 'absolute days' mode">autofill</button>
-                    <button id="clear-doses-button" class="flat-button" title="Clear all entries in the multi-dose curve">clear</button>
+                <div style="margin-top: 1em;">
+                    <button id="guess-button" class="flat-button element-reflow" title="Duplicate last entry when in 'days as interval mode'. Guess and autofill next dose given the last two or three entries when in 'absolute days' mode">autofill</button>
+                    <button id="clear-doses-button" class="flat-button element-reflow" title="Clear all entries in the multi-dose curve">clear</button>
                     <input type="file" id="csv-file" accept=".csv" style="display: none;">
-                    <button id="import-csv-dialog" class="flat-button">import</button>
-                    <button id="export-csv-button" class="flat-button">export</button>
+                    <button id="import-csv-dialog" class="flat-button element-reflow">import</button>
+                    <button id="export-csv-button" class="flat-button element-reflow">export</button>
                 </div>
 
                 <br>
@@ -148,8 +148,9 @@
             <div class="steadystate-container">
 
                 <span style="font-weight: bold;">steady-states</span>
-                <div id="bottom-button" style="margin-top: 1em;">
-                    <button id="clear-steadystates-button" class="flat-button" title="Clear all steady-state entries">clear</button>
+
+                <div style="margin-top: 1em;">
+                    <button id="clear-steadystates-button" class="flat-button element-reflow" title="Clear all steady-state entries">clear</button>
                 </div>
                 <br>
                 <table id="steadystate-table">
