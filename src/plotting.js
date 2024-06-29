@@ -213,7 +213,7 @@ export function plotCurves(dataset, options, returnHTML = false) {
                 description: `${entry.model} ${entry.dose}mg/${entry.time}day${entry.time > 1 ? 's' : ''}`
              }));
             yMax = Math.max(yMax, ...steadyStateCurve.map(p => p.E2));
-            lineMarks.push(Plot.line(steadyStateCurve, { x: 'Time', y: 'E2', strokeWidth: 2, stroke: wongPalette(colorCycle0 + index) }));
+            lineMarks.unshift(Plot.line(steadyStateCurve, { x: 'Time', y: 'E2', strokeWidth: 2, stroke: wongPalette(colorCycle0 + index) }));
             tipMarks.unshift(Plot.tip(steadyStateCurve, Plot.pointerX({
                 x: 'Time', y: 'E2',
                 title: p => `${p.description.toLowerCase()}\n\n   time: ${numberToDayHour(p.Time)}\n     e₂: ${p.E2.toFixed(0)} ${options.units}\naverage: ${entry.model.includes('patch') ? 'unavailable' : e2ssAverage3C(options.conversionFactor * entry.dose, entry.time, ...PKParameters[entry.model]).toFixed(0)} ${entry.model.includes("patch") ? '' : options.units}\n trough: ${PKFunctions(options.conversionFactor)[entry.model](0.0, entry.dose, true, entry.time).toFixed(0)} ${options.units}`,
