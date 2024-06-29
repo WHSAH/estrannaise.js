@@ -7,7 +7,7 @@ import {
 } from './modeldata.js';
 
 
-export const methodList = {
+export const modelList = {
     'EB im': {units: 'mg', description: 'Estradiol Benzoate, Intramuscular'},
     'EV im': {units: 'mg', description: 'Estradiol Valerate, Intramuscular'},
     'EEn im': {units: 'mg', description: 'Estradiol Enanthate, Intramuscular'},
@@ -129,7 +129,7 @@ export function PKRandomFunctions(conversionFactor = 1.0) {
  * @param {boolean} random if values need uncertainty applied
  * @param {boolean} intervals true if days are set as interval
  */
-export function e2MultiDose3C(t, doses = [1.0], times = [0.0], types = ['EV im'], cf = 1.0, random = false, intervals = false) {
+export function e2MultiDose3C(t, doses = [1.0], times = [0.0], models = ['EV im'], cf = 1.0, random = false, intervals = false) {
 
     if (intervals) {
         times = times.map((sum => value => sum += value)(0));
@@ -139,9 +139,9 @@ export function e2MultiDose3C(t, doses = [1.0], times = [0.0], types = ['EV im']
     let sum = 0;
     for (let i = 0; i < doses.length; i++) {
         if (!random) {
-            sum += PKFunctions(cf)[types[i]](t - times[i], doses[i]);
+            sum += PKFunctions(cf)[models[i]](t - times[i], doses[i]);
         } else {
-            sum += PKRandomFunctions(cf)[types[i]](t - times[i], doses[i]);
+            sum += PKRandomFunctions(cf)[models[i]](t - times[i], doses[i]);
         }
     }
     return sum;

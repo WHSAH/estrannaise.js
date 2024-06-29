@@ -59,31 +59,35 @@ function numberToDayHour(number, precision = 0) {
     return `${days}d ${hours}h`;
 }
 
-function sum(array) {
-    return array.reduce((a, b) => a + b, 0);
+export function createOptionsTemplate() {
+    return {
+        conversionFactor: 1.0,
+        currentColorScheme: 'day',
+        menstrualCycleVisible: false,
+        targetRangeVisible: false,
+        units: 'pg/mL',
+    };
 }
 
 /**
  * Re-calculate all curves and rebuild the graph
- * @param {Object} firstRow from multi-dose table
- * @param {Array} multiDoses
- * @param {Array} steadyDoses
+ * @param {Object} dataset all the data from multi-doses and steady-state table
  * @param {Object} options containing the following keys:
  * * `conversionFactor`: number,
  * * `currentColorScheme`: String
- * * `daysAsIntervals`: boolean,
  * * `menstrualCycleVisible`: boolean,
  * * `targetRangeVisible`: boolean,
- * * `units`: String
+ * * `units`: String,
+ * @param {Boolean} returnHTML
  * @return Plot for insertion into the page
  */
-export function plotCurves(firstRow, multiDoses, steadyDoses, options) {
+export function plotCurves(dataset, options, returnHTML = false) {
     // track the max e2 across all multi-dose curves
     // to set the y-axis limit. uncertainty clouds ignored
     // because of potential stray dots.
-    let e2max = 300;
+    let yMax = 300;
     let xMax = 50.1; // Initialize minimum right limit for the time axis
-    let colorCycle = 5;
+    let colorCycle0 = 5;
     let dotMarks  = [],
         lineMarks = [],
         msMarks   = [],
@@ -91,172 +95,140 @@ export function plotCurves(firstRow, multiDoses, steadyDoses, options) {
         tipMarks  = [],
         targetMarks = [];
 
-    // If the first row of the multi-dose table is invalid
-    // we won't know about mdCVisib and mdUVisib
-    let [mdTimes, mdDoses, mdTypes, [mdCVisib, ..._cnulls], [mdUVisib, ..._unulls]] = multiDoses;
-    // FIXME: Have getTDEs() more robust against this to prevent this
-    mdCVisib = firstRow.cVisibility;
-    mdUVisib = firstRow.uVisibility;
-
-    let [ssEveries, ssDoses, ssTypes, ssCVisibs, ssUVisibs] = steadyDoses;
-
     let xMin = 0;
-    if (!options.daysAsIntervals) {
-        xMin = Math.min(0, ...mdTimes);
-    }
 
-    if (mdCVisib || mdUVisib) {
-        if (options.daysAsIntervals) {
-            xMax = Math.max(xMax, 1.618 * (sum(mdTimes) - (mdTimes[0] ? mdTimes[0] : 0)));
+    if (dataset.multidoses.curveVisible || dataset.multidoses.uncertaintyVisible) {
+        if (dataset.multidoses.daysAsIntervals) {
+            let timeSum = dataset.multidoses.entries.reduce((sum, entry) => sum + entry.time, 0);
+            xMax = Math.max(xMax, 1.618 * timeSum);
         } else {
-            xMax = Math.max(xMax, 1.618 * Math.max(...mdTimes));
+            xMax = Math.max(xMax, ...dataset.multidoses.entries.map(entry => entry.time));
         }
     }
 
-    for (let i = 0; i < ssEveries.length; i++) {
-        if (ssUVisibs[i] || ssCVisibs[i]) {
-            xMax = Math.max(xMax, 5 * ssEveries[i]);
-        }
-    }
+    xMax = Math.max(xMax, ...dataset.steadystates.entries.map(entry => 5 * entry.time));
 
+    // Menstrual cycle line and confidence interval area marks
     if (options.menstrualCycleVisible) {
         let _menstrualCycle = fillMenstrualCycleCurve(xMin, xMax, NB_LINE_POINTS, options.conversionFactor);
         msMarks = [
             Plot.line(_menstrualCycle, {
-                x: 'Time',
-                y: 'E2',
-                strokeWidth: 2,
+                x: 'Time', y: 'E2', strokeWidth: 2,
                 stroke: options.currentColorScheme == 'night' ? 'rgba(255, 255, 255, 0.6)' : 'rgba(0, 0, 0, 0.5)'}),
+
             Plot.areaY(_menstrualCycle, {
-                x: 'Time',
-                y1: 'E2p5',
-                y2: 'E2p95',
+                x: 'Time', y1: 'E2p5', y2: 'E2p95',
                 fill: options.currentColorScheme == 'night' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'}),
+
             Plot.tip(_menstrualCycle, Plot.pointerX({
-                x: 'Time',
-                y: 'E2',
+                x: 'Time', y: 'E2', fill: colorBackground(0.618), stroke: colorLightForeground(),
                 title: p => `menstrual cycle\ntime: ${numberToDayHour(p.Time)}\n  e₂: ${p.E2.toFixed(0)} ${options.units}\n  CI: ${p.E2p5.toFixed(0)}-${p.E2p95.toFixed(0)} ${options.units}`,
-                fill: colorBackground(0.618),
-                stroke: colorLightForeground()
             }))
         ];
-        e2max = Math.max(e2max, options.conversionFactor * 350);
+        yMax = Math.max(yMax, options.conversionFactor * 350);
     }
 
+    // Target range area and text marks
     if (options.targetRangeVisible) {
         let targetRange = fillTargetRange(xMin, xMax, options.conversionFactor);
+
         targetMarks = [
             Plot.areaY(targetRange, {
                 x: 'time', y1: 'lower', y2: 'upper',
                 fill: options.currentColorScheme == 'night' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
             }),
+
             Plot.text(['target range'], {
-                x: 0.99 * xMax,
-                y: 150 * options.conversionFactor,
-                rotate: 90,
-                fill: colorStrongForeground(),
-                frameAnchor: 'middle',
-                textAnchor: 'middle',
-                lineAnchor: 'bottom'
+                x: 0.99 * xMax, y: 150 * options.conversionFactor, rotate: 90, fill: colorStrongForeground(),
+                frameAnchor: 'middle', textAnchor: 'middle', lineAnchor: 'bottom'
               })
         ];
     }
 
-    if (mdTimes.length > 0) {
+    // Multi-dose curves and uncertainty clouds
+    if (dataset.multidoses.entries.length > 0) {
 
-        // Uncertainty cloud
-        if (mdUVisib) {
+        let doses = dataset.multidoses.entries.map(entry => entry.dose);
+        let times = dataset.multidoses.entries.map(entry => entry.time);
+        let models = dataset.multidoses.entries.map(entry => entry.model);
 
-            // If the uncertainty is visible but not the curve
-            // we probe the range of the curve to set the y-axis limit
-            // The cloud points are not used to set it since they
-            // sometimes are too far up.
-            if (!mdCVisib) {
-                let probeMultiDoseCurve = fillCurve(t => e2MultiDose3C(t, mdDoses, mdTimes, mdTypes, options.conversionFactor, false, options.daysAsIntervals), xMin, xMax, NB_LINE_POINTS);
-                e2max = Math.max(e2max, ...probeMultiDoseCurve.map(p => p.E2));
-            }
+        if (dataset.multidoses.uncertaintyVisible) {
 
-            let mdUncertaintyCloud = [];
+            let multidoseUncertaintyCloud = [];
+            
             for (let i = 0; i < NB_CLOUD_POINTS; i++) {
                 let randx = Math.random() * (xMax - xMin) + xMin;
-                let y = e2MultiDose3C(randx, mdDoses, mdTimes, mdTypes, options.conversionFactor, true, options.daysAsIntervals);
-                mdUncertaintyCloud.push({ Time: randx, E2: y });
+                let y = e2MultiDose3C(randx, doses, times, models, options.conversionFactor, true, dataset.multidoses.daysAsIntervals);
+                multidoseUncertaintyCloud.push({ Time: randx, E2: y });
             }
-            dotMarks.push(Plot.dot(mdUncertaintyCloud, { x: 'Time', y: 'E2', r: CLOUD_POINT_SIZE, fill: wongPalette(4, CLOUD_POINT_OPACITY) }));
+
+            dotMarks.push(Plot.dot(multidoseUncertaintyCloud, { 
+                x: 'Time',
+                y: 'E2', 
+                r: CLOUD_POINT_SIZE, 
+                fill: wongPalette(4, CLOUD_POINT_OPACITY) }));
         }
 
-        if (mdCVisib) {
-            let multiDoseCurve = fillCurve(t => e2MultiDose3C(t, mdDoses, mdTimes, mdTypes, options.conversionFactor, false, options.daysAsIntervals), xMin, xMax, NB_LINE_POINTS);
+        if (dataset.multidoses.curveVisible) {
+            let multiDoseCurve = fillCurve(t => e2MultiDose3C(t, doses, times, models, options.conversionFactor, false, dataset.multidoses.daysAsIntervals), xMin, xMax, NB_LINE_POINTS);
             multiDoseCurve = multiDoseCurve.map(p => ({ Time: p.Time, E2: p.E2 }));
 
-            e2max = Math.max(e2max, ...multiDoseCurve.map(p => p.E2));
+            yMax = Math.max(yMax, ...multiDoseCurve.map(p => p.E2));
             lineMarks.push(Plot.line(multiDoseCurve, {
-                x: 'Time',
-                y: 'E2',
-                strokeWidth: 2,
-                stroke: wongPalette(4), strokeDash: [2, 2]
-            }));
+                x: 'Time', 
+                y: 'E2', 
+                strokeWidth: 2, 
+                stroke: wongPalette(4), strokeDash: [2, 2]}));
 
             tipMarks.push(Plot.tip(multiDoseCurve, Plot.pointerX({
-                x: 'Time', y: 'E2',
-                title: p => `multi-dose\n\ntime: ${numberToDayHour(p.Time)}\n  e₂: ${p.E2.toFixed(0)} ${options.units}`,
-                fill: colorBackground(0.618), stroke: colorLightForeground()
+                x: 'Time', 
+                y: 'E2', 
+                fill: colorBackground(0.618), 
+                stroke: colorLightForeground(),
+                title: p => `multi-dose\n\ntime: ${numberToDayHour(p.Time)}\n  e₂: ${p.E2.toFixed(0)} ${options.units}`
             })));
         }
 
     }
 
-    for (let i = 0; i < ssEveries.length; i++) {
-
-        if (ssUVisibs[i]) {
-
-            let ssUncertaintyCloud = [];
-            for (let j = 0; j < NB_CLOUD_POINTS; j++) {
+    // Steady-state curves and uncertainty clouds
+    dataset.steadystates.entries.forEach((entry, index) => {
+        
+        if (entry.uncertaintyVisible) {
+            let steadyStateUncertaintyCloud = [];
+            for (let i = 0; i < NB_CLOUD_POINTS; i++) {
                 let randx = Math.random() * (xMax - xMin) + xMin;
-                let y = PKRandomFunctions(options.conversionFactor)[ssTypes[i]](randx, ssDoses[i], true, ssEveries[i]);
-                ssUncertaintyCloud.push({ Time: randx, E2: y });
+                steadyStateUncertaintyCloud.push({ 
+                    Time: randx, 
+                    E2: PKRandomFunctions(options.conversionFactor)[entry.model](randx, entry.dose, true, entry.time) });
             }
-
-            if (!ssCVisibs[i]) {
-                let probeSteadyStateCurve = fillCurve(t => PKFunctions(options.conversionFactor)[ssTypes[i]](t, ssDoses[i], true, ssEveries[i]), xMin, xMax, NB_LINE_POINTS);
-                e2max = Math.max(e2max, ...probeSteadyStateCurve.map(p => p.E2));
-            }
-
-            dotMarks.unshift(Plot.dot(ssUncertaintyCloud, {
-                x: 'Time',
-                y: 'E2',
-                r: CLOUD_POINT_SIZE,
-                fill: wongPalette(colorCycle, CLOUD_POINT_OPACITY)
-            }));
+            dotMarks.push(Plot.dot(steadyStateUncertaintyCloud, { x: 'Time', y: 'E2', r: CLOUD_POINT_SIZE, fill: wongPalette(colorCycle0 + index, CLOUD_POINT_OPACITY) }));
         }
 
-        if (ssCVisibs[i]) {
-            let ssMethodCurve = fillCurve(t => PKFunctions(options.conversionFactor)[ssTypes[i]](t, ssDoses[i], true, ssEveries[i]), xMin, xMax, NB_LINE_POINTS);
-            ssMethodCurve = ssMethodCurve.map(p => ({
-                Time: p.Time,
+        if (entry.curveVisible) {
+            let steadyStateCurve = fillCurve(t => PKFunctions(options.conversionFactor)[entry.model](t, entry.dose, true, entry.time), xMin, xMax, NB_LINE_POINTS);
+            steadyStateCurve = steadyStateCurve.map(p => ({ 
+                Time: p.Time, 
                 E2: p.E2,
-                type: `${ssTypes[i]} ${ssDoses[i]}mg/${ssEveries[i]}day${ssEveries[i] > 1 ? 's' : ''}`
-            }));
-            e2max = Math.max(e2max, ...ssMethodCurve.map(p => p.E2));
-            lineMarks.unshift(Plot.line(ssMethodCurve, { x: 'Time', y: 'E2', strokeWidth: 2, stroke: wongPalette(colorCycle) }));
-            tipMarks.unshift(Plot.tip(ssMethodCurve, Plot.pointerX({
+                description: `${entry.model} ${entry.dose}mg/${entry.time}day${entry.time > 1 ? 's' : ''}`
+             }));
+            yMax = Math.max(yMax, ...steadyStateCurve.map(p => p.E2));
+            lineMarks.push(Plot.line(steadyStateCurve, { x: 'Time', y: 'E2', strokeWidth: 2, stroke: wongPalette(colorCycle0 + index) }));
+            tipMarks.unshift(Plot.tip(steadyStateCurve, Plot.pointerX({
                 x: 'Time', y: 'E2',
-                title: p => `${p.type.toLowerCase()},
-                    time: ${numberToDayHour(p.Time)},
-                    e₂: ${p.E2.toFixed(0)} ${options.units},
-                    average: ${ssTypes[i].includes('patch') ? 'unavailable' : e2ssAverage3C(options.conversionFactor * ssDoses[i], ssEveries[i], ...PKParameters[ssTypes[i]]).toFixed(0)} ${ssTypes[i].includes("patch") ? '' : options.units}
-                    trough: ${PKFunctions(options.conversionFactor)[ssTypes[i]](0.0, ssDoses[i], true, ssEveries[i]).toFixed(0)} ${options.units}`,
+                title: p => `${p.description.toLowerCase()}\n\n   time: ${numberToDayHour(p.Time)}\n     e₂: ${p.E2.toFixed(0)} ${options.units}\naverage: ${entry.model.includes('patch') ? 'unavailable' : e2ssAverage3C(options.conversionFactor * entry.dose, entry.time, ...PKParameters[entry.model]).toFixed(0)} ${entry.model.includes("patch") ? '' : options.units}\n trough: ${PKFunctions(options.conversionFactor)[entry.model](0.0, entry.dose, true, entry.time).toFixed(0)} ${options.units}`,
                 fill: colorBackground(0.618), stroke: colorLightForeground()
             })));
+
         }
 
-        colorCycle += 1;
-    }
+    });
+
 
     let e2curve = Plot.plot({
         width: NB_LINE_POINTS,
         x: { label: 'time (days)' },
-        y: { domain: [0, 1.25 * e2max], label: `serum e₂ (${options.units})` },
+        y: { domain: [0, 1.25 * yMax], label: `serum e₂ (${options.units})` },
         style: { fontFamily: 'monospace' },
         marks: [
             Plot.gridX({ stroke: 'grey' }),
@@ -270,5 +242,9 @@ export function plotCurves(firstRow, multiDoses, steadyDoses, options) {
         .concat([Plot.ruleX([xMin]), Plot.ruleY([0])])
     });
 
-    return e2curve;
+    if (returnHTML) {
+        return e2curve;
+    } else {
+        return e2curve.outerHTML;
+    }
 }

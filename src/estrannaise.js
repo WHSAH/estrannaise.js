@@ -1,7 +1,10 @@
 
-import { plotCurves } from './plotting.js';
+import { 
+    plotCurves,
+    createOptionsTemplate
+ } from './plotting.js';
 
-import { methodList } from './models.js';
+import { modelList } from './models.js';
 
 import { Presets } from './presets.js';
 
@@ -34,33 +37,35 @@ window.addEventListener('DOMContentLoaded', () => {
 
     themeSetup();
 
-    if (!loadFromURL()) {
-        loadFromLocalStorage();
-    }
+    // if (!loadFromURL()) {
+    //     loadFromLocalStorage();
+    // }
 
     refresh();
+
+
 });
 
 /**
  * Re-draw the graph
- * @param {boolean} save
+ * @param {boolean} save save current state to local storage
  */
 export function refresh(save = false) {
     if (save) {
         saveToLocalStorage();
     }
+
     let graph = plotCurves(
-        readRow(document.getElementById('multidose-table').rows[1], true),
-        getTDMs('multidose-table', true),
-        getTDMs('steadystate-table', true),
+        getTDMs(),
         {
             conversionFactor: global_conversionFactor,
             currentColorScheme: global_currentColorScheme,
-            daysAsIntervals: global_daysAsIntervals,
             menstrualCycleVisible: global_menstrualCycleVisible,
             targetRangeVisible: global_targetRangeVisible,
-            units: global_units
-    });
+            units: global_units,
+            returnRawSVG: false
+        },
+        true);
     let plot = document.getElementById('plot-region');
     plot.innerHTML = '';
     plot.append(graph);
@@ -94,7 +99,8 @@ function allUnique(list) {
 }
 
 function guessDaysAsIntervals() {
-    if (allUnique(getTDMs('multidose-table')[0])) {
+    let mdtimes = getMultiDoses().entries.map(entry => entry.time);
+    if (allUnique(mdtimes)) {
         document.getElementById('dropdown-daysinput').value = 'absolute';
         global_daysAsIntervals = false;
     } else {
@@ -112,10 +118,10 @@ function loadCSV(files) {
             Papa.parse(event.target.result, {
                 complete: function (results) {
                     deleteAllRows('multidose-table');
-                    results.data.forEach(([dose, time, method]) => {
-                        let delivtype = findIntersecting(Object.keys(methodList), method);
+                    results.data.forEach(([dose, time, model]) => {
+                        let delivtype = findIntersecting(Object.keys(modelList), model);
                         if (isValidInput(dose, time, delivtype)) {
-                            addTDMRow('multidose-table', dose, parseFloat(time), delivtype);
+                            addTDMRow('multidose-table', parseFloat(dose), parseFloat(time), delivtype);
                         }
                     });
                     guessDaysAsIntervals();
@@ -132,11 +138,11 @@ function loadCSV(files) {
 function exportCSV() {
     let table = document.getElementById('multidose-table');
     let rows = Array.from(table.rows);
-    let data = [['dose', 'time (days)', 'method']].concat(rows.slice(1).map(row => {
+    let data = [['dose', 'days', 'model']].concat(rows.slice(1).map(row => {
         let doseValue = row.cells[2].querySelector('input').value;
         let timeValue = row.cells[3].querySelector('input').value;
-        let methodValue = row.cells[4].querySelector('select').value;
-        return [timeValue, doseValue, methodValue];
+        let modelValue = row.cells[4].querySelector('select').value;
+        return [timeValue, doseValue, modelValue];
     }));
     let csvContent = Papa.unparse(data);
 
@@ -149,59 +155,77 @@ function exportCSV() {
     document.body.removeChild(downloadLink);
 }
 
-function isValidInput(dose, time, method) {
+function isValidInput(dose, time, model) {
     return (
         !isNaN(parseFloat(dose))
      && !isNaN(parseFloat(time))
-     && parseFloat(dose) > 0
-     && findIntersecting(Object.keys(methodList), method)
-    );
+     && parseFloat(dose) >= 0   // 0 doses are valid after all
+     && !!findIntersecting(Object.keys(modelList), model) 
+        // We need the !! because JS, in its infinite wisdom,
+        // is otherwise returning the string returned by findIntersecting 
+        // instead of the result of the boolean expression.
+        // Apparently boolean expressions can return strings now.
+     );
 }
 
-export function readRow(row, keepInvalid = false) {
+
+export function readRow(row, keepVisibilities = true, keepInvalid = false) {
+
+    let curveVisibleCheckBox = row.cells[0].querySelector('input');
+    let curveVisible = curveVisibleCheckBox ? curveVisibleCheckBox.checked : null;
+    let uncertaintyVisibleCheckBox = row.cells[1].querySelector('input');
+    let uncertaintyVisible = uncertaintyVisibleCheckBox ? uncertaintyVisibleCheckBox.checked : null;
 
     let dose = row.cells[2].querySelector('input').value;
     let time = row.cells[3].querySelector('input').value;
-    let method = row.cells[4].querySelector('select').value;
+    let model = row.cells[4].querySelector('select').value;
 
-    let cv = row.cells[0].querySelector('input');
-    let cVisibility = cv ? cv.checked : null;
-    let uv = row.cells[1].querySelector('input');
-    let uVisibility = uv ? uv.checked : null;
-
-    if (isValidInput(dose, time, method) || keepInvalid) {
-        return { time: parseFloat(time), dose: parseFloat(dose), method: method, cVisibility: cVisibility, uVisibility: uVisibility };
+    if (isValidInput(dose, time, model) || keepInvalid) {
+        let rowEntry = { dose: parseFloat(dose) , time: parseFloat(time), model: model };
+        if (curveVisible !== null && keepVisibilities) { rowEntry.curveVisible = curveVisible; };
+        if (uncertaintyVisible !== null && keepVisibilities) { rowEntry.uncertaintyVisible = uncertaintyVisible; };
+        return rowEntry;
     } else {
         return null;
     }
 }
 
-function getTDMs(tableId, getVisibility = false, keepInvalid = false) {
-    let doseTable = document.getElementById(tableId),
-        times = [],
-        doses = [],
-        methods = [],
-        cVisibilities = [],
-        uVisibilities = [];
+function getMultiDoses(keepInvalid = false) {
+    let multiDoses = {};
 
-    for (let i = 1; i < doseTable.rows.length; i++) {
-        let row = doseTable.rows[i];
-        let rowData = readRow(row, keepInvalid);
-        if (rowData) {
-            doses.push(rowData.dose);
-            times.push(rowData.time);
-            methods.push(rowData.method);
-            if (getVisibility) {
-                cVisibilities.push(rowData.cVisibility);
-                uVisibilities.push(rowData.uVisibility);
-            }
-        }
+    let multiDoseTable = document.getElementById('multidose-table');
+
+    let firstRowEntry = readRow(multiDoseTable.rows[1], true, true);
+    multiDoses.curveVisible = firstRowEntry.curveVisible
+    multiDoses.uncertaintyVisible = firstRowEntry.uncertaintyVisible
+    multiDoses.daysAsIntervals = global_daysAsIntervals;
+
+    // Read entries, ignore visibilities
+    multiDoses.entries = Array.from(multiDoseTable.rows).slice(1)
+                              .map(row => readRow(row, false, keepInvalid))
+                              .filter(entry => entry !== null);
+
+    return multiDoses
+}
+
+function getSteadyStates(keepInvalid = false) {
+    let steadyStates = {};
+    
+    let steadyStateTable = document.getElementById('steadystate-table');
+    steadyStates.entries = Array.from(steadyStateTable.rows).slice(1)
+                                .map(row => readRow(row, true, keepInvalid))
+                                .filter(entry => entry !== null);
+
+    return steadyStates;
+}
+
+function getTDMs(keepInvalid = false) {
+
+    return { 
+        multidoses: getMultiDoses(keepInvalid), 
+        steadystates: getSteadyStates(keepInvalid)
     };
 
-    if (getVisibility) {
-        return [times, doses, methods, cVisibilities, uVisibilities];
-    }
-    return [times, doses, methods];
 }
 
 function guessNextRow(tableID) {
@@ -215,17 +239,17 @@ function guessNextRow(tableID) {
                 if (beforeBeforeLastRow
                     && (lastRow.dose === beforeBeforeLastRow.dose)
                     && (lastRow.dose !== beforeLastRow.dose)) {
-                    let timeDifference = beforeLastRow.time - beforeBeforeLastRow.time;
                     let dose = beforeLastRow.dose;
-                    let method = beforeLastRow.method;
-                    return { time: lastRow.time + timeDifference, dose: dose, method: method };
+                    let timeDifference = beforeLastRow.time - beforeBeforeLastRow.time;
+                    let model = beforeLastRow.model;
+                    return { dose: dose, time: lastRow.time + timeDifference, model: model };
                 }
             }
-            if (lastRow.method == beforeLastRow.method) {
-                let timeDifference = lastRow.time - beforeLastRow.time;
+            if (lastRow.model == beforeLastRow.model) {
                 let doseDifference = lastRow.dose - beforeLastRow.dose;
-                let method = lastRow.method;
-                return { time: lastRow.time + timeDifference, dose: lastRow.dose + doseDifference, method: method };
+                let timeDifference = lastRow.time - beforeLastRow.time;
+                let model = lastRow.model;
+                return {dose: lastRow.dose + doseDifference, time: lastRow.time + timeDifference, model: model };
             }
         }
     } else if (table.rows.length >= 3 && global_daysAsIntervals) {
@@ -237,30 +261,30 @@ function guessNextRow(tableID) {
 }
 
 
-function addTDMRow(tableID, dose = null, time = null, method = null, cvisible = true, uvisible = true) {
+function addTDMRow(tableID, dose = null, time = null, model = null, cvisible = true, uvisible = true) {
 
     let table = document.getElementById(tableID);
     let row = table.insertRow(-1);
 
-    rowValidity.set(row, isValidInput(dose, time, method));
+    rowValidity.set(row, isValidInput(dose, time, model));
 
     // Add visibility and uncertainty checkboxes
     let visibilityCell = row.insertCell(0);
     visibilityCell.className = 'visibility-cell';
 
     if (tableID == 'steadystate-table' || ((tableID == 'multidose-table') && (table.rows.length == 2))) {
-        let visibilityCheckbox = document.createElement('input');
-        visibilityCheckbox.type = 'checkbox';
-        visibilityCheckbox.className = 'hidden-checkbox-state';
-        visibilityCheckbox.checked = cvisible;
-        visibilityCell.appendChild(visibilityCheckbox);
+        let visibilityCheckboxState = document.createElement('input');
+        visibilityCheckboxState.type = 'checkbox';
+        visibilityCheckboxState.className = 'hidden-checkbox-state';
+        visibilityCheckboxState.checked = cvisible;
+        visibilityCell.appendChild(visibilityCheckboxState);
 
         let visibilityCustomCheckbox = document.createElement('div');
-        visibilityCustomCheckbox.className = visibilityCheckbox.checked ? 'custom-checkbox checked-style' : 'custom-checkbox';
+        visibilityCustomCheckbox.className = visibilityCheckboxState.checked ? 'custom-checkbox checked-style' : 'custom-checkbox';
         visibilityCustomCheckbox.title = "Turn visibility of curve on/off";
         visibilityCustomCheckbox.onmousedown = function() {
-            visibilityCheckbox.checked = !visibilityCheckbox.checked;
-            this.className = visibilityCheckbox.checked ? 'custom-checkbox checked-style' : 'custom-checkbox';
+            visibilityCheckboxState.checked = !visibilityCheckboxState.checked;
+            this.className = visibilityCheckboxState.checked ? 'custom-checkbox checked-style' : 'custom-checkbox';
             refresh();
         };
         visibilityCell.appendChild(visibilityCustomCheckbox);
@@ -271,18 +295,18 @@ function addTDMRow(tableID, dose = null, time = null, method = null, cvisible = 
 
     if (tableID == 'steadystate-table' || ((tableID == 'multidose-table') && (table.rows.length == 2))) {
 
-        let uncertaintyCheckbox = document.createElement('input');
-        uncertaintyCheckbox.type = 'checkbox';
-        uncertaintyCheckbox.className = 'hidden-checkbox-state';
-        uncertaintyCheckbox.checked = uvisible;
-        uncertaintyCell.appendChild(uncertaintyCheckbox);
+        let uncertaintyCheckboxState = document.createElement('input');
+        uncertaintyCheckboxState.type = 'checkbox';
+        uncertaintyCheckboxState.className = 'hidden-checkbox-state';
+        uncertaintyCheckboxState.checked = uvisible;
+        uncertaintyCell.appendChild(uncertaintyCheckboxState);
 
         let uncertaintyCustomCheckbox = document.createElement('div');
-        uncertaintyCustomCheckbox.className = uncertaintyCheckbox.checked ? 'custom-checkbox checked-style' : 'custom-checkbox';
+        uncertaintyCustomCheckbox.className = uncertaintyCheckboxState.checked ? 'custom-checkbox checked-style' : 'custom-checkbox';
         uncertaintyCustomCheckbox.title = 'Turn visibility of uncertainty cloud on/off';
         uncertaintyCustomCheckbox.onmousedown = function() {
-            uncertaintyCheckbox.checked = !uncertaintyCheckbox.checked;
-            this.className = uncertaintyCheckbox.checked ? 'custom-checkbox checked-style' : 'custom-checkbox';
+            uncertaintyCheckboxState.checked = !uncertaintyCheckboxState.checked;
+            this.className = uncertaintyCheckboxState.checked ? 'custom-checkbox checked-style' : 'custom-checkbox';
             refresh();
         };
         uncertaintyCell.appendChild(uncertaintyCustomCheckbox);
@@ -316,11 +340,11 @@ function addTDMRow(tableID, dose = null, time = null, method = null, cvisible = 
 
     if (tableID == 'multidose-table') {
         timeInput.classList.add('time-input-multidose');
-        timeInput.placeholder = global_daysAsIntervals ? 'since last' : 'since first';
+        timeInput.placeholder = global_daysAsIntervals ? 'since -1' : 'since 0';
     }
     else if (tableID == 'steadystate-table') {
         timeInput.classList.add('time-input-steadystate');
-        timeInput.placeholder = 'days';
+        timeInput.placeholder = 'T days';
     };
 
     timeCell.appendChild(timeInput);
@@ -340,38 +364,38 @@ function addTDMRow(tableID, dose = null, time = null, method = null, cvisible = 
         addRowIfNeeded(tableID);
     });
 
-    let methodCell = row.insertCell(4);
-    let methodSelect = document.createElement('select');
-    methodSelect.classList.add('dropdown-method');
+    let modelCell = row.insertCell(4);
+    let modelSelect = document.createElement('select');
+    modelSelect.classList.add('dropdown-model');
 
-    // Fill method dropdown with models
-    Object.entries(methodList).forEach(([key, {units, description}]) => {
+    // Fill model dropdown with models
+    Object.entries(modelList).forEach(([key, {units, description}]) => {
         let option = document.createElement('option');
         option.value = key;
         option.text = key.toLowerCase();
         option.title = description;
-        methodSelect.appendChild(option);
+        modelSelect.appendChild(option);
     });
-    methodCell.appendChild(methodSelect);
+    modelCell.appendChild(modelSelect);
 
-    if (method !== null) {
-        methodSelect.value = method;
+    if (model !== null) {
+        modelSelect.value = model;
     } else {
-        // If no method is specified and there are
+        // If no model is specified and there are
         // more than one row in the table, add
-        // the same method as the one before
+        // the same model as the one before
         if (table.rows.length > 2) {
-            method = table.rows[table.rows.length - 2].cells[4].querySelector('select').value;
-            methodSelect.value = method;
+            model = table.rows[table.rows.length - 2].cells[4].querySelector('select').value;
+            modelSelect.value = model;
         }
     }
 
-    doseInput.placeholder = methodList[methodSelect.value].units;
+    doseInput.placeholder = modelList[modelSelect.value].units;
 
-    methodSelect.addEventListener('change', function() {
+    modelSelect.addEventListener('change', function() {
 
-        let newMethod = this.value;
-        let newUnits = methodList[newMethod].units;
+        let newModel = this.value;
+        let newUnits = modelList[newModel].units;
         doseInput.placeholder = newUnits;
 
         if (readRow(row)) {
@@ -439,7 +463,7 @@ function setDaysAsIntervals(refreshPlot = true) {
 
     let timeInputs = document.querySelectorAll('.time-input-multidose');
     timeInputs.forEach(input => {
-        input.placeholder = 'since last';
+        input.placeholder = 'since -1';
     });
 
     refreshPlot && refresh();
@@ -451,7 +475,7 @@ function setDaysAsAbsolute(refreshPlot = true) {
 
     let timeInputs = document.querySelectorAll('.time-input-multidose');
     timeInputs.forEach(input => {
-        input.placeholder = 'since first';
+        input.placeholder = 'since 0';
     });
 
     refreshPlot && refresh();
@@ -544,7 +568,7 @@ function attachMultidoseButtonsEvents() {
 
         if (guess) {
             guessButton.classList.add('button-on');
-            setRowParameters('multidose-table', -1, guess.time, guess.dose, guess.method);
+            setRowParameters('multidose-table', -1, guess.dose, guess.time, guess.model);
             refresh();
         } else {
             guessButton.innerHTML = '&nbsp;?._.)&nbsp;&nbsp;';
@@ -776,7 +800,7 @@ function addRowIfNeeded(tableID) {
     }
 }
 
-function setRowParameters(tableID, number, time, dose, method) {
+function setRowParameters(tableID, number, dose, time, model) {
     let table = document.getElementById(tableID);
 
     // Treat negative numbers as reverse order
@@ -789,11 +813,11 @@ function setRowParameters(tableID, number, time, dose, method) {
 
     let doseInput = row.cells[2].querySelector('input');
     let timeInput = row.cells[3].querySelector('input');
-    let methodInput = row.cells[4].querySelector('select');
+    let modelInput = row.cells[4].querySelector('select');
 
-    timeInput.value = time;
     doseInput.value = dose;
-    methodInput.value = method;
+    timeInput.value = time;
+    modelInput.value = model;
 
     addRowIfNeeded(tableID);
 }

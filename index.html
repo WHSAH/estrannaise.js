@@ -19,6 +19,7 @@
 </head>
 
 <body>
+    <div id="dragndrop-zone">
     <div class="container">
 
         <div class="header">
@@ -42,24 +43,19 @@
 
         </div> <!-- header -->
 
-        <div class="ui-container">
-
+        <div id="ui-container" class="ui-container">
             <div id="plot-region" class="plot-region"></div>
-
             <div class="options-container">
-
                 <select id="dropdown-units" class="element-reflow"
                         title="Change units for the estradiol concentration">
                     <option value="pg/mL">pg/mL</option>
                     <option value="pmol/L">pmol/L</option>
                 </select>
-
                 <select id="dropdown-daysinput" class="element-reflow"
                         title="Change the way days are interpreted as inputs in the multi-dose curve">
                     <option value="absolute">absolute days</option>
                     <option value="intervals">interval days</option>
                 </select>
-
                 <select id="dropdown-presets" class="element-reflow"
                         title="Load a preset">
                     <option value="" selected disabled>Select a preset</option>
@@ -94,43 +90,33 @@
                     <option value="" disabled>inappropriate regimens</option>
                     <option value="mimic-menstrual-cycle">&nbsp;&nbsp;Mimic Menstrual Cycle™</option>
                 </select>
-
                 <button id="menstrual-cycle-button" class="flat-button button-off element-reflow"
                         title="Turn on/off the display of the menstrual cycle data">
                     menstrual cycle
                 </button>
-
                 <button id="target-range-button" class="flat-button button-off element-reflow"
                         title="Turn on/off the display of target mean estradiol range">
                     target range
                 </button>
-
                 <button id="share-button" class="flat-button button-off element-reflow"
                         title="Share the current state of the simulator as an arcane URL">
                     share url
                 </button>
-
             </div> <!-- options -->
-
+            
             <div class="multidose-container">
-
-                <h3 style="font-weight: bold;">multi-doses</h3>
-
-                <div style="margin-top: 1em;">
-                    <button id="guess-button" class="flat-button element-reflow" title="Duplicate last entry when in 'days as interval mode'. Guess and autofill next dose given the last two or three entries when in 'absolute days' mode">autofill</button>
-                    <button id="clear-doses-button" class="flat-button element-reflow" title="Clear all entries in the multi-dose curve">clear</button>
-                    <input type="file" id="csv-file" accept=".csv" style="display: none;">
-                    <button id="import-csv-dialog" class="flat-button element-reflow">import</button>
-                    <button id="export-csv-button" class="flat-button element-reflow">export</button>
-                </div>
-
-                <br>
-
-                <div id="dragndrop-zone">
+                    <h3 style="font-weight: bold;">multi-doses</h3>
+                    <div style="margin-top: 1em;">
+                        <button id="guess-button" class="flat-button element-reflow" title="Duplicate last entry when in 'days as interval mode'. Guess and autofill next dose given the last two or three entries when in 'absolute days' mode">autofill</button>
+                        <button id="clear-doses-button" class="flat-button element-reflow" title="Clear all entries in the multi-dose curve">clear</button>
+                        <input type="file" id="csv-file" accept=".csv" style="display: none;">
+                        <button id="import-csv-dialog" class="flat-button element-reflow">import</button>
+                        <button id="export-csv-button" class="flat-button element-reflow">export</button>
+                    </div>
                     <table id="multidose-table">
                         <thead>
                             <tr>
-                                <th>v</th>
+                                <th>c</th>
                                 <th>u</th>
                                 <th>dose</th>
                                 <th>days</th>
@@ -141,23 +127,17 @@
                         <tbody>
                         </tbody>
                     </table>
-                    <span class="small-text">drag-n-drop csv on table to import</span>
-                </div>
-            </div> <!-- multidose-container -->
-
+                    <span class="small-text">drag-n-drop csv anywhere to import</span>
+                </div> <!-- multidose-container -->
             <div class="steadystate-container">
-
                 <h3 style="font-weight: bold;">steady-states</h2>
-
                 <div style="margin-top: 1em;">
                     <button id="clear-steadystates-button" class="flat-button element-reflow" title="Clear all steady-state entries">clear</button>
                 </div>
-                <br>
-
                 <table id="steadystate-table">
                     <thead>
                         <tr>
-                            <th>v</th>
+                            <th>c</th>
                             <th>u</th>
                             <th>dose</th>
                             <th>every</th>
@@ -169,7 +149,6 @@
                     </tbody>
                 </table>
             </div> <!-- steadystate-container-->
-
         </div> <!-- ui-container -->
 
         <div class="bottom-text">
@@ -279,6 +258,7 @@
 
         </div> <!-- bottom-text -->
     </div> <!-- container -->
+    </div> <!-- dragndrop-zone -->
 </body>
 
 </html>
