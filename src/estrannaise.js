@@ -37,9 +37,9 @@ window.addEventListener('DOMContentLoaded', () => {
 
     themeSetup();
 
-    // if (!loadFromURL()) {
-    //     loadFromLocalStorage();
-    // }
+    if (!loadFromURL()) {
+        loadFromLocalStorage();
+    }
 
     refresh();
 
@@ -714,8 +714,27 @@ function deleteLocalStorage() {
 }
 
 function generateShareURL() {
-    let multiDoseTable = getTDMs('multidose-table', true, true);
-    let steadyStateTable = getTDMs('steadystate-table', true, true);
+
+    let multiDoseTable = getMultiDoses(true, true);
+    let steadyStateTable = getSteadyStates(true, true);
+
+    let mdCurveVisibleColumn = multiDoseTable.entries.map(entry => null);
+    mdCurveVisibleColumn[0] = multiDoseTable.curveVisible;
+    let mdUncertaintyVisibleColumn = multiDoseTable.entries.map(entry => null);
+    mdUncertaintyVisibleColumn[0] = multiDoseTable.uncertaintyVisible;
+    let mdDoseColumn = multiDoseTable.entries.map(entry => entry.dose);
+    let mdTimeColumn = multiDoseTable.entries.map(entry => entry.time);
+    let mdMethodColumn = multiDoseTable.entries.map(entry => entry.model);
+
+    multiDoseTable = [mdTimeColumn, mdDoseColumn, mdMethodColumn, mdCurveVisibleColumn, mdUncertaintyVisibleColumn];
+
+    let ssCurveVisibleColumn = steadyStateTable.entries.map(entry => entry.curveVisible);
+    let ssUncertaintyVisibleColumn = steadyStateTable.entries.map(entry => entry.uncertaintyVisible);
+    let ssDoseColumn = steadyStateTable.entries.map(entry => entry.dose);
+    let ssTimeColumn = steadyStateTable.entries.map(entry => entry.time);
+    let ssMethodColumn = steadyStateTable.entries.map(entry => entry.model);
+
+    steadyStateTable = [ssTimeColumn, ssDoseColumn, ssMethodColumn, ssCurveVisibleColumn, ssUncertaintyVisibleColumn];
 
     let params = new URLSearchParams();
     params.set('multiDoseTable', JSON.stringify(multiDoseTable));
