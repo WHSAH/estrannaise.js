@@ -22,16 +22,15 @@ let global_currentColorScheme = 'night';
 window.addEventListener('DOMContentLoaded', () => {
 
     initializeDefaultPreset();
-
     attachDragNDropImport();
 
     attachOptionsEvents();
-
+    
     attachPresetsDropdown();
-
+    
     attachMultidoseButtonsEvents();
     attachSteadyStateButtonsEvents();
-
+    
     attachMenstrualCycleButtonEvent();
     attachTargetRangeButtonEvent();
 
@@ -51,6 +50,7 @@ window.addEventListener('DOMContentLoaded', () => {
  * @param {boolean} save save current state to local storage
  */
 export function refresh(save = false) {
+    
     if (save) {
         saveToLocalStorage();
     }
@@ -846,7 +846,7 @@ function setRowParameters(tableID, number, dose, time, model) {
  * with a blank slate and can see what's possible.
  */
 function initializeDefaultPreset() {
-    applyPreset(Presets.default);
+    applyPreset(Presets.default, false);
 }
 
 /**
@@ -868,7 +868,7 @@ function attachPresetsDropdown() {
  * Apply the preset configuration to the tables, and refresh the graph
  * @param {Object} presetConfig
  */
-function applyPreset(presetConfig) {
+function applyPreset(presetConfig, refreshAfter = true) {
     deleteAllRows('multidose-table');
     deleteAllRows('steadystate-table');
 
@@ -891,5 +891,5 @@ function applyPreset(presetConfig) {
         addTDMRow('multidose-table');
     }
 
-    refresh();
+    refreshAfter && refresh();
 }

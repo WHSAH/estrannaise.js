@@ -64,10 +64,13 @@
 @media (max-width: 40em) {
     .ui-container {
         grid-template-areas:
-            "plot-region plot-region"
-            "options-container options-container"
-            "multidose-container ."
-            "steadystate-container .";
+            "plot-region"
+            "options-container"
+            "multidose-container"
+            "steadystate-container";
+    }
+    svg text {
+        font-size: 20px;
     }
 }
 
@@ -97,7 +100,6 @@
     grid-area: bottom-text;
     max-width: 55em;
 }
-
 
 body, html {
     background-color: var(--background-color);
