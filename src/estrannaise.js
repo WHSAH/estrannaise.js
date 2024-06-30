@@ -220,8 +220,10 @@ export function convertEntriesToAbsoluteDays(refreshAfter = true) {
             let time = parseFloat(row.cells[3].querySelector('input').value);
             if (previousTime !== null) {
                 row.cells[3].querySelector('input').value = time + previousTime;
+                previousTime = time + previousTime;
+            } else {
+                previousTime = time;
             }
-            previousTime = time;
         }
     });
 
@@ -385,7 +387,7 @@ function addTDMRow(tableID, dose = null, time = null, model = null, cvisible = t
     }
     else if (tableID == 'steadystate-table') {
         timeInput.classList.add('time-input-steadystate');
-        timeInput.placeholder = 'T days';
+        timeInput.placeholder = '# days';
     };
 
     timeCell.appendChild(timeInput);
