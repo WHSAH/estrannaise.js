@@ -1,7 +1,6 @@
 
 import { 
     plotCurves,
-    createOptionsTemplate
  } from './plotting.js';
 
 import { modelList } from './models.js';
@@ -49,7 +48,7 @@ window.addEventListener('DOMContentLoaded', () => {
  * Re-draw the graph
  * @param {boolean} save save current state to local storage
  */
-export function refresh(save = false) {
+function refresh(save = false) {
     
     if (save) {
         saveToLocalStorage();
@@ -175,7 +174,7 @@ function isValidRow(row) {
     return isValidInput(dose, time, model);
 }
 
-export function readRow(row, keepVisibilities = true, keepInvalid = false) {
+function readRow(row, keepVisibilities = true, keepInvalid = false) {
 
     let curveVisibleCheckBox = row.cells[0].querySelector('input');
     let curveVisible = curveVisibleCheckBox ? curveVisibleCheckBox.checked : null;
@@ -196,9 +195,9 @@ export function readRow(row, keepVisibilities = true, keepInvalid = false) {
     }
 }
 
-export function convertEntriesToInvervalDays(refreshAfter = true) {
+function convertEntriesToInvervalDays(refreshAfter = true) {
 
-    let multiDoseTable = getMultiDoses(false);
+    let multiDoseTable = getMultiDoses();
     let sortedEntries = multiDoseTable.entries.sort((a, b) => a.time - b.time);
 
     deleteAllRows('multidose-table');
