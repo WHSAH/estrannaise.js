@@ -168,6 +168,12 @@ function isValidInput(dose, time, model) {
      );
 }
 
+function isValidRow(row) {
+    let dose = row.cells[2].querySelector('input').value;
+    let time = row.cells[3].querySelector('input').value;
+    let model = row.cells[4].querySelector('select').value;
+    return isValidInput(dose, time, model);
+}
 
 export function readRow(row, keepVisibilities = true, keepInvalid = false) {
 
@@ -189,6 +195,41 @@ export function readRow(row, keepVisibilities = true, keepInvalid = false) {
         return null;
     }
 }
+
+export function convertEntriesToInvervalDays(refreshAfter = true) {
+    let previousTime = null;
+    Array.from(document.getElementById('multidose-table').rows).slice(1).forEach(row => {
+        if (isValidRow(row)) {
+            let time = parseFloat(row.cells[3].querySelector('input').value);
+            if (previousTime !== null) {
+                row.cells[3].querySelector('input').value = time - previousTime;
+            }
+            previousTime = time;
+        }
+    });
+
+    setDaysAsIntervals();
+
+    refreshAfter && refresh();
+}
+
+export function convertEntriesToAbsoluteDays(refreshAfter = true) {
+    let previousTime = null;
+    Array.from(document.getElementById('multidose-table').rows).slice(1).forEach(row => {
+        if (isValidRow(row)) {
+            let time = parseFloat(row.cells[3].querySelector('input').value);
+            if (previousTime !== null) {
+                row.cells[3].querySelector('input').value = time + previousTime;
+            }
+            previousTime = time;
+        }
+    });
+
+    setDaysAsAbsolute();
+
+    refreshAfter && refresh();
+}
+
 
 function getMultiDoses(keepInvalid = false) {
     let multiDoses = {};
@@ -677,8 +718,13 @@ function attachOptionsEvents() {
     });
 
     document.getElementById('dropdown-daysinput').addEventListener('change', (event) => {
-        (event.target.value === 'intervals') ? setDaysAsIntervals() : setDaysAsAbsolute();
+        if (event.target.value === 'convert') {
+            (global_daysAsIntervals) ? convertEntriesToAbsoluteDays() : convertEntriesToInvervalDays();
+        } else {
+            (event.target.value === 'intervals') ? setDaysAsIntervals() : setDaysAsAbsolute();
+        }
     });
+
 }
 
 function saveToLocalStorage() {
