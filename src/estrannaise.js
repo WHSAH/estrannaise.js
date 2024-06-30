@@ -197,6 +197,15 @@ export function readRow(row, keepVisibilities = true, keepInvalid = false) {
 }
 
 export function convertEntriesToInvervalDays(refreshAfter = true) {
+
+    let multiDoseTable = getMultiDoses(false);
+    let sortedEntries = multiDoseTable.entries.sort((a, b) => a.time - b.time);
+
+    deleteAllRows('multidose-table');
+    sortedEntries.forEach(entry => {
+        addTDMRow('multidose-table', entry.dose, entry.time, entry.model);
+    });
+
     let previousTime = null;
     Array.from(document.getElementById('multidose-table').rows).slice(1).forEach(row => {
         if (isValidRow(row)) {
@@ -213,7 +222,7 @@ export function convertEntriesToInvervalDays(refreshAfter = true) {
     refreshAfter && refresh();
 }
 
-export function convertEntriesToAbsoluteDays(refreshAfter = true) {
+function convertEntriesToAbsoluteDays(refreshAfter = true) {
     let previousTime = null;
     Array.from(document.getElementById('multidose-table').rows).slice(1).forEach(row => {
         if (isValidRow(row)) {
