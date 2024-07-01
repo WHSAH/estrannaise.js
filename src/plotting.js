@@ -138,10 +138,10 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
         msMarks = [
             Plot.line(_menstrualCycle, {
                 x: 'Time', y: 'E2', strokeWidth: 2,
-                stroke: options.strongForegroundColor, strokeOpacity: 0.5}),
+                stroke: options.strongForegroundColor, strokeOpacity: 0.8}),
             Plot.areaY(_menstrualCycle, {
                 x: 'Time', y1: 'E2p5', y2: 'E2p95',
-                fill: options.strongForegroundColor, fillOpacity: 0.1}),
+                fill: options.strongForegroundColor, fillOpacity: 0.12}),
 
             Plot.tip(_menstrualCycle, Plot.pointerX({
                 x: 'Time', y: 'E2', 
