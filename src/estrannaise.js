@@ -1,7 +1,7 @@
 
 import { 
     plotCurves,
-    getDefaultPlottingOptions
+    generatePlottingOptions
  } from './plotting.js';
 
 import { modelList } from './models.js';
@@ -51,7 +51,7 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 export function getCurrentPlottingOptions() {
-    return getDefaultPlottingOptions(
+    return generatePlottingOptions(
         global_conversionFactor, 
         global_currentColorScheme, 
         global_menstrualCycleVisible, 
@@ -76,7 +76,7 @@ function refresh(save = false) {
     let graph = plotCurves(
         getTDMs(),
         getCurrentPlottingOptions(),
-        true);
+        false);
     let plot = document.getElementById('plot-region');
     plot.innerHTML = '';
     plot.append(graph);

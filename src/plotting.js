@@ -46,7 +46,7 @@ function numberToDayHour(number, precision = 0) {
     return `${days}d ${hours}h`;
 }
 
-export function getDefaultPlottingOptions(
+export function generatePlottingOptions(
     conversionFactor = 1.0, 
     currentColorscheme = 'day', 
     menstrualCycleVisible = false, 
@@ -79,10 +79,10 @@ export function getDefaultPlottingOptions(
  * * `menstrualCycleVisible`: boolean,
  * * `targetRangeVisible`: boolean,
  * * `units`: String,
- * @param {Boolean} returnHTML
+ * @param {Boolean} returnSVG
  * @return Plot for insertion into the page
  */
-export function plotCurves(dataset, options = getDefaultPlottingOptions(), returnHTML = false) {
+export function plotCurves(dataset, options = getDefaultPlottingOptions(), returnSVG = true) {
     // track the max e2 across all multi-dose curves
     // to set the y-axis limit. uncertainty clouds ignored
     // because of potential stray dots.
@@ -253,9 +253,9 @@ export function plotCurves(dataset, options = getDefaultPlottingOptions(), retur
         .concat([Plot.ruleX([xMin]), Plot.ruleY([0])])
     });
 
-    if (returnHTML) {
-        return e2curve;
-    } else {
+    if (returnSVG) {
         return e2curve.outerHTML;
+    } else {
+        return e2curve;
     }
 }
