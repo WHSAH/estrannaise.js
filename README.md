@@ -6,7 +6,6 @@ Under the hood, estrannaise.js uses pharmacokinetic compartments models and MCMC
 **estrannaise.js is entirely client-side. Your data, whether entered, imported, or stashed, remains exclusively within your browser and will never be transmitted to the developer(s) or any third-party.**
 
 # TODO
-- BUG inconsistent xMax between interval/absolute days
 - Save/load from localStorage
 - Shorten shared url
 - Allow to manual set x-axis limits
