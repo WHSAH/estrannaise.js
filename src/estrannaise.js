@@ -1,6 +1,7 @@
 
 import { 
     plotCurves,
+    getDefaultPlottingOptions
  } from './plotting.js';
 
 import { modelList } from './models.js';
@@ -17,6 +18,11 @@ let global_daysAsIntervals = false;
 let global_menstrualCycleVisible = false;
 let global_targetRangeVisible = false;
 let global_currentColorScheme = 'night';
+
+const NB_LINE_POINTS = 900;
+const NB_CLOUD_POINTS = 3500;
+const CLOUD_POINT_SIZE = 1.3;
+const CLOUD_POINT_OPACITY = 0.4;
 
 window.addEventListener('DOMContentLoaded', () => {
 
@@ -44,6 +50,19 @@ window.addEventListener('DOMContentLoaded', () => {
 
 });
 
+export function getCurrentPlottingOptions() {
+    return getDefaultPlottingOptions(
+        global_conversionFactor, 
+        global_currentColorScheme, 
+        global_menstrualCycleVisible, 
+        global_targetRangeVisible, 
+        global_units,
+        NB_LINE_POINTS,
+        NB_CLOUD_POINTS,
+        CLOUD_POINT_SIZE,
+        CLOUD_POINT_OPACITY);
+}
+
 /**
  * Re-draw the graph
  * @param {boolean} save save current state to local storage
@@ -56,14 +75,7 @@ function refresh(save = false) {
 
     let graph = plotCurves(
         getTDMs(),
-        {
-            conversionFactor: global_conversionFactor,
-            currentColorScheme: global_currentColorScheme,
-            menstrualCycleVisible: global_menstrualCycleVisible,
-            targetRangeVisible: global_targetRangeVisible,
-            units: global_units,
-            returnRawSVG: false
-        },
+        getCurrentPlottingOptions(),
         true);
     let plot = document.getElementById('plot-region');
     plot.innerHTML = '';
@@ -270,7 +282,7 @@ function getSteadyStates(keepInvalid = false) {
     return steadyStates;
 }
 
-function getTDMs(keepInvalid = false) {
+export function getTDMs(keepInvalid = false) {
 
     return { 
         multidoses: getMultiDoses(keepInvalid), 
@@ -286,6 +298,7 @@ function guessNextRow(tableID) {
         let lastRow = readRow(table.rows[table.rows.length - 2]);
         if (beforeLastRow && lastRow) {
             if (table.rows.length >= 5) {
+                
                 let beforeBeforeLastRow = readRow(table.rows[table.rows.length - 4]);
                 if (beforeBeforeLastRow
                     && (lastRow.dose === beforeBeforeLastRow.dose)
@@ -312,7 +325,7 @@ function guessNextRow(tableID) {
 }
 
 
-function addTDMRow(tableID, dose = null, time = null, model = null, cvisible = true, uvisible = true) {
+function addTDMRow(tableID, dose = null, time = null, model = null, curveVisible = true, uncertaintyVisible = true) {
 
     let table = document.getElementById(tableID);
     let row = table.insertRow(-1);
@@ -327,7 +340,7 @@ function addTDMRow(tableID, dose = null, time = null, model = null, cvisible = t
         let visibilityCheckboxState = document.createElement('input');
         visibilityCheckboxState.type = 'checkbox';
         visibilityCheckboxState.className = 'hidden-checkbox-state';
-        visibilityCheckboxState.checked = cvisible;
+        visibilityCheckboxState.checked = curveVisible;
         visibilityCell.appendChild(visibilityCheckboxState);
 
         let visibilityCustomCheckbox = document.createElement('div');
@@ -349,7 +362,7 @@ function addTDMRow(tableID, dose = null, time = null, model = null, cvisible = t
         let uncertaintyCheckboxState = document.createElement('input');
         uncertaintyCheckboxState.type = 'checkbox';
         uncertaintyCheckboxState.className = 'hidden-checkbox-state';
-        uncertaintyCheckboxState.checked = uvisible;
+        uncertaintyCheckboxState.checked = uncertaintyVisible;
         uncertaintyCell.appendChild(uncertaintyCheckboxState);
 
         let uncertaintyCustomCheckbox = document.createElement('div');
@@ -737,35 +750,53 @@ function attachOptionsEvents() {
 
 }
 
-function saveToLocalStorage() {
-    let multiDoseTable = getTDMs('multidose-table', true, true);
-    let steadyStateTable = getTDMs('steadystate-table', true, true);
+export function saveToLocalStorage() {
+    // let multiDoseTable = getTDMs('multidose-table', true, true);
+    // let steadyStateTable = getTDMs('steadystate-table', true, true);
 
-    localStorage.setItem('multiDoseTable', JSON.stringify(multiDoseTable));
-    localStorage.setItem('steadyStateTable', JSON.stringify(steadyStateTable));
+    // localStorage.setItem('multiDoseTable', JSON.stringify(multiDoseTable));
+    // localStorage.setItem('steadyStateTable', JSON.stringify(steadyStateTable));
+    
+    localStorage.setItem('estrannaiseOptions', JSON.stringify({
+        menstrualCycleVisible: global_menstrualCycleVisible,
+        targetRangeVisible: global_targetRangeVisible,
+        units: global_units,
+        daysAsIntervals: global_daysAsIntervals
+    }));
+    localStorage.setItem('estrannaiseDataset', JSON.stringify(getTDMs(true, true)));
+
 }
 
-function loadFromLocalStorage() {
+export function loadFromLocalStorage() {
 
-    let multiDoseTable = JSON.parse(localStorage.getItem('multiDoseTable'));
-    let steadyStateTable = JSON.parse(localStorage.getItem('steadyStateTable'));
+    let options = JSON.parse(localStorage.getItem('estrannaiseOptions'));
+    let dataset = JSON.parse(localStorage.getItem('estrannaiseDataset'));
 
-    if (multiDoseTable) {
+    if (options) {
+        setUnits(options.units, false);
+        options.menstrualCycleVisible ? turnMenstrualCycleOn(false) : turnMenstrualCycleOff(false);
+        options.targetRangeVisible ? turnTargetRangeOn(false) : turnTargetRangeOff(false);
+        options.daysAsIntervals ? setDaysAsIntervals(false) : setDaysAsAbsolute(false);
+    }
+
+    if (dataset) {
         deleteAllRows('multidose-table');
-        for (let i = 0; i < multiDoseTable[0].length; i++) {
-            addTDMRow('multidose-table', multiDoseTable[0][i], multiDoseTable[1][i], multiDoseTable[2][i], multiDoseTable[3][i], multiDoseTable[4][i]);
-        }
-    }
+        dataset.multidoses.entries.forEach((entry, i) => {
+            addTDMRow('multidose-table', entry.dose, entry.time, entry.model, dataset.multidoses.curveVisible, dataset.multidoses.uncertaintyVisible);
+        });
 
-    if (steadyStateTable) {
         deleteAllRows('steadystate-table');
-        for (let i = 0; i < steadyStateTable[0].length; i++) {
-            addTDMRow('steadystate-table', steadyStateTable[0][i], steadyStateTable[1][i], steadyStateTable[2][i], steadyStateTable[3][i], steadyStateTable[4][i]);
-        }
+        dataset.steadystates.entries.forEach(entry => {
+            addTDMRow('steadystate-table', entry.dose, entry.time, entry.model, entry.curveVisible, entry.uncertaintyVisible);
+        });
+
     }
+    
+    (options || dataset) && refresh();
+
 }
 
-function deleteLocalStorage() {
+export function deleteLocalStorage() {
     localStorage.clear();
 }
 
@@ -870,7 +901,7 @@ function addRowIfNeeded(tableID) {
     let lastRow = readRow(table.rows[table.rows.length - 1]);
 
     // Add new row if the last row is valid
-    if(lastRow !== null) {
+    if (lastRow !== null) {
         addTDMRow(tableID);
     }
 }
@@ -880,7 +911,7 @@ function setRowParameters(tableID, number, dose, time, model) {
 
     // Treat negative numbers as reverse order
     let rowNumber = number;
-    if(number < 0) {
+    if (number < 0) {
         rowNumber = table.rows.length + number;
     }
 
