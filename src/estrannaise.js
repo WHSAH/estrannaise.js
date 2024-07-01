@@ -51,6 +51,11 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 export function getCurrentPlottingOptions() {
+    let rootStyle = getComputedStyle(document.documentElement);
+    let backgroundColor = rootStyle.getPropertyValue('--background-color');
+    let lightForegroundColor = rootStyle.getPropertyValue('--light-foreground');
+    let strongForegroundColor = rootStyle.getPropertyValue('--strong-foreground');
+
     return generatePlottingOptions(
         global_conversionFactor, 
         global_currentColorScheme, 
@@ -60,7 +65,11 @@ export function getCurrentPlottingOptions() {
         NB_LINE_POINTS,
         NB_CLOUD_POINTS,
         CLOUD_POINT_SIZE,
-        CLOUD_POINT_OPACITY);
+        CLOUD_POINT_OPACITY,
+        backgroundColor,
+        lightForegroundColor,
+        strongForegroundColor
+        );
 }
 
 /**
