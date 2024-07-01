@@ -36,7 +36,7 @@ export const Presets = {
             [4, 7, 'EEn im'],
             [4, 7, 'EEn im'],
             [4, 7, 'EEn im'],
-            [4, 7, 'EEn im'],
+            [4, 7, 'EEn im']
         ]
     },
     'een-monotherapy-10': {
@@ -46,8 +46,6 @@ export const Presets = {
             [6, 10, 'EEn im', true, false]
         ],
         'multi': [
-            [6, 10, 'EEn im'],
-            [6, 10, 'EEn im'],
             [6, 10, 'EEn im'],
             [6, 10, 'EEn im'],
             [6, 10, 'EEn im'],
@@ -69,8 +67,6 @@ export const Presets = {
             [3, 4, 'EV im'],
             [3, 4, 'EV im'],
             [3, 4, 'EV im'],
-            [3, 4, 'EV im'],
-            [3, 4, 'EV im'],
         ]
     },
     'ec-monotherapy-7': {
@@ -86,8 +82,7 @@ export const Presets = {
             [5, 7, 'EC im'],
             [5, 7, 'EC im'],
             [5, 7, 'EC im'],
-            [5, 7, 'EC im'],
-            [5, 7, 'EC im'],
+            [5, 7, 'EC im']
         ]
     },
     'ester-monotherapies': {
@@ -336,10 +331,6 @@ export const Presets = {
         ],
         'multi': [
             [6, 4, 'EV im'],
-            [3, 4, 'EV im'],
-            [3, 4, 'EV im'],
-            [3, 4, 'EV im'],
-            [3, 4, 'EV im'],
             [3, 4, 'EV im'],
             [3, 4, 'EV im'],
             [3, 4, 'EV im'],
