@@ -80,7 +80,7 @@ function findxMax(dataset, options) {
                 else { acc.push(acc[idx - 1] + entry.time); }
                 return acc;
             }, []);
-            xMax = Math.max(...dataset.multidoses.entries.map((entry, idx) => absoluteTimes[idx] + 5 * Math.log(2) / Math.min(...PKParameters[entry.model].slice(1))));
+            xMax = Math.max(xMax, ...dataset.multidoses.entries.map((entry, idx) => absoluteTimes[idx] + 5 * Math.log(2) / Math.min(...PKParameters[entry.model].slice(1))));
         } else {
             xMax = Math.max(xMax, ...dataset.multidoses.entries.map(entry => entry.time + 5 * Math.log(2) / Math.min(...PKParameters[entry.model].slice(1))));
         }
