@@ -527,6 +527,10 @@ function setUnits(units, refreshPlot = true) {
         global_units = units
         global_conversionFactor = 3.6713;
         document.getElementById('dropdown-units').value = 'pmol/L';
+    } else if (units === 'ng/L') {
+        global_units = units
+        global_conversionFactor = 1.0;
+        document.getElementById('dropdown-units').value = 'ng/L';
     }
     refreshPlot && refresh();
 }
@@ -680,19 +684,16 @@ function attachMultidoseButtonsEvents() {
         setTimeout(() => {
             shareButton.classList.remove('button-on');
             shareButton.innerHTML = 'share url';
-        }, 500);
+        }, 700);
     });
 
     shareButton.addEventListener('dblclick', () => {
-        navigator.clipboard.writeText(generateShareURL());
-
-        shareButton.classList.add('button-on');
-        shareButton.innerHTML = '&nbsp;copied!&nbsp;<div class="floating-text small-text" style="color: black">praise Zalgo!</div>';
+        shareButton.innerHTML += '<div class="floating-text small-text" style="color: black">praise Zalgo!</div>';
 
         setTimeout(() => {
             shareButton.classList.remove('button-on');
             shareButton.innerHTML = 'share url';
-        }, 500);
+        }, 700);
     });
 
     let exportCSVButton = document.getElementById('export-csv-button');
