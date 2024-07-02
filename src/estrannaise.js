@@ -394,9 +394,10 @@ function addTDMRow(tableID, dose = null, time = null, model = null, curveVisible
     doseInput.addEventListener('input', function() {
 
         let myRow = this.parentElement.parentElement;
-        let currentValidity = Boolean(readRow(myRow, false));
+        let previousValidity = rowValidity.get(myRow);
+        let currentValidity = Boolean(isValidRow(myRow));
 
-        if ((currentValidity !== rowValidity.get(myRow)) || currentValidity) {
+        if ((currentValidity !== previousValidity) || currentValidity) {
             rowValidity.set(myRow, currentValidity);
             refresh();
         }
@@ -423,11 +424,13 @@ function addTDMRow(tableID, dose = null, time = null, model = null, curveVisible
     if (time !== null) {
         timeInput.value = time;
     }
+
     timeInput.addEventListener('input', function() {
         let myRow = this.parentElement.parentElement;
+        let previousValidity = rowValidity.get(myRow);
         let currentValidity = Boolean(readRow(myRow, false));
 
-        if ((currentValidity !== rowValidity.get(myRow)) || currentValidity) {
+        if ((currentValidity !== previousValidity) || currentValidity) {
             rowValidity.set(myRow, currentValidity);
             refresh();
         }
@@ -758,7 +761,7 @@ function attachOptionsEvents() {
 }
 
 export function saveToLocalStorage() {
-  
+
     localStorage.setItem('estrannaiseOptions', JSON.stringify({
         menstrualCycleVisible: global_menstrualCycleVisible,
         targetRangeVisible: global_targetRangeVisible,
@@ -904,10 +907,8 @@ function loadFromURL() {
 
 function addRowIfNeeded(tableID) {
     let table = document.getElementById(tableID);
-    let lastRow = readRow(table.rows[table.rows.length - 1]);
-
     // Add new row if the last row is valid
-    if (lastRow !== null) {
+    if (isValidRow(table.rows[table.rows.length - 1])) {
         addTDMRow(tableID);
     }
 }
