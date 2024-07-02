@@ -3,18 +3,18 @@
     /* Night colors */
     --background-color-night: #2a2a2a;
     --standout-background-color-night: #343434;
-    --strong-foreground-night: #b5b5b5;
-    --light-foreground-night: #e8e8e8;
+    --soft-foreground-night: #b5b5b5;
+    --strong-foreground-night: #e8e8e8;
 
     /* Day colors */
     --background-color-day: #f8f8f8;
     --standout-background-color-day: #eeeeee;
     --strong-foreground-day: #343434;
-    --light-foreground-day: #525252;
+    --soft-foreground-day: #525252;
 
     --background-color: var(--background-color-night);
     --standout-background-color: var(--standout-background-color-night);
-    --light-foreground: var(--light-foreground-night);
     --strong-foreground: var(--strong-foreground-night);
+    --soft-foreground: var(--soft-foreground-night);
 
 }

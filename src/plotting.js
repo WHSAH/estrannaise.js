@@ -42,8 +42,8 @@ export function generatePlottingOptions(
     pointCloudSize = 1.3,
     pointCloudOpacity = 0.4,
     backgroundColor = '#FFFFFF',
-    lightForegroundColor = '#525252',
-    strongForegroundColor = '#323232'
+    strongForegroundColor = '#525252',
+    softForegroundColor = '#323232'
     ) {
         return {
         conversionFactor: conversionFactor,
@@ -56,8 +56,8 @@ export function generatePlottingOptions(
         pointCloudSize: pointCloudSize,
         pointCloudOpacity: pointCloudOpacity,
         backgroundColor: backgroundColor,
-        lightForegroundColor: lightForegroundColor,
-        strongForegroundColor: strongForegroundColor
+        strongForegroundColor: strongForegroundColor,
+        softForegroundColor: softForegroundColor
     };
 }
 
@@ -103,8 +103,8 @@ function findxMax(dataset, options) {
  * * `pointCloudSize`: number,
  * * `pointCloudOpacity`: number,
  * * `backgroundColor`: String,
- * * `lightForegroundColor`: String,
- * * `strongForegroundColor`: String
+ * * `strongForegroundColor`: String,
+ * * `softForegroundColor`: String
  * @param {Boolean} returnSVG
  * @return SVG when return SVG is true, otherwise plot for insertion into the page
  */
@@ -140,15 +140,15 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
         msMarks = [
             Plot.line(_menstrualCycle, {
                 x: 'Time', y: 'E2', strokeWidth: 2,
-                stroke: options.strongForegroundColor, strokeOpacity: 0.8}),
+                stroke: options.softForegroundColor, strokeOpacity: 0.8}),
             Plot.areaY(_menstrualCycle, {
                 x: 'Time', y1: 'E2p5', y2: 'E2p95',
-                fill: options.strongForegroundColor, fillOpacity: 0.12}),
+                fill: options.softForegroundColor, fillOpacity: 0.12}),
 
             Plot.tip(_menstrualCycle, Plot.pointerX({
                 x: 'Time', y: 'E2',
                 fill: options.backgroundColor, fillOpacity: 0.618,
-                stroke: options.lightForegroundColor,
+                stroke: options.strongForegroundColor,
                 title: p => `menstrual cycle\ntime: ${numberToDayHour(p.Time)}\n  e₂: ${p.E2.toFixed(prec)} ${options.units}\n  CI: ${p.E2p5.toFixed(prec)}-${p.E2p95.toFixed(prec)} ${options.units}`,
             }))
         ];
@@ -162,12 +162,12 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
         targetMarks = [
             Plot.areaY(targetRange, {
                 x: 'time', y1: 'lower', y2: 'upper',
-                fill: options.strongForegroundColor, fillOpacity: 0.15
+                fill: options.softForegroundColor, fillOpacity: 0.15
             }),
 
             Plot.text(['target range'], {
                 x: 0.99 * xMax, y: 150 * options.conversionFactor, rotate: 90,
-                fill: options.strongforegroundColor,
+                fill: options.softForegroundColor,
                 frameAnchor: 'middle', textAnchor: 'middle', lineAnchor: 'bottom'
               })
         ];
@@ -213,8 +213,8 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
             tipMarks.push(Plot.tip(multiDoseCurve, Plot.pointerX({
                 x: 'Time',
                 y: 'E2',
-                fill: options.backgroundColor,  fillOpacity: 0.618,
-                stroke: options.lightForegroundColor,
+                fill: options.backgroundColor, fillOpacity: 0.618,
+                stroke: options.strongForegroundColor,
                 title: p => `multi-dose\n\ntime: ${numberToDayHour(p.Time)}\n  e₂: ${p.E2.toFixed(prec)} ${options.units}`
             })));
         }
@@ -263,7 +263,7 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
                 x: 'Time', y: 'E2',
                 title: p => `${p.description.toLowerCase()}\n\n   time: ${numberToDayHour(p.Time)}\n     e₂: ${p.E2.toFixed(prec)} ${options.units}\naverage: ${entry.model.includes('patch') ? 'unavailable' : e2ssAverage3C(options.conversionFactor * entry.dose, entry.time, ...PKParameters[entry.model]).toFixed(prec)} ${entry.model.includes("patch") ? '' : options.units}\n trough: ${PKFunctions(options.conversionFactor)[entry.model](0.0, entry.dose, true, entry.time).toFixed(prec)} ${options.units}`,
                 fill: options.backgroundColor, fillOpacity: 0.618,
-                stroke: options.lightForegroundColor
+                stroke: options.strongForegroundColor
             })));
         }
 
