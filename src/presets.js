@@ -19,7 +19,7 @@ export const Presets = {
         'multi': [
             [4, 0, 'EV im'],
             [4, 20, 'EEn im'],
-            [100, 40, 'patch ow']
+            [100, 30, 'patch ow']
         ]
     },
     'een-monotherapy-7': {

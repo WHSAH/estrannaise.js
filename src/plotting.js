@@ -12,13 +12,13 @@ import {
 // Colors need to be in hexcode to ouput SVG correctly
 // and alpha needs to be specified by strokeOpacity and fillOpacity
 const WONG_PALETTE = [
-    "#019E73",  //     'rgb(1, 158, 115)'
-    "#E79F03",  //     'rgb(231, 159, 3)'
-    "#54ADE1",  //     'rgb(84, 173, 225)'
-    "#F0E441",  //     'rgb(240, 228, 65)'
-    "#0072B2",  //     'rgb(0, 114, 178)' 
-    "#D55E00",  //     'rgb(213, 94, 0)'  
-    "#CB79A7"   //     'rgb(203, 121, 167)
+    "#019E73",  //     'rgb(  1, 158, 115)'  Green
+    "#E79F03",  //     'rgb(231, 159,   3)'  Orange-yellow
+    "#54ADE1",  //     'rgb( 84, 173, 225)'  Light blue
+    "#F0E441",  //     'rgb(240, 228,  65)'  Yellow
+    "#0072B2",  //     'rgb(  0, 114, 178)'  Blue (multicurve)
+    "#D55E00",  //     'rgb(213,  94,   0)'  Orange
+    "#CB79A7"   //     'rgb(203, 121, 167)   Pink
 ];
 
 function wongPalette(n) {

@@ -14,10 +14,10 @@ const rowValidity = new Map();
 
 let global_conversionFactor = 1.0;
 let global_units = 'pg/mL';
-let global_daysAsIntervals = false;
+let global_daysAsIntervals = true;
 let global_menstrualCycleVisible = false;
 let global_targetRangeVisible = false;
-let global_currentColorScheme = 'night';
+let global_currentColorScheme = 'day';
 
 const NB_LINE_POINTS = 900;
 const NB_CLOUD_POINTS = 3500;
@@ -26,7 +26,6 @@ const CLOUD_POINT_OPACITY = 0.4;
 
 window.addEventListener('DOMContentLoaded', () => {
 
-    initializeDefaultPreset();
     attachDragNDropImport();
 
     attachOptionsEvents();
@@ -42,12 +41,10 @@ window.addEventListener('DOMContentLoaded', () => {
     themeSetup();
 
     if (!loadFromURL()) {
-        loadFromLocalStorage();
+        initializeDefaultPreset();
     }
 
     refresh();
-
-
 });
 
 export function getCurrentPlottingOptions() {
@@ -96,7 +93,7 @@ function findIntersecting(list, str) {
     return list.find(el => el.toLowerCase().includes(str.toLowerCase()) || str.toLowerCase().includes(el.toLowerCase()));
 }
 
-function setColorScheme(scheme = 'night') {
+function setColorScheme(scheme = 'night', refreshAfter = true) {
     let rootStyle = getComputedStyle(document.documentElement);
     if (scheme == 'night') {
         document.documentElement.style.setProperty('--background-color', rootStyle.getPropertyValue('--background-color-night'));
@@ -111,7 +108,8 @@ function setColorScheme(scheme = 'night') {
         document.documentElement.style.setProperty('--light-foreground', rootStyle.getPropertyValue('--light-foreground-day'));
         global_currentColorScheme = 'day';
     }
-    refresh();
+
+    refreshAfter && refresh();
 }
 
 function allUnique(list) {
@@ -237,7 +235,7 @@ function convertEntriesToInvervalDays(refreshAfter = true) {
         }
     });
 
-    setDaysAsIntervals();
+    setDaysAsIntervals(false);
 
     refreshAfter && refresh();
 }
@@ -256,7 +254,7 @@ function convertEntriesToAbsoluteDays(refreshAfter = true) {
         }
     });
 
-    setDaysAsAbsolute();
+    setDaysAsAbsolute(false);
 
     refreshAfter && refresh();
 }
@@ -727,17 +725,17 @@ function themeSetup() {
 
     if (currentHour >= 6 && currentHour < 18) {
         document.getElementById('nightday-state').checked = true;
-        setColorScheme('day');
+        setColorScheme('day', false);
     } else {
         document.getElementById('nightday-state').checked = false;
-        setColorScheme('night');
+        setColorScheme('night', false);
     }
 
     document.getElementById('nightday-state').addEventListener('change', (event) => {
         if (event.target.checked) {
-            setColorScheme('day');
+            setColorScheme('day', false);
         } else {
-            setColorScheme('night');
+            setColorScheme('night', false);
         }
     });
 
@@ -760,12 +758,7 @@ function attachOptionsEvents() {
 }
 
 export function saveToLocalStorage() {
-    // let multiDoseTable = getTDMs('multidose-table', true, true);
-    // let steadyStateTable = getTDMs('steadystate-table', true, true);
-
-    // localStorage.setItem('multiDoseTable', JSON.stringify(multiDoseTable));
-    // localStorage.setItem('steadyStateTable', JSON.stringify(steadyStateTable));
-    
+  
     localStorage.setItem('estrannaiseOptions', JSON.stringify({
         menstrualCycleVisible: global_menstrualCycleVisible,
         targetRangeVisible: global_targetRangeVisible,
@@ -845,12 +838,16 @@ function generateShareURL() {
 
 function isValidBase64(str) {
     const base64Regex = /^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/;
-    return base64Regex.test(str);
+    return !!str && base64Regex.test(str);
 }
 
 function loadFromURL() {
 
     let hashString = window.location.hash.substring(1);
+
+    if (!hashString) {
+        return false;
+    }
 
     let dataLoaded = false;
 
