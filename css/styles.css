@@ -198,7 +198,7 @@ button.flat-button {
 
 button.button-on {
     font-weight: bold;
-    background-color: var(--strong-foreground);
+    background-color: var(--soft-foreground);
     color: var(--standout-background-color);
 }
 
@@ -225,7 +225,7 @@ button.delete-button {
 }
 
 .custom-checkbox.checked-style {
-    background-color: var(--strong-foreground)
+    background-color: var(--soft-foreground)
 }
 
 .visibility-cell .uncertainty-cell {
