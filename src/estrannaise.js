@@ -531,6 +531,10 @@ function setUnits(units, refreshPlot = true) {
         global_units = units
         global_conversionFactor = 1.0;
         document.getElementById('dropdown-units').value = 'ng/L';
+    } else if (units === 'firkin/furlong\u00B3') {
+        global_units = units
+        global_conversionFactor = 0.000320496;
+        document.getElementById('dropdown-units').value = 'firkin/furlong\u00B3';
     }
     refreshPlot && refresh();
 }
