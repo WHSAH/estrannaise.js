@@ -174,6 +174,7 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
         yMax = Math.max(yMax, options.conversionFactor * 300);
     }
 
+    let cloudYs = []; // In case we need them to set yMax.
 
     // Multi-dose curves and uncertainty clouds
     if (dataset.multidoses.entries.length > 0) {
@@ -188,6 +189,7 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
             for (let i = 0; i < options.numberOfCloudPoints; i++) {
                 let randx = Math.random() * (xMax - xMin) + xMin;
                 let y = e2MultiDose3C(randx, doses, times, models, options.conversionFactor, true, dataset.multidoses.daysAsIntervals);
+                cloudYs.push(y);
                 multiDoseUncertaintyCloud.push({ Time: randx, E2: y });
             }
 
@@ -222,7 +224,6 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
     }
 
     // Steady-state curves and uncertainty clouds
-    let cloudYs = []; // In case we need them to set yMax.
     dataset.steadystates.entries.forEach((entry) => {
         if (entry.uncertaintyVisible) {
             let steadyStateUncertaintyCloud = [];
@@ -274,7 +275,7 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
     // If no curve or target range or menstrual cycle are visible
     // the yMax is still 0. Use uncertainty clouds to set the y-axis limit
     // if any of them is visible.
-    if (yMax === 0) yMax = Math.max(cloudYs);
+    if (yMax === 0) yMax = Math.max(...cloudYs);
 
     let e2curve = Plot.plot({
         width: options.numberOfLinePoints,
