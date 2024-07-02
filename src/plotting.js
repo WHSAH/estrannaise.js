@@ -32,10 +32,10 @@ function numberToDayHour(number, precision = 0) {
 }
 
 export function generatePlottingOptions(
-    conversionFactor = 1.0, 
-    currentColorscheme = 'day', 
-    menstrualCycleVisible = false, 
-    targetRangeVisible = false, 
+    conversionFactor = 1.0,
+    currentColorscheme = 'day',
+    menstrualCycleVisible = false,
+    targetRangeVisible = false,
     units = 'pg/mL',
     numberOfLinePoints = 900,
     numberOfCloudPoints = 3500,
@@ -62,13 +62,13 @@ export function generatePlottingOptions(
 }
 
 function findxMax(dataset, options) {
-    
+
     // Initialize absolute minimum for the time axis
     let xMax = 14;
-    
+
     // At least one menstrual cycles
     if (options.menstrualCycleVisible) xMax = 28.1;
-    
+
     // At least 5 injection cycles
     xMax = Math.max(xMax, ...dataset.steadystates.entries.filter(entry => entry.curveVisible || entry.uncertaintyVisible).map(entry => 5 * entry.time));
 
@@ -115,7 +115,7 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
     let yMax = 0;
     let xMin = 0;
     let xMax = findxMax(dataset, options);
-    
+
     let colorCycle = 5;
     let dotMarks  = [],
         lineMarks = [],
@@ -146,7 +146,7 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
                 fill: options.strongForegroundColor, fillOpacity: 0.12}),
 
             Plot.tip(_menstrualCycle, Plot.pointerX({
-                x: 'Time', y: 'E2', 
+                x: 'Time', y: 'E2',
                 fill: options.backgroundColor, fillOpacity: 0.618,
                 stroke: options.lightForegroundColor,
                 title: p => `menstrual cycle\ntime: ${numberToDayHour(p.Time)}\n  e₂: ${p.E2.toFixed(prec)} ${options.units}\n  CI: ${p.E2p5.toFixed(prec)}-${p.E2p95.toFixed(prec)} ${options.units}`,
@@ -166,7 +166,7 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
             }),
 
             Plot.text(['target range'], {
-                x: 0.99 * xMax, y: 150 * options.conversionFactor, rotate: 90, 
+                x: 0.99 * xMax, y: 150 * options.conversionFactor, rotate: 90,
                 fill: options.strongforegroundColor,
                 frameAnchor: 'middle', textAnchor: 'middle', lineAnchor: 'bottom'
               })
@@ -174,7 +174,6 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
         yMax = Math.max(yMax, options.conversionFactor * 300);
     }
 
-    let multiDoseUncertaintyCloud = [];
 
     // Multi-dose curves and uncertainty clouds
     if (dataset.multidoses.entries.length > 0) {
@@ -184,17 +183,18 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
         let models = dataset.multidoses.entries.map(entry => entry.model);
 
         if (dataset.multidoses.uncertaintyVisible) {
-            
+            let multiDoseUncertaintyCloud = [];
+
             for (let i = 0; i < options.numberOfCloudPoints; i++) {
                 let randx = Math.random() * (xMax - xMin) + xMin;
                 let y = e2MultiDose3C(randx, doses, times, models, options.conversionFactor, true, dataset.multidoses.daysAsIntervals);
                 multiDoseUncertaintyCloud.push({ Time: randx, E2: y });
             }
 
-            dotMarks.push(Plot.dot(multiDoseUncertaintyCloud, { 
+            dotMarks.push(Plot.dot(multiDoseUncertaintyCloud, {
                 x: 'Time',
-                y: 'E2', 
-                r: options.pointCloudSize, 
+                y: 'E2',
+                r: options.pointCloudSize,
                 fill: wongPalette(4), fillOpacity: options.pointCloudOpacity
             }));
         }
@@ -205,14 +205,14 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
 
             yMax = Math.max(yMax, ...multiDoseCurve.map(p => p.E2));
             lineMarks.push(Plot.line(multiDoseCurve, {
-                x: 'Time', 
-                y: 'E2', 
+                x: 'Time',
+                y: 'E2',
                 stroke: wongPalette(4), strokeWidth: 2
             }));
 
             tipMarks.push(Plot.tip(multiDoseCurve, Plot.pointerX({
-                x: 'Time', 
-                y: 'E2', 
+                x: 'Time',
+                y: 'E2',
                 fill: options.backgroundColor,  fillOpacity: 0.618,
                 stroke: options.lightForegroundColor,
                 title: p => `multi-dose\n\ntime: ${numberToDayHour(p.Time)}\n  e₂: ${p.E2.toFixed(prec)} ${options.units}`
@@ -224,38 +224,39 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
     // Steady-state curves and uncertainty clouds
     let cloudYs = []; // In case we need them to set yMax.
     dataset.steadystates.entries.forEach((entry) => {
-        let steadyStateUncertaintyCloud = [];
         if (entry.uncertaintyVisible) {
+            let steadyStateUncertaintyCloud = [];
+
             for (let i = 0; i < options.numberOfCloudPoints; i++) {
                 let randx = Math.random() * (xMax - xMin) + xMin;
                 let y = PKRandomFunctions(options.conversionFactor)[entry.model](randx, entry.dose, true, entry.time)
-                steadyStateUncertaintyCloud.push({ 
-                    Time: randx, 
+                steadyStateUncertaintyCloud.push({
+                    Time: randx,
                     E2: y
                 });
                 cloudYs.push(y);
             }
             dotMarks.push(Plot.dot(steadyStateUncertaintyCloud, {
-                x: 'Time', 
-                y: 'E2', 
-                r: options.pointCloudSize, 
+                x: 'Time',
+                y: 'E2',
+                r: options.pointCloudSize,
                 fill: wongPalette(colorCycle), fillOpacity: options.pointCloudOpacity
             }));
         }
 
         if (entry.curveVisible) {
             let steadyStateCurve = fillCurve(t => PKFunctions(options.conversionFactor)[entry.model](t, entry.dose, true, entry.time), xMin, xMax, options.numberOfLinePoints);
-            steadyStateCurve = steadyStateCurve.map(p => ({ 
-                Time: p.Time, 
+            steadyStateCurve = steadyStateCurve.map(p => ({
+                Time: p.Time,
                 E2: p.E2,
                 description: `${entry.model} ${entry.dose}mg/${entry.time}day${entry.time > 1 ? 's' : ''}`
              }));
 
             yMax = Math.max(yMax, ...steadyStateCurve.map(p => p.E2));
 
-            lineMarks.unshift(Plot.line(steadyStateCurve, { 
-                x: 'Time', 
-                y: 'E2', 
+            lineMarks.unshift(Plot.line(steadyStateCurve, {
+                x: 'Time',
+                y: 'E2',
                 stroke: wongPalette(colorCycle), strokeWidth: 2
             }));
             tipMarks.unshift(Plot.tip(steadyStateCurve, Plot.pointerX({
