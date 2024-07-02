@@ -9,6 +9,7 @@ Under the hood, estrannaise.js uses pharmacokinetic compartments models and MCMC
 - Add visual markers for dose times
 - Save/load from localStorage
 - Shorten shared url
+- Re-organize the mess of pk/math notes
 - Fix tooltip mess in figure
 - Allow to manual set x-axis limits
 - Allow possibility of changing patch wear time
