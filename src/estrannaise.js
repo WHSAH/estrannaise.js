@@ -675,7 +675,19 @@ function attachMultidoseButtonsEvents() {
         navigator.clipboard.writeText(generateShareURL());
 
         shareButton.classList.add('button-on');
-        shareButton.innerHTML = '&nbsp;copied!&nbsp;<div class="floating-text small-text" style="color: black">Praise Zalgo!</div>';
+        shareButton.innerHTML = '&nbsp;copied!&nbsp;';
+
+        setTimeout(() => {
+            shareButton.classList.remove('button-on');
+            shareButton.innerHTML = 'share url';
+        }, 500);
+    });
+
+    shareButton.addEventListener('dblclick', () => {
+        navigator.clipboard.writeText(generateShareURL());
+
+        shareButton.classList.add('button-on');
+        shareButton.innerHTML = '&nbsp;copied!&nbsp;<div class="floating-text small-text" style="color: black">praise Zalgo!</div>';
 
         setTimeout(() => {
             shareButton.classList.remove('button-on');
