@@ -233,3 +233,15 @@ button.delete-button {
     justify-content: center;
     align-items: center;
 }
+
+#share-button {
+    position: relative;
+}
+
+.floating-text {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    text-align: center;
+}

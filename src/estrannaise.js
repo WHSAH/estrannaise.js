@@ -675,7 +675,7 @@ function attachMultidoseButtonsEvents() {
         navigator.clipboard.writeText(generateShareURL());
 
         shareButton.classList.add('button-on');
-        shareButton.innerHTML = '&nbsp;copied!&nbsp;';
+        shareButton.innerHTML = '&nbsp;copied!&nbsp;<div class="floating-text small-text" style="color: black">Praise Zalgo!</div>';
 
         setTimeout(() => {
             shareButton.classList.remove('button-on');
