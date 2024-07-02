@@ -50,8 +50,8 @@ window.addEventListener('DOMContentLoaded', () => {
 export function getCurrentPlottingOptions() {
     let rootStyle = getComputedStyle(document.documentElement);
     let backgroundColor = rootStyle.getPropertyValue('--background-color');
-    let lightForegroundColor = rootStyle.getPropertyValue('--light-foreground');
     let strongForegroundColor = rootStyle.getPropertyValue('--strong-foreground');
+    let softForegroundColor = rootStyle.getPropertyValue('--soft-foreground');
 
     return generatePlottingOptions(
         global_conversionFactor, 
@@ -64,8 +64,8 @@ export function getCurrentPlottingOptions() {
         CLOUD_POINT_SIZE,
         CLOUD_POINT_OPACITY,
         backgroundColor,
-        lightForegroundColor,
-        strongForegroundColor
+        strongForegroundColor,
+        softForegroundColor
         );
 }
 
@@ -98,14 +98,14 @@ function setColorScheme(scheme = 'night', refreshAfter = true) {
     if (scheme == 'night') {
         document.documentElement.style.setProperty('--background-color', rootStyle.getPropertyValue('--background-color-night'));
         document.documentElement.style.setProperty('--standout-background-color', rootStyle.getPropertyValue('--standout-background-color-night'));
+        document.documentElement.style.setProperty('--soft-foreground', rootStyle.getPropertyValue('--soft-foreground-night'));
         document.documentElement.style.setProperty('--strong-foreground', rootStyle.getPropertyValue('--strong-foreground-night'));
-        document.documentElement.style.setProperty('--light-foreground', rootStyle.getPropertyValue('--light-foreground-night'));
         global_currentColorScheme = 'night';
     } else if (scheme == 'day') {
         document.documentElement.style.setProperty('--background-color', rootStyle.getPropertyValue('--background-color-day'));
         document.documentElement.style.setProperty('--standout-background-color', rootStyle.getPropertyValue('--standout-background-color-day'));
+        document.documentElement.style.setProperty('--soft-foreground', rootStyle.getPropertyValue('--soft-foreground-day'));
         document.documentElement.style.setProperty('--strong-foreground', rootStyle.getPropertyValue('--strong-foreground-day'));
-        document.documentElement.style.setProperty('--light-foreground', rootStyle.getPropertyValue('--light-foreground-day'));
         global_currentColorScheme = 'day';
     }
 
@@ -692,7 +692,7 @@ function attachMultidoseButtonsEvents() {
     });
 
     shareButton.addEventListener('dblclick', () => {
-        shareButton.innerHTML += '<div class="floating-text small-text" style="color: black">praise Zalgo!</div>';
+        shareButton.innerHTML += '<div class="floating-text small-text" style="color: var(--strong-foreground)">praise Zalgo!</div>';
 
         setTimeout(() => {
             shareButton.classList.remove('button-on');
@@ -753,9 +753,9 @@ function themeSetup() {
 
     document.getElementById('nightday-state').addEventListener('change', (event) => {
         if (event.target.checked) {
-            setColorScheme('day', false);
+            setColorScheme('day');
         } else {
-            setColorScheme('night', false);
+            setColorScheme('night');
         }
     });
 

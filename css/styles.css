@@ -103,7 +103,7 @@
 
 body, html {
     background-color: var(--background-color);
-    color: var(--strong-foreground);
+    color: var(--soft-foreground);
     font-family: 'Roboto Mono', 'monospace';
     align-items: center;
     font-size: 12px;
@@ -120,7 +120,7 @@ p.indent {
 }
 
 a:link, a:visited {
-    color: var(--light-foreground);
+    color: var(--strong-foreground);
 }
 
 .overlay {
@@ -129,7 +129,7 @@ a:link, a:visited {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: var(--light-foreground);
+    background-color: var(--strong-foreground);
     margin: 0;
     padding: 0;
     border: none;
@@ -144,7 +144,7 @@ a:link, a:visited {
 }
 
 .standout-text {
-    color: var(--light-foreground);
+    color: var(--strong-foreground);
     font-weight: bold;
 }
 
@@ -153,7 +153,7 @@ select {
     border: none;
     outline: none;
     background-color: var(--standout-background-color);
-    color: var(--light-foreground);
+    color: var(--strong-foreground);
     padding-top: 4px;
     padding-bottom: 4px;
     padding-left: 10px;
@@ -168,7 +168,7 @@ input.flat-input {
     border: none;
     outline: none;
     background-color: var(--standout-background-color);
-    color: var(--light-foreground);
+    color: var(--strong-foreground);
     padding: 4px;
     font-size: 12px;
     text-align: center;
@@ -193,12 +193,12 @@ button.flat-button {
     font-family: monospace;
     border-radius: 4px;
     background-color: var(--standout-background-color);
-    color: var(--light-foreground);
+    color: var(--strong-foreground);
 }
 
 button.button-on {
     font-weight: bold;
-    background-color: var(--light-foreground);
+    background-color: var(--strong-foreground);
     color: var(--standout-background-color);
 }
 
@@ -225,7 +225,7 @@ button.delete-button {
 }
 
 .custom-checkbox.checked-style {
-    background-color: var(--light-foreground)
+    background-color: var(--strong-foreground)
 }
 
 .visibility-cell .uncertainty-cell {
