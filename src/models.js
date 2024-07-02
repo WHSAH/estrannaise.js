@@ -133,15 +133,16 @@ export function e2MultiDose3C(t, doses = [1.0], times = [0.0], models = ['EV im'
 
     if (intervals) {
         times = times.map((sum => value => sum += value)(0));
-        let initialTime = times[0];
     };
 
     let sum = 0;
     for (let i = 0; i < doses.length; i++) {
-        if (!random) {
+        if (random === false) {
             sum += PKFunctions(cf)[models[i]](t - times[i], doses[i]);
-        } else {
+        } else if (random === true) {
             sum += PKRandomFunctions(cf)[models[i]](t - times[i], doses[i]);
+        } else if (random >= 0) {
+            sum += PKRandomFunctions(cf)[models[i]](t - times[i], doses[i], random);
         }
     }
     return sum;
