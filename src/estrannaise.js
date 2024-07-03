@@ -160,7 +160,7 @@ function exportCSV() {
         let doseValue = row.cells[2].querySelector('input').value;
         let timeValue = row.cells[3].querySelector('input').value;
         let modelValue = row.cells[4].querySelector('select').value;
-        return [timeValue, doseValue, modelValue];
+        return [doseValue, timeValue, modelValue];
     }));
     let csvContent = Papa.unparse(data);
 
