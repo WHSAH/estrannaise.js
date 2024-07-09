@@ -112,7 +112,7 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
     // track the max e2 across all multi-dose curves
     // to set the y-axis limit. uncertainty clouds ignored
     // because of potential stray dots.
-    let yMax = 300;
+    let yMax = options.conversionFactor * 300;
     let xMin = 0;
     let xMax = Math.max(14.1, findxMax(dataset, options));
 
