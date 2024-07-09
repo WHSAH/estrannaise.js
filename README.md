@@ -7,6 +7,7 @@ Under the hood, estrannaise.js uses pharmacokinetic compartments models and MCMC
 
 # TODO
 - Handle rowValidity of last two rows
+- Add legend
 - Add visual markers for dose times
 - Save/load from localStorage
 - Shorten shared url

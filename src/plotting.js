@@ -72,7 +72,7 @@ function findxMax(dataset, options) {
     // At least 5 injection cycles
     xMax = Math.max(xMax, ...dataset.steadystates.entries.filter(entry => entry.curveVisible || entry.uncertaintyVisible).map(entry => 5 * entry.time));
 
-    // At least injection time plus 5 approximate terminal half-lives
+    // At least injection time plus 5 approximate terminal half-lives ( 5 x log 2 / smallest k )
     if (dataset.multidoses.entries.length > 0 && (dataset.multidoses.curveVisible || dataset.multidoses.uncertaintyVisible)) {
         if (dataset.multidoses.daysAsIntervals) {
             let absoluteTimes = dataset.multidoses.entries.reduce((acc, entry, idx) => {
@@ -273,7 +273,7 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
     });
 
     // If no curve or target range or menstrual cycle are visible
-    // the yMax is still 0. Use uncertainty clouds to set the y-axis limit
+    // then yMax is still 0. Use uncertainty clouds to set the y-axis limit
     // if any of them is visible.
     if (yMax === 0) yMax = Math.max(...cloudYs);
 
@@ -281,7 +281,7 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
         width: options.numberOfLinePoints,
         x: { label: 'time (days)' },
         y: { domain: [0, 1.25 * yMax], label: `serum e₂ (${options.units})` },
-        style: { fontFamily: 'monospace' },
+        style: { fontFamily: 'IBM Plex Mono' },
         marks: [
             Plot.gridX({ stroke: 'grey' }),
             Plot.gridY({ stroke: 'grey' }),

@@ -1,11 +1,39 @@
 @font-face {
     font-family: 'Roboto Mono';
-    font-style: normal;
+    font-style: auto;
     font-weight: 100 700;
     font-display: swap;
     src: url('../fonts/RobotoMono.woff2') format('woff2');
-    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
   }
+
+@font-face {
+    font-family: 'IBM Plex Mono';
+    font-style: auto;
+    font-weight: 100;
+    font-display: swap;
+    src: url('../fonts/IBMPlexMono-Regular.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'IBM Plex Mono';
+    font-style: auto;
+    font-weight: 700;
+    font-display: swap;
+    src: url('../fonts/IBMPlexMono-Bold.ttf') format('truetype');
+}
+
+
+body, html {
+    background-color: var(--background-color);
+    color: var(--soft-foreground);
+    font-family: 'IBM Plex Mono', 'monospace';
+    align-items: center;
+    font-size: 13px;
+}
+
+svg text {
+    font-size: 12px;
+}
 
 .container {
     display: grid;
@@ -53,7 +81,7 @@
     grid-area: ui-container;
     grid-template-columns: auto auto auto;
     grid-template-rows: auto auto auto;
-    gap: 1em 0px;
+    gap: 0em 0em;
     grid-auto-flow: row;
     grid-template-areas:
         "plot-region plot-region plot-region"
@@ -83,30 +111,23 @@
 }
 
 .options-container {
+    margin-top: 1em;
     grid-area: options-container;
 }
 
 .multidose-container {
-    margin-top: 1.5em;
+    margin-top: 0.7em;
     grid-area: multidose-container;
 }
 
 .steadystate-container {
-    margin-top: 1.5em;
+    margin-top: 0.7em;
     grid-area: steadystate-container;
 }
 
 .bottom-text {
     grid-area: bottom-text;
     max-width: 55em;
-}
-
-body, html {
-    background-color: var(--background-color);
-    color: var(--soft-foreground);
-    font-family: 'Roboto Mono', 'monospace';
-    align-items: center;
-    font-size: 12px;
 }
 
 a {
@@ -160,7 +181,7 @@ select {
     padding-right: 10px;
     font-size: 12px;
     text-align: right;
-    font-family: monospace;
+    font-family: 'IBM Plex Mono', 'monospace';
     border-radius: 4px;
 }
 
@@ -172,7 +193,7 @@ input.flat-input {
     padding: 4px;
     font-size: 12px;
     text-align: center;
-    font-family: monospace;
+    font-family: 'IBM Plex Mono', 'monospace';
     max-width: 9.5em;
     width: 100%;
     border-radius: 4px;
@@ -190,7 +211,7 @@ button.flat-button {
     padding-right: 10px;
     font-size: 12px;
     text-align: center;
-    font-family: monospace;
+    font-family: 'IBM Plex Mono', 'monospace';
     border-radius: 4px;
     background-color: var(--standout-background-color);
     color: var(--strong-foreground);
@@ -244,4 +265,9 @@ button.delete-button {
     left: 0;
     width: 100%;
     text-align: center;
+}
+
+.inline-image {
+    height: 1em;
+    vertical-align: middle;
 }

@@ -95,6 +95,8 @@ function findIntersecting(list, str) {
 
 function setColorScheme(scheme = 'night', refreshAfter = true) {
     let rootStyle = getComputedStyle(document.documentElement);
+    let githubLogo = document.getElementById('github-logo');
+
     if (scheme == 'night') {
         document.documentElement.style.setProperty('--background-color', rootStyle.getPropertyValue('--background-color-night'));
         document.documentElement.style.setProperty('--standout-background-color', rootStyle.getPropertyValue('--standout-background-color-night'));
