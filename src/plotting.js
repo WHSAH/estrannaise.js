@@ -112,9 +112,9 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
     // track the max e2 across all multi-dose curves
     // to set the y-axis limit. uncertainty clouds ignored
     // because of potential stray dots.
-    let yMax = 0;
+    let yMax = 300;
     let xMin = 0;
-    let xMax = findxMax(dataset, options);
+    let xMax = Math.max(14.1, findxMax(dataset, options));
 
     let colorCycle = 5;
     let dotMarks  = [],
@@ -174,8 +174,6 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
         yMax = Math.max(yMax, options.conversionFactor * 200);
     }
 
-    let cloudYs = []; // In case we need them to set yMax.
-
     // Multi-dose curves and uncertainty clouds
     if (dataset.multidoses.entries.length > 0) {
 
@@ -189,7 +187,6 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
             for (let i = 0; i < options.numberOfCloudPoints; i++) {
                 let randx = Math.random() * (xMax - xMin) + xMin;
                 let y = e2MultiDose3C(randx, doses, times, models, options.conversionFactor, true, dataset.multidoses.daysAsIntervals);
-                cloudYs.push(y);
                 multiDoseUncertaintyCloud.push({ Time: randx, E2: y });
             }
 
@@ -201,11 +198,13 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
             }));
         }
 
+        // Always compute the curve to set the y-axis limit
+        let multiDoseCurve = fillCurve(t => e2MultiDose3C(t, doses, times, models, options.conversionFactor, false, dataset.multidoses.daysAsIntervals), xMin, xMax, options.numberOfLinePoints);
+        yMax = Math.max(yMax, ...multiDoseCurve.map(p => p.E2));
+
         if (dataset.multidoses.curveVisible) {
-            let multiDoseCurve = fillCurve(t => e2MultiDose3C(t, doses, times, models, options.conversionFactor, false, dataset.multidoses.daysAsIntervals), xMin, xMax, options.numberOfLinePoints);
             multiDoseCurve = multiDoseCurve.map(p => ({ Time: p.Time, E2: p.E2 }));
 
-            yMax = Math.max(yMax, ...multiDoseCurve.map(p => p.E2));
             lineMarks.push(Plot.line(multiDoseCurve, {
                 x: 'Time',
                 y: 'E2',
@@ -235,7 +234,6 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
                     Time: randx,
                     E2: y
                 });
-                cloudYs.push(y);
             }
             dotMarks.push(Plot.dot(steadyStateUncertaintyCloud, {
                 x: 'Time',
@@ -245,15 +243,15 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
             }));
         }
 
+        let steadyStateCurve = fillCurve(t => PKFunctions(options.conversionFactor)[entry.model](t, entry.dose, true, entry.time), xMin, xMax, options.numberOfLinePoints);
+        yMax = Math.max(yMax, ...steadyStateCurve.map(p => p.E2));
+
         if (entry.curveVisible) {
-            let steadyStateCurve = fillCurve(t => PKFunctions(options.conversionFactor)[entry.model](t, entry.dose, true, entry.time), xMin, xMax, options.numberOfLinePoints);
             steadyStateCurve = steadyStateCurve.map(p => ({
                 Time: p.Time,
                 E2: p.E2,
                 description: `${entry.model} ${entry.dose}mg/${entry.time}day${entry.time > 1 ? 's' : ''}`
              }));
-
-            yMax = Math.max(yMax, ...steadyStateCurve.map(p => p.E2));
 
             lineMarks.unshift(Plot.line(steadyStateCurve, {
                 x: 'Time',
@@ -272,14 +270,9 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
 
     });
 
-    // If no curve or target range or menstrual cycle are visible
-    // then yMax is still 0. Use uncertainty clouds to set the y-axis limit
-    // if any of them is visible.
-    if (yMax === 0) yMax = Math.max(...cloudYs);
-
     let e2curve = Plot.plot({
         width: options.numberOfLinePoints,
-        x: { label: 'time (days)' },
+        x: { domain: [xMin, xMax], label: 'time (days)' },
         y: { domain: [0, 1.25 * yMax], label: `serum e₂ (${options.units})` },
         style: { fontFamily: 'IBM Plex Mono' },
         marks: [
