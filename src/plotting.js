@@ -64,7 +64,7 @@ export function generatePlottingOptions(
 function findxMax(dataset, options) {
 
     // Initialize absolute minimum for the time axis
-    let xMax = 14;
+    let xMax = 14.1;
 
     // At least one menstrual cycles
     if (options.menstrualCycleVisible) xMax = 28.1;
@@ -152,7 +152,7 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
                 title: p => `menstrual cycle\ntime: ${numberToDayHour(p.Time)}\n  e₂: ${p.E2.toFixed(prec)} ${options.units}\n  CI: ${p.E2p5.toFixed(prec)}-${p.E2p95.toFixed(prec)} ${options.units}`,
             }))
         ];
-        yMax = Math.max(yMax, options.conversionFactor * 375);
+        yMax = Math.max(yMax, options.conversionFactor * 415);
     }
 
     // Target range area and text marks
@@ -171,7 +171,7 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
                 frameAnchor: 'middle', textAnchor: 'middle', lineAnchor: 'bottom'
               })
         ];
-        yMax = Math.max(yMax, options.conversionFactor * 300);
+        yMax = Math.max(yMax, options.conversionFactor * 200);
     }
 
     let cloudYs = []; // In case we need them to set yMax.
