@@ -272,6 +272,7 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
 
     let e2curve = Plot.plot({
         width: options.numberOfLinePoints,
+        marginLeft: 60,
         x: { domain: [xMin, xMax], label: 'time (days)' },
         y: { domain: [0, 1.25 * yMax], label: `serum e₂ (${options.units})` },
         style: { fontFamily: 'IBM Plex Mono' },
