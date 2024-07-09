@@ -67,7 +67,7 @@ function findxMax(dataset, options) {
     let xMax = 14.1;
 
     // At least one menstrual cycles
-    if (options.menstrualCycleVisible) xMax = 28.1;
+    if (options.menstrualCycleVisible) xMax = 28.2;
 
     // At least 5 injection cycles
     xMax = Math.max(xMax, ...dataset.steadystates.entries.filter(entry => entry.curveVisible || entry.uncertaintyVisible).map(entry => 5 * entry.time));
