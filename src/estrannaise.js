@@ -1,7 +1,8 @@
 
 import { 
     plotCurves,
-    generatePlottingOptions
+    generatePlottingOptions,
+    wongPalette
  } from './plotting.js';
 
 import { modelList } from './models.js';
@@ -213,7 +214,7 @@ function readRow(row, keepVisibilities = true, keepInvalid = false) {
         return rowEntry;
     } else {
         return null;
-    }
+    };
 }
 
 function convertEntriesToInvervalDays(refreshAfter = true) {
@@ -339,35 +340,51 @@ function addTDMRow(tableID, dose = null, time = null, model = null, curveVisible
     let table = document.getElementById(tableID);
     let row = table.insertRow(-1);
 
+    row.className = tableID + '-input-row';
+
     rowValidity.set(row, isValidInput(dose, time, model));
 
-    // Add visibility and uncertainty checkboxes
     let visibilityCell = row.insertCell(0);
     visibilityCell.className = 'visibility-cell';
-
+    
+    let uncertaintyCell = row.insertCell(1);
+    uncertaintyCell.className = 'uncertainty-cell';
+    
     if (tableID == 'steadystate-table' || ((tableID == 'multidose-table') && (table.rows.length == 2))) {
+
+        //////////////////////////
+        /// Visibility checkbox //
+        //////////////////////////
         let visibilityCheckboxState = document.createElement('input');
         visibilityCheckboxState.type = 'checkbox';
         visibilityCheckboxState.className = 'hidden-checkbox-state';
         visibilityCheckboxState.checked = curveVisible;
         visibilityCell.appendChild(visibilityCheckboxState);
 
-        let visibilityCustomCheckbox = document.createElement('div');
-        visibilityCustomCheckbox.className = visibilityCheckboxState.checked ? 'custom-checkbox checked-style' : 'custom-checkbox';
+        let visibilityCustomCheckbox = document.createElement('div');        
+        visibilityCustomCheckbox.className = 'custom-checkbox';
+
+        if (tableID == 'multidose-table') {
+            visibilityCustomCheckbox.style.backgroundColor = (visibilityCheckboxState.checked) ? wongPalette(4) : '';
+        } else if (tableID == 'steadystate-table') {
+            visibilityCustomCheckbox.style.backgroundColor = (visibilityCheckboxState.checked) ? wongPalette(4 + row.rowIndex) : '';
+        }
+
         visibilityCustomCheckbox.title = "Turn visibility of curve on/off";
         visibilityCustomCheckbox.onmousedown = function() {
             visibilityCheckboxState.checked = !visibilityCheckboxState.checked;
-            this.className = visibilityCheckboxState.checked ? 'custom-checkbox checked-style' : 'custom-checkbox';
-            refresh();
+            if (tableID == 'multidose-table') {
+                visibilityCustomCheckbox.style.backgroundColor = (visibilityCheckboxState.checked) ? wongPalette(4) : '';
+            } else if (tableID == 'steadystate-table') {
+                visibilityCustomCheckbox.style.backgroundColor = (visibilityCheckboxState.checked) ? wongPalette(4 + row.rowIndex) : '';
+            }
+            rowValidity.get(row) && refresh();
         };
         visibilityCell.appendChild(visibilityCustomCheckbox);
-    }
 
-    let uncertaintyCell = row.insertCell(1);
-    uncertaintyCell.className = 'uncertainty-cell';
-
-    if (tableID == 'steadystate-table' || ((tableID == 'multidose-table') && (table.rows.length == 2))) {
-
+        //////////////////////////
+        // Uncertainty checkbox //
+        //////////////////////////
         let uncertaintyCheckboxState = document.createElement('input');
         uncertaintyCheckboxState.type = 'checkbox';
         uncertaintyCheckboxState.className = 'hidden-checkbox-state';
@@ -375,24 +392,35 @@ function addTDMRow(tableID, dose = null, time = null, model = null, curveVisible
         uncertaintyCell.appendChild(uncertaintyCheckboxState);
 
         let uncertaintyCustomCheckbox = document.createElement('div');
-        uncertaintyCustomCheckbox.className = uncertaintyCheckboxState.checked ? 'custom-checkbox checked-style' : 'custom-checkbox';
+        uncertaintyCustomCheckbox.className = 'custom-checkbox';
+        
+        if (tableID == 'multidose-table') {
+            uncertaintyCustomCheckbox.style.backgroundColor = (uncertaintyCheckboxState.checked) ? wongPalette(4) : '';
+        } else if (tableID == 'steadystate-table') {
+            uncertaintyCustomCheckbox.style.backgroundColor = (uncertaintyCheckboxState.checked) ? wongPalette(4 + row.rowIndex) : '';
+        }
+        
         uncertaintyCustomCheckbox.title = 'Turn visibility of uncertainty cloud on/off';
         uncertaintyCustomCheckbox.onmousedown = function() {
             uncertaintyCheckboxState.checked = !uncertaintyCheckboxState.checked;
-            this.className = uncertaintyCheckboxState.checked ? 'custom-checkbox checked-style' : 'custom-checkbox';
-            refresh();
+            if (tableID == 'multidose-table') {
+                uncertaintyCustomCheckbox.style.backgroundColor = uncertaintyCheckboxState.checked ? wongPalette(4) : '';
+            } else if (tableID == 'steadystate-table') {
+                uncertaintyCustomCheckbox.style.backgroundColor = uncertaintyCheckboxState.checked ? wongPalette(4 + row.rowIndex) : '';
+            }
+            rowValidity.get(row) && refresh();
         };
         uncertaintyCell.appendChild(uncertaintyCustomCheckbox);
     }
 
+    //////////////////////////
+    ////// Dose input ////////
+    //////////////////////////
     let doseCell = row.insertCell(2);
     let doseInput = document.createElement('input');
     doseInput.classList.add('flat-input', 'dose-input');
     doseInput.setAttribute('type', 'text');
 
-    doseCell.appendChild(doseInput);
-    // Set given dose or empty string as default value (prevents NaNs)
-    doseInput.value = dose || '';
     doseInput.addEventListener('input', function() {
 
         let myRow = this.parentElement.parentElement;
@@ -407,6 +435,15 @@ function addTDMRow(tableID, dose = null, time = null, model = null, curveVisible
         addRowIfNeeded(tableID);
     });
 
+    doseCell.appendChild(doseInput);
+
+    if (dose !== null) {
+        doseInput.value = dose;
+    }
+
+    //////////////////////////
+    ////// Time input ////////
+    //////////////////////////
     let timeCell = row.insertCell(3);
     let timeInput = document.createElement('input');
     timeInput.classList.add('flat-input')
@@ -440,6 +477,10 @@ function addTDMRow(tableID, dose = null, time = null, model = null, curveVisible
         addRowIfNeeded(tableID);
     });
 
+
+    //////////////////////////
+    ///// Model dropdown /////
+    //////////////////////////
     let modelCell = row.insertCell(4);
     let modelSelect = document.createElement('select');
     modelSelect.classList.add('dropdown-model');
@@ -478,7 +519,11 @@ function addTDMRow(tableID, dose = null, time = null, model = null, curveVisible
             refresh();
         }
     });
+    //////////////////////////
 
+    //////////////////////////
+    ///// Delete button //////
+    //////////////////////////
     let deleteCell = row.insertCell(5);
     if (tableID == 'steadystate-table' || (tableID == 'multidose-table' && table.rows.length > 2)) {
 
@@ -494,6 +539,7 @@ function addTDMRow(tableID, dose = null, time = null, model = null, curveVisible
             let myTable = myRow.parentNode.parentNode;
 
             rowValidity.delete(myRow);
+            myRow.className = '';
             myRow.remove();
 
             if (myTable.rows.length < 2) {
@@ -502,9 +548,24 @@ function addTDMRow(tableID, dose = null, time = null, model = null, curveVisible
 
             addRowIfNeeded(tableID);
 
+            // Reassign the right colors to the checkboxes
+            if (tableID == 'steadystate-table') {
+                let steadyStateRows = document.querySelectorAll('.steadystate-table-input-row');
+                steadyStateRows.forEach(function(r) {
+                    let curveCheckbox = r.cells[0].querySelector('.custom-checkbox');
+                    let curveState = r.cells[0].querySelector('.hidden-checkbox-state');
+                    curveCheckbox.style.backgroundColor = curveState.checked ? wongPalette(4 + r.rowIndex) : '';
+                    
+                    let uncertCheckbox = r.cells[1].querySelector('.custom-checkbox');
+                    let uncertState = r.cells[1].querySelector('.hidden-checkbox-state');                    
+                    uncertCheckbox.style.backgroundColor = uncertState.checked ? wongPalette(4 + r.rowIndex) : '';
+                });
+            };
+
             refresh();
         });
     }
+    //////////////////////////
 
     // Run addRowIfNeeded() after this row has been added
     setTimeout(() => {addRowIfNeeded(tableID)});

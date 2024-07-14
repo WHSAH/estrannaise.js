@@ -21,7 +21,7 @@ const WONG_PALETTE = [
     "#CB79A7"   //     'rgb(203, 121, 167)   Pink
 ];
 
-function wongPalette(n) {
+export function wongPalette(n) {
     return WONG_PALETTE[n % WONG_PALETTE.length];
 }
 

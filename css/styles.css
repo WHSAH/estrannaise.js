@@ -245,9 +245,9 @@ button.delete-button {
     padding: 3px;
 }
 
-.custom-checkbox.checked-style {
+/* .custom-checkbox.checked-style {
     background-color: var(--soft-foreground)
-}
+} */
 
 .visibility-cell .uncertainty-cell {
     display: flex;
