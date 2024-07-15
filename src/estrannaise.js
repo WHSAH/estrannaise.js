@@ -705,18 +705,9 @@ function setupShareURLButtonEvent() {
 
     shareButton.addEventListener('mousedown', () => {
         navigator.clipboard.writeText(generateSanerShareURL());
-        console.log(generateSanerShareURL());
+
         shareButton.classList.add('button-on');
         shareButton.innerHTML = '&nbsp;copied!&nbsp;';
-
-        setTimeout(() => {
-            shareButton.classList.remove('button-on');
-            shareButton.innerHTML = 'share url';
-        }, 700);
-    });
-
-    shareButton.addEventListener('dblclick', () => {
-        shareButton.innerHTML += '<div class="floating-text small-text" style="color: var(--strong-foreground)">praise Zalgo!</div>';
 
         setTimeout(() => {
             shareButton.classList.remove('button-on');
