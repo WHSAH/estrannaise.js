@@ -28,18 +28,18 @@ body, html {
     color: var(--soft-foreground);
     font-family: 'IBM Plex Mono', 'monospace';
     align-items: center;
-    font-size: 13px;
+    font-size: 0.9rem;
 }
 
 svg text {
-    font-size: 12px;
+    font-size: 0.9rem;
 }
 
 .container {
     display: grid;
     grid-template-columns: 1fr auto 1fr;
     grid-template-rows: auto auto 0.2fr auto;
-    gap: 2em 0px;
+    gap: 2rem 0rem;
     grid-auto-flow: row;
     grid-template-areas:
       ". header-container ."
@@ -53,7 +53,7 @@ svg text {
     grid-area: header-container;
     grid-template-columns: 0.1fr 2.4fr 0.1fr;
     grid-template-rows: 1fr;
-    gap: 0px 0px;
+    gap: 0rem 0rem;
     grid-auto-flow: row;
     grid-template-areas:
         "logo title theme-slider";
@@ -79,9 +79,9 @@ svg text {
     position: relative;
     display: grid;
     grid-area: ui-container;
-    grid-template-columns: auto auto auto;
+    grid-template-columns: auto 2rem auto;
     grid-template-rows: auto auto auto;
-    gap: 0em 0em;
+    gap: 0rem 0rem;
     grid-auto-flow: row;
     grid-template-areas:
         "plot-region plot-region plot-region"
@@ -98,36 +98,68 @@ svg text {
             "steadystate-container";
     }
     svg text {
-        font-size: 20px;
+        font-size: 1rem;
     }
 }
+
+/* @media only screen and (max-width: 480px) {
+    .container {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto auto auto auto;
+        gap: 0rem 0rem;
+        grid-auto-flow: row;
+        grid-template-areas:
+            "header-container"
+            "ui-container"
+            "plot-region"
+            "options-container"
+            "bottom-text";
+    }
+    .ui-container {
+        grid-template-columns: auto;
+        grid-template-rows: auto auto auto auto;
+        gap: 0rem 0rem;
+        grid-auto-flow: row;
+        grid-template-areas:
+            "plot-region"
+            "options-container"
+            "multidose-container"
+            "steadystate-container";
+    }
+    svg text {
+        font-size: 1rem;
+    }
+    body, html {
+        font-size: 1rem;
+    }
+} */
 
 .plot-region {
     grid-area: plot-region;
 }
 
 #plot-region {
-    margin-top: 1em;
+    margin-top: 1rem;
 }
 
 .options-container {
-    margin-top: 1em;
+    margin-top: 1rem;
     grid-area: options-container;
 }
 
 .multidose-container {
-    margin-top: 0.7em;
+    margin-top: 0.7rem;
     grid-area: multidose-container;
 }
 
 .steadystate-container {
-    margin-top: 0.7em;
+    margin-top: 0.7rem;
     grid-area: steadystate-container;
 }
 
 .bottom-text {
     grid-area: bottom-text;
-    max-width: 55em;
+    max-width: 50rem;
 }
 
 a {
@@ -137,7 +169,7 @@ a {
 }
 
 p.indent {
-    text-indent: 2em;
+    text-indent: 2rem;
 }
 
 a:link, a:visited {
@@ -159,7 +191,7 @@ a:link, a:visited {
 
 .small-text {
     font-weight: normal;
-    font-size: 9px;
+    font-size: 0.8rem;
     display: block;
     text-align: center;
 }
@@ -175,14 +207,14 @@ select {
     outline: none;
     background-color: var(--standout-background-color);
     color: var(--strong-foreground);
-    padding-top: 4px;
-    padding-bottom: 4px;
-    padding-left: 10px;
-    padding-right: 10px;
-    font-size: 12px;
+    padding-top: 0.35rem;
+    padding-bottom: 0.35rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    font-size: 0.9rem;
     text-align: right;
     font-family: 'IBM Plex Mono', 'monospace';
-    border-radius: 4px;
+    border-radius: 0.35rem;
 }
 
 input.flat-input {
@@ -190,25 +222,25 @@ input.flat-input {
     outline: none;
     background-color: var(--standout-background-color);
     color: var(--strong-foreground);
-    padding: 4px;
-    font-size: 12px;
+    padding: 0.35rem;
+    font-size: 0.9rem;
     text-align: center;
     font-family: 'IBM Plex Mono', 'monospace';
-    max-width: 9.5em;
+    max-width: 9rem;
     width: 100%;
-    border-radius: 4px;
+    border-radius: 0.35rem;
 }
 
 button.flat-button {
     border: none;
     outline: none;
-    padding: 4px;
-    padding-left: 10px;
-    padding-right: 10px;
-    font-size: 12px;
+    padding: 0.35rem;
+    padding-left: 0.8rem;
+    padding-right: 0.8rem;
+    font-size: 0.9rem;
     text-align: center;
     font-family: 'IBM Plex Mono', 'monospace';
-    border-radius: 4px;
+    border-radius: 0.35rem;
     background-color: var(--standout-background-color);
     color: var(--strong-foreground);
 }
@@ -219,13 +251,11 @@ button.button-on {
     color: var(--standout-background-color);
 }
 
-
 button.delete-button {
-    padding: 4px;
-    padding-left: 10px;
-    padding-right: 10px;
+    padding: 0.35rem;
+    padding-left: 0.8rem;
+    padding-right: 0.8rem;
 }
-
 
 .hidden-checkbox-state {
     display: none;
@@ -233,17 +263,13 @@ button.delete-button {
 
 .custom-checkbox {
     margin: auto;
-    width: 1em;
-    height: 1em;
+    width: 0.7em;
+    height: 0.7em;
     background-color: var(--standout-background-color);
     cursor: pointer;
-    border-radius: 4px;
-    padding: 3px;
+    border-radius: 0.35rem;
+    padding: 0.4rem;
 }
-
-/* .custom-checkbox.checked-style {
-    background-color: var(--soft-foreground)
-} */
 
 .visibility-cell .uncertainty-cell {
     display: flex;
@@ -264,6 +290,6 @@ button.delete-button {
 }
 
 .inline-image {
-    height: 1em;
+    height: 1rem;
     vertical-align: middle;
 }
