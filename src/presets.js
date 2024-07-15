@@ -392,6 +392,7 @@ export const Presets = {
         ]
     },
     'ev-to-een-loadingdose': {
+        'label': 'EV to EEn with 7 mg loading dose',
         'menstrualCycle': false,
         'intervalDays': true,
         'steady': [],
