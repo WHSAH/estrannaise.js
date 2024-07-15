@@ -4,6 +4,7 @@ import {
   fillCurve,
   fillMenstrualCycleCurve,
   fillTargetRange,
+  availableUnits,
   PKFunctions,
   PKParameters,
   PKRandomFunctions,
@@ -31,9 +32,7 @@ function numberToDayHour(number, precision = 0) {
     return `${days}d ${hours}h`;
 }
 
-export function generatePlottingOptions(
-    conversionFactor = 1.0,
-    currentColorscheme = 'day',
+export function generatePlottingOptions({
     menstrualCycleVisible = false,
     targetRangeVisible = false,
     units = 'pg/mL',
@@ -41,23 +40,23 @@ export function generatePlottingOptions(
     numberOfCloudPoints = 3500,
     pointCloudSize = 1.3,
     pointCloudOpacity = 0.4,
+    currentColorscheme = 'day',
     backgroundColor = '#FFFFFF',
     strongForegroundColor = '#525252',
     softForegroundColor = '#323232'
-    ) {
+    } = {}) {
         return {
-        conversionFactor: conversionFactor,
-        currentColorScheme: currentColorscheme,
-        menstrualCycleVisible: menstrualCycleVisible,
-        targetRangeVisible: targetRangeVisible,
-        units: units,
-        numberOfLinePoints: numberOfLinePoints,
-        numberOfCloudPoints: numberOfCloudPoints,
-        pointCloudSize: pointCloudSize,
-        pointCloudOpacity: pointCloudOpacity,
-        backgroundColor: backgroundColor,
-        strongForegroundColor: strongForegroundColor,
-        softForegroundColor: softForegroundColor
+            menstrualCycleVisible,
+            targetRangeVisible,
+            units,
+            numberOfLinePoints,
+            numberOfCloudPoints,
+            pointCloudSize,
+            pointCloudOpacity,
+            currentColorscheme,
+            backgroundColor,
+            strongForegroundColor,
+            softForegroundColor
     };
 }
 
@@ -66,7 +65,7 @@ function findxMax(dataset, options) {
     // Initialize absolute minimum for the time axis
     let xMax = 14.1;
 
-    // At least one menstrual cycles
+    // At least one menstrual cycle
     if (options.menstrualCycleVisible) xMax = 28.2;
 
     // At least 5 injection cycles
@@ -93,15 +92,14 @@ function findxMax(dataset, options) {
  * Re-calculate all curves and rebuild the graph
  * @param {Object} dataset all the data from multi-doses and steady-state table
  * @param {Object} options containing the following keys:
- * * `conversionFactor`: number,
- * * `currentColorScheme`: String
  * * `menstrualCycleVisible`: boolean,
  * * `targetRangeVisible`: boolean,
- * * `units`: String,
+ * * `units`: Object,
  * * `numberOfLinePoints`: integer,
  * * `numberOfCloudPoints`: integer,
  * * `pointCloudSize`: number,
  * * `pointCloudOpacity`: number,
+ * * `currentColorScheme`: String
  * * `backgroundColor`: String,
  * * `strongForegroundColor`: String,
  * * `softForegroundColor`: String
@@ -112,7 +110,12 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
     // track the max e2 across all multi-dose curves
     // to set the y-axis limit. uncertainty clouds ignored
     // because of potential stray dots.
-    let yMax = options.conversionFactor * 300;
+
+    let precision = availableUnits[options.units].precision;
+    let units = availableUnits[options.units].units;
+    let conversionFactor = availableUnits[options.units].conversionFactor;
+
+    let yMax = conversionFactor * 300;
     let xMin = 0;
     let xMax = Math.max(14.1, findxMax(dataset, options));
 
@@ -122,8 +125,6 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
         ruleMarks = [],
         tipMarks  = [],
         targetMarks = [];
-
-    let prec = options.units === 'firkin/furlong\u00B3' ? 4 : 0;
 
     if (dataset.multidoses.entries.length > 0) {
         if (dataset.multidoses.daysAsIntervals) {
@@ -135,7 +136,7 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
 
     // Menstrual cycle line and confidence interval area marks
     if (options.menstrualCycleVisible) {
-        let _menstrualCycle = fillMenstrualCycleCurve(xMin, xMax, options.numberOfLinePoints, options.conversionFactor);
+        let _menstrualCycle = fillMenstrualCycleCurve(xMin, xMax, options.numberOfLinePoints, conversionFactor);
         msMarks = [
             Plot.line(_menstrualCycle, {
                 x: 'Time', y: 'E2', strokeWidth: 2,
@@ -148,15 +149,15 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
                 x: 'Time', y: 'E2',
                 fill: options.backgroundColor, fillOpacity: 0.618,
                 stroke: options.strongForegroundColor,
-                title: p => `menstrual cycle\ntime: ${numberToDayHour(p.Time)}\n  e₂: ${p.E2.toFixed(prec)} ${options.units}\n  CI: ${p.E2p5.toFixed(prec)}-${p.E2p95.toFixed(prec)} ${options.units}`,
+                title: p => `menstrual cycle\ntime: ${numberToDayHour(p.Time)}\n  e₂: ${p.E2.toFixed(precision)} ${units}\n  CI: ${p.E2p5.toFixed(precision)}-${p.E2p95.toFixed(precision)} ${units}`,
             }))
         ];
-        yMax = Math.max(yMax, options.conversionFactor * 415);
+        yMax = Math.max(yMax, conversionFactor * 415);
     }
 
     // Target range area and text marks
     if (options.targetRangeVisible) {
-        let targetRange = fillTargetRange(xMin, xMax, options.conversionFactor);
+        let targetRange = fillTargetRange(xMin, xMax, conversionFactor);
 
         targetMarks = [
             Plot.areaY(targetRange, {
@@ -165,12 +166,12 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
             }),
 
             Plot.text(['target range'], {
-                x: 0.99 * xMax, y: 150 * options.conversionFactor, rotate: 90,
+                x: 0.99 * xMax, y: 150 * conversionFactor, rotate: 90,
                 fill: options.softForegroundColor,
                 frameAnchor: 'middle', textAnchor: 'middle', lineAnchor: 'bottom'
               })
         ];
-        yMax = Math.max(yMax, options.conversionFactor * 200);
+        yMax = Math.max(yMax, conversionFactor * 200);
     }
 
     // Multi-dose curves and uncertainty clouds
@@ -185,7 +186,7 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
 
             for (let i = 0; i < options.numberOfCloudPoints; i++) {
                 let randx = Math.random() * (xMax - xMin) + xMin;
-                let y = e2MultiDose3C(randx, doses, times, models, options.conversionFactor, true, dataset.multidoses.daysAsIntervals);
+                let y = e2MultiDose3C(randx, doses, times, models, conversionFactor, true, dataset.multidoses.daysAsIntervals);
                 multiDoseUncertaintyCloud.push({ Time: randx, E2: y });
             }
 
@@ -198,7 +199,7 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
         }
 
         // Always compute the curve to set the y-axis limit
-        let multiDoseCurve = fillCurve(t => e2MultiDose3C(t, doses, times, models, options.conversionFactor, false, dataset.multidoses.daysAsIntervals), xMin, xMax, options.numberOfLinePoints);
+        let multiDoseCurve = fillCurve(t => e2MultiDose3C(t, doses, times, models, conversionFactor, false, dataset.multidoses.daysAsIntervals), xMin, xMax, options.numberOfLinePoints);
         yMax = Math.max(yMax, ...multiDoseCurve.map(p => p.E2));
 
         if (dataset.multidoses.curveVisible) {
@@ -215,7 +216,7 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
                 y: 'E2',
                 fill: options.backgroundColor, fillOpacity: 0.618,
                 stroke: options.strongForegroundColor,
-                title: p => `multi-dose\n\ntime: ${numberToDayHour(p.Time)}\n  e₂: ${p.E2.toFixed(prec)} ${options.units}`
+                title: p => `multi-dose\n\ntime: ${numberToDayHour(p.Time)}\n  e₂: ${p.E2.toFixed(precision)} ${units}`
             })));
         }
 
@@ -228,7 +229,7 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
 
             for (let i = 0; i < options.numberOfCloudPoints; i++) {
                 let randx = Math.random() * (xMax - xMin) + xMin;
-                let y = PKRandomFunctions(options.conversionFactor)[entry.model](randx, entry.dose, true, entry.time)
+                let y = PKRandomFunctions(conversionFactor)[entry.model](randx, entry.dose, true, entry.time)
                 steadyStateUncertaintyCloud.push({
                     Time: randx,
                     E2: y
@@ -242,7 +243,7 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
             }));
         }
 
-        let steadyStateCurve = fillCurve(t => PKFunctions(options.conversionFactor)[entry.model](t, entry.dose, true, entry.time), xMin, xMax, options.numberOfLinePoints);
+        let steadyStateCurve = fillCurve(t => PKFunctions(conversionFactor)[entry.model](t, entry.dose, true, entry.time), xMin, xMax, options.numberOfLinePoints);
         yMax = Math.max(yMax, ...steadyStateCurve.map(p => p.E2));
 
         if (entry.curveVisible) {
@@ -259,7 +260,7 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
             }));
             tipMarks.unshift(Plot.tip(steadyStateCurve, Plot.pointerX({
                 x: 'Time', y: 'E2',
-                title: p => `${p.description.toLowerCase()}\n\n   time: ${numberToDayHour(p.Time)}\n     e₂: ${p.E2.toFixed(prec)} ${options.units}\naverage: ${entry.model.includes('patch') ? 'unavailable' : e2ssAverage3C(options.conversionFactor * entry.dose, entry.time, ...PKParameters[entry.model]).toFixed(prec)} ${entry.model.includes("patch") ? '' : options.units}\n trough: ${PKFunctions(options.conversionFactor)[entry.model](0.0, entry.dose, true, entry.time).toFixed(prec)} ${options.units}`,
+                title: p => `${p.description.toLowerCase()}\n\n   time: ${numberToDayHour(p.Time)}\n     e₂: ${p.E2.toFixed(precision)} ${units}\naverage: ${entry.model.includes('patch') ? 'unavailable' : e2ssAverage3C(conversionFactor * entry.dose, entry.time, ...PKParameters[entry.model]).toFixed(precision)} ${entry.model.includes("patch") ? '' : units}\n trough: ${PKFunctions(conversionFactor)[entry.model](0.0, entry.dose, true, entry.time).toFixed(precision)} ${units}`,
                 fill: options.backgroundColor, fillOpacity: 0.618,
                 stroke: options.strongForegroundColor
             })));
@@ -270,7 +271,7 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
         width: options.numberOfLinePoints,
         marginLeft: 60,
         x: { domain: [xMin, xMax], label: 'time (days)' },
-        y: { domain: [0, 1.25 * yMax], label: `serum e₂ (${options.units})` },
+        y: { domain: [0, 1.25 * yMax], label: `serum e₂ (${units})` },
         style: { fontFamily: 'IBM Plex Mono' },
         marks: [
             Plot.gridX({ stroke: 'grey' }),

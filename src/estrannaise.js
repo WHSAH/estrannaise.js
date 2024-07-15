@@ -1,11 +1,14 @@
 
-import { 
+import {
     plotCurves,
     generatePlottingOptions,
-    wongPalette
+    wongPalette,
  } from './plotting.js';
 
-import { modelList } from './models.js';
+import {
+    availableUnits,
+    modelList
+ } from './models.js';
 
 import { Presets } from './presets.js';
 
@@ -13,11 +16,7 @@ import { Presets } from './presets.js';
 // Only refresh when a row goes from invalid to valid or vis-versa
 const rowValidity = new Map();
 
-let global_conversionFactor = 1.0;
-let global_units = 'pg/mL';
 let global_daysAsIntervals = true;
-let global_menstrualCycleVisible = false;
-let global_targetRangeVisible = false;
 let global_currentColorScheme = 'day';
 
 const NB_LINE_POINTS = 900;
@@ -27,17 +26,19 @@ const CLOUD_POINT_OPACITY = 0.4;
 
 window.addEventListener('DOMContentLoaded', () => {
 
-    attachDragNDropImport();
-
-    attachOptionsEvents();
+    
+    attachUnitsDropdown()
+    attachDaysInputEvents();
     
     attachPresetsDropdown();
+    
+    attachMenstrualCycleButtonEvent();
+    attachTargetRangeButtonEvent();
     
     attachMultidoseButtonsEvents();
     attachSteadyStateButtonsEvents();
     
-    attachMenstrualCycleButtonEvent();
-    attachTargetRangeButtonEvent();
+    attachDragNDropImport();
 
     themeSetup();
 
@@ -54,32 +55,26 @@ export function getCurrentPlottingOptions() {
     let strongForegroundColor = rootStyle.getPropertyValue('--strong-foreground');
     let softForegroundColor = rootStyle.getPropertyValue('--soft-foreground');
 
+    let menstrualCycleVisible = isButtonOn('menstrual-cycle-button');
+    let targetRangeVisible = isButtonOn('target-range-button');
+    let units = document.getElementById('dropdown-units').value;
+
     return generatePlottingOptions(
-        global_conversionFactor, 
-        global_currentColorScheme, 
-        global_menstrualCycleVisible, 
-        global_targetRangeVisible, 
-        global_units,
-        NB_LINE_POINTS,
-        NB_CLOUD_POINTS,
-        CLOUD_POINT_SIZE,
-        CLOUD_POINT_OPACITY,
-        backgroundColor,
-        strongForegroundColor,
-        softForegroundColor
-        );
+        {menstrualCycleVisible: menstrualCycleVisible,
+        targetRangeVisible: targetRangeVisible,
+        units: units,
+        numberOfLinePoints: NB_LINE_POINTS,
+        numberOfCloudPoints: NB_CLOUD_POINTS,
+        pointCloudSize: CLOUD_POINT_SIZE,
+        pointCloudOpacity: CLOUD_POINT_OPACITY,
+        currentColorscheme: global_currentColorScheme,
+        backgroundColor: backgroundColor,
+        strongForegroundColor: strongForegroundColor,
+        softForegroundColor: softForegroundColor
+    });
 }
 
-/**
- * Re-draw the graph
- * @param {boolean} save save current state to local storage
- */
-function refresh(save = false) {
-    
-    if (save) {
-        saveToLocalStorage();
-    }
-
+function refresh() {
     let graph = plotCurves(
         getTDMs(),
         getCurrentPlottingOptions(),
@@ -181,9 +176,9 @@ function isValidInput(dose, time, model) {
         !isNaN(parseFloat(dose))
      && !isNaN(parseFloat(time))
      && parseFloat(dose) >= 0   // 0 doses are valid after all
-     && !!findIntersecting(Object.keys(modelList), model) 
+     && !!findIntersecting(Object.keys(modelList), model)
         // We need the !! because JS, in its infinite wisdom,
-        // is otherwise returning the string returned by findIntersecting 
+        // is otherwise returning the string returned by findIntersecting
         // instead of the result of the boolean expression.
         // Apparently boolean expressions can return strings now.
      );
@@ -194,6 +189,11 @@ function isValidRow(row) {
     let time = row.cells[3].querySelector('input').value;
     let model = row.cells[4].querySelector('select').value;
     return isValidInput(dose, time, model);
+}
+
+function isButtonOn(buttonID) {
+    let button = document.getElementById(buttonID);
+    return button.classList.contains('button-on');
 }
 
 function readRow(row, keepVisibilities = true, keepInvalid = false) {
@@ -284,7 +284,7 @@ function getMultiDoses(keepInvalid = false, passColor = true) {
 
 function getSteadyStates(keepInvalid = false, passColor = true) {
     let steadyStates = {};
-    
+
     let steadyStateTable = document.getElementById('steadystate-table');
     steadyStates.entries = Array.from(steadyStateTable.rows).slice(1)
                                 .map((row, idx) => {
@@ -298,8 +298,8 @@ function getSteadyStates(keepInvalid = false, passColor = true) {
 
 export function getTDMs(keepInvalid = false) {
 
-    return { 
-        multidoses: getMultiDoses(keepInvalid), 
+    return {
+        multidoses: getMultiDoses(keepInvalid),
         steadystates: getSteadyStates(keepInvalid)
     };
 
@@ -312,7 +312,7 @@ function guessNextRow(tableID) {
         let lastRow = readRow(table.rows[table.rows.length - 2]);
         if (beforeLastRow && lastRow) {
             if (table.rows.length >= 5) {
-                
+
                 let beforeBeforeLastRow = readRow(table.rows[table.rows.length - 4]);
                 if (beforeBeforeLastRow
                     && (lastRow.dose === beforeBeforeLastRow.dose)
@@ -350,10 +350,10 @@ function addTDMRow(tableID, dose = null, time = null, model = null, curveVisible
 
     let visibilityCell = row.insertCell(0);
     visibilityCell.className = 'visibility-cell';
-    
+
     let uncertaintyCell = row.insertCell(1);
     uncertaintyCell.className = 'uncertainty-cell';
-    
+
     if (tableID == 'steadystate-table' || ((tableID == 'multidose-table') && (table.rows.length == 2))) {
 
         //////////////////////////
@@ -365,7 +365,7 @@ function addTDMRow(tableID, dose = null, time = null, model = null, curveVisible
         visibilityCheckboxState.checked = curveVisible;
         visibilityCell.appendChild(visibilityCheckboxState);
 
-        let visibilityCustomCheckbox = document.createElement('div');        
+        let visibilityCustomCheckbox = document.createElement('div');
         visibilityCustomCheckbox.className = 'custom-checkbox';
 
         if (tableID == 'multidose-table') {
@@ -397,13 +397,13 @@ function addTDMRow(tableID, dose = null, time = null, model = null, curveVisible
 
         let uncertaintyCustomCheckbox = document.createElement('div');
         uncertaintyCustomCheckbox.className = 'custom-checkbox';
-        
+
         if (tableID == 'multidose-table') {
             uncertaintyCustomCheckbox.style.backgroundColor = (uncertaintyCheckboxState.checked) ? wongPalette(4) : '';
         } else if (tableID == 'steadystate-table') {
             uncertaintyCustomCheckbox.style.backgroundColor = (uncertaintyCheckboxState.checked) ? wongPalette(4 + row.rowIndex) : '';
         }
-        
+
         uncertaintyCustomCheckbox.title = 'Turn visibility of uncertainty cloud on/off';
         uncertaintyCustomCheckbox.onmousedown = function() {
             uncertaintyCheckboxState.checked = !uncertaintyCheckboxState.checked;
@@ -559,9 +559,9 @@ function addTDMRow(tableID, dose = null, time = null, model = null, curveVisible
                     let curveCheckbox = r.cells[0].querySelector('.custom-checkbox');
                     let curveState = r.cells[0].querySelector('.hidden-checkbox-state');
                     curveCheckbox.style.backgroundColor = curveState.checked ? wongPalette(4 + r.rowIndex) : '';
-                    
+
                     let uncertCheckbox = r.cells[1].querySelector('.custom-checkbox');
-                    let uncertState = r.cells[1].querySelector('.hidden-checkbox-state');                    
+                    let uncertState = r.cells[1].querySelector('.hidden-checkbox-state');
                     uncertCheckbox.style.backgroundColor = uncertState.checked ? wongPalette(4 + r.rowIndex) : '';
                 });
             };
@@ -583,27 +583,6 @@ function deleteAllRows(tableID) {
         rowValidity.delete(table.rows[table.rows.length - 1]);
         table.deleteRow(-1);
     }
-}
-
-function setUnits(units, refreshPlot = true) {
-    if (units === 'pg/mL') {
-        global_units = units
-        global_conversionFactor = 1.0;
-        document.getElementById('dropdown-units').value = 'pg/mL';
-    } else if (units === 'pmol/L') {
-        global_units = units
-        global_conversionFactor = 3.6713;
-        document.getElementById('dropdown-units').value = 'pmol/L';
-    } else if (units === 'ng/L') {
-        global_units = units
-        global_conversionFactor = 1.0;
-        document.getElementById('dropdown-units').value = 'ng/L';
-    } else if (units === 'firkin/furlong\u00B3') {
-        global_units = units
-        global_conversionFactor = 0.000320496;
-        document.getElementById('dropdown-units').value = 'firkin/furlong\u00B3';
-    }
-    refreshPlot && refresh();
 }
 
 function setDaysAsIntervals(refreshPlot = true) {
@@ -633,36 +612,31 @@ function setDaysAsAbsolute(refreshPlot = true) {
 function turnMenstrualCycleOn(refreshPlot = true) {
     let mcButton = document.getElementById('menstrual-cycle-button');
     mcButton.classList.add('button-on');
-    global_menstrualCycleVisible = true;
     refreshPlot && refresh();
 }
 
 function turnMenstrualCycleOff(refreshPlot = true) {
     let mcButton = document.getElementById('menstrual-cycle-button');
     mcButton.classList.remove('button-on');
-    global_menstrualCycleVisible = false;
     refreshPlot && refresh();
 }
 
 function turnTargetRangeOn(refreshPlot = true) {
     let trButton = document.getElementById('target-range-button');
     trButton.classList.add('button-on');
-    global_targetRangeVisible = true;
     refreshPlot && refresh();
 }
 
 function turnTargetRangeOff(refreshPlot = true) {
     let trButton = document.getElementById('target-range-button');
     trButton.classList.remove('button-on');
-    global_targetRangeVisible = false;
     refreshPlot && refresh();
 }
 
 function attachMenstrualCycleButtonEvent() {
-    let mcButton = document.getElementById('menstrual-cycle-button');
-
-    mcButton.addEventListener('mousedown', () => {
-        if (global_menstrualCycleVisible) {
+    let button = document.getElementById('menstrual-cycle-button');
+    button.addEventListener('mousedown', () => {
+        if (isButtonOn('menstrual-cycle-button')) {
             turnMenstrualCycleOff();
         } else {
             turnMenstrualCycleOn();
@@ -673,7 +647,7 @@ function attachMenstrualCycleButtonEvent() {
 function attachTargetRangeButtonEvent() {
     let button = document.getElementById('target-range-button');
     button.addEventListener('mousedown', () => {
-        if (global_targetRangeVisible) {
+        if (isButtonOn('target-range-button')) {
             turnTargetRangeOff();
         } else {
             turnTargetRangeOn();
@@ -828,11 +802,23 @@ function themeSetup() {
 
 }
 
-function attachOptionsEvents() {
+function attachUnitsDropdown() {
 
-    document.getElementById('dropdown-units').addEventListener('change', (event) => {
-        setUnits(event.target.value)
+    let dropdown = document.getElementById('dropdown-units');
+
+    for (let units in availableUnits) {
+        let option = document.createElement('option');
+        option.value = units;
+        option.text = units;
+        dropdown.appendChild(option);
+    }
+
+    dropdown.addEventListener('change', () => {
+        refresh();
     });
+}
+
+function attachDaysInputEvents() {
 
     document.getElementById('dropdown-daysinput').addEventListener('change', (event) => {
         if (event.target.value === 'convert') {
@@ -842,51 +828,6 @@ function attachOptionsEvents() {
         }
     });
 
-}
-
-export function saveToLocalStorage() {
-
-    localStorage.setItem('estrannaiseOptions', JSON.stringify({
-        menstrualCycleVisible: global_menstrualCycleVisible,
-        targetRangeVisible: global_targetRangeVisible,
-        units: global_units,
-        daysAsIntervals: global_daysAsIntervals
-    }));
-    localStorage.setItem('estrannaiseDataset', JSON.stringify(getTDMs(true, true)));
-
-}
-
-export function loadFromLocalStorage() {
-
-    let options = JSON.parse(localStorage.getItem('estrannaiseOptions'));
-    let dataset = JSON.parse(localStorage.getItem('estrannaiseDataset'));
-
-    if (options) {
-        setUnits(options.units, false);
-        options.menstrualCycleVisible ? turnMenstrualCycleOn(false) : turnMenstrualCycleOff(false);
-        options.targetRangeVisible ? turnTargetRangeOn(false) : turnTargetRangeOff(false);
-        options.daysAsIntervals ? setDaysAsIntervals(false) : setDaysAsAbsolute(false);
-    }
-
-    if (dataset) {
-        deleteAllRows('multidose-table');
-        dataset.multidoses.entries.forEach((entry, i) => {
-            addTDMRow('multidose-table', entry.dose, entry.time, entry.model, dataset.multidoses.curveVisible, dataset.multidoses.uncertaintyVisible);
-        });
-
-        deleteAllRows('steadystate-table');
-        dataset.steadystates.entries.forEach(entry => {
-            addTDMRow('steadystate-table', entry.dose, entry.time, entry.model, entry.curveVisible, entry.uncertaintyVisible);
-        });
-
-    }
-    
-    (options || dataset) && refresh();
-
-}
-
-export function deleteLocalStorage() {
-    localStorage.clear();
 }
 
 function generateShareURL() {
@@ -911,12 +852,14 @@ function generateShareURL() {
 
     steadyStateTable = [ssTimeColumn, ssDoseColumn, ssMethodColumn, ssCurveVisibleColumn, ssUncertaintyVisibleColumn];
 
+    let units = document.getElementById('dropdown-units').value;
+
     let params = new URLSearchParams();
     params.set('multiDoseTable', JSON.stringify(multiDoseTable));
     params.set('steadyStateTable', JSON.stringify(steadyStateTable));
-    params.set('menstrualCycleVisible', global_menstrualCycleVisible);
-    params.set('targetRangeVisible', global_targetRangeVisible);
-    params.set('units', global_units);
+    params.set('menstrualCycleVisible', isButtonOn('menstrual-cycle-button'));
+    params.set('targetRangeVisible', isButtonOn('target-range-button'));
+    params.set('units', units);
     params.set('daysAsIntervals', global_daysAsIntervals);
 
     return window.location.origin + window.location.pathname + '#' + btoa(params.toString());
@@ -982,7 +925,11 @@ function loadFromURL() {
             guessDaysAsIntervals();
         }
 
-        hashParams.has('units') && setUnits(hashParams.get('units'), false);
+        if (hashParams.has('units')) {
+            document.getElementById('dropdown-units').value = hashParams.get('units');
+        } else {
+            document.getElementById('dropdown-units').value = 'pg/mL'
+        };
 
     }
     return dataLoaded;
