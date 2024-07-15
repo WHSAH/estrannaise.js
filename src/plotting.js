@@ -152,7 +152,7 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
                 title: p => `menstrual cycle\ntime: ${numberToDayHour(p.Time)}\n  e₂: ${p.E2.toFixed(precision)} ${units}\n  CI: ${p.E2p5.toFixed(precision)}-${p.E2p95.toFixed(precision)} ${units}`,
             }))
         ];
-        yMax = Math.max(yMax, conversionFactor * 415);
+        yMax = Math.max(yMax, conversionFactor * 414/1.25);
     }
 
     // Target range area and text marks
