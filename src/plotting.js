@@ -116,7 +116,6 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
     let xMin = 0;
     let xMax = Math.max(14.1, findxMax(dataset, options));
 
-    let colorCycle = 5;
     let dotMarks  = [],
         lineMarks = [],
         msMarks   = [],
@@ -223,7 +222,7 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
     }
 
     // Steady-state curves and uncertainty clouds
-    dataset.steadystates.entries.forEach((entry) => {
+    dataset.steadystates.entries.forEach((entry, idx) => {
         if (entry.uncertaintyVisible) {
             let steadyStateUncertaintyCloud = [];
 
@@ -239,7 +238,7 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
                 x: 'Time',
                 y: 'E2',
                 r: options.pointCloudSize,
-                fill: wongPalette(colorCycle), fillOpacity: options.pointCloudOpacity
+                fill: wongPalette(5 + idx), fillOpacity: options.pointCloudOpacity
             }));
         }
 
@@ -256,7 +255,7 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
             lineMarks.unshift(Plot.line(steadyStateCurve, {
                 x: 'Time',
                 y: 'E2',
-                stroke: wongPalette(colorCycle), strokeWidth: 2
+                stroke: wongPalette(5 + idx), strokeWidth: 2
             }));
             tipMarks.unshift(Plot.tip(steadyStateCurve, Plot.pointerX({
                 x: 'Time', y: 'E2',
@@ -265,9 +264,6 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
                 stroke: options.strongForegroundColor
             })));
         }
-
-        if (entry.curveVisible || entry.uncertaintyVisible) colorCycle++;
-
     });
 
     let e2curve = Plot.plot({
