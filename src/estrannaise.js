@@ -1,4 +1,3 @@
-
 import {
     plotCurves,
     generatePlottingOptions,
@@ -7,7 +6,9 @@ import {
 
 import {
     availableUnits,
-    modelList
+    modelList,
+    unitsMap,
+    modelsMap
  } from './models.js';
 
 import { Presets } from './presets.js';
@@ -28,15 +29,17 @@ window.addEventListener('DOMContentLoaded', () => {
 
     setupUnitsDropdown()
     setupDaysInputEvents();
-    
+
     setupPresetsDropdown();
-    
+
     setupMenstrualCycleButtonEvent();
     setupTargetRangeButtonEvent();
-    
+
+    setupShareURLButtonEvent();
+
     setupMultidoseButtonsEvents();
     setupSteadyStateButtonsEvents();
-    
+
     setupDragNDropImport();
 
     themeSetup();
@@ -88,9 +91,21 @@ function findIntersecting(list, str) {
     return list.find(el => el.toLowerCase().includes(str.toLowerCase()) || str.toLowerCase().includes(el.toLowerCase()));
 }
 
+function isValidBase64(str) {
+    const base64Regex = /^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/;
+    return !!str && base64Regex.test(str);
+}
+
+function dropNaNAndFix(value, precision = 3) {
+    if (!isNaN(value)) {
+        return parseFloat(value.toFixed(precision));
+    } else {
+        return '';
+    }
+}
+
 function setColorScheme(scheme = 'night', refreshAfter = true) {
     let rootStyle = getComputedStyle(document.documentElement);
-    let githubLogo = document.getElementById('github-logo');
 
     if (scheme == 'night') {
         document.documentElement.style.setProperty('--background-color', rootStyle.getPropertyValue('--background-color-night'));
@@ -216,7 +231,7 @@ function readRow(row, keepVisibilities = true, keepInvalid = false) {
     };
 }
 
-function convertEntriesToInvervalDays(refreshAfter = true) {
+function convertEntriesToInvervalDays() {
 
     let multiDoseTable = getMultiDoses();
     let sortedEntries = multiDoseTable.entries.sort((a, b) => a.time - b.time);
@@ -237,12 +252,12 @@ function convertEntriesToInvervalDays(refreshAfter = true) {
         }
     });
 
+    // no need to refresh
     setDaysAsIntervals(false);
 
-    refreshAfter && refresh();
 }
 
-function convertEntriesToAbsoluteDays(refreshAfter = true) {
+function convertEntriesToAbsoluteDays() {
     let previousTime = null;
     Array.from(document.getElementById('multidose-table').rows).slice(1).forEach(row => {
         if (isValidRow(row)) {
@@ -256,21 +271,23 @@ function convertEntriesToAbsoluteDays(refreshAfter = true) {
         }
     });
 
+    // no need to refresh
     setDaysAsAbsolute(false);
 
-    refreshAfter && refresh();
 }
 
+function multiDosesVisibilities() {
+    let multiDoseTable = document.getElementById('multidose-table');
+    let firstRowEntry = readRow(multiDoseTable.rows[1], true, true);
+    return [firstRowEntry.curveVisible, firstRowEntry.uncertaintyVisible]
+}
 
 function getMultiDoses(keepInvalid = false, passColor = true) {
     let multiDoses = {};
 
     let multiDoseTable = document.getElementById('multidose-table');
 
-    // Catch visibility even if first row is invalid
-    let firstRowEntry = readRow(multiDoseTable.rows[1], true, true);
-    multiDoses.curveVisible = firstRowEntry.curveVisible
-    multiDoses.uncertaintyVisible = firstRowEntry.uncertaintyVisible
+    [multiDoses.curveVisible, multiDoses.uncertaintyVisible] = multiDosesVisibilities();
 
     multiDoses.daysAsIntervals = global_daysAsIntervals;
     if (passColor) { multiDoses.color = wongPalette(4); }
@@ -456,11 +473,11 @@ function addTDMRow(tableID, dose = null, time = null, model = null, curveVisible
 
     if (tableID == 'multidose-table') {
         timeInput.classList.add('time-input-multidose');
-        timeInput.placeholder = global_daysAsIntervals ? 'since -1' : 'since 0';
+        timeInput.placeholder = global_daysAsIntervals ? 'since last' : 'since first';
     }
     else if (tableID == 'steadystate-table') {
         timeInput.classList.add('time-input-steadystate');
-        timeInput.placeholder = '# days';
+        timeInput.placeholder = 'num of days';
     };
 
     timeCell.appendChild(timeInput);
@@ -592,7 +609,7 @@ function setDaysAsIntervals(refreshPlot = true) {
 
     let timeInputs = document.querySelectorAll('.time-input-multidose');
     timeInputs.forEach(input => {
-        input.placeholder = 'since -1';
+        input.placeholder = 'since last';
     });
 
     refreshPlot && refresh();
@@ -604,7 +621,7 @@ function setDaysAsAbsolute(refreshPlot = true) {
 
     let timeInputs = document.querySelectorAll('.time-input-multidose');
     timeInputs.forEach(input => {
-        input.placeholder = 'since 0';
+        input.placeholder = 'since first';
     });
 
     refreshPlot && refresh();
@@ -683,6 +700,31 @@ function setupDragNDropImport() {
 
 }
 
+function setupShareURLButtonEvent() {
+    let shareButton = document.getElementById('share-button');
+
+    shareButton.addEventListener('mousedown', () => {
+        navigator.clipboard.writeText(generateSanerShareURL());
+        console.log(generateSanerShareURL());
+        shareButton.classList.add('button-on');
+        shareButton.innerHTML = '&nbsp;copied!&nbsp;';
+
+        setTimeout(() => {
+            shareButton.classList.remove('button-on');
+            shareButton.innerHTML = 'share url';
+        }, 700);
+    });
+
+    shareButton.addEventListener('dblclick', () => {
+        shareButton.innerHTML += '<div class="floating-text small-text" style="color: var(--strong-foreground)">praise Zalgo!</div>';
+
+        setTimeout(() => {
+            shareButton.classList.remove('button-on');
+            shareButton.innerHTML = 'share url';
+        }, 700);
+    });
+}
+
 function setupMultidoseButtonsEvents() {
 
     let guessButton = document.getElementById('guess-button');
@@ -717,29 +759,6 @@ function setupMultidoseButtonsEvents() {
     });
     clearDoseButton.addEventListener('mouseup', () => {
         clearDoseButton.classList.remove('button-on');
-    });
-
-    let shareButton = document.getElementById('share-button');
-
-    shareButton.addEventListener('mousedown', () => {
-        navigator.clipboard.writeText(generateShareURL());
-
-        shareButton.classList.add('button-on');
-        shareButton.innerHTML = '&nbsp;copied!&nbsp;';
-
-        setTimeout(() => {
-            shareButton.classList.remove('button-on');
-            shareButton.innerHTML = 'share url';
-        }, 700);
-    });
-
-    shareButton.addEventListener('dblclick', () => {
-        shareButton.innerHTML += '<div class="floating-text small-text" style="color: var(--strong-foreground)">praise Zalgo!</div>';
-
-        setTimeout(() => {
-            shareButton.classList.remove('button-on');
-            shareButton.innerHTML = 'share url';
-        }, 700);
     });
 
     let exportCSVButton = document.getElementById('export-csv-button');
@@ -827,48 +846,26 @@ function setupDaysInputEvents() {
         } else {
             (event.target.value === 'intervals') ? setDaysAsIntervals() : setDaysAsAbsolute();
         }
+
     });
 
 }
 
-function generateShareURL() {
-    let multiDoseTable = getMultiDoses(true, false);
-    let steadyStateTable = getSteadyStates(true, false);
+function generateSanerShareURL() {
+    let stateString = '';
+    stateString += global_daysAsIntervals ? 'i' : 'a';
+    stateString += isButtonOn('menstrual-cycle-button') ? 'm' : '';
+    stateString += isButtonOn('target-range-button') ? 't' : '';
+    stateString += unitsMap[document.getElementById('dropdown-units').value];
 
-    let mdCurveVisibleColumn = multiDoseTable.entries.map(entry => null);
-    mdCurveVisibleColumn[0] = multiDoseTable.curveVisible;
-    let mdUncertaintyVisibleColumn = multiDoseTable.entries.map(entry => null);
-    mdUncertaintyVisibleColumn[0] = multiDoseTable.uncertaintyVisible;
-    let mdDoseColumn = multiDoseTable.entries.map(entry => entry.dose);
-    let mdTimeColumn = multiDoseTable.entries.map(entry => entry.time);
-    let mdMethodColumn = multiDoseTable.entries.map(entry => entry.model);
+    let multiDoseString = '';
+    let [c, u] = multiDosesVisibilities();
+    multiDoseString += getMultiDoses(true, false).entries.slice(0, -1).map((entry, idx) => (idx == 0 ? (c ? 'c' : '' ) + (u ? 'u' : '') + ',' : '') + dropNaNAndFix(entry.dose) + ',' + dropNaNAndFix(entry.time) + ',' + modelsMap[entry.model]).join('~');
 
-    multiDoseTable = [mdTimeColumn, mdDoseColumn, mdMethodColumn, mdCurveVisibleColumn, mdUncertaintyVisibleColumn];
+    let steadyStateString = '';
+    steadyStateString += getSteadyStates(true, false).entries.slice(0, -1).map(entry => (entry.curveVisible ? 'c' : '') + (entry.uncertaintyVisible ? 'u' : '') + ',' + dropNaNAndFix(entry.dose) + ',' + dropNaNAndFix(entry.time) + ',' + modelsMap[entry.model]).join('~');
 
-    let ssCurveVisibleColumn = steadyStateTable.entries.map(entry => entry.curveVisible);
-    let ssUncertaintyVisibleColumn = steadyStateTable.entries.map(entry => entry.uncertaintyVisible);
-    let ssDoseColumn = steadyStateTable.entries.map(entry => entry.dose);
-    let ssTimeColumn = steadyStateTable.entries.map(entry => entry.time);
-    let ssMethodColumn = steadyStateTable.entries.map(entry => entry.model);
-
-    steadyStateTable = [ssTimeColumn, ssDoseColumn, ssMethodColumn, ssCurveVisibleColumn, ssUncertaintyVisibleColumn];
-
-    let units = document.getElementById('dropdown-units').value;
-
-    let params = new URLSearchParams();
-    params.set('multiDoseTable', JSON.stringify(multiDoseTable));
-    params.set('steadyStateTable', JSON.stringify(steadyStateTable));
-    params.set('menstrualCycleVisible', isButtonOn('menstrual-cycle-button'));
-    params.set('targetRangeVisible', isButtonOn('target-range-button'));
-    params.set('units', units);
-    params.set('daysAsIntervals', global_daysAsIntervals);
-
-    return window.location.origin + window.location.pathname + '#' + btoa(params.toString());
-}
-
-function isValidBase64(str) {
-    const base64Regex = /^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/;
-    return !!str && base64Regex.test(str);
+    return window.location.origin + window.location.pathname + '#' + stateString + '_' + multiDoseString + '_' + steadyStateString;
 }
 
 function loadFromURL() {
@@ -878,6 +875,48 @@ function loadFromURL() {
     if (!hashString) {
         return false;
     }
+
+    if (isValidBase64(hashString)) {
+        return loadFromZalgoIncantation()
+    } else {
+        return loadFromSanerURL();
+    }
+}
+
+function loadFromSanerURL() {
+    let hashString = window.location.hash.substring(1);
+    let dataLoaded = false;
+
+    let [state, multiDose, steadyState] = hashString.split('_');
+    state.includes('i') ? setDaysAsIntervals(false) : setDaysAsAbsolute(false);
+    state.includes('m') ? turnMenstrualCycleOn(false) : turnMenstrualCycleOff(false);
+    state.includes('t') ? turnTargetRangeOn(false) : turnTargetRangeOff(false);
+    document.getElementById('dropdown-units').value = unitsMap[state.slice(-1)];
+
+    let mdEntries = multiDose.split('~');
+    deleteAllRows('multidose-table');
+    let [cu, dose, time, model] = mdEntries[0].split(',');
+    addTDMRow('multidose-table', dose, time, modelsMap[model], cu.includes('c') ? true : false, cu.includes('u') ? true : false);
+    for (let entry of mdEntries.slice(1)) {
+        [dose, time, model] = entry.split(',');
+        addTDMRow('multidose-table', dose, time, modelsMap[model]);
+        dataLoaded = true;
+    }
+
+    let ssEntries = steadyState.split('~');
+    deleteAllRows('steadystate-table');
+    for (let entry of ssEntries) {
+        let [ssVisibilities, dose, time, model] = entry.split(',');
+        addTDMRow('steadystate-table', dose, time, modelsMap[model], ssVisibilities.includes('c') ? true : false, ssVisibilities.includes('u') ? true : false);
+        dataLoaded = true;
+    }
+
+    return dataLoaded
+}
+
+function loadFromZalgoIncantation() {
+
+    let hashString = window.location.hash.substring(1);
 
     let dataLoaded = false;
 
