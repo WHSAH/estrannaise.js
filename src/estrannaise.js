@@ -878,20 +878,23 @@ function loadFromURL() {
 
     if (isValidBase64(hashString)) {
         return loadFromZalgoIncantation()
-    } else {
+    } else if (hashString.split('_').length === 3) {
         return loadFromSanerURL();
+    } else {
+        return false
     }
 }
 
 function loadFromSanerURL() {
     let hashString = window.location.hash.substring(1);
-    let dataLoaded = false;
 
     let [state, multiDose, steadyState] = hashString.split('_');
     state.includes('i') ? setDaysAsIntervals(false) : setDaysAsAbsolute(false);
     state.includes('m') ? turnMenstrualCycleOn(false) : turnMenstrualCycleOff(false);
     state.includes('t') ? turnTargetRangeOn(false) : turnTargetRangeOff(false);
-    document.getElementById('dropdown-units').value = unitsMap[state.slice(-1)];
+    if (state.slice(-1) in unitsMap) {
+        document.getElementById('dropdown-units').value = unitsMap[state.slice(-1)];
+    }
 
     let mdEntries = multiDose.split('~');
     deleteAllRows('multidose-table');
@@ -900,7 +903,6 @@ function loadFromSanerURL() {
     for (let entry of mdEntries.slice(1)) {
         [dose, time, model] = entry.split(',');
         addTDMRow('multidose-table', dose, time, modelsMap[model]);
-        dataLoaded = true;
     }
 
     let ssEntries = steadyState.split('~');
@@ -908,10 +910,9 @@ function loadFromSanerURL() {
     for (let entry of ssEntries) {
         let [ssVisibilities, dose, time, model] = entry.split(',');
         addTDMRow('steadystate-table', dose, time, modelsMap[model], ssVisibilities.includes('c') ? true : false, ssVisibilities.includes('u') ? true : false);
-        dataLoaded = true;
     }
 
-    return dataLoaded
+    return true
 }
 
 function loadFromZalgoIncantation() {
