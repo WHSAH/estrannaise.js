@@ -263,7 +263,7 @@ function convertEntriesToAbsoluteDays(refreshAfter = true) {
 }
 
 
-function getMultiDoses(keepInvalid = false) {
+function getMultiDoses(keepInvalid = false, passColor = true) {
     let multiDoses = {};
 
     let multiDoseTable = document.getElementById('multidose-table');
@@ -272,6 +272,7 @@ function getMultiDoses(keepInvalid = false) {
     multiDoses.curveVisible = firstRowEntry.curveVisible
     multiDoses.uncertaintyVisible = firstRowEntry.uncertaintyVisible
     multiDoses.daysAsIntervals = global_daysAsIntervals;
+    if (passColor) { multiDoses.color = wongPalette(4); }
 
     // Read entries, ignore visibilities
     multiDoses.entries = Array.from(multiDoseTable.rows).slice(1)
@@ -281,13 +282,16 @@ function getMultiDoses(keepInvalid = false) {
     return multiDoses
 }
 
-function getSteadyStates(keepInvalid = false) {
+function getSteadyStates(keepInvalid = false, passColor = true) {
     let steadyStates = {};
     
     let steadyStateTable = document.getElementById('steadystate-table');
     steadyStates.entries = Array.from(steadyStateTable.rows).slice(1)
-                                .map(row => readRow(row, true, keepInvalid))
-                                .filter(entry => entry !== null);
+                                .map((row, idx) => {
+                                    let entry = readRow(row, true, keepInvalid);
+                                    if (entry && passColor) { entry.color = wongPalette(5 + idx); }
+                                    return entry;
+                                }).filter(entry => entry !== null);
 
     return steadyStates;
 }
@@ -886,9 +890,8 @@ export function deleteLocalStorage() {
 }
 
 function generateShareURL() {
-
-    let multiDoseTable = getMultiDoses(true, true);
-    let steadyStateTable = getSteadyStates(true, true);
+    let multiDoseTable = getMultiDoses(true, false);
+    let steadyStateTable = getSteadyStates(true, false);
 
     let mdCurveVisibleColumn = multiDoseTable.entries.map(entry => null);
     mdCurveVisibleColumn[0] = multiDoseTable.curveVisible;

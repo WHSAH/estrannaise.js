@@ -193,7 +193,7 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
                 x: 'Time',
                 y: 'E2',
                 r: options.pointCloudSize,
-                fill: wongPalette(4), fillOpacity: options.pointCloudOpacity
+                fill: dataset.multidoses.color ? dataset.multidoses.color : wongPalette(4), fillOpacity: options.pointCloudOpacity
             }));
         }
 
@@ -207,7 +207,7 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
             lineMarks.push(Plot.line(multiDoseCurve, {
                 x: 'Time',
                 y: 'E2',
-                stroke: wongPalette(4), strokeWidth: 2
+                stroke: dataset.multidoses.color ? dataset.multidoses.color : wongPalette(4), strokeWidth: 2
             }));
 
             tipMarks.push(Plot.tip(multiDoseCurve, Plot.pointerX({
@@ -238,7 +238,7 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
                 x: 'Time',
                 y: 'E2',
                 r: options.pointCloudSize,
-                fill: wongPalette(5 + idx), fillOpacity: options.pointCloudOpacity
+                fill: entry.color ? entry.color : wongPalette(5 + idx), fillOpacity: options.pointCloudOpacity
             }));
         }
 
@@ -255,7 +255,7 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
             lineMarks.unshift(Plot.line(steadyStateCurve, {
                 x: 'Time',
                 y: 'E2',
-                stroke: wongPalette(5 + idx), strokeWidth: 2
+                stroke: entry.color ? entry.color : wongPalette(5 + idx), strokeWidth: 2
             }));
             tipMarks.unshift(Plot.tip(steadyStateCurve, Plot.pointerX({
                 x: 'Time', y: 'E2',
