@@ -26,7 +26,6 @@ const CLOUD_POINT_OPACITY = 0.4;
 
 window.addEventListener('DOMContentLoaded', () => {
 
-    
     attachUnitsDropdown()
     attachDaysInputEvents();
     
@@ -268,9 +267,11 @@ function getMultiDoses(keepInvalid = false, passColor = true) {
 
     let multiDoseTable = document.getElementById('multidose-table');
 
+    // Catch visibility even if first row is invalid
     let firstRowEntry = readRow(multiDoseTable.rows[1], true, true);
     multiDoses.curveVisible = firstRowEntry.curveVisible
     multiDoses.uncertaintyVisible = firstRowEntry.uncertaintyVisible
+
     multiDoses.daysAsIntervals = global_daysAsIntervals;
     if (passColor) { multiDoses.color = wongPalette(4); }
 
@@ -382,7 +383,7 @@ function addTDMRow(tableID, dose = null, time = null, model = null, curveVisible
             } else if (tableID == 'steadystate-table') {
                 visibilityCustomCheckbox.style.backgroundColor = (visibilityCheckboxState.checked) ? wongPalette(4 + row.rowIndex) : '';
             }
-            rowValidity.get(row) && refresh();
+            (rowValidity.get(row) || (tableID == 'multidose-table' && row.rowIndex == 1)) && refresh();
         };
         visibilityCell.appendChild(visibilityCustomCheckbox);
 
@@ -412,7 +413,7 @@ function addTDMRow(tableID, dose = null, time = null, model = null, curveVisible
             } else if (tableID == 'steadystate-table') {
                 uncertaintyCustomCheckbox.style.backgroundColor = uncertaintyCheckboxState.checked ? wongPalette(4 + row.rowIndex) : '';
             }
-            rowValidity.get(row) && refresh();
+            (rowValidity.get(row) || (tableID == 'multidose-table' && row.rowIndex == 1)) && refresh();
         };
         uncertaintyCell.appendChild(uncertaintyCustomCheckbox);
     }
