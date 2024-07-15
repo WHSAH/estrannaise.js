@@ -530,7 +530,7 @@ function addTDMRow(tableID, dose = null, time = null, model = null, curveVisible
         let deleteButton = document.createElement('button');
         deleteButton.classList.add('flat-button', 'delete-button');
         deleteButton.setAttribute('title', 'Delete this entry');
-        deleteButton.textContent = '-';
+        deleteButton.textContent = '—';
 
         deleteCell.appendChild(deleteButton);
 
