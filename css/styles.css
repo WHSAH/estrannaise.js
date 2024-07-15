@@ -199,10 +199,6 @@ input.flat-input {
     border-radius: 4px;
 }
 
-.element-reflow {
-    margin-bottom: 0.3em;
-}
-
 button.flat-button {
     border: none;
     outline: none;

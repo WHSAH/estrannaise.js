@@ -9,7 +9,8 @@
 export const Presets = {
 
     // To display first when loading the page
-    'default': {
+    '_default': {
+        'hidden': true,
         'menstrualCycle': false,
         'intervalDays': true,
         'steady': [
@@ -22,7 +23,26 @@ export const Presets = {
             [100, 30, 'patch ow']
         ]
     },
+    '_section1': {
+        'disabled': true,
+        'label': 'monotherapies',
+    },
+    'ester-monotherapies': {
+        'label': 'Ester monotherapies comparison',
+        'menstrualCycle': false,
+        'intervalDays': true,
+        'steady': [
+            [3, 4, 'EV im', true, false],
+            [4, 7, 'EEn im', true, false],
+            [6, 10, 'EEn im', true, false],
+            [5, 7, 'EC im', true, false],
+            [15, 14, 'EUn im', true, false],
+            [40, 30, 'EUn casubq', true, false]
+        ],
+        'multi': []
+    },
     'een-monotherapy-7': {
+        'label': 'EEn monotherapy (7 days)',
         'menstrualCycle': false,
         'intervalDays': true,
         'steady': [
@@ -40,6 +60,7 @@ export const Presets = {
         ]
     },
     'een-monotherapy-10': {
+        'label': 'EEn monotherapy (10 days)',
         'menstrualCycle': false,
         'intervalDays': true,
         'steady': [
@@ -55,6 +76,7 @@ export const Presets = {
         ]
     },
     'ev-monotherapy-4': {
+        'label': 'EV monotherapy (4 days)',
         'menstrualCycle': false,
         'intervalDays': true,
         'steady': [
@@ -70,6 +92,7 @@ export const Presets = {
         ]
     },
     'ec-monotherapy-7': {
+        'label': 'EC monotherapy (7 days)',
         'menstrualCycle': false,
         'intervalDays': true,
         'steady': [
@@ -85,61 +108,8 @@ export const Presets = {
             [5, 7, 'EC im']
         ]
     },
-    'ester-monotherapies': {
-        'menstrualCycle': false,
-        'intervalDays': true,
-        'steady': [
-            [3, 4, 'EV im', true, false],
-            [4, 7, 'EEn im', true, false],
-            [6, 10, 'EEn im', true, false],
-            [5, 7, 'EC im', true, false],
-            [15, 14, 'EUn im', true, false],
-            [40, 30, 'EUn casubq', true, false]
-        ],
-        'multi': []
-    },
-    'ev34-to-een47-monotherapy': {
-        'menstrualCycle': false,
-        'intervalDays': true,
-        'steady': [],
-        'multi': [
-            [3, 4, 'EV im'],
-            [3, 4, 'EV im'],
-            [3, 4, 'EV im'],
-            [3, 4, 'EV im'],
-            [3, 4, 'EV im'],
-            [3, 4, 'EV im'],
-            [3, 4, 'EV im'],
-            [4, 4, 'EEn im'],
-            [4, 7, 'EEn im'],
-            [4, 7, 'EEn im'],
-            [4, 7, 'EEn im'],
-            [4, 7, 'EEn im'],
-            [4, 7, 'EEn im'],
-            [4, 7, 'EEn im'],
-        ]
-    },
-    'eun-monotherapy-30': {
-        'menstrualCycle': false,
-        'intervalDays': true,
-        'steady': [
-            [40, 30, 'EUn casubq', true, false]
-        ],
-        'multi': [
-            [40, 30, 'EUn casubq'],
-            [40, 30, 'EUn casubq'],
-            [40, 30, 'EUn casubq'],
-            [40, 30, 'EUn casubq'],
-            [40, 30, 'EUn casubq'],
-            [40, 30, 'EUn casubq'],
-            [40, 30, 'EUn casubq'],
-            [40, 30, 'EUn casubq'],
-            [40, 30, 'EUn casubq'],
-            [40, 30, 'EUn casubq'],
-            [40, 30, 'EUn casubq']
-        ]
-    },
     'eun-monotherapy-14': {
+        'label': 'EUn monotherapy (14 days)',
         'menstrualCycle': false,
         'intervalDays': true,
         'steady': [
@@ -162,7 +132,29 @@ export const Presets = {
             [15, 14, 'EUn im'],
         ]
     },
+    'eun-monotherapy-30': {
+        'label': 'EUn monotherapy (30 days)',
+        'menstrualCycle': false,
+        'intervalDays': true,
+        'steady': [
+            [40, 30, 'EUn casubq', true, false]
+        ],
+        'multi': [
+            [40, 30, 'EUn casubq'],
+            [40, 30, 'EUn casubq'],
+            [40, 30, 'EUn casubq'],
+            [40, 30, 'EUn casubq'],
+            [40, 30, 'EUn casubq'],
+            [40, 30, 'EUn casubq'],
+            [40, 30, 'EUn casubq'],
+            [40, 30, 'EUn casubq'],
+            [40, 30, 'EUn casubq'],
+            [40, 30, 'EUn casubq'],
+            [40, 30, 'EUn casubq']
+        ]
+    },
     'patch-monotherapy': {
+        'label': 'Patch mono (once/twice weekly)',
         'menstrualCycle': false,
         'intervalDays': true,
         'steady': [
@@ -171,20 +163,34 @@ export const Presets = {
         ],
         'multi': []
     },
-    'mimic-menstrual-cycle': {
-        'menstrualCycle': true,
-        'intervalDays': false,
+    'ev34-to-een47-monotherapy': {
+        'label': 'EV (4 days) to EEn (7 days)',
+        'menstrualCycle': false,
+        'intervalDays': true,
         'steady': [],
         'multi': [
-            [1, 13.5, 'EB im'],
-            [4, 16, 'EEn im'],
-            [1, 41.5, 'EB im'],
-            [4, 44, 'EEn im'],
-            [1, 69.5, 'EB im'],
-            [4, 72, 'EEn im'],
+            [3, 4, 'EV im'],
+            [3, 4, 'EV im'],
+            [3, 4, 'EV im'],
+            [3, 4, 'EV im'],
+            [3, 4, 'EV im'],
+            [3, 4, 'EV im'],
+            [3, 4, 'EV im'],
+            [4, 4, 'EEn im'],
+            [4, 7, 'EEn im'],
+            [4, 7, 'EEn im'],
+            [4, 7, 'EEn im'],
+            [4, 7, 'EEn im'],
+            [4, 7, 'EEn im'],
+            [4, 7, 'EEn im'],
         ]
     },
+    '_section2': {
+        'disabled': true,
+        'label': 'missed doses',
+    },
     'missed-een-dose-7': {
+        'label': 'Missed EEn dose',
         'menstrualCycle': false,
         'intervalDays': true,
         'steady': [
@@ -206,6 +212,7 @@ export const Presets = {
         ]
     },
     'missed-ev-dose-4': {
+        'label': 'Missed EV dose',
         'menstrualCycle': false,
         'intervalDays': true,
         'steady': [
@@ -227,6 +234,7 @@ export const Presets = {
         ]
     },
     'correct-missed-een-dose-7': {
+        'label': 'Correct missed EEn dose',
         'menstrualCycle': false,
         'intervalDays': true,
         'steady': [
@@ -248,6 +256,7 @@ export const Presets = {
         ]
     },
     'correct-missed-ev-dose-4': {
+        'label': 'Correct missed EV dose',
         'menstrualCycle': false,
         'intervalDays': true,
         'steady': [
@@ -268,6 +277,7 @@ export const Presets = {
         ]
         },
     'preemptcorrect-missed-een-dose-7': {
+        'label': 'Preempt/correct missed EEn dose',
         'menstrualCycle': false,
         'intervalDays': true,
         'steady': [
@@ -289,6 +299,7 @@ export const Presets = {
         ]
     },
     'preemptcorrect-missed-ev-dose-4': {
+        'label': 'Preempt/correct missed EV dose',
         'menstrualCycle': false,
         'intervalDays': true,
         'steady': [
@@ -308,7 +319,12 @@ export const Presets = {
             [3, 4, 'EV im'],
         ]
     },
+    '_section3': {
+        'disabled': true,
+        'label': 'monotherapies with loading dose',
+    },
     'een-monotherapy-loadingdose': {
+        'label': 'EEn mono with 8mg loading dose',
         'menstrualCycle': false,
         'intervalDays': true,
         'steady': [
@@ -324,6 +340,7 @@ export const Presets = {
         ]
     },
     'ev-monotherapy-loadingdose': {
+        'label': 'EV mono with 6mg loading dose',
         'menstrualCycle': false,
         'intervalDays': true,
         'steady': [
@@ -339,6 +356,7 @@ export const Presets = {
         ]
     },
     'ec-monotherapy-loadingdose': {
+        'label': 'EC mono with 8mg loading dose',
         'menstrualCycle': false,
         'intervalDays': true,
         'steady': [
@@ -351,6 +369,26 @@ export const Presets = {
             [5, 7, 'EC im'],
             [5, 7, 'EC im'],
             [5, 7, 'EC im'],
+        ]
+    },
+    'eun-monotherapy-loadingdose': {
+        'label': 'EUn mono with 100mg loading dose',
+        'menstrualCycle': false,
+        'intervalDays': true,
+        'steady': [
+            [40, 30, 'EUn casubq', true, false]
+        ],
+        'multi': [
+            [100, 30, 'EUn casubq'],
+            [40, 30, 'EUn casubq'],
+            [40, 30, 'EUn casubq'],
+            [40, 30, 'EUn casubq'],
+            [40, 30, 'EUn casubq'],
+            [40, 30, 'EUn casubq'],
+            [40, 30, 'EUn casubq'],
+            [40, 30, 'EUn casubq'],
+            [40, 30, 'EUn casubq'],
+            [40, 30, 'EUn casubq']
         ]
     },
     'ev-to-een-loadingdose': {
@@ -374,35 +412,12 @@ export const Presets = {
             [4, 7, 'EEn im'],
         ]
     },
-    'eun-monotherapy-loadingdose': {
-        'menstrualCycle': false,
-        'intervalDays': true,
-        'steady': [
-            [40, 30, 'EUn casubq', true, false]
-        ],
-        'multi': [
-            [100, 30, 'EUn casubq'],
-            [40, 30, 'EUn casubq'],
-            [40, 30, 'EUn casubq'],
-            [40, 30, 'EUn casubq'],
-            [40, 30, 'EUn casubq'],
-            [40, 30, 'EUn casubq'],
-            [40, 30, 'EUn casubq'],
-            [40, 30, 'EUn casubq'],
-            [40, 30, 'EUn casubq'],
-            [40, 30, 'EUn casubq']
-        ]
-    },
-    'wpath-toomuch-toospaced': {
-        'menstrualCycle': false,
-        'intervalDays': true,
-        'steady': [
-            [30, 14, 'EV im', true, true],
-            [30, 14, 'EC im', true, true]
-        ],
-        'multi': []
+    '_section4': {
+        'disabled': true,
+        'label': 'inappropriate WPATH regimens (see text)',
     },
     'wpath-toolittle-toospaced': {
+        'label': 'EV/EC 5mg/14days (too variable)',
         'menstrualCycle': false,
         'intervalDays': true,
         'steady': [
@@ -411,16 +426,18 @@ export const Presets = {
         ],
         'multi': []
     },
-    'wpath-toomuch': {
+    'wpath-toomuch-toospaced': {
+        'label': 'EV/EC 30mg/14days (extreme)',
         'menstrualCycle': false,
         'intervalDays': true,
         'steady': [
-            [10, 7, 'EV im', true, true],
-            [10, 7, 'EC im', true, true]
+            [30, 14, 'EV im', true, true],
+            [30, 14, 'EC im', true, true]
         ],
         'multi': []
     },
     'wpath-toolittle': {
+        'label': 'EV/EC 2mg/7days (low & needs AA)',
         'menstrualCycle': false,
         'intervalDays': true,
         'steady': [
@@ -429,7 +446,37 @@ export const Presets = {
         ],
         'multi': []
     },
-    'peak-performance': {
+    'wpath-toomuch': {
+        'label': 'EV/EC 10mg/7days (too much)',
+        'menstrualCycle': false,
+        'intervalDays': true,
+        'steady': [
+            [10, 7, 'EV im', true, true],
+            [10, 7, 'EC im', true, true]
+        ],
+        'multi': []
+    },
+    '_section5': {
+        'disabled': true,
+        'label': 'inappropriate regimens',
+    },
+    'mimic-menstrual-cycle': {
+        'label': 'Mimic menstrual cycle',
+        'menstrualCycle': true,
+        'intervalDays': false,
+        'steady': [],
+        'multi': [
+            [1, 13.5, 'EB im'],
+            [4, 16, 'EEn im'],
+            [1, 41.5, 'EB im'],
+            [4, 44, 'EEn im'],
+            [1, 69.5, 'EB im'],
+            [4, 72, 'EEn im'],
+        ]
+    },
+    '_peak-performance': {
+        'hidden': true,
+        'label': 'Peak performance',
         'menstrualCycle': true,
         'intervalDays': true,
         'steady': [],

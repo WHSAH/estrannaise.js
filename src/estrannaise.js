@@ -26,18 +26,18 @@ const CLOUD_POINT_OPACITY = 0.4;
 
 window.addEventListener('DOMContentLoaded', () => {
 
-    attachUnitsDropdown()
-    attachDaysInputEvents();
+    setupUnitsDropdown()
+    setupDaysInputEvents();
     
-    attachPresetsDropdown();
+    setupPresetsDropdown();
     
-    attachMenstrualCycleButtonEvent();
-    attachTargetRangeButtonEvent();
+    setupMenstrualCycleButtonEvent();
+    setupTargetRangeButtonEvent();
     
-    attachMultidoseButtonsEvents();
-    attachSteadyStateButtonsEvents();
+    setupMultidoseButtonsEvents();
+    setupSteadyStateButtonsEvents();
     
-    attachDragNDropImport();
+    setupDragNDropImport();
 
     themeSetup();
 
@@ -634,7 +634,7 @@ function turnTargetRangeOff(refreshPlot = true) {
     refreshPlot && refresh();
 }
 
-function attachMenstrualCycleButtonEvent() {
+function setupMenstrualCycleButtonEvent() {
     let button = document.getElementById('menstrual-cycle-button');
     button.addEventListener('mousedown', () => {
         if (isButtonOn('menstrual-cycle-button')) {
@@ -645,7 +645,7 @@ function attachMenstrualCycleButtonEvent() {
     });
 }
 
-function attachTargetRangeButtonEvent() {
+function setupTargetRangeButtonEvent() {
     let button = document.getElementById('target-range-button');
     button.addEventListener('mousedown', () => {
         if (isButtonOn('target-range-button')) {
@@ -656,7 +656,7 @@ function attachTargetRangeButtonEvent() {
     });
 }
 
-function attachDragNDropImport() {
+function setupDragNDropImport() {
 
     let dragNDropZone = document.getElementById('dragndrop-zone');
 
@@ -683,7 +683,7 @@ function attachDragNDropImport() {
 
 }
 
-function attachMultidoseButtonsEvents() {
+function setupMultidoseButtonsEvents() {
 
     let guessButton = document.getElementById('guess-button');
 
@@ -765,7 +765,7 @@ function attachMultidoseButtonsEvents() {
     });
 }
 
-function attachSteadyStateButtonsEvents() {
+function setupSteadyStateButtonsEvents() {
 
     let clearSteadyStateButton = document.getElementById('clear-steadystates-button')
 
@@ -803,7 +803,7 @@ function themeSetup() {
 
 }
 
-function attachUnitsDropdown() {
+function setupUnitsDropdown() {
 
     let dropdown = document.getElementById('dropdown-units');
 
@@ -819,7 +819,7 @@ function attachUnitsDropdown() {
     });
 }
 
-function attachDaysInputEvents() {
+function setupDaysInputEvents() {
 
     document.getElementById('dropdown-daysinput').addEventListener('change', (event) => {
         if (event.target.value === 'convert') {
@@ -971,14 +971,30 @@ function setRowParameters(tableID, number, dose, time, model) {
  * with a blank slate and can see what's possible.
  */
 function initializeDefaultPreset() {
-    applyPreset(Presets.default, false);
+    applyPreset(Presets._default, false);
 }
 
 /**
  * Provide an event handler whenever the user selects a preset
  */
-function attachPresetsDropdown() {
+function setupPresetsDropdown() {
     let presetDropdown = document.getElementById('dropdown-presets');
+
+    for (let preset in Presets) {
+        if (!preset.startsWith('_')) {
+            let option = document.createElement('option');
+            option.value = preset;
+            option.innerHTML = '&nbsp;&nbsp;' + Presets[preset].label;
+            presetDropdown.appendChild(option);
+        } else {
+            if (typeof Presets[preset].hidden === 'undefined') {
+                let option = document.createElement('option');
+                option.disabled = true;
+                option.innerHTML = Presets[preset].label;
+                presetDropdown.appendChild(option);
+            };
+        };
+    }
 
     presetDropdown.addEventListener('change', function(event) {
         if(!Presets[this.value]) {
