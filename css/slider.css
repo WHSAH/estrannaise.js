@@ -2,8 +2,26 @@
 /* night/day switch */
 /*------------------*/
 
-/* Do not change any of those rem */
-/*   without adult supervision    */
+/*               WARNING              */
+/*   Do not change any of these rem   */
+/*  without proper adult supervision  */
+
+/* If you must disregard your elders, remember this wisdom:
+
+   - slider:before top should be (.slider-box height - slider height) / 2
+
+   - translateX should be 
+     slider-box width - slider:before width - 2 * slider:before left
+
+   - The night/day contrast will fool you into believing
+     certain spacings aren't equals or that things have
+     changed in size.
+     Do not trust your eyes. Follow the pixels.
+
+   - Do not touch the 0's in .slider or that which must not
+     be seen will reappear and devour your slider.
+
+*/
 
 .slider-box {
     position: relative;
@@ -40,7 +58,7 @@ input:checked+.slider {
 }
 
 input:checked+.slider:before {
-    transform: translateX(1.3rem);
+    transform: translateX(1.4rem);
     transition: 0.4s;
     background-color: var(--strong-foreground-night);
 }
