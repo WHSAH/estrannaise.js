@@ -851,10 +851,10 @@ function generateSanerShareURL() {
 
     let multiDoseString = '';
     let [c, u] = multiDosesVisibilities();
-    multiDoseString += getMultiDoses(true, false).entries.slice(0, -1).map((entry, idx) => (idx == 0 ? (c ? 'c' : '' ) + (u ? 'u' : '') + ',' : '') + dropNaNAndFix(entry.dose) + ',' + dropNaNAndFix(entry.time) + ',' + modelsMap[entry.model]).join('~');
+    multiDoseString += getMultiDoses(true, false).entries.slice(0, -1).map((entry, idx) => (idx == 0 ? (c ? 'c' : '' ) + (u ? 'u' : '') + ',' : '') + dropNaNAndFix(entry.dose) + ',' + dropNaNAndFix(entry.time) + ',' + modelsMap[entry.model]).join('-');
 
     let steadyStateString = '';
-    steadyStateString += getSteadyStates(true, false).entries.slice(0, -1).map(entry => (entry.curveVisible ? 'c' : '') + (entry.uncertaintyVisible ? 'u' : '') + ',' + dropNaNAndFix(entry.dose) + ',' + dropNaNAndFix(entry.time) + ',' + modelsMap[entry.model]).join('~');
+    steadyStateString += getSteadyStates(true, false).entries.slice(0, -1).map(entry => (entry.curveVisible ? 'c' : '') + (entry.uncertaintyVisible ? 'u' : '') + ',' + dropNaNAndFix(entry.dose) + ',' + dropNaNAndFix(entry.time) + ',' + modelsMap[entry.model]).join('-');
 
     return window.location.origin + window.location.pathname + '#' + stateString + '_' + multiDoseString + '_' + steadyStateString;
 }
@@ -887,7 +887,7 @@ function loadFromSanerURL() {
         document.getElementById('dropdown-units').value = unitsMap[state.slice(-1)];
     }
 
-    let mdEntries = multiDose.split('~');
+    let mdEntries = multiDose.split('-');
     deleteAllRows('multidose-table');
     let [cu, dose, time, model] = mdEntries[0].split(',');
     addTDMRow('multidose-table', dose, time, modelsMap[model], cu.includes('c') ? true : false, cu.includes('u') ? true : false);
@@ -896,7 +896,7 @@ function loadFromSanerURL() {
         addTDMRow('multidose-table', dose, time, modelsMap[model]);
     }
 
-    let ssEntries = steadyState.split('~');
+    let ssEntries = steadyState.split('-');
     deleteAllRows('steadystate-table');
     for (let entry of ssEntries) {
         let [ssVisibilities, dose, time, model] = entry.split(',');

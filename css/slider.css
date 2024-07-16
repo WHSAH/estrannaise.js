@@ -10,7 +10,7 @@
 
    - slider:before top should be (.slider-box height - slider height) / 2
 
-   - translateX should be 
+   - translateX should be
      slider-box width - slider:before width - 2 * slider:before left
 
    - The night/day contrast will fool you into believing
