@@ -24,9 +24,6 @@ export const modelList = {
     'patch ow': {units: 'mcg/day', description: 'Patch, once weekly application'}
 };
 
-export const unitsMap = {}; let _i = 0; for (let key in availableUnits) { unitsMap[unitsMap[_i] = key] = _i; _i++; }
-export const modelsMap = {}; _i = 0; for (let key in modelList) { modelsMap[modelsMap[_i] = key] = _i; _i++; }
-
 // Export this value to avoid further upstream importing
 export const PKParameters = PKParams;
 

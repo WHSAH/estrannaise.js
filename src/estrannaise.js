@@ -7,8 +7,6 @@ import {
 import {
     availableUnits,
     modelList,
-    unitsMap,
-    modelsMap
  } from './models.js';
 
 import { Presets } from './presets.js';
@@ -137,6 +135,14 @@ function guessDaysAsIntervals() {
         document.getElementById('dropdown-daysinput').value = 'intervals';
         global_daysAsIntervals = true;
     }
+}
+
+function generateEnum(object) {
+    let enumObject = {};
+    Object.keys(object).forEach((key, idx) => {
+        enumObject[enumObject[idx] = key] = idx;
+    });
+    return enumObject
 }
 
 function loadCSV(files) {
@@ -843,6 +849,9 @@ function setupDaysInputEvents() {
 }
 
 function generateSanerShareURL() {
+
+    let [unitsMap, modelsMap] = [generateEnum(availableUnits), generateEnum(modelList)];
+
     let stateString = '';
     stateString += global_daysAsIntervals ? 'i' : 'a';
     stateString += isButtonOn('menstrual-cycle-button') ? 'm' : '';
@@ -878,6 +887,8 @@ function loadFromURL() {
 
 function loadFromSanerURL() {
     let hashString = window.location.hash.substring(1);
+
+    let [unitsMap, modelsMap] = [generateEnum(availableUnits), generateEnum(modelList)];
 
     let [state, multiDose, steadyState] = hashString.split('_');
     state.includes('i') ? setDaysAsIntervals(false) : setDaysAsAbsolute(false);
