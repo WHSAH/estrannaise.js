@@ -154,7 +154,7 @@ export const Presets = {
         ]
     },
     'patch-monotherapy': {
-        'label': 'Patch mono (once/twice weekly)',
+        'label': 'Patch monotherapies (once/twice weekly)',
         'menstrualCycle': false,
         'intervalDays': true,
         'steady': [

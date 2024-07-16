@@ -20,7 +20,7 @@ const rowValidity = new Map();
 let global_daysAsIntervals = true;
 let global_currentColorScheme = 'day';
 
-const NB_LINE_POINTS = 900;
+const NB_LINE_POINTS = 1000;
 const NB_CLOUD_POINTS = 3500;
 const CLOUD_POINT_SIZE = 1.3;
 const CLOUD_POINT_OPACITY = 0.4;
