@@ -25,10 +25,7 @@
 
 .slider-box {
     position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 0.45rem;
+    margin-bottom: 0.45rem; /* don't you even dare. */
     width: 3rem;
     height: 1.5rem;
 }
@@ -47,10 +44,10 @@
 .slider:before {
     position: absolute;
     content: "";
-    height: 1.0rem;
-    width: 1.0rem;
-    left: 0.3rem;
-    top: 0.25rem;
+    height: 0.96rem;
+    width: 1rem;
+    left: 0.27rem; /* should be 0.3rem, but there's a psychovisual illusion where the width of a white gap over a dark background appears wider than a dark gap over white */
+    top: 0.27rem;
     background-color: var(--strong-foreground-day);
     transition: 0.4s;
 }

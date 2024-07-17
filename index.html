@@ -26,15 +26,15 @@
 
         <div class="header">
 
-            <div class="logo">
-                <img src="img/favicon-48x48-bw.png" alt="estrannaise.js logo" style="margin-bottom: 0rem;">
+            <div id="logo">
+                <img src="img/favicon-32x32-bw.png" alt="estrannaise.js logo">
             </div>
 
-            <div class="title">
-                <h1 style="margin-right: auto; margin-bottom: 0rem;">estradiol <a href="docs/">pharmacokinetics</a> playground</h1>
+            <div id="title">
+                <h1 id="titleh1">estradiol <a href="docs/">pharmacokinetics</a> playground</h1>
             </div>
 
-            <div class="theme-slider">
+            <div id="theme-slider">
                 <div class="slider-box">
                     <label class="switch">
                         <input type="checkbox" id="nightday-state">
@@ -52,8 +52,7 @@
                     <select id="dropdown-units"
                             title="Change units for the estradiol concentration">
                     </select>
-                    <select id="dropdown-daysinput"
-                            title="Change the way days are interpreted as inputs in the multi-dose curve">
+                    <select id="dropdown-daysinput" title="Change the way days are interpreted as inputs in the multi-dose curve">
                         <option value="intervals">interval days</option>
                         <option value="absolute">absolute days</option>
                         <option value="convert">convert</option>
@@ -62,12 +61,10 @@
                             title="Load a preset">
                         <option value="" selected disabled>Select a preset</option>
                     </select>
-                    <button id="menstrual-cycle-button" class="flat-button"
-                            title="Turn on/off the display of the menstrual cycle data">
+                    <button id="menstrual-cycle-button" class="flat-button" title="Turn on/off the display of the menstrual cycle data">
                         menstrual cycle
                     </button>
-                    <button id="target-range-button" class="flat-button"
-                            title="Turn on/off the display of target mean estradiol range">
+                    <button id="target-range-button" class="flat-button" title="Turn on/off the display of target mean estradiol range">
                         target range
                     </button>
                 </div>
@@ -80,14 +77,19 @@
             </div> <!-- options -->
 
             <div class="multidose-container">
-                    <h3 style="font-weight: bold;">multi-doses</h3>
-                    <div style="margin-top: 0.7em; margin-bottom: 0.7em;">
+                <div id="multidose-title">
+                    multiple doses
+                </div>
+                <div id="multidose-buttons">
+                    <div>
                         <button id="guess-button" class="flat-button" title="Duplicate last entry when in 'days as interval mode'. Guess and autofill next dose given the last two or three entries when in 'absolute days' mode">autofill</button>
                         <button id="clear-doses-button" class="flat-button" title="Clear all entries in the multi-dose curve">clear</button>
-                        <input type="file" id="csv-file" accept=".csv" style="display: none;">
+                        <input type="file" id="csv-file" accept=".csv">
                         <button id="import-csv-dialog" class="flat-button">import</button>
                         <button id="export-csv-button" class="flat-button">export</button>
                     </div>
+                </div>
+                <div id="multidose-table-container">
                     <table id="multidose-table">
                         <thead>
                             <tr>
@@ -103,26 +105,33 @@
                         </tbody>
                     </table>
                     <span class="small-text">drag-n-drop csv anywhere to import</span>
-                </div> <!-- multidose-container -->
-            <div class="steadystate-container">
-                <h3 style="font-weight: bold;">steady-states</h2>
-                <div style="margin-top: 0.7em; margin-bottom: 0.7em;">
-                    <button id="clear-steadystates-button" class="flat-button" title="Clear all steady-state entries">clear</button>
                 </div>
-                <table id="steadystate-table">
-                    <thead>
-                        <tr>
-                            <th>c</th>
-                            <th>u</th>
-                            <th>dose</th>
-                            <th>every</th>
-                            <th>model</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
+            </div> <!-- multidose-container -->
+            <div class="steadystate-container">
+                <div id="steadystate-title">
+                    steady states
+                </div>
+                <div id="steadystate-buttons">
+                    <div>
+                        <button id="clear-steadystates-button" class="flat-button" title="Clear all steady-state entries">clear</button>
+                    </div>
+                </div>
+                <div id="steadystate-table-container">
+                    <table id="steadystate-table">
+                        <thead>
+                            <tr>
+                                <th>c</th>
+                                <th>u</th>
+                                <th>dose</th>
+                                <th>every</th>
+                                <th>model</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
             </div> <!-- steadystate-container-->
         </div> <!-- ui-container -->
 
