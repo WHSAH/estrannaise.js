@@ -48,31 +48,35 @@
         <div id="ui-container" class="ui-container">
             <div id="plot-region" class="plot-region"></div>
             <div class="options-container">
-                <select id="dropdown-units"
-                        title="Change units for the estradiol concentration">
-                </select>
-                <select id="dropdown-daysinput"
-                        title="Change the way days are interpreted as inputs in the multi-dose curve">
-                    <option value="intervals">interval days</option>
-                    <option value="absolute">absolute days</option>
-                    <option value="convert">convert</option>
-                </select>
-                <select id="dropdown-presets"
-                        title="Load a preset">
-                    <option value="" selected disabled>Select a preset</option>
-                </select>
-                <button id="menstrual-cycle-button" class="flat-button"
-                        title="Turn on/off the display of the menstrual cycle data">
-                    menstrual cycle
-                </button>
-                <button id="target-range-button" class="flat-button"
-                        title="Turn on/off the display of target mean estradiol range">
-                    target range
-                </button>
-                <button id="share-button" class="flat-button"
-                        title="Share the current state of the simulator as an arcane URL">
-                    share url
-                </button>
+                <div class="options">
+                    <select id="dropdown-units"
+                            title="Change units for the estradiol concentration">
+                    </select>
+                    <select id="dropdown-daysinput"
+                            title="Change the way days are interpreted as inputs in the multi-dose curve">
+                        <option value="intervals">interval days</option>
+                        <option value="absolute">absolute days</option>
+                        <option value="convert">convert</option>
+                    </select>
+                    <select id="dropdown-presets"
+                            title="Load a preset">
+                        <option value="" selected disabled>Select a preset</option>
+                    </select>
+                    <button id="menstrual-cycle-button" class="flat-button"
+                            title="Turn on/off the display of the menstrual cycle data">
+                        menstrual cycle
+                    </button>
+                    <button id="target-range-button" class="flat-button"
+                            title="Turn on/off the display of target mean estradiol range">
+                        target range
+                    </button>
+                </div>
+                <div class="shareurl-container">
+                    <button id="share-button" class="flat-button"
+                            title="Share the current state of the simulator as an arcane URL">
+                        share url
+                    </button>
+                </div>
             </div> <!-- options -->
 
             <div class="multidose-container">

@@ -25,10 +25,12 @@
 
 .slider-box {
     position: relative;
-    display: inline-block;
-
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.45rem;
     width: 3rem;
-    height: 1.7rem;
+    height: 1.5rem;
 }
 
 .slider {
@@ -48,7 +50,7 @@
     height: 1.0rem;
     width: 1.0rem;
     left: 0.3rem;
-    top: 0.35rem;
+    top: 0.25rem;
     background-color: var(--strong-foreground-day);
     transition: 0.4s;
 }
