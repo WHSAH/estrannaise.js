@@ -45,7 +45,6 @@ a:link, a:visited {
 }
 
 .container {
-    margin-top: 0.75rem;
     display: grid;
     grid-template-columns: 1fr auto 1fr;
     grid-template-rows: auto auto 0.2fr auto;
