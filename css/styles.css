@@ -44,10 +44,6 @@ a:link, a:visited {
     color: var(--strong-foreground);
 }
 
-svg text {
-    font-size: 0.9rem;
-}
-
 .container {
     margin-top: 0.75rem;
     display: grid;

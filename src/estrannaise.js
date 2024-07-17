@@ -104,18 +104,19 @@ function dropNaNAndFix(value, precision = 3) {
 
 function setColorScheme(scheme = 'night', refreshAfter = true) {
     let rootStyle = getComputedStyle(document.documentElement);
+    let s = document.documentElement.style
 
     if (scheme == 'night') {
-        document.documentElement.style.setProperty('--background-color', rootStyle.getPropertyValue('--background-color-night'));
-        document.documentElement.style.setProperty('--standout-background-color', rootStyle.getPropertyValue('--standout-background-color-night'));
-        document.documentElement.style.setProperty('--soft-foreground', rootStyle.getPropertyValue('--soft-foreground-night'));
-        document.documentElement.style.setProperty('--strong-foreground', rootStyle.getPropertyValue('--strong-foreground-night'));
+        s.setProperty('--background-color', rootStyle.getPropertyValue('--background-color-night'));
+        s.setProperty('--standout-background-color', rootStyle.getPropertyValue('--standout-background-color-night'));
+        s.setProperty('--soft-foreground', rootStyle.getPropertyValue('--soft-foreground-night'));
+        s.setProperty('--strong-foreground', rootStyle.getPropertyValue('--strong-foreground-night'));
         global_currentColorScheme = 'night';
     } else if (scheme == 'day') {
-        document.documentElement.style.setProperty('--background-color', rootStyle.getPropertyValue('--background-color-day'));
-        document.documentElement.style.setProperty('--standout-background-color', rootStyle.getPropertyValue('--standout-background-color-day'));
-        document.documentElement.style.setProperty('--soft-foreground', rootStyle.getPropertyValue('--soft-foreground-day'));
-        document.documentElement.style.setProperty('--strong-foreground', rootStyle.getPropertyValue('--strong-foreground-day'));
+        s.setProperty('--background-color', rootStyle.getPropertyValue('--background-color-day'));
+        s.setProperty('--standout-background-color', rootStyle.getPropertyValue('--standout-background-color-day'));
+        s.setProperty('--soft-foreground', rootStyle.getPropertyValue('--soft-foreground-day'));
+        s.setProperty('--strong-foreground', rootStyle.getPropertyValue('--strong-foreground-day'));
         global_currentColorScheme = 'day';
     }
 
@@ -823,27 +824,30 @@ function setupUnitsDropdown() {
 
     let dropdown = document.getElementById('dropdown-units');
 
-    for (let units in availableUnits) {
+    // for (let units in availableUnits) {
+    Object.keys(availableUnits).forEach(units => {
         let option = document.createElement('option');
         option.value = units;
         option.text = units;
         dropdown.appendChild(option);
-    }
+    });
 
     dropdown.addEventListener('change', () => {
         refresh();
     });
+
 }
 
 function setupDaysInputEvents() {
 
-    document.getElementById('dropdown-daysinput').addEventListener('change', (event) => {
+    let dropdownDaysInput = document.getElementById('dropdown-daysinput');
+
+    dropdownDaysInput.addEventListener('change', (event) => {
         if (event.target.value === 'convert') {
             (global_daysAsIntervals) ? convertEntriesToAbsoluteDays() : convertEntriesToInvervalDays();
         } else {
             (event.target.value === 'intervals') ? setDaysAsIntervals() : setDaysAsAbsolute();
         }
-
     });
 
 }
@@ -866,6 +870,7 @@ function generateSanerShareURL() {
     steadyStateString += getSteadyStates(true, false).entries.slice(0, -1).map(entry => (entry.curveVisible ? 'c' : '') + (entry.uncertaintyVisible ? 'u' : '') + ',' + dropNaNAndFix(entry.dose) + ',' + dropNaNAndFix(entry.time) + ',' + modelsMap[entry.model]).join('-');
 
     return window.location.origin + window.location.pathname + '#' + stateString + '_' + multiDoseString + '_' + steadyStateString;
+
 }
 
 function loadFromURL() {

@@ -7,7 +7,6 @@ Under the hood, estrannaise.js uses pharmacokinetic compartments models and MCMC
 
 # TODO
 - Mobile-friendly CSS
-- Add legend
 - Add visual markers for dose times
 - Save/load from localStorage
 - Fix tooltip mess in figure

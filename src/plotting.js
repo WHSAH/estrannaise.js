@@ -123,6 +123,7 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
         lineMarks = [],
         msMarks   = [],
         ruleMarks = [],
+        gridMarks = [],
         tipMarks  = [],
         targetMarks = [];
 
@@ -273,22 +274,23 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
         }
     });
 
+    gridMarks.push(Plot.gridX({ stroke: 'grey' }), Plot.gridY({ stroke: 'grey' }));
+    ruleMarks.push(Plot.ruleX([xMin]), Plot.ruleY([0]));
+
     let e2curve = Plot.plot({
         width: options.numberOfLinePoints,
         marginLeft: 60,
+        marginBottom: 40,
         x: { domain: [xMin, xMax], label: 'time (days)' },
         y: { domain: [0, 1.25 * yMax], label: `serum e₂ (${units})` },
-        style: { fontFamily: 'IBM Plex Mono' },
-        marks: [
-            Plot.gridX({ stroke: 'grey' }),
-            Plot.gridY({ stroke: 'grey' }),
-        ].concat(targetMarks)
+        style: { fontFamily: 'IBM Plex Mono', fontSize: "0.9rem" },
+        marks: [].concat(gridMarks)
+         .concat(targetMarks)
          .concat(msMarks)
-         .concat(ruleMarks)
          .concat(dotMarks)
          .concat(lineMarks)
          .concat(tipMarks)
-         .concat([Plot.ruleX([xMin]), Plot.ruleY([0])])
+         .concat(ruleMarks)
     });
 
     if (returnSVG) {
