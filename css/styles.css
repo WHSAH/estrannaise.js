@@ -53,9 +53,11 @@ svg text {
 }
 
 .logo {
+    display: flex;
     margin-bottom: 0rem;
     grid-area: logo;
-    align-self: end;
+    align-self: center;
+    justify-content: center;
     align-items: center;
 }
 
