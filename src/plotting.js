@@ -149,9 +149,11 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
                 x: 'Time', y: 'E2',
                 fill: options.backgroundColor, fillOpacity: 0.618,
                 stroke: options.strongForegroundColor,
-                title: p => `menstrual cycle\ntime: ${numberToDayHour(p.Time)}\n  e₂: ${p.E2.toFixed(precision)} ${units}\n  CI: ${p.E2p5.toFixed(precision)}-${p.E2p95.toFixed(precision)} ${units}`,
-            }))
-        ];
+                title: p => `time: ${numberToDayHour(p.Time)}
+                             ~~e₂: ${p.E2.toFixed(precision)} ${units}
+                             ~~CI: ${p.E2p5.toFixed(precision)}-${p.E2p95.toFixed(precision)} ${units}`.replace(/(\n+)(\s*)/g, '\n').replace(/~/g, ' ')
+            }))                                                                                                 /*   JS is silly with strings, but  */
+        ];                                                                                                      /* I'm silly too so it's ok I guess */
         yMax = Math.max(yMax, conversionFactor * 414/1.25);
     }
 
@@ -166,7 +168,7 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
             }),
 
             Plot.text(['target range'], {
-                x: 0.99 * xMax, y: 150 * conversionFactor, rotate: 90,
+                x: 0.985 * xMax, y: 150 * conversionFactor, rotate: 90,
                 fill: options.softForegroundColor,
                 frameAnchor: 'middle', textAnchor: 'middle', lineAnchor: 'bottom'
               })
@@ -216,8 +218,9 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
                 y: 'E2',
                 fill: options.backgroundColor, fillOpacity: 0.618,
                 stroke: options.strongForegroundColor,
-                title: p => `multi-dose\n\ntime: ${numberToDayHour(p.Time)}\n  e₂: ${p.E2.toFixed(precision)} ${units}`
-            })));
+                title: p => `time: ${numberToDayHour(p.Time)}
+                             ~~e₂: ${p.E2.toFixed(precision)} ${units}`.replace(/(\n+)(\s*)/g, (_, p, __) => p).replace(/~/g, ' ')
+            })));                                                                    /* lol. */
         }
 
     }
@@ -259,9 +262,12 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
                 stroke: entry.color ? entry.color : wongPalette(5 + idx), strokeWidth: 2
             }));
             tipMarks.unshift(Plot.tip(steadyStateCurve, Plot.pointerX({
-                x: 'Time', y: 'E2',
-                title: p => `${p.description.toLowerCase()}\n\n   time: ${numberToDayHour(p.Time)}\n     e₂: ${p.E2.toFixed(precision)} ${units}\naverage: ${entry.model.includes('patch') ? 'unavailable' : e2ssAverage3C(conversionFactor * entry.dose, entry.time, ...PKParameters[entry.model]).toFixed(precision)} ${entry.model.includes("patch") ? '' : units}\n trough: ${PKFunctions(conversionFactor)[entry.model](0.0, entry.dose, true, entry.time).toFixed(precision)} ${units}`,
-                fill: options.backgroundColor, fillOpacity: 0.618,
+                x: 'Time', y: 'E2',        /* lmao even */
+                title: p => `~~~time: ${numberToDayHour(p.Time)}
+                             ~~~~~e₂: ${p.E2.toFixed(precision)} ${units}
+                             average: ${entry.model.includes('patch') ? 'unavailable' : e2ssAverage3C(conversionFactor * entry.dose, entry.time, ...PKParameters[entry.model]).toFixed(precision)} ${entry.model.includes("patch") ? '' : units}
+                             ~trough: ${PKFunctions(conversionFactor)[entry.model](0.0, entry.dose, true, entry.time).toFixed(precision)} ${units}`.replace(/(\n+)(\s*)/g, (_, p, __) => p).replace(/~/g, ' '),
+                fill: options.backgroundColor, fillOpacity: 0.618,                                                                                               /* i mean just look at it */
                 stroke: options.strongForegroundColor
             })));
         }
@@ -277,12 +283,12 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
             Plot.gridX({ stroke: 'grey' }),
             Plot.gridY({ stroke: 'grey' }),
         ].concat(targetMarks)
-        .concat(msMarks)
-        .concat(ruleMarks)
-        .concat(dotMarks)
-        .concat(lineMarks)
-        .concat(tipMarks)
-        .concat([Plot.ruleX([xMin]), Plot.ruleY([0])])
+         .concat(msMarks)
+         .concat(ruleMarks)
+         .concat(dotMarks)
+         .concat(lineMarks)
+         .concat(tipMarks)
+         .concat([Plot.ruleX([xMin]), Plot.ruleY([0])])
     });
 
     if (returnSVG) {
