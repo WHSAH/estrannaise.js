@@ -107,7 +107,7 @@ a:link, a:visited {
         "multidose-container . steadystate-container";
 }
 
-@media (max-width: 40em) {
+@media (max-width: 50em) {
     .ui-container {
         grid-template-areas:
             "plot-region"
@@ -115,8 +115,9 @@ a:link, a:visited {
             "multidose-container"
             "steadystate-container";
     }
-    svg text {
-        font-size: 1rem;
+
+    .options-container button, .options-container select {
+        margin-top: 0.5rem;
     }
 }
 
@@ -224,7 +225,7 @@ a:link, a:visited {
 
 .bottom-text {
     grid-area: bottom-text;
-    max-width: 50rem;
+    max-width: 45rem;
 }
 
 .overlay {
@@ -257,7 +258,6 @@ select {
     box-sizing: border-box;
     border: 0;
     outline: 0;
-    margin: 0;
     background-color: var(--standout-background-color);
     color: var(--strong-foreground);
     padding-left: 1rem;
@@ -274,7 +274,6 @@ input.flat-input {
     box-sizing: border-box;
     border: 0;
     outline: 0;
-    margin: 0;
     background-color: var(--standout-background-color);
     color: var(--strong-foreground);
     text-align: center;
@@ -291,7 +290,6 @@ button.flat-button {
     box-sizing: border-box;
     border: 0;
     outline: 0;
-    margin: 0;
     padding-left: 0.8rem;
     padding-right: 0.8rem;
     height: var(--element-height);
