@@ -18,3 +18,21 @@
     --soft-foreground: var(--soft-foreground-night);
 
 }
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --background-color: var(--background-color-night);
+        --standout-background-color: var(--standout-background-color-night);
+        --strong-foreground: var(--strong-foreground-night);
+        --soft-foreground: var(--soft-foreground-night);    
+    }
+}
+
+@media (prefers-color-scheme: light) {
+    :root {
+        --background-color: var(--background-color-day);
+        --standout-background-color: var(--standout-background-color-day);
+        --strong-foreground: var(--strong-foreground-day);
+        --soft-foreground: var(--soft-foreground-day);    
+    }
+}

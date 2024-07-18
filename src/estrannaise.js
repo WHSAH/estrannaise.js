@@ -148,12 +148,19 @@ function setColorScheme(scheme = 'night', refreshAfter = false) {
         s.setProperty('--soft-foreground', rootStyle.getPropertyValue('--soft-foreground-night'));
         s.setProperty('--strong-foreground', rootStyle.getPropertyValue('--strong-foreground-night'));
         global_currentColorScheme = 'night';
+        
+        /* This is to make sure the switch is in the right state
+           when it's the OS that triggers the change and not a
+           manual change from the user. */
+        document.getElementById('nightday-state').checked = false;
+
     } else if (scheme == 'day') {
         s.setProperty('--background-color', rootStyle.getPropertyValue('--background-color-day'));
         s.setProperty('--standout-background-color', rootStyle.getPropertyValue('--standout-background-color-day'));
         s.setProperty('--soft-foreground', rootStyle.getPropertyValue('--soft-foreground-day'));
         s.setProperty('--strong-foreground', rootStyle.getPropertyValue('--strong-foreground-day'));
         global_currentColorScheme = 'day';
+        document.getElementById('nightday-state').checked = true;
     }
 
     refreshAfter && refresh();
@@ -851,7 +858,7 @@ function setupResizeRefresh() {
         isSmallScreen = window.matchMedia('(max-width: 768px)').matches;
 
         /* iOS is weird an will trigger resize
-           event when scrolling. */
+           events when scrolling. */
         let currentWindowWidth = window.innerWidth;
         if (currentWindowWidth === previousWindowWidth) {
             return;
@@ -869,15 +876,19 @@ function setupResizeRefresh() {
 
 function themeSetup() {
 
-    let currentHour = new Date().getHours();
-
-    if (currentHour >= 6 && currentHour < 18) {
-        document.getElementById('nightday-state').checked = true;
-        setColorScheme('day');
-    } else {
-        document.getElementById('nightday-state').checked = false;
+    if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
         setColorScheme('night');
+    } else {
+        setColorScheme('day');
     }
+
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (event) => {
+        if (event.matches) {
+            setColorScheme('night');
+        } else {
+            setColorScheme('day');
+        }
+    });
 
     document.getElementById('nightday-state').addEventListener('change', (event) => {
         if (event.target.checked) {
