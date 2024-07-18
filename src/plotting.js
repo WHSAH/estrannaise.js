@@ -279,6 +279,8 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
     });
 
     gridMarks.push(Plot.gridX({ stroke: 'grey' }), Plot.gridY({ stroke: 'grey' }));
+    
+    // Vertical and horizontal lines for the y and x axes
     ruleMarks.push(Plot.ruleX([xMin]), Plot.ruleY([0]));
 
     let e2curve = Plot.plot({
@@ -286,8 +288,8 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
         marginLeft: 80,
         marginBottom: 50,
         marginTop: 30,
-        x: { domain: [xMin, xMax], label: 'time (days)' },
-        y: { domain: [0, 1.25 * yMax], label: `serum e₂ (${units})` },
+        x: { domain: [xMin, xMax], label: 'time (days)', ticks: 7 },
+        y: { domain: [0, 1.25 * yMax], label: `serum e₂ (${units})`, ticks: 6 },
         style: { fontFamily: 'monospace', fontSize: options.fontSize },
         marks: [].concat(gridMarks)
          .concat(targetMarks)
