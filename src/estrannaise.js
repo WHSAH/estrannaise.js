@@ -484,6 +484,7 @@ function addDTMRow(tableID, dose = null, time = null, model = null, curveVisible
     doseInput.classList.add('flat-input', 'dose-input');
     doseInput.setAttribute('type', 'text');
     doseInput.type = 'number';
+    doseInput.min = 0;
 
     doseInput.addEventListener('input', function() {
 
