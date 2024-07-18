@@ -47,7 +47,7 @@
 
         <div id="ui-container" class="ui-container">
             <div id="plot-region" class="plot-region"></div>
-            <div class="options-container">
+            <div class="options-container centered-reflow">
                 <select id="dropdown-units" title="Change units for the estradiol concentration"> </select>
                 <select id="dropdown-daysinput" title="Change the way days are interpreted as inputs in the multi-dose curve">
                     <option value="intervals">interval days</option>
@@ -69,10 +69,10 @@
             </div> <!-- options-container -->
 
             <div id="multidose-container">
-                <div id="multidose-title">
+                <div id="multidose-title" class="centered-reflow">
                     multiple doses
                 </div>
-                <div id="multidose-buttons">
+                <div id="multidose-buttons" class="centered-reflow">
                     <div>
                         <button id="guess-button" class="flat-button" title="Duplicate last entry when in 'days as interval mode'. Guess and autofill next dose given the last two or three entries when in 'absolute days' mode">autofill</button>
                         <button id="clear-doses-button" class="flat-button" title="Clear all entries in the multi-dose curve">clear</button>
@@ -81,8 +81,8 @@
                         <button id="export-csv-button" class="flat-button">export</button>
                     </div>
                 </div>
-                <div id="multidose-table-container">
-                    <table id="multidose-table">
+                <div id="multidose-table-container" class="centered-reflow">
+                    <table id="multidose-table" class="centered-reflow">
                         <thead>
                             <tr>
                                 <th>c</th>
@@ -100,16 +100,16 @@
                 <span id="dragndrop-text" class="small-text">drag-n-drop csv anywhere to import</span>
             </div> <!-- multidose-container -->
             <div id="steadystate-container">
-                <div id="steadystate-title">
+                <div id="steadystate-title" class="centered-reflow">
                     steady states
                 </div>
-                <div id="steadystate-buttons">
+                <div id="steadystate-buttons" class="centered-reflow">
                     <div>
                         <button id="clear-steadystates-button" class="flat-button" title="Clear all steady-state entries">clear</button>
                     </div>
                 </div>
-                <div id="steadystate-table-container">
-                    <table id="steadystate-table">
+                <div id="steadystate-table-container" class="centered-reflow">
+                    <table id="steadystate-table" class="centered-reflow">
                         <thead>
                             <tr>
                                 <th>c</th>
