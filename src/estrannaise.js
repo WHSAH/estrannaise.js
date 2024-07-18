@@ -21,7 +21,7 @@ let global_currentColorScheme = 'day';
 let resizeTimeout;
 let previousWindowWidth = window.innerWidth;
 
-const isSmallScreen = window.matchMedia('(max-width: 768px)').matches;
+let isSmallScreen = window.matchMedia('(max-width: 768px)').matches;
 const isMobile = window.matchMedia('(pointer: coarse), (pointer: none)').matches || /Mobi|Android/i.test(navigator.userAgent);
 
 window.addEventListener('DOMContentLoaded', () => {
@@ -847,13 +847,15 @@ function setupSteadyStateButtonsEvents() {
 function setupResizeRefresh() {
     window.addEventListener('resize', () => {
 
+        /* catch switch to small screen on desktop/laptop */
+        isSmallScreen = window.matchMedia('(max-width: 768px)').matches;
+
         /* iOS is weird an will trigger resize
            event when scrolling. */
         let currentWindowWidth = window.innerWidth;
         if (currentWindowWidth === previousWindowWidth) {
             return;
         }
-
         previousWindowWidth = currentWindowWidth;
 
         if (resizeTimeout) {
