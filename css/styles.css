@@ -281,10 +281,14 @@ select {
     padding-left: 1rem;
     padding-right: 1rem;
     height: var(--element-height);
-    text-align: right;
+    text-align: center;
     font-family: 'IBM Plex Mono', 'monospace';
     font-size: var(--font-size-for-dummies-like-safari);
     border-radius: 0.35rem;
+}
+
+.dropdown-model {
+    text-align: right;
 }
 
 input.flat-input {

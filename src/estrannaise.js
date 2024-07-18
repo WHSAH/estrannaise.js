@@ -47,12 +47,29 @@ window.addEventListener('DOMContentLoaded', () => {
 
     themeSetup();
 
-    if (!loadFromURL()) {
+    if (!loadFromURL() && !loadFromLocalStorage()) {
         initializeDefaultPreset();
     }
 
     refresh();
 });
+
+function refresh(save = false) {
+
+    let graph = plotCurves(
+        getTDMs(),
+        getCurrentPlottingOptions(),
+        false);
+    let plot = document.getElementById('plot-region');
+    plot.innerHTML = '';
+    plot.append(graph);
+
+    if (save) {
+        saveToLocalStorage();
+        console.log(localStorage.getItem('stateString'));
+    }
+
+}
 
 export function getCurrentPlottingOptions() {
     let rootStyle = getComputedStyle(document.documentElement);
@@ -98,16 +115,6 @@ export function getCurrentPlottingOptions() {
         softForegroundColor: softForegroundColor,
         fontSize: fontSize
     });
-}
-
-function refresh() {
-    let graph = plotCurves(
-        getTDMs(),
-        getCurrentPlottingOptions(),
-        false);
-    let plot = document.getElementById('plot-region');
-    plot.innerHTML = '';
-    plot.append(graph);
 }
 
 // Find the first element in list that contains str or is contained in str (case insensitive)
@@ -894,7 +901,7 @@ function setupDaysInputEvents() {
 
 }
 
-function generateSanerShareURL() {
+function generateStateString() {
 
     let [unitsMap, modelsMap] = [generateEnum(availableUnits), generateEnum(modelList)];
 
@@ -911,8 +918,26 @@ function generateSanerShareURL() {
     let steadyStateString = '';
     steadyStateString += getSteadyStates(true, false).entries.slice(0, -1).map(entry => (entry.curveVisible ? 'c' : '') + (entry.uncertaintyVisible ? 'u' : '') + ',' + dropNaNAndFix(entry.dose) + ',' + dropNaNAndFix(entry.time) + ',' + modelsMap[entry.model]).join('-');
 
-    return window.location.origin + window.location.pathname + '#' + stateString + '_' + multiDoseString + '_' + steadyStateString;
+    return [stateString, multiDoseString, steadyStateString].join('_');
 
+}
+
+function generateSanerShareURL() {
+    return window.location.origin + window.location.pathname + '#' + generateStateString();
+}
+
+function saveToLocalStorage() {
+    let stateString = generateStateString();
+    localStorage.setItem('stateString', stateString);
+}
+
+function loadFromLocalStorage() {
+    let stateString = localStorage.getItem('stateString');
+    if (stateString) {
+        return loadFromStateString(stateString);
+    } else {
+        return false;
+    }
 }
 
 function loadFromURL() {
@@ -934,10 +959,15 @@ function loadFromURL() {
 
 function loadFromSanerURL() {
     let hashString = window.location.hash.substring(1);
+    return loadFromStateString(hashString);
+}
+
+
+function loadFromStateString(stateString) {
 
     let [unitsMap, modelsMap] = [generateEnum(availableUnits), generateEnum(modelList)];
 
-    let [state, multiDose, steadyState] = hashString.split('_');
+    let [state, multiDose, steadyState] = stateString.split('_');
     state.includes('i') ? setDaysAsIntervals(false) : setDaysAsAbsolute(false);
     state.includes('m') ? turnMenstrualCycleOn(false) : turnMenstrualCycleOff(false);
     state.includes('t') ? turnTargetRangeOn(false) : turnTargetRangeOff(false);

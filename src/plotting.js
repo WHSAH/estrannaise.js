@@ -285,6 +285,7 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
         width: options.numberOfLinePoints,
         marginLeft: 80,
         marginBottom: 40,
+        marginTop: 30,
         x: { domain: [xMin, xMax], label: 'time (days)' },
         y: { domain: [0, 1.25 * yMax], label: `serum e₂ (${units})` },
         style: { fontFamily: 'IBM Plex Mono', fontSize: options.fontSize },
