@@ -17,7 +17,9 @@ const rowValidity = new Map();
 
 let global_daysAsIntervals = true;
 let global_currentColorScheme = 'day';
+
 let resizeTimeout;
+let previousWindowWidth = window.innerWidth;
 
 const isSmallScreen = window.matchMedia('(max-width: 768px)').matches;
 const isMobile = window.matchMedia('(pointer: coarse), (pointer: none)').matches || /Mobi|Android/i.test(navigator.userAgent);
@@ -844,6 +846,16 @@ function setupSteadyStateButtonsEvents() {
 */
 function setupResizeRefresh() {
     window.addEventListener('resize', () => {
+
+        /* iOS is weird an will trigger resize
+           event when scrolling. */
+        let currentWindowWidth = window.innerWidth;
+        if (currentWindowWidth === previousWindowWidth) {
+            return;
+        }
+
+        previousWindowWidth = currentWindowWidth;
+
         if (resizeTimeout) {
             clearTimeout(resizeTimeout);
         }
