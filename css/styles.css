@@ -107,7 +107,7 @@ a:link, a:visited {
         "multidose-container . steadystate-container";
 }
 
-@media (max-width: 50em) {
+@media (max-width: 768px) {
     .ui-container {
         grid-template-areas:
             "plot-region"
@@ -116,8 +116,8 @@ a:link, a:visited {
             "steadystate-container";
     }
 
-    .options-container button, .options-container select {
-        margin-top: 0.5rem;
+    #theme-slider {
+        align-items: baseline;
     }
 }
 
@@ -127,30 +127,14 @@ a:link, a:visited {
 
 #plot-region {
     width: 100%;
-    height: 100%;    
+    height: 100%;
 }
 
 .options-container {
-    vertical-align: middle;
-    display: grid;
-    grid-area: options-container;
-    grid-template-columns: auto 7rem;
-    grid-template-rows: auto;
-    gap: 1rem 0rem;
-    grid-auto-flow: row;
-    grid-template-areas:
-        "options shareurl-container";
-}
-
-.options {
-    grid-area: options;
-}
-
-.shareurl-container {
-    grid-area: shareurl-container;
     display: flex;
-    align-content: center;
-    justify-content: end;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    grid-area: options-container;
 }
 
 .multidose-container {
@@ -330,8 +314,4 @@ button.delete-button {
     display: flex;
     justify-content: center;
     align-items: center;
-}
-
-#share-button {
-    position: relative;
 }

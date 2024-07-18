@@ -36,6 +36,7 @@ export function generatePlottingOptions({
     menstrualCycleVisible = false,
     targetRangeVisible = false,
     units = 'pg/mL',
+    strokeWidth = 2,
     numberOfLinePoints = 900,
     numberOfCloudPoints = 3500,
     pointCloudSize = 1.3,
@@ -43,12 +44,14 @@ export function generatePlottingOptions({
     currentColorscheme = 'day',
     backgroundColor = '#FFFFFF',
     strongForegroundColor = '#525252',
-    softForegroundColor = '#323232'
+    softForegroundColor = '#323232',
+    fontSize = '0.9rem',
     } = {}) {
         return {
             menstrualCycleVisible,
             targetRangeVisible,
             units,
+            strokeWidth,
             numberOfLinePoints,
             numberOfCloudPoints,
             pointCloudSize,
@@ -56,7 +59,8 @@ export function generatePlottingOptions({
             currentColorscheme,
             backgroundColor,
             strongForegroundColor,
-            softForegroundColor
+            softForegroundColor,
+            fontSize
     };
 }
 
@@ -140,7 +144,7 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
         let _menstrualCycle = fillMenstrualCycleCurve(xMin, xMax, options.numberOfLinePoints, conversionFactor);
         msMarks = [
             Plot.line(_menstrualCycle, {
-                x: 'Time', y: 'E2', strokeWidth: 2,
+                x: 'Time', y: 'E2', strokeWidth: options.strokeWidth,
                 stroke: options.softForegroundColor, strokeOpacity: 0.8}),
             Plot.areaY(_menstrualCycle, {
                 x: 'Time', y1: 'E2p5', y2: 'E2p95',
@@ -211,7 +215,7 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
             lineMarks.push(Plot.line(multiDoseCurve, {
                 x: 'Time',
                 y: 'E2',
-                stroke: dataset.multidoses.color ? dataset.multidoses.color : wongPalette(4), strokeWidth: 2
+                stroke: dataset.multidoses.color ? dataset.multidoses.color : wongPalette(4), strokeWidth: options.strokeWidth
             }));
 
             tipMarks.push(Plot.tip(multiDoseCurve, Plot.pointerX({
@@ -260,7 +264,7 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
             lineMarks.unshift(Plot.line(steadyStateCurve, {
                 x: 'Time',
                 y: 'E2',
-                stroke: entry.color ? entry.color : wongPalette(5 + idx), strokeWidth: 2
+                stroke: entry.color ? entry.color : wongPalette(5 + idx), strokeWidth: options.strokeWidth
             }));
             tipMarks.unshift(Plot.tip(steadyStateCurve, Plot.pointerX({
                 x: 'Time', y: 'E2',        /* lmao even */
@@ -283,7 +287,7 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
         marginBottom: 40,
         x: { domain: [xMin, xMax], label: 'time (days)' },
         y: { domain: [0, 1.25 * yMax], label: `serum e₂ (${units})` },
-        style: { fontFamily: 'IBM Plex Mono', fontSize: "0.9rem" },
+        style: { fontFamily: 'IBM Plex Mono', fontSize: options.fontSize },
         marks: [].concat(gridMarks)
          .concat(targetMarks)
          .concat(msMarks)

@@ -17,11 +17,14 @@ const rowValidity = new Map();
 
 let global_daysAsIntervals = true;
 let global_currentColorScheme = 'day';
+let resizeTimeout;
 
 const NB_LINE_POINTS = 1000;
 const NB_CLOUD_POINTS = 3500;
 const CLOUD_POINT_SIZE = 1.3;
 const CLOUD_POINT_OPACITY = 0.4;
+
+const isMobile = /Mobi|Android/i.test(navigator.userAgent);
 
 window.addEventListener('DOMContentLoaded', () => {
 
@@ -39,6 +42,8 @@ window.addEventListener('DOMContentLoaded', () => {
     setupSteadyStateButtonsEvents();
 
     setupDragNDropImport();
+
+    setupResizeRefresh();
 
     themeSetup();
 
@@ -59,18 +64,39 @@ export function getCurrentPlottingOptions() {
     let targetRangeVisible = isButtonOn('target-range-button');
     let units = document.getElementById('dropdown-units').value;
 
+    let viewportWidthPixels = window.innerWidth;
+    let rootFontSize = parseFloat(rootStyle.getPropertyValue('font-size'));
+    let viewportWidthRem = viewportWidthPixels / rootFontSize;
+
+    let numberOfCloudPoints = NB_CLOUD_POINTS;
+    let pointCloudSize = CLOUD_POINT_SIZE;
+    let fontSize = "0.9rem";
+    let strokeWidth = 2;
+
+    if (viewportWidthRem < 50 || isMobile) {
+        pointCloudSize = 2.5;
+        fontSize = "1.6rem";
+        strokeWidth = 4;
+        /* And let's ease off a bit on the
+           computational burden when on mobile.
+           It was sluggish on my Pixel 5 */
+        numberOfCloudPoints = 900;
+    }
+
     return generatePlottingOptions(
         {menstrualCycleVisible: menstrualCycleVisible,
         targetRangeVisible: targetRangeVisible,
         units: units,
+        strokeWidth: strokeWidth,
         numberOfLinePoints: NB_LINE_POINTS,
-        numberOfCloudPoints: NB_CLOUD_POINTS,
-        pointCloudSize: CLOUD_POINT_SIZE,
+        numberOfCloudPoints: numberOfCloudPoints,
+        pointCloudSize: pointCloudSize,
         pointCloudOpacity: CLOUD_POINT_OPACITY,
         currentColorscheme: global_currentColorScheme,
         backgroundColor: backgroundColor,
         strongForegroundColor: strongForegroundColor,
-        softForegroundColor: softForegroundColor
+        softForegroundColor: softForegroundColor,
+        fontSize: fontSize
     });
 }
 
@@ -102,7 +128,7 @@ function dropNaNAndFix(value, precision = 3) {
     }
 }
 
-function setColorScheme(scheme = 'night', refreshAfter = true) {
+function setColorScheme(scheme = 'night', refreshAfter = false) {
     let rootStyle = getComputedStyle(document.documentElement);
     let s = document.documentElement.style
 
@@ -798,16 +824,33 @@ function setupSteadyStateButtonsEvents() {
     });
 }
 
+/*
+ Debounce and refresh on resize so that we send
+ the new set of plotting options with new point size
+ and curve stroke widths when the screen goes
+ from big to small or vis-versa.
+*/
+function setupResizeRefresh() {
+    window.addEventListener('resize', () => {
+        if (resizeTimeout) {
+            clearTimeout(resizeTimeout);
+        }
+        resizeTimeout = setTimeout(() => {
+            refresh();
+        }, 100);
+    });
+}
+
 function themeSetup() {
 
     let currentHour = new Date().getHours();
 
     if (currentHour >= 6 && currentHour < 18) {
         document.getElementById('nightday-state').checked = true;
-        setColorScheme('day', false);
+        setColorScheme('day');
     } else {
         document.getElementById('nightday-state').checked = false;
-        setColorScheme('night', false);
+        setColorScheme('night');
     }
 
     document.getElementById('nightday-state').addEventListener('change', (event) => {
@@ -824,7 +867,6 @@ function setupUnitsDropdown() {
 
     let dropdown = document.getElementById('dropdown-units');
 
-    // for (let units in availableUnits) {
     Object.keys(availableUnits).forEach(units => {
         let option = document.createElement('option');
         option.value = units;
