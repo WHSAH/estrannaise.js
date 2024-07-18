@@ -122,6 +122,43 @@ a:link, a:visited {
     #theme-slider {
         align-items: baseline;
     }
+
+    .options-container {
+        display: flex;
+        justify-content: center;
+    }
+
+    #multidose-table-container {
+        grid-area: steadystate-table;
+        display: flex;
+        justify-content: center;
+    }
+
+    #multidose-title {
+        display: flex;
+        justify-content: center;
+    }
+
+    #multidose-buttons {
+        display: flex;
+        justify-content: center;
+    }
+
+    #steadystate-table-container {
+        grid-area: steadystate-table;
+        display: flex;
+        justify-content: center;
+    }
+
+    #steadystate-title {
+        display: flex;
+        justify-content: center;
+    }
+
+    #steadystate-buttons {
+        display: flex;
+        justify-content: center;
+    }
 }
 
 @media (pointer:none), (pointer:coarse) {
