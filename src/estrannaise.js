@@ -19,11 +19,7 @@ let global_daysAsIntervals = true;
 let global_currentColorScheme = 'day';
 let resizeTimeout;
 
-const NB_LINE_POINTS = 1000;
-const NB_CLOUD_POINTS = 3500;
-const CLOUD_POINT_SIZE = 1.3;
-const CLOUD_POINT_OPACITY = 0.4;
-
+const isSmallScreen = window.matchMedia('(max-width: 768px)').matches;
 const isMobile = window.matchMedia('(pointer: coarse), (pointer: none)').matches || /Mobi|Android/i.test(navigator.userAgent);
 
 window.addEventListener('DOMContentLoaded', () => {
@@ -81,27 +77,27 @@ export function getCurrentPlottingOptions() {
     let targetRangeVisible = isButtonOn('target-range-button');
     let units = document.getElementById('dropdown-units').value;
 
-    let viewportWidthPixels = window.innerWidth;
-    let rootFontSize = parseFloat(rootStyle.getPropertyValue('font-size'));
-    let viewportWidthRem = viewportWidthPixels / rootFontSize;
-
-    let numberOfCloudPoints = NB_CLOUD_POINTS;
-    let pointCloudSize = CLOUD_POINT_SIZE;
+    let numberOfLinePoints = 1000;
+    let numberOfCloudPoints = 3500;
+    let pointCloudSize = 1.3;
+    let pointCloudOpacity = 0.4;
     let fontSize = "0.9rem";
     let strokeWidth = 2;
     let aspectRatio = 0.43;
 
-    if (viewportWidthRem < 50 || isMobile) {
-        pointCloudSize = 2.5;
+    if (isSmallScreen || isMobile) {
         fontSize = "1.6rem";
         aspectRatio = 0.55;
         strokeWidth = 4;
-        /* And let's ease off a bit on the
-           computational burden when on mobile.
-           It was sluggish on my Pixel 5 */
-        }
+        pointCloudOpacity = 0.4;
+        pointCloudSize = 2.1;
+    }
     
     if (isMobile) {
+        pointCloudSize = 3.5;
+        /* And let's ease off a bit on the
+           computational burden when on mobile.
+           It was a bit sluggish on my Pixel 5 */
         numberOfCloudPoints = 900;
     }
 
@@ -110,10 +106,10 @@ export function getCurrentPlottingOptions() {
         targetRangeVisible: targetRangeVisible,
         units: units,
         strokeWidth: strokeWidth,
-        numberOfLinePoints: NB_LINE_POINTS,
+        numberOfLinePoints: numberOfLinePoints,
         numberOfCloudPoints: numberOfCloudPoints,
         pointCloudSize: pointCloudSize,
-        pointCloudOpacity: CLOUD_POINT_OPACITY,
+        pointCloudOpacity: pointCloudOpacity,
         currentColorscheme: global_currentColorScheme,
         backgroundColor: backgroundColor,
         strongForegroundColor: strongForegroundColor,
