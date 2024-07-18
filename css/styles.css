@@ -273,8 +273,14 @@ select {
     text-align: right;
 }
 
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
 input.flat-input {
-    appearance: none;
+    appearance: textfield;
     box-sizing: border-box;
     border: 0;
     outline: 0;
