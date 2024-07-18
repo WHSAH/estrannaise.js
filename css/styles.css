@@ -159,7 +159,12 @@ a:link, a:visited {
         display: flex;
         justify-content: center;
     }
-    
+}
+
+@media (pointer:none), (pointer:coarse) {
+    #dragndrop-text {
+        display: none;
+    }
 }
 
 .plot-region {

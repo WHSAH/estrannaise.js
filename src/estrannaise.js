@@ -24,7 +24,7 @@ const NB_CLOUD_POINTS = 3500;
 const CLOUD_POINT_SIZE = 1.3;
 const CLOUD_POINT_OPACITY = 0.4;
 
-const isMobile = /Mobi|Android/i.test(navigator.userAgent);
+const isMobile = window.matchMedia('(pointer: coarse), (pointer: none)').matches || /Mobi|Android/i.test(navigator.userAgent);
 
 window.addEventListener('DOMContentLoaded', () => {
 
@@ -99,6 +99,9 @@ export function getCurrentPlottingOptions() {
         /* And let's ease off a bit on the
            computational burden when on mobile.
            It was sluggish on my Pixel 5 */
+        }
+    
+    if (isMobile) {
         numberOfCloudPoints = 900;
     }
 
