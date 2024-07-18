@@ -138,7 +138,7 @@ function dropNaNAndFix(value, precision = 3) {
     }
 }
 
-function setColorScheme(scheme = 'night', refreshAfter = false) {
+function setColorScheme(scheme) {
     let rootStyle = getComputedStyle(document.documentElement);
     let s = document.documentElement.style
 
@@ -162,8 +162,6 @@ function setColorScheme(scheme = 'night', refreshAfter = false) {
         global_currentColorScheme = 'day';
         document.getElementById('nightday-state').checked = true;
     }
-
-    refreshAfter && refresh();
 }
 
 function allUnique(list) {
