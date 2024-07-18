@@ -22,7 +22,7 @@
 body, html {
     background-color: var(--background-color);
     color: var(--soft-foreground);
-    font-family: 'IBM Plex Mono', 'monospace';
+    font-family: 'IBM Plex Mono', monospace, monospace;
     font-size: var(--font-size-for-dummies-like-safari);
 }
 
@@ -282,7 +282,7 @@ select {
     padding-right: 1rem;
     height: var(--element-height);
     text-align: center;
-    font-family: 'IBM Plex Mono', 'monospace';
+    font-family: 'IBM Plex Mono', monospace, monospace;
     font-size: var(--font-size-for-dummies-like-safari);
     border-radius: 0.35rem;
 }
@@ -299,7 +299,7 @@ input.flat-input {
     background-color: var(--standout-background-color);
     color: var(--strong-foreground);
     text-align: center;
-    font-family: 'IBM Plex Mono', 'monospace';
+    font-family: 'IBM Plex Mono', monospace, monospace;
     max-width: 9rem;
     width: 100%;
     height: var(--element-height);
@@ -316,7 +316,7 @@ button.flat-button {
     padding-right: 0.8rem;
     height: var(--element-height);
     text-align: center;
-    font-family: 'IBM Plex Mono', 'monospace';
+    font-family: 'IBM Plex Mono', monospace, monospace;
     border-radius: 0.35rem;
     background-color: var(--standout-background-color);
     font-size: var(--font-size-for-dummies-like-safari);
