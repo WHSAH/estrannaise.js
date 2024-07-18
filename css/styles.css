@@ -119,6 +119,44 @@ a:link, a:visited {
     #theme-slider {
         align-items: baseline;
     }
+
+    .options-container {
+        display: flex;
+        justify-content: center;
+    }
+
+    #multidose-table-container {
+        grid-area: steadystate-table;
+        display: flex;
+        justify-content: center;
+    }
+
+    #multidose-title {
+        display: flex;
+        justify-content: center;
+    }
+
+    #multidose-buttons {
+        display: flex;
+        justify-content: center;
+    }
+
+    #steadystate-table-container {
+        grid-area: steadystate-table;
+        display: flex;
+        justify-content: center;
+    }
+
+    #steadystate-title {
+        display: flex;
+        justify-content: center;
+    }
+
+    #steadystate-buttons {
+        display: flex;
+        justify-content: center;
+    }
+    
 }
 
 .plot-region {
@@ -131,13 +169,13 @@ a:link, a:visited {
 }
 
 .options-container {
+    grid-area: options-container;
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
-    grid-area: options-container;
 }
 
-.multidose-container {
+#multidose-container {
     grid-area: multidose-container;
     position: relative;
     align-items: start;
@@ -161,11 +199,9 @@ a:link, a:visited {
 
 #multidose-buttons {
     grid-area: multidose-buttons;
-    display: flex;
-    justify-content: left;
 }
 
-#multidose-table {
+#multidose-table-container {
     grid-area: multidose-table;
 }
 
@@ -173,7 +209,7 @@ a:link, a:visited {
     display: none;
 }
 
-.steadystate-container {
+#steadystate-container {
     grid-area: steadystate-container;
     position: relative;
     display: grid;
@@ -198,8 +234,6 @@ a:link, a:visited {
 
 #steadystate-buttons {
     grid-area: steadystate-buttons;
-    display: flex;
-    justify-content: left;
 }
 
 #steadystate-table-container {
