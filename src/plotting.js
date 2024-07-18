@@ -46,6 +46,7 @@ export function generatePlottingOptions({
     strongForegroundColor = '#525252',
     softForegroundColor = '#323232',
     fontSize = '0.9rem',
+    aspectRatio = 0.43,
     } = {}) {
         return {
             menstrualCycleVisible,
@@ -60,7 +61,8 @@ export function generatePlottingOptions({
             backgroundColor,
             strongForegroundColor,
             softForegroundColor,
-            fontSize
+            fontSize,
+            aspectRatio
     };
 }
 
@@ -285,6 +287,7 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
 
     let e2curve = Plot.plot({
         width: options.numberOfLinePoints,
+        height: options.aspectRatio * options.numberOfLinePoints,
         marginLeft: 80,
         marginBottom: 50,
         marginTop: 30,

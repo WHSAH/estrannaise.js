@@ -89,10 +89,12 @@ export function getCurrentPlottingOptions() {
     let pointCloudSize = CLOUD_POINT_SIZE;
     let fontSize = "0.9rem";
     let strokeWidth = 2;
+    let aspectRatio = 0.43;
 
     if (viewportWidthRem < 50 || isMobile) {
         pointCloudSize = 2.5;
         fontSize = "1.6rem";
+        aspectRatio = 0.55;
         strokeWidth = 4;
         /* And let's ease off a bit on the
            computational burden when on mobile.
@@ -113,7 +115,8 @@ export function getCurrentPlottingOptions() {
         backgroundColor: backgroundColor,
         strongForegroundColor: strongForegroundColor,
         softForegroundColor: softForegroundColor,
-        fontSize: fontSize
+        fontSize: fontSize,
+        aspectRatio: aspectRatio
     });
 }
 
