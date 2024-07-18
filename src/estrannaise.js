@@ -85,14 +85,13 @@ export function getCurrentPlottingOptions() {
     let strokeWidth = 2;
     let aspectRatio = 0.43;
 
-    if (isSmallScreen || isMobile) {
+    if (isSmallScreen) {
         fontSize = "1.6rem";
         aspectRatio = 0.55;
         strokeWidth = 4;
-        pointCloudOpacity = 0.4;
         pointCloudSize = 2.1;
     }
-    
+
     if (isMobile) {
         pointCloudSize = 3.5;
         /* And let's ease off a bit on the
@@ -484,6 +483,7 @@ function addTDMRow(tableID, dose = null, time = null, model = null, curveVisible
     let doseInput = document.createElement('input');
     doseInput.classList.add('flat-input', 'dose-input');
     doseInput.setAttribute('type', 'text');
+    doseInput.type = 'number';
 
     doseInput.addEventListener('input', function() {
 
@@ -512,6 +512,7 @@ function addTDMRow(tableID, dose = null, time = null, model = null, curveVisible
     let timeInput = document.createElement('input');
     timeInput.classList.add('flat-input')
     timeInput.setAttribute('type', 'text');
+    timeInput.type = 'number';
 
     if (tableID == 'multidose-table') {
         timeInput.classList.add('time-input-multidose');
@@ -778,6 +779,7 @@ function setupMultidoseButtonsEvents() {
             }, 500);
         }
     });
+
     guessButton.addEventListener('mouseup', () => {
         guessButton.classList.remove('button-on');
     });
