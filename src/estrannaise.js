@@ -53,7 +53,7 @@ window.addEventListener('DOMContentLoaded', () => {
 function refresh(save = false) {
 
     let graph = plotCurves(
-        getTDMs(),
+        getDTMs(),
         getCurrentPlottingOptions(),
         false);
     let plot = document.getElementById('plot-region');
@@ -192,7 +192,7 @@ function loadCSV(files) {
                     results.data.forEach(([dose, time, model]) => {
                         let delivtype = findIntersecting(Object.keys(modelList), model);
                         if (isValidInput(dose, time, delivtype)) {
-                            addTDMRow('multidose-table', parseFloat(dose), parseFloat(time), delivtype);
+                            addDTMRow('multidose-table', parseFloat(dose), parseFloat(time), delivtype);
                         }
                     });
                     guessDaysAsIntervals();
@@ -279,7 +279,7 @@ function convertEntriesToInvervalDays() {
 
     deleteAllRows('multidose-table');
     sortedEntries.forEach(entry => {
-        addTDMRow('multidose-table', entry.dose, entry.time, entry.model);
+        addDTMRow('multidose-table', entry.dose, entry.time, entry.model);
     });
 
     let previousTime = null;
@@ -355,7 +355,7 @@ function getSteadyStates(keepInvalid = false, passColor = true) {
     return steadyStates;
 }
 
-export function getTDMs(keepInvalid = false) {
+export function getDTMs(keepInvalid = false) {
 
     return {
         multidoses: getMultiDoses(keepInvalid),
@@ -398,7 +398,7 @@ function guessNextRow(tableID) {
 }
 
 
-function addTDMRow(tableID, dose = null, time = null, model = null, curveVisible = true, uncertaintyVisible = true) {
+function addDTMRow(tableID, dose = null, time = null, model = null, curveVisible = true, uncertaintyVisible = true) {
 
     let table = document.getElementById(tableID);
     let row = table.insertRow(-1);
@@ -608,7 +608,7 @@ function addTDMRow(tableID, dose = null, time = null, model = null, curveVisible
             myRow.remove();
 
             if (myTable.rows.length < 2) {
-                addTDMRow(myTable.id);
+                addDTMRow(myTable.id);
             }
 
             addRowIfNeeded(tableID);
@@ -789,7 +789,7 @@ function setupMultidoseButtonsEvents() {
     clearDoseButton.addEventListener('mousedown', () => {
         clearDoseButton.classList.add('button-on');
         deleteAllRows('multidose-table');
-        addTDMRow('multidose-table');
+        addDTMRow('multidose-table');
         refresh();
     });
     clearDoseButton.addEventListener('mouseup', () => {
@@ -826,7 +826,7 @@ function setupSteadyStateButtonsEvents() {
     clearSteadyStateButton.addEventListener('mousedown', () => {
         clearSteadyStateButton.classList.add('button-on');
         deleteAllRows('steadystate-table');
-        addTDMRow('steadystate-table');
+        addDTMRow('steadystate-table');
         refresh();
     });
 
@@ -982,17 +982,17 @@ function loadFromStateString(stateString) {
     let mdEntries = multiDose.split('-');
     deleteAllRows('multidose-table');
     let [cu, dose, time, model] = mdEntries[0].split(',');
-    addTDMRow('multidose-table', dose, time, modelsMap[model], cu.includes('c') ? true : false, cu.includes('u') ? true : false);
+    addDTMRow('multidose-table', dose, time, modelsMap[model], cu.includes('c') ? true : false, cu.includes('u') ? true : false);
     for (let entry of mdEntries.slice(1)) {
         [dose, time, model] = entry.split(',');
-        addTDMRow('multidose-table', dose, time, modelsMap[model]);
+        addDTMRow('multidose-table', dose, time, modelsMap[model]);
     }
 
     let ssEntries = steadyState.split('-');
     deleteAllRows('steadystate-table');
     for (let entry of ssEntries) {
         let [ssVisibilities, dose, time, model] = entry.split(',');
-        addTDMRow('steadystate-table', dose, time, modelsMap[model], ssVisibilities.includes('c') ? true : false, ssVisibilities.includes('u') ? true : false);
+        addDTMRow('steadystate-table', dose, time, modelsMap[model], ssVisibilities.includes('c') ? true : false, ssVisibilities.includes('u') ? true : false);
     }
 
     return true
@@ -1014,7 +1014,7 @@ function loadFromZalgoIncantation() {
         if (multiDoseTable) {
             deleteAllRows('multidose-table');
             for (let i = 0; i < multiDoseTable[0].length; i++) {
-                addTDMRow('multidose-table', multiDoseTable[1][i], multiDoseTable[0][i], multiDoseTable[2][i], multiDoseTable[3][i], multiDoseTable[4][i]);
+                addDTMRow('multidose-table', multiDoseTable[1][i], multiDoseTable[0][i], multiDoseTable[2][i], multiDoseTable[3][i], multiDoseTable[4][i]);
             }
             dataLoaded = true;
         }
@@ -1022,7 +1022,7 @@ function loadFromZalgoIncantation() {
         if (steadyStateTable) {
             deleteAllRows('steadystate-table');
             for (let i = 0; i < steadyStateTable[0].length; i++) {
-                addTDMRow('steadystate-table', steadyStateTable[1][i], steadyStateTable[0][i], steadyStateTable[2][i], steadyStateTable[3][i], steadyStateTable[4][i]);
+                addDTMRow('steadystate-table', steadyStateTable[1][i], steadyStateTable[0][i], steadyStateTable[2][i], steadyStateTable[3][i], steadyStateTable[4][i]);
             }
             dataLoaded = true;
         }
@@ -1063,7 +1063,7 @@ function addRowIfNeeded(tableID) {
     let table = document.getElementById(tableID);
     // Add new row if the last row is valid
     if (isValidRow(table.rows[table.rows.length - 1])) {
-        addTDMRow(tableID);
+        addDTMRow(tableID);
     }
 }
 
@@ -1141,18 +1141,18 @@ function applyPreset(presetConfig, refreshAfter = true) {
 
     if (presetConfig.steady.length) {
         presetConfig.steady.forEach(steadyDose => {
-            addTDMRow('steadystate-table', ...steadyDose);
+            addDTMRow('steadystate-table', ...steadyDose);
         });
     } else {
-        addTDMRow('steadystate-table');
+        addDTMRow('steadystate-table');
     }
 
     if (presetConfig.multi.length) {
         presetConfig.multi.forEach(multiDose => {
-            addTDMRow('multidose-table', ...multiDose);
+            addDTMRow('multidose-table', ...multiDose);
         });
     } else {
-        addTDMRow('multidose-table');
+        addDTMRow('multidose-table');
     }
 
     refreshAfter && refresh();
