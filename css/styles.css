@@ -20,7 +20,7 @@
 }
 
 * {
-    font-family: 'IBM Plex Mono', monospace, monospace, sans-serif;
+    font-family: 'IBM Plex Mono', monospace, sans-serif;
 }
 
 body, html {
@@ -75,9 +75,18 @@ a:link, a:visited {
 #logo {
     display: flex;
     grid-area: logo;
-    margin-bottom: 0.45rem; /* do not the margin! otherwise the bottom of the logo doesn't align with the title */
+
+    /* do not the margin! otherwise the
+    white of the bottom of the logo doesn't
+    align with the title and it looks off */
+    margin-bottom: 0.34rem;
     justify-content: end;
     align-items: flex-end;
+}
+
+#logo img {
+    width: 48px;
+    height: 48px;
 }
 
 #title {
@@ -128,6 +137,9 @@ a:link, a:visited {
         justify-content: center;
     }
 
+    #logo {
+        align-items: center;
+    }
 }
 
 @media (pointer:none), (pointer:coarse) {

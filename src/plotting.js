@@ -146,15 +146,19 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
         let _menstrualCycle = fillMenstrualCycleCurve(xMin, xMax, options.numberOfLinePoints, conversionFactor);
         msMarks = [
             Plot.line(_menstrualCycle, {
-                x: 'Time', y: 'E2', strokeWidth: options.strokeWidth,
-                stroke: options.softForegroundColor, strokeOpacity: 0.8}),
+                x: 'Time', y: 'E2',
+                strokeWidth: options.strokeWidth,
+                stroke: options.softForegroundColor,
+                strokeOpacity: 0.6}),
             Plot.areaY(_menstrualCycle, {
                 x: 'Time', y1: 'E2p5', y2: 'E2p95',
-                fill: options.softForegroundColor, fillOpacity: 0.12}),
+                fill: options.softForegroundColor,
+                fillOpacity: 0.12}),
 
             Plot.tip(_menstrualCycle, Plot.pointerX({
                 x: 'Time', y: 'E2',
-                fill: options.backgroundColor, fillOpacity: 0.618,
+                fill: options.backgroundColor,
+                fillOpacity: 0.618,
                 stroke: options.strongForegroundColor,
                 title: p => `time: ${numberToDayHour(p.Time)}
                              ~~e₂: ${p.E2.toFixed(precision)} ${units}
@@ -171,7 +175,8 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
         targetMarks = [
             Plot.areaY(targetRange, {
                 x: 'time', y1: 'lower', y2: 'upper',
-                fill: options.softForegroundColor, fillOpacity: 0.15
+                fill: options.softForegroundColor,
+                 fillOpacity: 0.15
             }),
 
             Plot.text(['target range'], {
@@ -203,7 +208,8 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
                 x: 'Time',
                 y: 'E2',
                 r: options.pointCloudSize,
-                fill: dataset.multidoses.color ? dataset.multidoses.color : wongPalette(4), fillOpacity: options.pointCloudOpacity
+                fill: dataset.multidoses.color ? dataset.multidoses.color : wongPalette(4),
+                fillOpacity: options.pointCloudOpacity
             }));
         }
 
@@ -217,13 +223,15 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
             lineMarks.push(Plot.line(multiDoseCurve, {
                 x: 'Time',
                 y: 'E2',
-                stroke: dataset.multidoses.color ? dataset.multidoses.color : wongPalette(4), strokeWidth: options.strokeWidth
+                stroke: dataset.multidoses.color ? dataset.multidoses.color : wongPalette(4),
+                strokeWidth: options.strokeWidth
             }));
 
             tipMarks.push(Plot.tip(multiDoseCurve, Plot.pointerX({
                 x: 'Time',
                 y: 'E2',
-                fill: options.backgroundColor, fillOpacity: 0.618,
+                fill: options.backgroundColor,
+                fillOpacity: 0.6,
                 stroke: options.strongForegroundColor,
                 title: p => `time: ${numberToDayHour(p.Time)}
                              ~~e₂: ${p.E2.toFixed(precision)} ${units}`.replace(/(\n+)(\s*)/g, (_, p, __) => p).replace(/~/g, ' ')
@@ -249,7 +257,8 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
                 x: 'Time',
                 y: 'E2',
                 r: options.pointCloudSize,
-                fill: entry.color ? entry.color : wongPalette(5 + idx), fillOpacity: options.pointCloudOpacity
+                fill: entry.color ? entry.color : wongPalette(5 + idx),
+                fillOpacity: options.pointCloudOpacity
             }));
         }
 
@@ -266,7 +275,8 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
             lineMarks.unshift(Plot.line(steadyStateCurve, {
                 x: 'Time',
                 y: 'E2',
-                stroke: entry.color ? entry.color : wongPalette(5 + idx), strokeWidth: options.strokeWidth
+                stroke: entry.color ? entry.color : wongPalette(5 + idx),
+                strokeWidth: options.strokeWidth
             }));
             tipMarks.unshift(Plot.tip(steadyStateCurve, Plot.pointerX({
                 x: 'Time', y: 'E2',        /* lmao even */
@@ -274,14 +284,15 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
                              ~~~~~e₂: ${p.E2.toFixed(precision)} ${units}
                              average: ${entry.model.includes('patch') ? 'unavailable' : e2ssAverage3C(conversionFactor * entry.dose, entry.time, ...PKParameters[entry.model]).toFixed(precision)} ${entry.model.includes("patch") ? '' : units}
                              ~trough: ${PKFunctions(conversionFactor)[entry.model](0.0, entry.dose, true, entry.time).toFixed(precision)} ${units}`.replace(/(\n+)(\s*)/g, (_, p, __) => p).replace(/~/g, ' '),
-                fill: options.backgroundColor, fillOpacity: 0.618,                                                                                               /* i mean just look at it */
+                fill: options.backgroundColor,
+                fillOpacity: 0.618,                                                                                               /* i mean just look at it */
                 stroke: options.strongForegroundColor
             })));
         }
     });
 
     gridMarks.push(Plot.gridX({ stroke: 'grey' }), Plot.gridY({ stroke: 'grey' }));
-    
+
     // Vertical and horizontal lines for the y and x axes
     ruleMarks.push(Plot.ruleX([xMin]), Plot.ruleY([0]));
 
