@@ -138,7 +138,7 @@ function dropNaNAndFix(value, precision = 3) {
     }
 }
 
-function setColorScheme(scheme) {
+function setColorScheme(scheme, refreshAfter = true) {
     let rootStyle = getComputedStyle(document.documentElement);
     let s = document.documentElement.style
 
@@ -162,6 +162,9 @@ function setColorScheme(scheme) {
         global_currentColorScheme = 'day';
         document.getElementById('nightday-state').checked = true;
     }
+
+    /* You actually need it because the tooltips don't behave */
+    refreshAfter && refresh();
 }
 
 function allUnique(list) {
@@ -861,6 +864,9 @@ function setupResizeRefresh() {
         if (currentWindowWidth === previousWindowWidth) {
             return;
         }
+        
+        // Doesn't appear to be necessary and I don't
+        // understand how come, but just in case
         previousWindowWidth = currentWindowWidth;
 
         if (resizeTimeout) {
@@ -875,9 +881,9 @@ function setupResizeRefresh() {
 function themeSetup() {
 
     if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        setColorScheme('night');
+        setColorScheme('night', false);
     } else {
-        setColorScheme('day');
+        setColorScheme('day', false);
     }
 
     window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (event) => {
