@@ -1,31 +1,19 @@
 let Spline = require('cubic-spline');
 
 import {
-  mcmcSamplesPK,
-  PKParams,
-  menstrualCycleData,
+    PKParameters,
+    mcmcSamplesPK,
+    menstrualCycleData,
+    modelList,
+    availableUnits
 } from './modeldata.js';
 
-export const availableUnits = {
-    'pg/mL': { units: 'pg/mL', conversionFactor: 1.0, precision: 0 } ,
-    'pmol/L': { units: 'pmol/L', conversionFactor: 3.6713, precision: 0 },
-    'ng/L': { units: 'ng/L', conversionFactor: 1.0, precision: 0},
-    'FFF': { units: 'firkin/furlong\u00B3', conversionFactor: 0.000320496, precision: 4 }
+// Export those values to avoid further upstream importing
+export {
+    modelList,
+    PKParameters,
+    availableUnits
 };
-
-export const modelList = {
-    'EB im': {units: 'mg', description: 'Estradiol Benzoate, Intramuscular'},
-    'EV im': {units: 'mg', description: 'Estradiol Valerate, Intramuscular'},
-    'EEn im': {units: 'mg', description: 'Estradiol Enanthate, Intramuscular'},
-    'EC im': {units: 'mg', description: 'Estradiol Cypionate, Intramuscular'},
-    'EUn im': {units: 'mg', description: 'Estradiol Undecylate, Intramuscular'},
-    'EUn casubq': {units: 'mg', description: 'Estradiol Undecylate in Castor oil, Subcutaneous'},
-    'patch tw': {units: 'mcg/day', description: 'Patch, twice weekly application'},
-    'patch ow': {units: 'mcg/day', description: 'Patch, once weekly application'}
-};
-
-// Export this value to avoid further upstream importing
-export const PKParameters = PKParams;
 
 const menstrualCycleSpline = new Spline(menstrualCycleData['t'], menstrualCycleData['E2']);
 const menstrualCycleSplineP05 = new Spline(menstrualCycleData['t'], menstrualCycleData['E2p5']);
@@ -81,7 +69,7 @@ export function fillCurve(func, xMin, xMax, nbSteps) {
 
 // lil bit of ravioli code, but then if we wanted
 // to replace this with a more general master PKFunction
-// we'd have to add ds=0.0 and d2=0.0 in PKParams of each esters
+// we'd have to add ds=0.0 and d2=0.0 in PKParameters of each esters
 // and W for patches and then do the same in mcmcSamplesPK.
 // This allows for a little bit more flexibility in the future
 // if we want to add more compartments or initial conditions.
@@ -96,14 +84,14 @@ export function fillCurve(func, xMin, xMax, nbSteps) {
  */
 export function PKFunctions(conversionFactor = 1.0) {
     return {
-        'EV im': (t, dose, steadystate=false, T=0.0) => { return e2Curve3C(t, conversionFactor * dose, ...PKParams['EV im'], 0.0, 0.0, steadystate, T); },
-        'EEn im': (t, dose, steadystate=false, T=0.0) => { return e2Curve3C(t, conversionFactor * dose, ...PKParams['EEn im'], 0.0, 0.0, steadystate, T); },
-        'EC im': (t, dose, steadystate=false, T=0.0) => { return e2Curve3C(t, conversionFactor * dose, ...PKParams['EC im'], 0.0, 0.0, steadystate, T); },
-        'EUn im': (t, dose, steadystate=false, T=0.0) => { return e2Curve3C(t, conversionFactor * dose, ...PKParams['EUn im'], 0.0, 0.0, steadystate, T); },
-        'EUn casubq': (t, dose, steadystate=false, T=0.0) => { return e2Curve3C(t, conversionFactor * dose, ...PKParams['EUn casubq'], 0.0, 0.0, steadystate, T); },
-        'EB im': (t, dose, steadystate=false, T=0.0) => { return e2Curve3C(t, conversionFactor * dose, ...PKParams['EB im'], 0.0, 0.0, steadystate, T); },
-        'patch tw': (t, dose, steadystate=false, T=0.0) => { return e2Patch3C(t, conversionFactor * dose, ...PKParams['patch tw'], 3.5, steadystate, T); },
-        'patch ow': (t, dose, steadystate=false, T=0.0) => { return e2Patch3C(t, conversionFactor * dose, ...PKParams['patch ow'], 7.0, steadystate, T); }
+        'EV im': (t, dose, steadystate=false, T=0.0) => { return e2Curve3C(t, conversionFactor * dose, ...PKParameters['EV im'], 0.0, 0.0, steadystate, T); },
+        'EEn im': (t, dose, steadystate=false, T=0.0) => { return e2Curve3C(t, conversionFactor * dose, ...PKParameters['EEn im'], 0.0, 0.0, steadystate, T); },
+        'EC im': (t, dose, steadystate=false, T=0.0) => { return e2Curve3C(t, conversionFactor * dose, ...PKParameters['EC im'], 0.0, 0.0, steadystate, T); },
+        'EUn im': (t, dose, steadystate=false, T=0.0) => { return e2Curve3C(t, conversionFactor * dose, ...PKParameters['EUn im'], 0.0, 0.0, steadystate, T); },
+        'EUn casubq': (t, dose, steadystate=false, T=0.0) => { return e2Curve3C(t, conversionFactor * dose, ...PKParameters['EUn casubq'], 0.0, 0.0, steadystate, T); },
+        'EB im': (t, dose, steadystate=false, T=0.0) => { return e2Curve3C(t, conversionFactor * dose, ...PKParameters['EB im'], 0.0, 0.0, steadystate, T); },
+        'patch tw': (t, dose, steadystate=false, T=0.0) => { return e2Patch3C(t, conversionFactor * dose, ...PKParameters['patch tw'], 3.5, steadystate, T); },
+        'patch ow': (t, dose, steadystate=false, T=0.0) => { return e2Patch3C(t, conversionFactor * dose, ...PKParameters['patch ow'], 7.0, steadystate, T); }
     };
 }
 
@@ -157,7 +145,7 @@ export function e2MultiDose3C(t, doses = [1.0], times = [0.0], models = ['EV im'
     return sum;
 }
 
-// Keep k1 and k2 for splatting PKParams
+// Keep k1 and k2 for splatting PKParameters
 export function e2ssAverage3C(dose, T, d, _k1, _k2, k3) {
     return dose * d / k3 / T;
 }
@@ -294,4 +282,9 @@ function _logsubexp(x, y) {
     else {
         return x + Math.log(1 - Math.exp(y - x));
     }
+}
+
+// This is an approximation, but it's good enough for our purposes
+export function terminalEliminationTime3C(model, nbHalfLives = 5) {
+    return nbHalfLives * Math.log(2) / Math.min(...PKParameters[model].slice(1));
 }

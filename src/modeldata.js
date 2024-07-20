@@ -33,12 +33,31 @@ export const menstrualCycleData = {
     E2p95: [52.97, 51.12, 51.58, 54.74, 53.59, 57.08, 61.20, 60.16, 72.79, 85.36, 94.46, 133.70, 218.89, 314.28, 413.41, 388.28, 140.11, 108.52, 135.06, 181.42, 191.73, 196.05, 189.45, 195.64, 208.23, 219.75, 174.38, 148.77, 135.58, 188.92]
 };
 
+export const availableUnits = {
+    'pg/mL': { units: 'pg/mL', conversionFactor: 1.0, precision: 0 } ,
+    'pmol/L': { units: 'pmol/L', conversionFactor: 3.6713, precision: 0 },
+    'ng/L': { units: 'ng/L', conversionFactor: 1.0, precision: 0},
+    'FFF': { units: 'firkin/furlong\u00B3', conversionFactor: 0.000320496, precision: 4 }
+};
+
+// Should be merged with PKParameters at some point.
+export const modelList = {
+    'EB im': {units: 'mg', description: 'Estradiol Benzoate, Intramuscular'},
+    'EV im': {units: 'mg', description: 'Estradiol Valerate, Intramuscular'},
+    'EEn im': {units: 'mg', description: 'Estradiol Enanthate, Intramuscular'},
+    'EC im': {units: 'mg', description: 'Estradiol Cypionate, Intramuscular'},
+    'EUn im': {units: 'mg', description: 'Estradiol Undecylate, Intramuscular'},
+    'EUn casubq': {units: 'mg', description: 'Estradiol Undecylate in Castor oil, Subcutaneous'},
+    'patch tw': {units: 'mcg/day', description: 'Patch, twice weekly application'},
+    'patch ow': {units: 'mcg/day', description: 'Patch, once weekly application'}
+};
+
 /**
- * 
+ * PK parameters for the different models
  */
-export const PKParams = {
+export const PKParameters = {
     "EV im": [95.0, 1.55, 17.2, 0.21],
-    
+
     // New EEn im parameters using gaussian with random weights model
     // (Wiemeyer 1986's weird data included)
     "EEn im": [49.63, 0.612, 0.554, 0.101],

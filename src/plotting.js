@@ -8,6 +8,7 @@ import {
   PKFunctions,
   PKParameters,
   PKRandomFunctions,
+  terminalEliminationTime3C
 } from './models.js';
 
 // Colors need to be in hexcode to ouput SVG correctly
@@ -66,6 +67,7 @@ export function generatePlottingOptions({
     };
 }
 
+
 function findxMax(dataset, options) {
 
     // Initialize absolute minimum for the time axis
@@ -85,9 +87,9 @@ function findxMax(dataset, options) {
                 else { acc.push(acc[idx - 1] + entry.time); }
                 return acc;
             }, []);
-            xMax = Math.max(xMax, ...dataset.multidoses.entries.map((entry, idx) => absoluteTimes[idx] + 5 * Math.log(2) / Math.min(...PKParameters[entry.model].slice(1))));
+            xMax = Math.max(xMax, ...dataset.multidoses.entries.map((entry, idx) => absoluteTimes[idx] + terminalEliminationTime3C(entry.model)));
         } else {
-            xMax = Math.max(xMax, ...dataset.multidoses.entries.map(entry => entry.time + 5 * Math.log(2) / Math.min(...PKParameters[entry.model].slice(1))));
+            xMax = Math.max(xMax, ...dataset.multidoses.entries.map(entry => entry.time + terminalEliminationTime3C(entry.model)));
         }
     }
 
