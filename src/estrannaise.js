@@ -601,7 +601,7 @@ function addDTMRow(tableID, dose = null, time = null, model = null, curveVisible
     ///// Delete button //////
     //////////////////////////
     let deleteCell = row.insertCell(5);
-    if (tableID == 'steadystate-table' || (tableID == 'multidose-table' && table.rows.length > 2)) {
+    // if (tableID == 'steadystate-table' || (tableID == 'multidose-table' && table.rows.length > 2)) {
 
         let deleteButton = document.createElement('button');
         deleteButton.classList.add('flat-button', 'delete-button');
@@ -615,8 +615,13 @@ function addDTMRow(tableID, dose = null, time = null, model = null, curveVisible
             let myTable = myRow.parentNode.parentNode;
 
             rowValidity.delete(myRow);
-            myRow.className = '';
-            myRow.remove();
+            if (tableID == 'multidose-table' && myRow.rowIndex === 1) {
+                myRow.cells[2].querySelector('input').value = '';
+                myRow.cells[3].querySelector('input').value = '';
+            } else {
+                myRow.className = '';
+                myRow.remove();
+            }
 
             if (myTable.rows.length < 2) {
                 addDTMRow(myTable.id);
@@ -640,7 +645,7 @@ function addDTMRow(tableID, dose = null, time = null, model = null, curveVisible
 
             refresh();
         });
-    }
+    // }
     //////////////////////////
 
     // Run addRowIfNeeded() after this row has been added
