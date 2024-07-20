@@ -140,7 +140,38 @@ a:link, a:visited {
     #logo {
         align-items: center;
     }
+    
 }
+
+@media (min-width: 769px) {
+    #multidose-title {
+        margin-left: 4.0rem;
+    }
+    
+    #multidose-buttons {
+        margin-left: 3.7rem;
+    }
+
+    #steadystate-title {
+        margin-left: 3.9rem;
+    }
+
+    #steadystate-buttons {
+        margin-left: 3.7rem;
+    }
+   
+
+    .options-container {
+        justify-content: center;
+        margin-left: 1.5rem;
+    }
+
+    .bottom-text {
+        margin-left: 3.7rem;
+        max-width: 44rem;
+    }
+}
+
 
 @media (pointer:none), (pointer:coarse) {
     
@@ -167,6 +198,7 @@ a:link, a:visited {
     grid-area: options-container;
     display: flex;
     flex-wrap: wrap;
+    justify-content: center;
     gap: 0.5rem;
 }
 
@@ -238,7 +270,6 @@ a:link, a:visited {
 
 .bottom-text {
     grid-area: bottom-text;
-    max-width: 45rem;
 }
 
 .overlay {
@@ -299,7 +330,7 @@ input.flat-input {
     background-color: var(--standout-background-color);
     color: var(--strong-foreground);
     text-align: center;
-    max-width: 9rem;
+    max-width: 9.61rem;
     width: 100%;
     height: var(--element-height);
     font-size: var(--font-size-for-dummies-like-safari);
