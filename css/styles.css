@@ -140,6 +140,11 @@ a:link, a:visited {
     #logo {
         align-items: center;
     }
+
+    .bottom-text {
+        margin-left: 0.43rem;
+        margin-right: 0.43rem;
+    }
     
 }
 
@@ -160,7 +165,6 @@ a:link, a:visited {
         margin-left: 3.7rem;
     }
    
-
     .options-container {
         justify-content: center;
         margin-left: 1.5rem;
