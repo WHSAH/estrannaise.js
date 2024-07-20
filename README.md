@@ -8,8 +8,12 @@ Under the hood, estrannaise.js uses pharmacokinetic compartments models and MCMC
 # TODO
 - Add visual markers for dose times
 - Save/load from localStorage
-- Allow possibility of changing patch wear time
+- Automatically remove double empty tailing input lines
+- Deal with multidose visibilities and table differently.
+- Add delete button to top multidose input row.
+- Remove interval day first row offset, it interferes with the autofill UX
 - Offer different ways to visualize the uncertainty (parallel sigma lines and cloud ensemble of curves)
+- Allow possibility of changing patch wear time
 - Oral/sublingual/iv/gel models
 - Re-organize the mess of pk/math notes
 
