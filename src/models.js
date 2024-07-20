@@ -138,7 +138,10 @@ export function PKRandomFunctions(conversionFactor = 1.0) {
 export function e2MultiDose3C(t, doses = [1.0], times = [0.0], models = ['EV im'], cf = 1.0, random = false, intervals = false) {
 
     if (intervals) {
-        times = times.map((sum => value => sum += value)(0));
+        // Some Chad wrote this code, I don't know who.
+        // My only contribution is the -times[0] to ignore
+        // the first interval
+        times = times.map((sum => value => sum += value)(-times[0]));
     };
 
     let sum = 0;

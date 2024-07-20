@@ -49,7 +49,7 @@ export const Presets = {
             [4, 7, 'EEn im', true, false]
         ],
         'multi': [
-            [4, 0, 'EEn im'],
+            [4, 7, 'EEn im'],
             [4, 7, 'EEn im'],
             [4, 7, 'EEn im'],
             [4, 7, 'EEn im'],
@@ -67,7 +67,7 @@ export const Presets = {
             [6, 10, 'EEn im', true, false]
         ],
         'multi': [
-            [6, 0, 'EEn im'],
+            [6, 10, 'EEn im'],
             [6, 10, 'EEn im'],
             [6, 10, 'EEn im'],
             [6, 10, 'EEn im'],
@@ -83,7 +83,7 @@ export const Presets = {
             [3, 4, 'EV im', true, false]
         ],
         'multi': [
-            [3, 0, 'EV im'],
+            [3, 4, 'EV im'],
             [3, 4, 'EV im'],
             [3, 4, 'EV im'],
             [3, 4, 'EV im'],
@@ -99,7 +99,7 @@ export const Presets = {
             [5, 7, 'EC im', true, false]
         ],
         'multi': [
-            [5, 0, 'EC im'],
+            [5, 7, 'EC im'],
             [5, 7, 'EC im'],
             [5, 7, 'EC im'],
             [5, 7, 'EC im'],
@@ -116,7 +116,7 @@ export const Presets = {
             [15, 14, 'EUn im', true, false]
         ],
         'multi': [
-            [15, 0, 'EUn im'],
+            [15, 14, 'EUn im'],
             [15, 14, 'EUn im'],
             [15, 14, 'EUn im'],
             [15, 14, 'EUn im'],
@@ -140,7 +140,7 @@ export const Presets = {
             [40, 30, 'EUn casubq', true, false]
         ],
         'multi': [
-            [40, 0, 'EUn casubq'],
+            [40, 30, 'EUn casubq'],
             [40, 30, 'EUn casubq'],
             [40, 30, 'EUn casubq'],
             [40, 30, 'EUn casubq'],
@@ -169,7 +169,7 @@ export const Presets = {
         'intervalDays': true,
         'steady': [],
         'multi': [
-            [3, 0, 'EV im'],
+            [3, 4, 'EV im'],
             [3, 4, 'EV im'],
             [3, 4, 'EV im'],
             [3, 4, 'EV im'],
@@ -197,7 +197,7 @@ export const Presets = {
             [4, 7, 'EEn im', true, false]
         ],
         'multi': [
-            [4, 0, 'EEn im'],
+            [4, 7, 'EEn im'],
             [4, 7, 'EEn im'],
             [4, 7, 'EEn im'],
             [4, 7, 'EEn im'],
@@ -219,7 +219,7 @@ export const Presets = {
             [3, 4, 'EV im', true, false]
         ],
         'multi': [
-            [3, 0, 'EV im'],
+            [3, 4, 'EV im'],
             [3, 4, 'EV im'],
             [3, 4, 'EV im'],
             [3, 4, 'EV im'],
@@ -241,7 +241,7 @@ export const Presets = {
             [4, 7, 'EEn im', true, false]
         ],
         'multi': [
-            [4, 0, 'EEn im'],
+            [4, 7, 'EEn im'],
             [4, 7, 'EEn im'],
             [4, 7, 'EEn im'],
             [4, 7, 'EEn im'],
@@ -263,7 +263,7 @@ export const Presets = {
             [3, 4, 'EV im', true, false]
         ],
         'multi': [
-            [3, 0, 'EV im'],
+            [3, 4, 'EV im'],
             [3, 4, 'EV im'],
             [3, 4, 'EV im'],
             [3, 4, 'EV im'],
@@ -284,7 +284,7 @@ export const Presets = {
             [4, 7, 'EEn im', true, false]
         ],
         'multi': [
-            [4, 0, 'EEn im'],
+            [4, 7, 'EEn im'],
             [4, 7, 'EEn im'],
             [4, 7, 'EEn im'],
             [4, 7, 'EEn im'],
@@ -306,7 +306,7 @@ export const Presets = {
             [3, 4, 'EV im', true, false]
         ],
         'multi': [
-            [3, 0, 'EV im'],
+            [3, 4, 'EV im'],
             [3, 4, 'EV im'],
             [3, 4, 'EV im'],
             [3, 4, 'EV im'],
@@ -331,7 +331,7 @@ export const Presets = {
             [4, 7, 'EEn im', true, false]
         ],
         'multi': [
-            [8, 0, 'EEn im'],
+            [8, 7, 'EEn im'],
             [4, 7, 'EEn im'],
             [4, 7, 'EEn im'],
             [4, 7, 'EEn im'],
@@ -347,7 +347,7 @@ export const Presets = {
             [3, 4, 'EV im', true, false]
         ],
         'multi': [
-            [6, 0, 'EV im'],
+            [6, 4, 'EV im'],
             [3, 4, 'EV im'],
             [3, 4, 'EV im'],
             [3, 4, 'EV im'],
@@ -363,7 +363,7 @@ export const Presets = {
             [5, 7, 'EC im', true, false]
         ],
         'multi': [
-            [8, 0, 'EC im'],
+            [8, 7, 'EC im'],
             [5, 7, 'EC im'],
             [5, 7, 'EC im'],
             [5, 7, 'EC im'],
@@ -379,7 +379,7 @@ export const Presets = {
             [40, 30, 'EUn casubq', true, false]
         ],
         'multi': [
-            [100, 0, 'EUn casubq'],
+            [100, 30, 'EUn casubq'],
             [40, 30, 'EUn casubq'],
             [40, 30, 'EUn casubq'],
             [40, 30, 'EUn casubq'],
@@ -397,7 +397,7 @@ export const Presets = {
         'intervalDays': true,
         'steady': [],
         'multi': [
-            [3, 0, 'EV im'],
+            [3, 4, 'EV im'],
             [3, 4, 'EV im'],
             [3, 4, 'EV im'],
             [3, 4, 'EV im'],
