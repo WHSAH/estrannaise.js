@@ -22,7 +22,7 @@ let resizeTimeout;
 let previousWindowWidth = window.innerWidth;
 
 let isSmallScreen = window.matchMedia('(max-width: 768px)').matches;
-const isMobile = window.matchMedia('(pointer: coarse), (pointer: none)').matches || /Mobi|Android/i.test(navigator.userAgent);
+const isMobileOrTablet = window.matchMedia('(pointer: coarse), (pointer: none)').matches || /Mobi|Android/i.test(navigator.userAgent);
 
 window.addEventListener('DOMContentLoaded', () => {
 
@@ -58,6 +58,7 @@ function refresh(save = false) {
         getDTMs(),
         getCurrentPlottingOptions(),
         false);
+        
     let plot = document.getElementById('plot-region');
     plot.innerHTML = '';
     plot.append(graph);
@@ -94,7 +95,7 @@ export function getCurrentPlottingOptions() {
         pointCloudSize = 2.1;
     }
 
-    if (isMobile) {
+    if (isMobileOrTablet) {
         pointCloudSize = 3.5;
         /* And let's ease off a bit on the
            computational burden when on mobile.
