@@ -116,7 +116,7 @@ a:link, a:visited {
     grid-template-areas:
         "plot-region plot-region plot-region"
         "options-container options-container options-container"
-        "multidose-container . steadystate-container";
+        "steadystate-container . multidose-container";
 }
 
 @media (max-width: 768px) {
@@ -124,8 +124,8 @@ a:link, a:visited {
         grid-template-areas:
             "plot-region"
             "options-container"
-            "multidose-container"
-            "steadystate-container";
+            "steadystate-container"
+            "multidose-container";
     }
 
     #theme-slider {
