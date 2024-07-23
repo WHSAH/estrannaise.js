@@ -58,7 +58,7 @@ function refresh(save = false) {
         getDTMs(),
         getCurrentPlottingOptions(),
         false);
-        
+
     let plot = document.getElementById('plot-region');
     plot.innerHTML = '';
     plot.append(graph);
@@ -1185,7 +1185,7 @@ function applyPreset(presetConfig, refreshAfter = true) {
 
     if (presetConfig.multi.length) {
         presetConfig.multi.forEach(multiDose => {
-            addDTMRow('multidose-table', ...multiDose);
+            addDTMRow('multidose-table', ...multiDose, presetConfig.multiDosesCurveVisible === true, presetConfig.multiDosesUncertaintyVisible === true);
         });
     } else {
         addDTMRow('multidose-table');
