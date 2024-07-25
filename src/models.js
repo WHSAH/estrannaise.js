@@ -288,3 +288,39 @@ function _logsubexp(x, y) {
 export function terminalEliminationTime3C(model, nbHalfLives = 5) {
     return nbHalfLives * Math.log(2) / Math.min(...PKParameters[model].slice(1));
 }
+
+function goldenSectionSearch(f, a, b, tolerance = 1e-5, maxIterations = 100) {
+    const phi = (1 + Math.sqrt(5)) / 2; // The golden ratio
+    let c = b - (b - a) / phi;
+    let d = a + (b - a) / phi;
+
+    for (let i = 0; i < maxIterations; i++) {
+        if (f(c) < f(d)) {
+            b = d;
+        } else {
+            a = c;
+        }
+
+        c = b - (b - a) / phi;
+        d = a + (b - a) / phi;
+        if (Math.abs(b - a) < tolerance) {
+            break;
+        }
+    }
+
+    return (b + a) / 2;
+}
+
+export function getPKQuantities3C(d, k1, k2, k3) {
+    let terminalTime = 5 * Math.log(2) / Math.min(k1, k2, k3);
+    let Tmax = goldenSectionSearch(t => -e2Curve3C(t, 1.0, 1.0, k1, k2, k3), 0, terminalTime);
+    let Cmax = e2Curve3C(Tmax, 1.0, 1.0, k1, k2, k3);
+    let Chalf = Cmax / 2;
+    let ThalfPlusTmax = goldenSectionSearch(t => (e2Curve3C(t, 1.0, 1.0, k1, k2, k3) - Chalf)**2, Tmax, terminalTime);
+    let halfLife = ThalfPlusTmax - Tmax;
+    return { Tmax: Tmax, Cmax: d * Cmax, halfLife: halfLife };
+}
+
+export function getPKQuantities(model) {
+    return getPKQuantities3C(...PKParameters[model]);
+}
