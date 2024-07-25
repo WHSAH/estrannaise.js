@@ -444,7 +444,7 @@ function addDTMRow(tableID, dose = null, time = null, model = null, curveVisible
             visibilityCustomCheckbox.style.backgroundColor = (visibilityCheckboxState.checked) ? wongPalette(4 + row.rowIndex) : '';
         }
 
-        visibilityCustomCheckbox.title = "Turn visibility of curve on/off";
+        visibilityCustomCheckbox.title = "Turn the visibility of the curve on/off";
         visibilityCustomCheckbox.onmousedown = function() {
             visibilityCheckboxState.checked = !visibilityCheckboxState.checked;
             if (tableID == 'multidose-table') {
@@ -474,7 +474,7 @@ function addDTMRow(tableID, dose = null, time = null, model = null, curveVisible
             uncertaintyCustomCheckbox.style.backgroundColor = (uncertaintyCheckboxState.checked) ? wongPalette(4 + row.rowIndex) : '';
         }
 
-        uncertaintyCustomCheckbox.title = 'Turn visibility of uncertainty cloud on/off';
+        uncertaintyCustomCheckbox.title = 'Turn the visibility of the uncertainty cloud on/off';
         uncertaintyCustomCheckbox.onmousedown = function() {
             uncertaintyCheckboxState.checked = !uncertaintyCheckboxState.checked;
             if (tableID == 'multidose-table') {
