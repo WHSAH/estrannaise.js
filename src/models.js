@@ -316,8 +316,8 @@ export function getPKQuantities3C(d, k1, k2, k3) {
     let Tmax = goldenSectionSearch(t => -e2Curve3C(t, 1.0, 1.0, k1, k2, k3), 0, terminalTime);
     let Cmax = e2Curve3C(Tmax, 1.0, 1.0, k1, k2, k3);
     let Chalf = Cmax / 2;
-    let ThalfPlusTmax = goldenSectionSearch(t => (e2Curve3C(t, 1.0, 1.0, k1, k2, k3) - Chalf)**2, Tmax, terminalTime);
-    let halfLife = ThalfPlusTmax - Tmax;
+    let Thalf = goldenSectionSearch(t => (e2Curve3C(t, 1.0, 1.0, k1, k2, k3) - Chalf)**2, Tmax, terminalTime);
+    let halfLife = Thalf - Tmax;
     return { Tmax: Tmax, Cmax: d * Cmax, halfLife: halfLife };
 }
 
