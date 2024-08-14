@@ -35,9 +35,9 @@ export const menstrualCycleData = {
 
 export const availableUnits = {
     'pg/mL': { units: 'pg/mL', conversionFactor: 1.0, precision: 0 } ,
-    'pmol/L': { units: 'pmol/L', conversionFactor: 3.671, precision: 0 },
+    'pmol/L': { units: 'pmol/L', conversionFactor: 3.6713, precision: 0 },
     'ng/L': { units: 'ng/L', conversionFactor: 1.0, precision: 0},
-    'FFF': { units: 'firkin/furlong\u00B3', conversionFactor: 0.000, precision: 4 }
+    'FFF': { units: 'firkin/furlong\u00B3', conversionFactor: 0.000320496, precision: 4 }
 };
 
 // Should be merged with PKParameters at some point.
