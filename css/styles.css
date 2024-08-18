@@ -145,7 +145,29 @@ a:link, a:visited {
         margin-left: 0.43rem;
         margin-right: 0.43rem;
     }
-    
+
+    #dropdown-presets {
+        width: 10rem;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    #title {
+        align-items: center;
+    }
+
+    #titleh1 {
+        font-size: 0.9rem;
+    }
+
+    #logo {
+        margin-bottom: 0rem;
+    }
+
+    #logo img {
+        width: 16px;
+        height: 16px;
+    }
 }
 
 @media (min-width: 769px) {
