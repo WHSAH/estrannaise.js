@@ -105,7 +105,7 @@ a:link, a:visited {
     justify-content: center;
 }
 
-.ui-container {
+#ui-container {
     position: relative;
     display: grid;
     grid-area: ui-container;
@@ -119,108 +119,13 @@ a:link, a:visited {
         "steadystate-container . multidose-container";
 }
 
-@media (max-width: 768px) {
-    .ui-container {
-        grid-template-areas:
-            "plot-region"
-            "options-container"
-            "steadystate-container"
-            "multidose-container";
-    }
-
-    #theme-slider {
-        align-items: baseline;
-    }
-
-    .centered-reflow {
-        display: flex;
-        justify-content: center;
-    }
-
-    #logo {
-        align-items: center;
-    }
-
-    .bottom-text {
-        margin-left: 0.43rem;
-        margin-right: 0.43rem;
-    }
-
-    #dropdown-presets {
-        width: 10rem;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-    #title {
-        align-items: center;
-    }
-
-    #titleh1 {
-        font-size: 0.9rem;
-    }
-
-    #logo {
-        margin-bottom: 0rem;
-    }
-
-    #logo img {
-        width: 16px;
-        height: 16px;
-    }
-}
-
-@media (min-width: 769px) {
-    #multidose-title {
-        margin-left: 4.0rem;
-    }
-    
-    #multidose-buttons {
-        margin-left: 3.7rem;
-    }
-
-    #steadystate-title {
-        margin-left: 3.9rem;
-    }
-
-    #steadystate-buttons {
-        margin-left: 3.7rem;
-    }
-   
-    .options-container {
-        justify-content: center;
-        margin-left: 1.5rem;
-    }
-
-    .bottom-text {
-        margin-left: 3.7rem;
-        max-width: 44rem;
-    }
-}
-
-
-@media (pointer:none), (pointer:coarse) {
-    
-    #dragndrop-text {
-        display: none;
-    }
-
-    .centered-reflow {
-        display: flex;
-        justify-content: center;
-    }
-}
-
-.plot-region {
-    grid-area: plot-region;
-}
-
 #plot-region {
+    grid-area: plot-region;
     width: 100%;
     height: 100%;
 }
 
-.options-container {
+#options-container {
     grid-area: options-container;
     display: flex;
     flex-wrap: wrap;
@@ -294,7 +199,7 @@ a:link, a:visited {
 }
 
 
-.bottom-text {
+#bottom-text {
     grid-area: bottom-text;
 }
 
@@ -407,4 +312,97 @@ button.delete-button {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+@media (max-width: 768px) {
+    #ui-container {
+        grid-template-areas:
+            "plot-region"
+            "options-container"
+            "steadystate-container"
+            "multidose-container";
+    }
+
+    #theme-slider {
+        align-items: bottom;
+    }
+
+    .centered-reflow {
+        display: flex;
+        justify-content: center;
+    }
+
+    #logo {
+        align-items: center;
+    }
+
+    #bottom-text {
+        margin-left: 0.43rem;
+        margin-right: 0.43rem;
+    }
+
+    #dropdown-presets {
+        width: 10rem;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    #title {
+        margin-bottom: 0.5rem;
+        align-items: center;
+    }
+
+    #titleh1 {
+        font-size: 0.9rem;
+    }
+
+    #logo {
+        margin-bottom: auto;
+    }
+
+    #logo img {
+        width: 16px;
+        height: 16px;
+    }
+}
+
+@media (min-width: 769px) {
+    #multidose-title {
+        margin-left: 4.0rem;
+    }
+
+    #multidose-buttons {
+        margin-left: 3.7rem;
+    }
+
+    #steadystate-title {
+        margin-left: 3.9rem;
+    }
+
+    #steadystate-buttons {
+        margin-left: 3.7rem;
+    }
+
+    #options-container {
+        justify-content: center;
+        margin-left: 1.5rem;
+    }
+
+    #bottom-text {
+        margin-left: 3.7rem;
+        max-width: 44rem;
+    }
+}
+
+
+@media (pointer:none), (pointer:coarse) {
+
+    #dragndrop-text {
+        display: none;
+    }
+
+    .centered-reflow {
+        display: flex;
+        justify-content: center;
+    }
 }

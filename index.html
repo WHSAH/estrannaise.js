@@ -47,7 +47,7 @@
 
         <div id="ui-container" class="ui-container">
             <div id="plot-region" class="plot-region"></div>
-            <div class="options-container centered-reflow">
+            <div id="options-container" class="centered-reflow">
                 <select id="dropdown-units" title="Change units for the estradiol concentration"> </select>
                 <select id="dropdown-daysinput" title="Change the way days are interpreted as inputs in the multi-dose curve">
                     <option value="intervals">interval days</option>
@@ -55,7 +55,7 @@
                     <option value="convert">convert</option>
                 </select>
                 <select id="dropdown-presets" title="Load a preset">
-                    <option value="" selected disabled>Select a preset</option>
+                    <option value="" selected disabled>select a preset</option>
                 </select>
                 <button id="menstrual-cycle-button" class="flat-button" title="Turn on/off the display of the menstrual cycle data">
                     menstrual cycle
@@ -127,7 +127,7 @@
             </div> <!-- steadystate-container-->
         </div> <!-- ui-container -->
 
-        <div class="bottom-text">
+        <div id="bottom-text">
             <p>
                 Remember, <span class="standout-text">the line is a lie!</span> The cloud a little less so.
             </p>
