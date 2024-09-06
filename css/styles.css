@@ -314,6 +314,11 @@ button.delete-button {
     align-items: center;
 }
 
+.copy-crypto {
+    cursor: copy;
+    transition: background-color 0.15s;
+}
+
 @media (max-width: 768px) {
     #ui-container {
         grid-template-areas:

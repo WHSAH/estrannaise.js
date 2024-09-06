@@ -43,6 +43,8 @@ window.addEventListener('DOMContentLoaded', () => {
 
     setupResizeRefresh();
 
+    attachTipjarsEvent();
+
     themeSetup();
 
     if (!loadFromURL() && !loadFromLocalStorage()) {
@@ -940,6 +942,36 @@ function setupDaysInputEvents() {
     });
 
 }
+
+function changeBackgroundColor(elementId, color1, color2, delay = 150) {
+    let element = document.getElementById(elementId);
+    element.style.backgroundColor = color1;
+
+    setTimeout(function () {
+        element.style.backgroundColor = color2;
+    }, delay);
+}
+
+function attachTipjarsEvent() {
+    ['xmr', 'btc', 'ltc', 'eth'].forEach(crypto => {
+        document.getElementById(`copy-${crypto}`).addEventListener('mousedown', function() {
+
+            let rootStyle = getComputedStyle(document.documentElement);
+            let softForegroundColor = rootStyle.getPropertyValue('--strong-foreground');
+
+            navigator.clipboard.writeText(this.innerText);
+
+            document.getElementById(`${crypto}-tipjar-text`).innerHTML = `${crypto} address copied, thank you!`;
+
+            setTimeout(() => {
+                document.getElementById(`${crypto}-tipjar-text`).innerHTML = `${crypto}`;
+            }, 350);
+
+            changeBackgroundColor(`copy-${crypto}`, softForegroundColor, null, 150);
+        });
+    });
+}
+
 
 function generateStateString() {
 
