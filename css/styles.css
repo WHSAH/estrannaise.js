@@ -317,6 +317,10 @@ button.delete-button {
 .copy-crypto {
     cursor: copy;
     transition: background-color 0.15s;
+    overflow-wrap: break-word;
+    word-break: break-all;
+    max-width: 100%;
+    font-size: 0.7rem;
 }
 
 @media (max-width: 768px) {
