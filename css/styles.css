@@ -110,19 +110,30 @@ a:link, a:visited {
     display: grid;
     grid-area: ui-container;
     grid-template-columns: auto auto auto;
-    grid-template-rows: auto auto auto;
+    grid-template-rows: auto auto auto auto;
     gap: 1rem 0rem;
     grid-auto-flow: row;
     grid-template-areas:
         "plot-region plot-region plot-region"
         "options-container options-container options-container"
-        "steadystate-container . multidose-container";
+        "warning-container warning-container warning-container"
+        "steadystate-container . customdose-container";
 }
 
 #plot-region {
     grid-area: plot-region;
     width: 100%;
-    height: 100%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#warning-container {
+    grid-area: warning-container;
+    display: inline-flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    text-align: left;
+    align-items: center;
 }
 
 #options-container {
@@ -133,8 +144,8 @@ a:link, a:visited {
     gap: 0.5rem;
 }
 
-#multidose-container {
-    grid-area: multidose-container;
+#customdose-container {
+    grid-area: customdose-container;
     position: relative;
     align-items: start;
     display: grid;
@@ -144,23 +155,23 @@ a:link, a:visited {
     gap: 0.8rem 0rem;
     grid-auto-flow: row;
     grid-template-areas:
-        "multidose-title"
-        "multidose-buttons"
-        "multidose-table";
+        "customdose-title"
+        "customdose-buttons"
+        "customdose-table";
 }
 
-#multidose-title {
-    grid-area: multidose-title;
+#customdose-title {
+    grid-area: customdose-title;
     font-size: 1rem;
     font-weight: bold;
 }
 
-#multidose-buttons {
-    grid-area: multidose-buttons;
+#customdose-buttons {
+    grid-area: customdose-buttons;
 }
 
-#multidose-table-container {
-    grid-area: multidose-table;
+#customdose-table-container {
+    grid-area: customdose-table;
 }
 
 #csv-file {
@@ -197,7 +208,6 @@ a:link, a:visited {
 #steadystate-table-container {
     grid-area: steadystate-table;
 }
-
 
 #bottom-text {
     grid-area: bottom-text;
@@ -315,14 +325,15 @@ button.delete-button {
 }
 
 .copy-crypto {
-    display: block;
+    display: inline-flex;
     cursor: copy;
     transition: background-color 0.15s;
-    overflow-wrap: break-word;
-    word-break: break-all;
-    max-width: 100%;
+    overflow-wrap: anywhere;
+    /* word-break: break-all; */
+    /* max-width: 100%; */
     font-size: 0.75rem;
-    padding-left: 1rem;
+    margin-left: 1rem;
+    margin-right: auto;
 }
 
 @media (max-width: 768px) {
@@ -330,8 +341,9 @@ button.delete-button {
         grid-template-areas:
             "plot-region"
             "options-container"
+            "warning-container"
             "steadystate-container"
-            "multidose-container";
+            "customdose-container";
     }
 
     #theme-slider {
@@ -350,6 +362,12 @@ button.delete-button {
     #bottom-text {
         margin-left: 0.43rem;
         margin-right: 0.43rem;
+    }
+
+    #warning-container {
+        margin-left: 1rem;
+        margin-right: 1rem;
+        font-size: 0.5rem;
     }
 
     #dropdown-presets {
@@ -378,11 +396,11 @@ button.delete-button {
 }
 
 @media (min-width: 769px) {
-    #multidose-title {
+    #customdose-title {
         margin-left: 4.0rem;
     }
 
-    #multidose-buttons {
+    #customdose-buttons {
         margin-left: 3.7rem;
     }
 
@@ -397,6 +415,12 @@ button.delete-button {
     #options-container {
         justify-content: center;
         margin-left: 1.5rem;
+    }
+
+    #warning-container {
+        margin-left: 3.9rem;
+        margin-right: auto;
+        max-width: 65rem;
     }
 
     #bottom-text {

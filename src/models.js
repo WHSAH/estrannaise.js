@@ -123,7 +123,7 @@ export function PKRandomFunctions(conversionFactor = 1.0) {
  * @param {boolean} random if values need uncertainty applied
  * @param {boolean} intervals true if days are set as interval
  */
-export function e2MultiDose3C(t, doses = [1.0], times = [0.0], models = ['EV im'], cf = 1.0, random = false, intervals = false) {
+export function e2multidosedose3C(t, doses = [1.0], times = [0.0], models = ['EV im'], cf = 1.0, random = false, intervals = false) {
 
     if (intervals) {
         // Some Chad wrote this code, I don't know who.

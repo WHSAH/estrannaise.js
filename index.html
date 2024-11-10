@@ -45,11 +45,13 @@
 
         </div> <!-- header -->
 
-        <div id="ui-container" class="ui-container">
-            <div id="plot-region" class="plot-region"></div>
+        <div id="ui-container">
+
+            <div id="plot-region" class="centered-reflow"></div>
+
             <div id="options-container" class="centered-reflow">
-                <select id="dropdown-units" title="Change units for the estradiol concentration"> </select>
-                <select id="dropdown-daysinput" title="Change the way days are interpreted as inputs in the multi-dose curve">
+                <select id="dropdown-units" title="Change units for the estradiol concentration"></select>
+                <select id="dropdown-daysinput" title="Change the way days are interpreted as inputs in the custom curve">
                     <option value="intervals">interval days</option>
                     <option value="absolute">absolute days</option>
                     <option value="convert">convert</option>
@@ -68,21 +70,31 @@
                 </button>
             </div> <!-- options-container -->
 
-            <div id="multidose-container">
-                <div id="multidose-title" class="centered-reflow">
+            <div id="warning-container" class="centered-reflow">
+                <div>
+                    <span class="standout-text">The line is a lie!</span> The cloud a little less so. 
+                    All current models tend to underestimate uncertainty, particularly patch models, 
+                    which may underestimate it by up to a factor of 10.
+                </div>
+            </div>
+
+            <div id="customdose-container">
+
+                <div id="customdose-title" class="centered-reflow">
                     custom doses
                 </div>
-                <div id="multidose-buttons" class="centered-reflow">
+                <div id="customdose-buttons" class="centered-reflow">
                     <div>
                         <button id="guess-button" class="flat-button" title="Duplicate last entry when in 'days as interval mode'. Guess and autofill next dose given the last two or three entries when in 'absolute days' mode">autofill</button>
-                        <button id="clear-doses-button" class="flat-button" title="Clear all entries in the multi-dose curve">clear</button>
+                        <button id="clear-doses-button" class="flat-button" title="Clear all entries of the custom dose curve">clear</button>
                         <input type="file" id="csv-file" accept=".csv">
                         <button id="import-csv-dialog" class="flat-button">import</button>
                         <button id="export-csv-button" class="flat-button">export</button>
                     </div>
                 </div>
-                <div id="multidose-table-container" class="centered-reflow">
-                    <table id="multidose-table" class="centered-reflow">
+
+                <div id="customdose-table-container" class="centered-reflow">
+                    <table id="customdose-table" class="centered-reflow">
                         <thead>
                             <tr>
                                 <th title="Turn visibility of curve on/off">c</th>
@@ -98,16 +110,20 @@
                     </table>
                 </div>
                 <span id="dragndrop-text" class="small-text">drag-n-drop csv anywhere to import</span>
-            </div> <!-- multidose-container -->
+            </div>
+
             <div id="steadystate-container">
+
                 <div id="steadystate-title" class="centered-reflow">
                     repeated doses
                 </div>
+
                 <div id="steadystate-buttons" class="centered-reflow">
                     <div>
                         <button id="clear-steadystates-button" class="flat-button" title="Clear all steady-state entries">clear</button>
                     </div>
                 </div>
+
                 <div id="steadystate-table-container" class="centered-reflow">
                     <table id="steadystate-table" class="centered-reflow">
                         <thead>
@@ -124,13 +140,10 @@
                         </tbody>
                     </table>
                 </div>
-            </div> <!-- steadystate-container-->
-        </div> <!-- ui-container -->
+            </div>
+        </div>
 
         <div id="bottom-text">
-            <p>
-                Remember, <span class="standout-text">the line is a lie!</span> The cloud a little less so.
-            </p>
 
             <p class="indent">The cloud does not represent data points, it is a visual representation of the uncertainty
                 in the model itself and it underestimates the total uncertainty.
@@ -217,7 +230,7 @@
                 <h4 class="standout-text">Acknowledgements</h4>
                 Initial idea and development by alix. Code improvement and refactoring by Meringue.
                 Additional help from GearKite, Jess, Xea, and idk2848.
-                
+
                 <br/><br/>Encouragements, entertainment, and memetic pumping from
                 <br/>Torble Lea photino Annie emily Izzy Ashley Cassandra Sapphira
             </p>

@@ -1,5 +1,5 @@
 import {
-  e2MultiDose3C,
+  e2multidosedose3C,
   e2ssAverage3C,
   fillCurve,
   fillMenstrualCycleCurve,
@@ -80,16 +80,16 @@ function findxMax(dataset, options) {
     xMax = Math.max(xMax, ...dataset.steadystates.entries.filter(entry => entry.curveVisible || entry.uncertaintyVisible).map(entry => 5 * entry.time));
 
     // At least injection time plus 5 approximate terminal half-lives ( 5 x log 2 / smallest k )
-    if (dataset.multidoses.entries.length > 0 && (dataset.multidoses.curveVisible || dataset.multidoses.uncertaintyVisible)) {
-        if (dataset.multidoses.daysAsIntervals) {
-            let absoluteTimes = dataset.multidoses.entries.reduce((acc, entry, idx) => {
+    if (dataset.customdoses.entries.length > 0 && (dataset.customdoses.curveVisible || dataset.customdoses.uncertaintyVisible)) {
+        if (dataset.customdoses.daysAsIntervals) {
+            let absoluteTimes = dataset.customdoses.entries.reduce((acc, entry, idx) => {
                 if (idx === 0) { acc.push(entry.time); }
                 else { acc.push(acc[idx - 1] + entry.time); }
                 return acc;
             }, []);
-            xMax = Math.max(xMax, ...dataset.multidoses.entries.map((entry, idx) => absoluteTimes[idx] + terminalEliminationTime3C(entry.model)));
+            xMax = Math.max(xMax, ...dataset.customdoses.entries.map((entry, idx) => absoluteTimes[idx] + terminalEliminationTime3C(entry.model)));
         } else {
-            xMax = Math.max(xMax, ...dataset.multidoses.entries.map(entry => entry.time + terminalEliminationTime3C(entry.model)));
+            xMax = Math.max(xMax, ...dataset.customdoses.entries.map(entry => entry.time + terminalEliminationTime3C(entry.model)));
         }
     }
 
@@ -135,11 +135,11 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
         tipMarks  = [],
         targetMarks = [];
 
-    if (dataset.multidoses.entries.length > 0) {
-        if (dataset.multidoses.daysAsIntervals) {
-            xMin = Math.min(xMin, dataset.multidoses.entries[0].time);
+    if (dataset.customdoses.entries.length > 0) {
+        if (dataset.customdoses.daysAsIntervals) {
+            xMin = Math.min(xMin, dataset.customdoses.entries[0].time);
         } else {
-            xMin = Math.min(xMin, ...dataset.multidoses.entries.map(entry => entry.time))
+            xMin = Math.min(xMin, ...dataset.customdoses.entries.map(entry => entry.time))
         }
     }
 
@@ -191,45 +191,45 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
     }
 
     // Multi-dose curves and uncertainty clouds
-    if (dataset.multidoses.entries.length > 0) {
+    if (dataset.customdoses.entries.length > 0) {
 
-        let doses = dataset.multidoses.entries.map(entry => entry.dose);
-        let times = dataset.multidoses.entries.map(entry => entry.time);
-        let models = dataset.multidoses.entries.map(entry => entry.model);
+        let doses = dataset.customdoses.entries.map(entry => entry.dose);
+        let times = dataset.customdoses.entries.map(entry => entry.time);
+        let models = dataset.customdoses.entries.map(entry => entry.model);
 
-        if (dataset.multidoses.uncertaintyVisible) {
-            let multiDoseUncertaintyCloud = [];
+        if (dataset.customdoses.uncertaintyVisible) {
+            let customdoseUncertaintyCloud = [];
 
             for (let i = 0; i < options.numberOfCloudPoints; i++) {
                 let randx = Math.random() * (xMax - xMin) + xMin;
-                let y = e2MultiDose3C(randx, doses, times, models, conversionFactor, true, dataset.multidoses.daysAsIntervals);
-                multiDoseUncertaintyCloud.push({ Time: randx, E2: y });
+                let y = e2multidosedose3C(randx, doses, times, models, conversionFactor, true, dataset.customdoses.daysAsIntervals);
+                customdoseUncertaintyCloud.push({ Time: randx, E2: y });
             }
 
-            dotMarks.push(Plot.dot(multiDoseUncertaintyCloud, {
+            dotMarks.push(Plot.dot(customdoseUncertaintyCloud, {
                 x: 'Time',
                 y: 'E2',
                 r: options.pointCloudSize,
-                fill: dataset.multidoses.color ? dataset.multidoses.color : wongPalette(4),
+                fill: dataset.customdoses.color ? dataset.customdoses.color : wongPalette(4),
                 fillOpacity: options.pointCloudOpacity
             }));
         }
 
         // Always compute the curve to set the y-axis limit
-        let multiDoseCurve = fillCurve(t => e2MultiDose3C(t, doses, times, models, conversionFactor, false, dataset.multidoses.daysAsIntervals), xMin, xMax, options.numberOfLinePoints);
-        yMax = Math.max(yMax, ...multiDoseCurve.map(p => p.E2));
+        let customdoseCurve = fillCurve(t => e2multidosedose3C(t, doses, times, models, conversionFactor, false, dataset.customdoses.daysAsIntervals), xMin, xMax, options.numberOfLinePoints);
+        yMax = Math.max(yMax, ...customdoseCurve.map(p => p.E2));
 
-        if (dataset.multidoses.curveVisible) {
-            multiDoseCurve = multiDoseCurve.map(p => ({ Time: p.Time, E2: p.E2 }));
+        if (dataset.customdoses.curveVisible) {
+            customdoseCurve = customdoseCurve.map(p => ({ Time: p.Time, E2: p.E2 }));
 
-            lineMarks.push(Plot.line(multiDoseCurve, {
+            lineMarks.push(Plot.line(customdoseCurve, {
                 x: 'Time',
                 y: 'E2',
-                stroke: dataset.multidoses.color ? dataset.multidoses.color : wongPalette(4),
+                stroke: dataset.customdoses.color ? dataset.customdoses.color : wongPalette(4),
                 strokeWidth: options.strokeWidth
             }));
 
-            tipMarks.push(Plot.tip(multiDoseCurve, Plot.pointerX({
+            tipMarks.push(Plot.tip(customdoseCurve, Plot.pointerX({
                 x: 'Time',
                 y: 'E2',
                 fill: options.backgroundColor,

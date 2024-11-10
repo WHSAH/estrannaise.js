@@ -21,8 +21,11 @@ let global_currentColorScheme = 'day';
 let resizeTimeout;
 let previousWindowWidth = window.innerWidth;
 
+// Will serve to tweak the plot styling to increase visibility
 let isSmallScreen = window.matchMedia('(max-width: 768px)').matches;
-const isMobileOrTablet = window.matchMedia('(pointer: coarse), (pointer: none)').matches || /Mobi|Android/i.test(navigator.userAgent);
+
+// Will serve to lighten the computational burden on mobile devices
+const isMobileOrTablet = (window.matchMedia('(pointer: coarse), (pointer: none)').matches || /Mobi|Android/i.test(navigator.userAgent));
 
 window.addEventListener('DOMContentLoaded', () => {
 
@@ -36,7 +39,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
     setupShareURLButtonEvent();
 
-    setupMultidoseButtonsEvents();
+    setupcustomdoseButtonsEvents();
     setupSteadyStateButtonsEvents();
 
     setupDragNDropImport();
@@ -175,7 +178,7 @@ function allUnique(list) {
 }
 
 function guessDaysAsIntervals() {
-    let mdtimes = getMultiDoses().entries.map(entry => entry.time);
+    let mdtimes = getcustomdoses().entries.map(entry => entry.time);
     if (allUnique(mdtimes)) {
         document.getElementById('dropdown-daysinput').value = 'absolute';
         global_daysAsIntervals = false;
@@ -201,15 +204,15 @@ function loadCSV(files) {
         reader.onload = (event) => {
             Papa.parse(event.target.result, {
                 complete: function (results) {
-                    deleteAllRows('multidose-table');
+                    deleteAllRows('customdose-table');
                     results.data.forEach(([dose, time, model]) => {
                         let delivtype = findIntersecting(Object.keys(modelList), model);
                         if (isValidInput(dose, time, delivtype)) {
-                            addDTMRow('multidose-table', parseFloat(dose), parseFloat(time), delivtype);
+                            addDTMRow('customdose-table', parseFloat(dose), parseFloat(time), delivtype);
                         }
                     });
                     guessDaysAsIntervals();
-                    addRowIfNeeded('multidose-table');
+                    addRowIfNeeded('customdose-table');
                     refresh();
                 }
             });
@@ -220,7 +223,7 @@ function loadCSV(files) {
 }
 
 function exportCSV() {
-    let table = document.getElementById('multidose-table');
+    let table = document.getElementById('customdose-table');
     let rows = Array.from(table.rows);
     let data = [['dose', 'days', 'model']].concat(rows.slice(1).map(row => {
         let doseValue = row.cells[2].querySelector('input').value;
@@ -232,7 +235,7 @@ function exportCSV() {
 
     let downloadLink = document.createElement('a');
     downloadLink.href = 'data:text/csv;charset=utf-8,' + encodeURI(csvContent);
-    downloadLink.download = 'multidose-table.csv';
+    downloadLink.download = 'customdose-table.csv';
 
     document.body.appendChild(downloadLink);
     downloadLink.click();
@@ -287,16 +290,16 @@ function readRow(row, keepVisibilities = true, keepInvalid = false) {
 
 function convertEntriesToInvervalDays() {
 
-    let multiDoseTable = getMultiDoses();
-    let sortedEntries = multiDoseTable.entries.sort((a, b) => a.time - b.time);
+    let customdoseTable = getcustomdoses();
+    let sortedEntries = customdoseTable.entries.sort((a, b) => a.time - b.time);
 
-    deleteAllRows('multidose-table');
+    deleteAllRows('customdose-table');
     sortedEntries.forEach(entry => {
-        addDTMRow('multidose-table', entry.dose, entry.time, entry.model);
+        addDTMRow('customdose-table', entry.dose, entry.time, entry.model);
     });
 
     let previousTime = null;
-    Array.from(document.getElementById('multidose-table').rows).slice(1).forEach(row => {
+    Array.from(document.getElementById('customdose-table').rows).slice(1).forEach(row => {
         if (isValidRow(row)) {
             let time = parseFloat(row.cells[3].querySelector('input').value);
             if (previousTime !== null) {
@@ -313,7 +316,7 @@ function convertEntriesToInvervalDays() {
 
 function convertEntriesToAbsoluteDays() {
     let previousTime = null;
-    Array.from(document.getElementById('multidose-table').rows).slice(1).forEach(row => {
+    Array.from(document.getElementById('customdose-table').rows).slice(1).forEach(row => {
         if (isValidRow(row)) {
             let time = parseFloat(row.cells[3].querySelector('input').value);
             if (previousTime !== null) {
@@ -330,28 +333,28 @@ function convertEntriesToAbsoluteDays() {
 
 }
 
-function multiDosesVisibilities() {
-    let multiDoseTable = document.getElementById('multidose-table');
-    let firstRowEntry = readRow(multiDoseTable.rows[1], true, true);
+function customdosesVisibilities() {
+    let customdoseTable = document.getElementById('customdose-table');
+    let firstRowEntry = readRow(customdoseTable.rows[1], true, true);
     return [firstRowEntry.curveVisible, firstRowEntry.uncertaintyVisible]
 }
 
-function getMultiDoses(keepInvalid = false, passColor = true) {
-    let multiDoses = {};
+function getcustomdoses(keepInvalid = false, passColor = true) {
+    let customdoses = {};
 
-    let multiDoseTable = document.getElementById('multidose-table');
+    let customdoseTable = document.getElementById('customdose-table');
 
-    [multiDoses.curveVisible, multiDoses.uncertaintyVisible] = multiDosesVisibilities();
+    [customdoses.curveVisible, customdoses.uncertaintyVisible] = customdosesVisibilities();
 
-    multiDoses.daysAsIntervals = global_daysAsIntervals;
-    if (passColor) { multiDoses.color = wongPalette(4); }
+    customdoses.daysAsIntervals = global_daysAsIntervals;
+    if (passColor) { customdoses.color = wongPalette(4); }
 
     // Read entries, ignore visibilities
-    multiDoses.entries = Array.from(multiDoseTable.rows).slice(1)
+    customdoses.entries = Array.from(customdoseTable.rows).slice(1)
                               .map(row => readRow(row, false, keepInvalid))
                               .filter(entry => entry !== null);
 
-    return multiDoses
+    return customdoses
 }
 
 function getSteadyStates(keepInvalid = false, passColor = true) {
@@ -371,7 +374,7 @@ function getSteadyStates(keepInvalid = false, passColor = true) {
 export function getDTMs(keepInvalid = false) {
 
     return {
-        multidoses: getMultiDoses(keepInvalid),
+        customdoses: getcustomdoses(keepInvalid),
         steadystates: getSteadyStates(keepInvalid)
     };
 
@@ -426,7 +429,7 @@ function addDTMRow(tableID, dose = null, time = null, model = null, curveVisible
     let uncertaintyCell = row.insertCell(1);
     uncertaintyCell.className = 'uncertainty-cell';
 
-    if (tableID == 'steadystate-table' || ((tableID == 'multidose-table') && (table.rows.length == 2))) {
+    if (tableID == 'steadystate-table' || ((tableID == 'customdose-table') && (table.rows.length == 2))) {
 
         //////////////////////////
         /// Visibility checkbox //
@@ -440,7 +443,7 @@ function addDTMRow(tableID, dose = null, time = null, model = null, curveVisible
         let visibilityCustomCheckbox = document.createElement('div');
         visibilityCustomCheckbox.className = 'custom-checkbox';
 
-        if (tableID == 'multidose-table') {
+        if (tableID == 'customdose-table') {
             visibilityCustomCheckbox.style.backgroundColor = (visibilityCheckboxState.checked) ? wongPalette(4) : '';
         } else if (tableID == 'steadystate-table') {
             visibilityCustomCheckbox.style.backgroundColor = (visibilityCheckboxState.checked) ? wongPalette(4 + row.rowIndex) : '';
@@ -449,12 +452,12 @@ function addDTMRow(tableID, dose = null, time = null, model = null, curveVisible
         visibilityCustomCheckbox.title = "Turn the visibility of the curve on/off";
         visibilityCustomCheckbox.onmousedown = function() {
             visibilityCheckboxState.checked = !visibilityCheckboxState.checked;
-            if (tableID == 'multidose-table') {
+            if (tableID == 'customdose-table') {
                 visibilityCustomCheckbox.style.backgroundColor = (visibilityCheckboxState.checked) ? wongPalette(4) : '';
             } else if (tableID == 'steadystate-table') {
                 visibilityCustomCheckbox.style.backgroundColor = (visibilityCheckboxState.checked) ? wongPalette(4 + row.rowIndex) : '';
             }
-            (rowValidity.get(row) || (tableID == 'multidose-table' && row.rowIndex == 1)) && refresh();
+            (rowValidity.get(row) || (tableID == 'customdose-table' && row.rowIndex == 1)) && refresh();
         };
         visibilityCell.appendChild(visibilityCustomCheckbox);
 
@@ -470,7 +473,7 @@ function addDTMRow(tableID, dose = null, time = null, model = null, curveVisible
         let uncertaintyCustomCheckbox = document.createElement('div');
         uncertaintyCustomCheckbox.className = 'custom-checkbox';
 
-        if (tableID == 'multidose-table') {
+        if (tableID == 'customdose-table') {
             uncertaintyCustomCheckbox.style.backgroundColor = (uncertaintyCheckboxState.checked) ? wongPalette(4) : '';
         } else if (tableID == 'steadystate-table') {
             uncertaintyCustomCheckbox.style.backgroundColor = (uncertaintyCheckboxState.checked) ? wongPalette(4 + row.rowIndex) : '';
@@ -479,12 +482,12 @@ function addDTMRow(tableID, dose = null, time = null, model = null, curveVisible
         uncertaintyCustomCheckbox.title = 'Turn the visibility of the uncertainty cloud on/off';
         uncertaintyCustomCheckbox.onmousedown = function() {
             uncertaintyCheckboxState.checked = !uncertaintyCheckboxState.checked;
-            if (tableID == 'multidose-table') {
+            if (tableID == 'customdose-table') {
                 uncertaintyCustomCheckbox.style.backgroundColor = uncertaintyCheckboxState.checked ? wongPalette(4) : '';
             } else if (tableID == 'steadystate-table') {
                 uncertaintyCustomCheckbox.style.backgroundColor = uncertaintyCheckboxState.checked ? wongPalette(4 + row.rowIndex) : '';
             }
-            (rowValidity.get(row) || (tableID == 'multidose-table' && row.rowIndex == 1)) && refresh();
+            (rowValidity.get(row) || (tableID == 'customdose-table' && row.rowIndex == 1)) && refresh();
         };
         uncertaintyCell.appendChild(uncertaintyCustomCheckbox);
     }
@@ -528,8 +531,8 @@ function addDTMRow(tableID, dose = null, time = null, model = null, curveVisible
     timeInput.setAttribute('type', 'text');
     timeInput.type = 'number';
 
-    if (tableID == 'multidose-table') {
-        timeInput.classList.add('time-input-multidose');
+    if (tableID == 'customdose-table') {
+        timeInput.classList.add('time-input-customdose');
         timeInput.placeholder = global_daysAsIntervals ? 'since last' : 'since first';
     }
     else if (tableID == 'steadystate-table') {
@@ -604,7 +607,7 @@ function addDTMRow(tableID, dose = null, time = null, model = null, curveVisible
     ///// Delete button //////
     //////////////////////////
     let deleteCell = row.insertCell(5);
-    // if (tableID == 'steadystate-table' || (tableID == 'multidose-table' && table.rows.length > 2)) {
+    // if (tableID == 'steadystate-table' || (tableID == 'customdose-table' && table.rows.length > 2)) {
 
         let deleteButton = document.createElement('button');
         deleteButton.classList.add('flat-button', 'delete-button');
@@ -618,7 +621,7 @@ function addDTMRow(tableID, dose = null, time = null, model = null, curveVisible
             let myTable = myRow.parentNode.parentNode;
 
             rowValidity.delete(myRow);
-            if (tableID == 'multidose-table' && myRow.rowIndex === 1) {
+            if (tableID == 'customdose-table' && myRow.rowIndex === 1) {
                 myRow.cells[2].querySelector('input').value = '';
                 myRow.cells[3].querySelector('input').value = '';
             } else {
@@ -669,7 +672,7 @@ function setDaysAsIntervals(refreshPlot = true) {
     global_daysAsIntervals = true;
     document.getElementById('dropdown-daysinput').value = 'intervals';
 
-    let timeInputs = document.querySelectorAll('.time-input-multidose');
+    let timeInputs = document.querySelectorAll('.time-input-customdose');
     timeInputs.forEach(input => {
         input.placeholder = 'since last';
     });
@@ -681,7 +684,7 @@ function setDaysAsAbsolute(refreshPlot = true) {
     global_daysAsIntervals = false;
     document.getElementById('dropdown-daysinput').value = 'absolute';
 
-    let timeInputs = document.querySelectorAll('.time-input-multidose');
+    let timeInputs = document.querySelectorAll('.time-input-customdose');
     timeInputs.forEach(input => {
         input.placeholder = 'since first';
     });
@@ -778,16 +781,16 @@ function setupShareURLButtonEvent() {
     });
 }
 
-function setupMultidoseButtonsEvents() {
+function setupcustomdoseButtonsEvents() {
 
     let guessButton = document.getElementById('guess-button');
 
     guessButton.addEventListener('mousedown', () => {
-        let guess = guessNextRow('multidose-table');
+        let guess = guessNextRow('customdose-table');
 
         if (guess) {
             guessButton.classList.add('button-on');
-            setRowParameters('multidose-table', -1, guess.dose, guess.time, guess.model);
+            setRowParameters('customdose-table', -1, guess.dose, guess.time, guess.model);
             refresh();
         } else {
             guessButton.innerHTML = '&nbsp;?._.)&nbsp;&nbsp;';
@@ -807,8 +810,8 @@ function setupMultidoseButtonsEvents() {
 
     clearDoseButton.addEventListener('mousedown', () => {
         clearDoseButton.classList.add('button-on');
-        deleteAllRows('multidose-table');
-        addDTMRow('multidose-table');
+        deleteAllRows('customdose-table');
+        addDTMRow('customdose-table');
         refresh();
     });
     clearDoseButton.addEventListener('mouseup', () => {
@@ -983,14 +986,14 @@ function generateStateString() {
     stateString += isButtonOn('target-range-button') ? 't' : '';
     stateString += unitsMap[document.getElementById('dropdown-units').value];
 
-    let multiDoseString = '';
-    let [c, u] = multiDosesVisibilities();
-    multiDoseString += getMultiDoses(true, false).entries.slice(0, -1).map((entry, idx) => (idx == 0 ? (c ? 'c' : '' ) + (u ? 'u' : '') + ',' : '') + dropNaNAndFix(entry.dose) + ',' + dropNaNAndFix(entry.time) + ',' + modelsMap[entry.model]).join('-');
+    let customdoseString = '';
+    let [c, u] = customdosesVisibilities();
+    customdoseString += getcustomdoses(true, false).entries.slice(0, -1).map((entry, idx) => (idx == 0 ? (c ? 'c' : '' ) + (u ? 'u' : '') + ',' : '') + dropNaNAndFix(entry.dose) + ',' + dropNaNAndFix(entry.time) + ',' + modelsMap[entry.model]).join('-');
 
     let steadyStateString = '';
     steadyStateString += getSteadyStates(true, false).entries.slice(0, -1).map(entry => (entry.curveVisible ? 'c' : '') + (entry.uncertaintyVisible ? 'u' : '') + ',' + dropNaNAndFix(entry.dose) + ',' + dropNaNAndFix(entry.time) + ',' + modelsMap[entry.model]).join('-');
 
-    return [stateString, multiDoseString, steadyStateString].join('_');
+    return [stateString, customdoseString, steadyStateString].join('_');
 
 }
 
@@ -1039,7 +1042,7 @@ function loadFromStateString(stateString) {
 
     let [unitsMap, modelsMap] = [generateEnum(availableUnits), generateEnum(modelList)];
 
-    let [state, multiDose, steadyState] = stateString.split('_');
+    let [state, customdose, steadyState] = stateString.split('_');
     state.includes('i') ? setDaysAsIntervals(false) : setDaysAsAbsolute(false);
     state.includes('m') ? turnMenstrualCycleOn(false) : turnMenstrualCycleOff(false);
     state.includes('t') ? turnTargetRangeOn(false) : turnTargetRangeOff(false);
@@ -1047,13 +1050,13 @@ function loadFromStateString(stateString) {
         document.getElementById('dropdown-units').value = unitsMap[state.slice(-1)];
     }
 
-    let mdEntries = multiDose.split('-');
-    deleteAllRows('multidose-table');
+    let mdEntries = customdose.split('-');
+    deleteAllRows('customdose-table');
     let [cu, dose, time, model] = mdEntries[0].split(',');
-    addDTMRow('multidose-table', dose, time, modelsMap[model], cu.includes('c') ? true : false, cu.includes('u') ? true : false);
+    addDTMRow('customdose-table', dose, time, modelsMap[model], cu.includes('c') ? true : false, cu.includes('u') ? true : false);
     for (let entry of mdEntries.slice(1)) {
         [dose, time, model] = entry.split(',');
-        addDTMRow('multidose-table', dose, time, modelsMap[model]);
+        addDTMRow('customdose-table', dose, time, modelsMap[model]);
     }
 
     let ssEntries = steadyState.split('-');
@@ -1076,13 +1079,13 @@ function loadFromZalgoIncantation() {
 
         let hashParams = new URLSearchParams(atob(hashString));
 
-        let multiDoseTable = JSON.parse(hashParams.get('multiDoseTable'));
+        let customdoseTable = JSON.parse(hashParams.get('customdoseTable'));
         let steadyStateTable = JSON.parse(hashParams.get('steadyStateTable'));
 
-        if (multiDoseTable) {
-            deleteAllRows('multidose-table');
-            for (let i = 0; i < multiDoseTable[0].length; i++) {
-                addDTMRow('multidose-table', multiDoseTable[1][i], multiDoseTable[0][i], multiDoseTable[2][i], multiDoseTable[3][i], multiDoseTable[4][i]);
+        if (customdoseTable) {
+            deleteAllRows('customdose-table');
+            for (let i = 0; i < customdoseTable[0].length; i++) {
+                addDTMRow('customdose-table', customdoseTable[1][i], customdoseTable[0][i], customdoseTable[2][i], customdoseTable[3][i], customdoseTable[4][i]);
             }
             dataLoaded = true;
         }
@@ -1201,7 +1204,7 @@ function setupPresetsDropdown() {
  * @param {Object} presetConfig
  */
 function applyPreset(presetConfig, refreshAfter = true) {
-    deleteAllRows('multidose-table');
+    deleteAllRows('customdose-table');
     deleteAllRows('steadystate-table');
 
     presetConfig.menstrualCycle ? turnMenstrualCycleOn(false) : turnMenstrualCycleOff(false);
@@ -1216,11 +1219,11 @@ function applyPreset(presetConfig, refreshAfter = true) {
     }
 
     if (presetConfig.multi.length) {
-        presetConfig.multi.forEach(multiDose => {
-            addDTMRow('multidose-table', ...multiDose, presetConfig.multiDosesCurveVisible === true, presetConfig.multiDosesUncertaintyVisible === true);
+        presetConfig.multi.forEach(customdose => {
+            addDTMRow('customdose-table', ...customdose, presetConfig.customdosesCurveVisible === true, presetConfig.customdosesUncertaintyVisible === true);
         });
     } else {
-        addDTMRow('multidose-table');
+        addDTMRow('customdose-table');
     }
 
     refreshAfter && refresh();

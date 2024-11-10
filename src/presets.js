@@ -17,8 +17,8 @@ export const Presets = {
             [4, 7, 'EEn im'],
             [4, 10, 'EC im', false, true]
         ],
-        'multiDosesCurveVisible': true,
-        'multiDosesUncertaintyVisible': false,
+        'customdosesCurveVisible': true,
+        'customdosesUncertaintyVisible': false,
         'multi': [
             [4, 0, 'EV im'],
             [4, 20, 'EEn im'],
@@ -50,8 +50,8 @@ export const Presets = {
         'steady': [
             [4, 7, 'EEn im', true, false]
         ],
-        'multiDosesCurveVisible': true,
-        'multiDosesUncertaintyVisible': true,
+        'customdosesCurveVisible': true,
+        'customdosesUncertaintyVisible': true,
         'multi': [
             [4, 7, 'EEn im'],
             [4, 7, 'EEn im'],
@@ -70,8 +70,8 @@ export const Presets = {
         'steady': [
             [6, 10, 'EEn im', true, false]
         ],
-        'multiDosesCurveVisible': true,
-        'multiDosesUncertaintyVisible': true,
+        'customdosesCurveVisible': true,
+        'customdosesUncertaintyVisible': true,
         'multi': [
             [6, 10, 'EEn im'],
             [6, 10, 'EEn im'],
@@ -88,8 +88,8 @@ export const Presets = {
         'steady': [
             [3, 4, 'EV im', true, false]
         ],
-        'multiDosesCurveVisible': true,
-        'multiDosesUncertaintyVisible': true,
+        'customdosesCurveVisible': true,
+        'customdosesUncertaintyVisible': true,
         'multi': [
             [3, 4, 'EV im'],
             [3, 4, 'EV im'],
@@ -106,8 +106,8 @@ export const Presets = {
         'steady': [
             [5, 7, 'EC im', true, false]
         ],
-        'multiDosesCurveVisible': true,
-        'multiDosesUncertaintyVisible': true,
+        'customdosesCurveVisible': true,
+        'customdosesUncertaintyVisible': true,
         'multi': [
             [5, 7, 'EC im'],
             [5, 7, 'EC im'],
@@ -125,8 +125,8 @@ export const Presets = {
         'steady': [
             [15, 14, 'EUn im', true, false]
         ],
-        'multiDosesCurveVisible': true,
-        'multiDosesUncertaintyVisible': true,
+        'customdosesCurveVisible': true,
+        'customdosesUncertaintyVisible': true,
         'multi': [
             [15, 14, 'EUn im'],
             [15, 14, 'EUn im'],
@@ -151,8 +151,8 @@ export const Presets = {
         'steady': [
             [40, 30, 'EUn casubq', true, false]
         ],
-        'multiDosesCurveVisible': true,
-        'multiDosesUncertaintyVisible': true,
+        'customdosesCurveVisible': true,
+        'customdosesUncertaintyVisible': true,
         'multi': [
             [40, 30, 'EUn casubq'],
             [40, 30, 'EUn casubq'],
@@ -175,8 +175,8 @@ export const Presets = {
             [400, 3.5, 'patch tw', true, true],
             [300, 7, 'patch ow', true, true]
         ],
-        'multiDosesCurveVisible': true,
-        'multiDosesUncertaintyVisible': true,
+        'customdosesCurveVisible': true,
+        'customdosesUncertaintyVisible': true,
         'multi': []
     },
     'ev34-to-een47-monotherapy': {
@@ -184,8 +184,8 @@ export const Presets = {
         'menstrualCycle': false,
         'intervalDays': true,
         'steady': [],
-        'multiDosesCurveVisible': true,
-        'multiDosesUncertaintyVisible': true,
+        'customdosesCurveVisible': true,
+        'customdosesUncertaintyVisible': true,
         'multi': [
             [3, 4, 'EV im'],
             [3, 4, 'EV im'],
@@ -214,8 +214,8 @@ export const Presets = {
         'steady': [
             [4, 7, 'EEn im', true, false]
         ],
-        'multiDosesCurveVisible': true,
-        'multiDosesUncertaintyVisible': true,
+        'customdosesCurveVisible': true,
+        'customdosesUncertaintyVisible': true,
         'multi': [
             [4, 7, 'EEn im'],
             [4, 7, 'EEn im'],
@@ -238,8 +238,8 @@ export const Presets = {
         'steady': [
             [3, 4, 'EV im', true, false]
         ],
-        'multiDosesCurveVisible': true,
-        'multiDosesUncertaintyVisible': true,
+        'customdosesCurveVisible': true,
+        'customdosesUncertaintyVisible': true,
         'multi': [
             [3, 4, 'EV im'],
             [3, 4, 'EV im'],
@@ -262,8 +262,8 @@ export const Presets = {
         'steady': [
             [4, 7, 'EEn im', true, false]
         ],
-        'multiDosesCurveVisible': true,
-        'multiDosesUncertaintyVisible': true,
+        'customdosesCurveVisible': true,
+        'customdosesUncertaintyVisible': true,
         'multi': [
             [4, 7, 'EEn im'],
             [4, 7, 'EEn im'],
@@ -286,8 +286,8 @@ export const Presets = {
         'steady': [
             [3, 4, 'EV im', true, false]
         ],
-        'multiDosesCurveVisible': true,
-        'multiDosesUncertaintyVisible': true,
+        'customdosesCurveVisible': true,
+        'customdosesUncertaintyVisible': true,
         'multi': [
             [3, 4, 'EV im'],
             [3, 4, 'EV im'],
@@ -309,8 +309,8 @@ export const Presets = {
         'steady': [
             [4, 7, 'EEn im', true, false]
         ],
-        'multiDosesCurveVisible': true,
-        'multiDosesUncertaintyVisible': true,
+        'customdosesCurveVisible': true,
+        'customdosesUncertaintyVisible': true,
         'multi': [
             [4, 7, 'EEn im'],
             [4, 7, 'EEn im'],
@@ -333,8 +333,8 @@ export const Presets = {
         'steady': [
             [3, 4, 'EV im', true, false]
         ],
-        'multiDosesCurveVisible': true,
-        'multiDosesUncertaintyVisible': true,
+        'customdosesCurveVisible': true,
+        'customdosesUncertaintyVisible': true,
         'multi': [
             [3, 4, 'EV im'],
             [3, 4, 'EV im'],
@@ -360,8 +360,8 @@ export const Presets = {
         'steady': [
             [4, 7, 'EEn im', true, false]
         ],
-        'multiDosesCurveVisible': true,
-        'multiDosesUncertaintyVisible': true,
+        'customdosesCurveVisible': true,
+        'customdosesUncertaintyVisible': true,
         'multi': [
             [8, 7, 'EEn im'],
             [4, 7, 'EEn im'],
@@ -378,8 +378,8 @@ export const Presets = {
         'steady': [
             [3, 4, 'EV im', true, false]
         ],
-        'multiDosesCurveVisible': true,
-        'multiDosesUncertaintyVisible': true,
+        'customdosesCurveVisible': true,
+        'customdosesUncertaintyVisible': true,
         'multi': [
             [6, 4, 'EV im'],
             [3, 4, 'EV im'],
@@ -396,8 +396,8 @@ export const Presets = {
         'steady': [
             [5, 7, 'EC im', true, false]
         ],
-        'multiDosesCurveVisible': true,
-        'multiDosesUncertaintyVisible': true,
+        'customdosesCurveVisible': true,
+        'customdosesUncertaintyVisible': true,
         'multi': [
             [8, 7, 'EC im'],
             [5, 7, 'EC im'],
@@ -414,8 +414,8 @@ export const Presets = {
         'steady': [
             [40, 30, 'EUn casubq', true, false]
         ],
-        'multiDosesCurveVisible': true,
-        'multiDosesUncertaintyVisible': true,
+        'customdosesCurveVisible': true,
+        'customdosesUncertaintyVisible': true,
         'multi': [
             [100, 30, 'EUn casubq'],
             [40, 30, 'EUn casubq'],
@@ -434,8 +434,8 @@ export const Presets = {
         'menstrualCycle': false,
         'intervalDays': true,
         'steady': [],
-        'multiDosesCurveVisible': true,
-        'multiDosesUncertaintyVisible': true,
+        'customdosesCurveVisible': true,
+        'customdosesUncertaintyVisible': true,
         'multi': [
             [3, 4, 'EV im'],
             [3, 4, 'EV im'],
@@ -506,8 +506,8 @@ export const Presets = {
         'menstrualCycle': true,
         'intervalDays': false,
         'steady': [],
-        'multiDosesCurveVisible': true,
-        'multiDosesUncertaintyVisible': true,
+        'customdosesCurveVisible': true,
+        'customdosesUncertaintyVisible': true,
         'multi': [
             [1, 13.5, 'EB im'],
             [4, 16, 'EEn im'],
@@ -523,8 +523,8 @@ export const Presets = {
         'menstrualCycle': true,
         'intervalDays': true,
         'steady': [],
-        'multiDosesCurveVisible': true,
-        'multiDosesUncertaintyVisible': true,
+        'customdosesCurveVisible': true,
+        'customdosesUncertaintyVisible': true,
         'multi': [
             [0.145, 0.0, 'EB im'],
             [0.022, 0.667, 'EB im'],
