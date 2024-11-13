@@ -1,3 +1,5 @@
+import * as Plot from '@observablehq/plot';
+
 import {
   e2multidosedose3C,
   e2ssAverage3C,

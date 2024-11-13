@@ -1,4 +1,4 @@
-let Spline = require('cubic-spline');
+import Spline from 'cubic-spline';
 
 import {
     PKParameters,
