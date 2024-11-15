@@ -13,10 +13,17 @@
     <link rel="stylesheet" type="text/css" href="css/colors.css">
     <link rel="stylesheet" type="text/css" href="css/slider.css">
     <link rel="stylesheet" type="text/css" href="css/styles.css">
-    <script src="lib/papaparse.min.js"></script>
-    <script src="lib/cubic-spline.js"></script>
-    <script src="lib/d3.min.js"></script>
-    <script src="lib/plot.min.js"></script>
+
+	<script type="importmap">
+		{
+			"imports": {
+				"cubic-spline": "./lib/cubic-spline.js",
+				"@observablehq/plot": "./lib/plot.js"
+			}
+		}
+	</script>
+	<link rel="modulepreload" href="lib/plot.js">
+	<link rel="modulepreload" href="lib/cubic-spline.js">
     <script type="module" src="src/estrannaise.js"></script>
 </head>
 
