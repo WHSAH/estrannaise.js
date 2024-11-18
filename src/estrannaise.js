@@ -10,6 +10,7 @@ import {
  } from './models.js';
 
 import { Presets } from './presets.js';
+import Papa from 'papaparse';
 
 // This is used to determine whether to refresh after each input event
 // Only refresh when a row goes from invalid to valid or vis-versa
