@@ -1,7 +1,7 @@
 import * as Plot from '@observablehq/plot';
 
 import {
-  e2multidosedose3C,
+  e2multidose3C,
   e2ssAverage3C,
   fillCurve,
   fillMenstrualCycleCurve,
@@ -204,7 +204,7 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
 
             for (let i = 0; i < options.numberOfCloudPoints; i++) {
                 let randx = Math.random() * (xMax - xMin) + xMin;
-                let y = e2multidosedose3C(randx, doses, times, models, conversionFactor, true, dataset.customdoses.daysAsIntervals);
+                let y = e2multidose3C(randx, doses, times, models, conversionFactor, true, dataset.customdoses.daysAsIntervals);
                 customdoseUncertaintyCloud.push({ Time: randx, E2: y });
             }
 
@@ -218,7 +218,7 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
         }
 
         // Always compute the curve to set the y-axis limit
-        let customdoseCurve = fillCurve(t => e2multidosedose3C(t, doses, times, models, conversionFactor, false, dataset.customdoses.daysAsIntervals), xMin, xMax, options.numberOfLinePoints);
+        let customdoseCurve = fillCurve(t => e2multidose3C(t, doses, times, models, conversionFactor, false, dataset.customdoses.daysAsIntervals), xMin, xMax, options.numberOfLinePoints);
         yMax = Math.max(yMax, ...customdoseCurve.map(p => p.E2));
 
         if (dataset.customdoses.curveVisible) {
