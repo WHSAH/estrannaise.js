@@ -123,7 +123,7 @@ export function PKRandomFunctions(conversionFactor = 1.0) {
  * @param {boolean} random if values need uncertainty applied
  * @param {boolean} intervals true if days are set as interval
  */
-export function e2multidosedose3C(t, doses = [1.0], times = [0.0], models = ['EV im'], cf = 1.0, random = false, intervals = false) {
+export function e2multidose3C(t, doses = [1.0], times = [0.0], models = ['EV im'], cf = 1.0, random = false, intervals = false) {
 
     if (intervals) {
         // Some Chad wrote this code, I don't know who.
@@ -150,7 +150,7 @@ export function e2ssAverage3C(dose, T, d, _k1, _k2, k3) {
     return dose * d / k3 / T;
 }
 
-function randomMCMCSample(type, idx=null) {
+export function randomMCMCSample(type, idx=null) {
     if (idx === null) {
         idx = Math.floor(Math.random() * mcmcSamplesPK[type].length);
     }
@@ -159,7 +159,7 @@ function randomMCMCSample(type, idx=null) {
 
 // parameters ds and d2 are optional initial conditions
 // Es(0) = ds and E2(0) = d2 for the second and third compartments
-function e2Curve3C(t, dose, d, k1, k2, k3, Ds = 0.0, D2 = 0.0, steadystate = false, T = 1.0) {
+export function e2Curve3C(t, dose, d, k1, k2, k3, Ds = 0.0, D2 = 0.0, steadystate = false, T = 1.0) {
 
     if (!steadystate) {
         if (t < 0) {
@@ -212,7 +212,7 @@ function e2Curve3C(t, dose, d, k1, k2, k3, Ds = 0.0, D2 = 0.0, steadystate = fal
     }
 }
 
-function esSingleDose3C(t, dose, d, k1, k2, _k3, Ds = 0.0) {
+export function esSingleDose3C(t, dose, d, k1, k2, _k3, Ds = 0.0) {
 
     if (t < 0) {
         return 0.0;
@@ -235,11 +235,11 @@ function esSingleDose3C(t, dose, d, k1, k2, _k3, Ds = 0.0) {
 }
 
 
-function e2SteadyState3C(t, dose, T, d, k1, k2, k3) {
+export function e2SteadyState3C(t, dose, T, d, k1, k2, k3) {
     return dose * d * k1 * k2 * (Math.exp(-k1 * (t - T * Math.floor(t / T))) / (1 - Math.exp(-k1 * T)) / (k1 - k2) / (k1 - k3) - Math.exp(-k2 * (t - T * Math.floor(t / T))) / (1 - Math.exp(-k2 * T)) / (k1 - k2) / (k2 - k3) + Math.exp(-k3 * (t - T * Math.floor(t / T))) / (1 - Math.exp(-k3 * T)) / (k1 - k3) / (k2 - k3));
 }
 
-function e2Patch3C(t, dose, d, k1, k2, k3, W, steadystate = false, T = 0.0) {
+export function e2Patch3C(t, dose, d, k1, k2, k3, W, steadystate = false, T = 0.0) {
     if (!steadystate){
         if (t < 0.0) {
             return 0.0;
@@ -255,7 +255,7 @@ function e2Patch3C(t, dose, d, k1, k2, k3, W, steadystate = false, T = 0.0) {
     }
 }
 
-function e2SteadyStatePatch3C(t, dose, T, d, k1, k2, k3, W) {
+export function e2SteadyStatePatch3C(t, dose, T, d, k1, k2, k3, W) {
     let esW = esSingleDose3C(W, dose, d, k1, k2, k3);
     let e2W = e2Curve3C(W, dose, d, k1, k2, k3);
 
