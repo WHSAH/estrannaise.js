@@ -37,18 +37,17 @@ window.addEventListener('DOMContentLoaded', () => {
 
     setupMenstrualCycleButtonEvent();
     setupTargetRangeButtonEvent();
-
+    setupResetLocalStorageButtonEvent();
     setupShareURLButtonEvent();
 
-    setupcustomdoseButtonsEvents();
+    setupCustomDoseButtonsEvents();
     setupSteadyStateButtonsEvents();
-
-    setupDragNDropImport();
-
-    setupResizeRefresh();
-
+    
     attachTipjarsEvent();
-
+    
+    setupDragNDropImport();
+    setupResizeRefresh();
+    
     themeSetup();
 
     if (!loadFromURL() && !loadFromLocalStorage()) {
@@ -58,22 +57,15 @@ window.addEventListener('DOMContentLoaded', () => {
     refresh();
 });
 
-function refresh(save = false) {
-
+function refresh() {
     let graph = plotCurves(
-        getDTMs(),
+        getDataset(),
         getCurrentPlottingOptions(),
         false);
 
     let plot = document.getElementById('plot-region');
     plot.innerHTML = '';
     plot.append(graph);
-
-    if (save) {
-        saveToLocalStorage();
-        console.log(localStorage.getItem('stateString'));
-    }
-
 }
 
 export function getCurrentPlottingOptions() {
@@ -109,8 +101,8 @@ export function getCurrentPlottingOptions() {
         numberOfCloudPoints = 900;
     }
 
-    return generatePlottingOptions(
-        {menstrualCycleVisible: menstrualCycleVisible,
+    return generatePlottingOptions({
+        menstrualCycleVisible: menstrualCycleVisible,
         targetRangeVisible: targetRangeVisible,
         units: units,
         strokeWidth: strokeWidth,
@@ -155,7 +147,7 @@ function setColorScheme(scheme, refreshAfter = true) {
         s.setProperty('--soft-foreground', rootStyle.getPropertyValue('--soft-foreground-night'));
         s.setProperty('--strong-foreground', rootStyle.getPropertyValue('--strong-foreground-night'));
         global_currentColorScheme = 'night';
-        
+
         /* This is to make sure the switch is in the right state
            when it's the OS that triggers the change and not a
            manual change from the user. */
@@ -179,7 +171,7 @@ function allUnique(list) {
 }
 
 function guessDaysAsIntervals() {
-    let mdtimes = getcustomdoses().entries.map(entry => entry.time);
+    let mdtimes = getCustomDoses(false, false).entries.map(entry => entry.time);
     if (allUnique(mdtimes)) {
         document.getElementById('dropdown-daysinput').value = 'absolute';
         global_daysAsIntervals = false;
@@ -215,6 +207,7 @@ function loadCSV(files) {
                     guessDaysAsIntervals();
                     addRowIfNeeded('customdose-table');
                     refresh();
+                    saveToLocalStorage();
                 }
             });
         };
@@ -291,7 +284,7 @@ function readRow(row, keepVisibilities = true, keepInvalid = false) {
 
 function convertEntriesToInvervalDays() {
 
-    let customdoseTable = getcustomdoses();
+    let customdoseTable = getCustomDoses();
     let sortedEntries = customdoseTable.entries.sort((a, b) => a.time - b.time);
 
     deleteAllRows('customdose-table');
@@ -334,28 +327,28 @@ function convertEntriesToAbsoluteDays() {
 
 }
 
-function customdosesVisibilities() {
+function customDosesVisibilities() {
     let customdoseTable = document.getElementById('customdose-table');
     let firstRowEntry = readRow(customdoseTable.rows[1], true, true);
     return [firstRowEntry.curveVisible, firstRowEntry.uncertaintyVisible]
 }
 
-function getcustomdoses(keepInvalid = false, passColor = true) {
-    let customdoses = {};
+function getCustomDoses(keepInvalid = false, passColor = true) {
+    let customDoses = {};
 
     let customdoseTable = document.getElementById('customdose-table');
 
-    [customdoses.curveVisible, customdoses.uncertaintyVisible] = customdosesVisibilities();
+    [customDoses.curveVisible, customDoses.uncertaintyVisible] = customDosesVisibilities();
 
-    customdoses.daysAsIntervals = global_daysAsIntervals;
-    if (passColor) { customdoses.color = wongPalette(4); }
+    customDoses.daysAsIntervals = global_daysAsIntervals;
+    if (passColor) { customDoses.color = wongPalette(4); }
 
     // Read entries, ignore visibilities
-    customdoses.entries = Array.from(customdoseTable.rows).slice(1)
+    customDoses.entries = Array.from(customdoseTable.rows).slice(1)
                               .map(row => readRow(row, false, keepInvalid))
                               .filter(entry => entry !== null);
 
-    return customdoses
+    return customDoses
 }
 
 function getSteadyStates(keepInvalid = false, passColor = true) {
@@ -372,13 +365,11 @@ function getSteadyStates(keepInvalid = false, passColor = true) {
     return steadyStates;
 }
 
-export function getDTMs(keepInvalid = false) {
-
+export function getDataset(keepInvalid = false, passColor = true) {
     return {
-        customdoses: getcustomdoses(keepInvalid),
-        steadystates: getSteadyStates(keepInvalid)
+        customdoses: getCustomDoses(keepInvalid, passColor),
+        steadystates: getSteadyStates(keepInvalid, passColor)
     };
-
 }
 
 function guessNextRow(tableID) {
@@ -458,7 +449,7 @@ function addDTMRow(tableID, dose = null, time = null, model = null, curveVisible
             } else if (tableID == 'steadystate-table') {
                 visibilityCustomCheckbox.style.backgroundColor = (visibilityCheckboxState.checked) ? wongPalette(4 + row.rowIndex) : '';
             }
-            (rowValidity.get(row) || (tableID == 'customdose-table' && row.rowIndex == 1)) && refresh();
+            (rowValidity.get(row) || (tableID == 'customdose-table' && row.rowIndex == 1)) && (refresh(), saveToLocalStorage());
         };
         visibilityCell.appendChild(visibilityCustomCheckbox);
 
@@ -488,7 +479,7 @@ function addDTMRow(tableID, dose = null, time = null, model = null, curveVisible
             } else if (tableID == 'steadystate-table') {
                 uncertaintyCustomCheckbox.style.backgroundColor = uncertaintyCheckboxState.checked ? wongPalette(4 + row.rowIndex) : '';
             }
-            (rowValidity.get(row) || (tableID == 'customdose-table' && row.rowIndex == 1)) && refresh();
+            (rowValidity.get(row) || (tableID == 'customdose-table' && row.rowIndex == 1)) && (refresh(), saveToLocalStorage());
         };
         uncertaintyCell.appendChild(uncertaintyCustomCheckbox);
     }
@@ -512,6 +503,7 @@ function addDTMRow(tableID, dose = null, time = null, model = null, curveVisible
         if ((currentValidity !== previousValidity) || currentValidity) {
             rowValidity.set(myRow, currentValidity);
             refresh();
+            saveToLocalStorage();
         }
 
         addRowIfNeeded(tableID);
@@ -555,6 +547,7 @@ function addDTMRow(tableID, dose = null, time = null, model = null, curveVisible
         if ((currentValidity !== previousValidity) || currentValidity) {
             rowValidity.set(myRow, currentValidity);
             refresh();
+            saveToLocalStorage();
         }
 
         addRowIfNeeded(tableID);
@@ -600,6 +593,7 @@ function addDTMRow(tableID, dose = null, time = null, model = null, curveVisible
 
         if (readRow(row)) {
             refresh();
+            saveToLocalStorage();
         }
     });
     //////////////////////////
@@ -651,6 +645,7 @@ function addDTMRow(tableID, dose = null, time = null, model = null, curveVisible
             };
 
             refresh();
+            saveToLocalStorage();
         });
     // }
     //////////////////////////
@@ -678,7 +673,7 @@ function setDaysAsIntervals(refreshPlot = true) {
         input.placeholder = 'since last';
     });
 
-    refreshPlot && refresh();
+    refreshPlot && (refresh(), saveToLocalStorage());
 }
 
 function setDaysAsAbsolute(refreshPlot = true) {
@@ -690,31 +685,31 @@ function setDaysAsAbsolute(refreshPlot = true) {
         input.placeholder = 'since first';
     });
 
-    refreshPlot && refresh();
+    refreshPlot && (refresh(), saveToLocalStorage());
 }
 
 function turnMenstrualCycleOn(refreshPlot = true) {
     let mcButton = document.getElementById('menstrual-cycle-button');
     mcButton.classList.add('button-on');
-    refreshPlot && refresh();
+    refreshPlot && (refresh(), saveToLocalStorage());
 }
 
 function turnMenstrualCycleOff(refreshPlot = true) {
     let mcButton = document.getElementById('menstrual-cycle-button');
     mcButton.classList.remove('button-on');
-    refreshPlot && refresh();
+    refreshPlot && (refresh(), saveToLocalStorage());
 }
 
 function turnTargetRangeOn(refreshPlot = true) {
     let trButton = document.getElementById('target-range-button');
     trButton.classList.add('button-on');
-    refreshPlot && refresh();
+    refreshPlot && (refresh(), saveToLocalStorage());
 }
 
 function turnTargetRangeOff(refreshPlot = true) {
     let trButton = document.getElementById('target-range-button');
     trButton.classList.remove('button-on');
-    refreshPlot && refresh();
+    refreshPlot && (refresh(), saveToLocalStorage());
 }
 
 function setupMenstrualCycleButtonEvent() {
@@ -766,10 +761,28 @@ function setupDragNDropImport() {
 
 }
 
+function setupResetLocalStorageButtonEvent() {
+    let resetButton = document.getElementById('reset-button');
+    resetButton.addEventListener('mousedown', (event) => {
+        event.preventDefault();
+        resetButton.classList.add('button-on');
+        localStorage.removeItem('states');
+        localStorage.removeItem('data');
+        localStorage.removeItem('force-color-scheme');
+        initializeDefaultPreset();
+        refresh()
+        setTimeout(() => {
+            resetButton.classList.remove('button-on');
+        }, 200);
+    });
+}
+
 function setupShareURLButtonEvent() {
     let shareButton = document.getElementById('share-button');
 
-    shareButton.addEventListener('mousedown', () => {
+    shareButton.addEventListener('mousedown', (event) => {
+        event.preventDefault();
+        
         navigator.clipboard.writeText(generateSanerShareURL());
 
         shareButton.classList.add('button-on');
@@ -782,17 +795,19 @@ function setupShareURLButtonEvent() {
     });
 }
 
-function setupcustomdoseButtonsEvents() {
+function setupCustomDoseButtonsEvents() {
 
     let guessButton = document.getElementById('guess-button');
 
-    guessButton.addEventListener('mousedown', () => {
+    guessButton.addEventListener('mousedown', (event) => {
+        event.preventDefault();
         let guess = guessNextRow('customdose-table');
 
         if (guess) {
             guessButton.classList.add('button-on');
             setRowParameters('customdose-table', -1, guess.dose, guess.time, guess.model);
             refresh();
+            saveToLocalStorage();
         } else {
             guessButton.innerHTML = '&nbsp;?._.)&nbsp;&nbsp;';
 
@@ -809,11 +824,13 @@ function setupcustomdoseButtonsEvents() {
 
     let clearDoseButton = document.getElementById('clear-doses-button');
 
-    clearDoseButton.addEventListener('mousedown', () => {
+    clearDoseButton.addEventListener('mousedown', (event) => {
+        event.preventDefault();
         clearDoseButton.classList.add('button-on');
         deleteAllRows('customdose-table');
         addDTMRow('customdose-table');
         refresh();
+        saveToLocalStorage();
     });
     clearDoseButton.addEventListener('mouseup', () => {
         clearDoseButton.classList.remove('button-on');
@@ -846,11 +863,13 @@ function setupSteadyStateButtonsEvents() {
 
     let clearSteadyStateButton = document.getElementById('clear-steadystates-button')
 
-    clearSteadyStateButton.addEventListener('mousedown', () => {
+    clearSteadyStateButton.addEventListener('mousedown', (event) => {
+        event.preventDefault();
         clearSteadyStateButton.classList.add('button-on');
         deleteAllRows('steadystate-table');
         addDTMRow('steadystate-table');
         refresh();
+        saveToLocalStorage();
     });
 
     clearSteadyStateButton.addEventListener('mouseup', () => {
@@ -876,7 +895,7 @@ function setupResizeRefresh() {
         if (currentWindowWidth === previousWindowWidth) {
             return;
         }
-        
+
         // Doesn't appear to be necessary and I don't
         // understand how come, but just in case
         previousWindowWidth = currentWindowWidth;
@@ -892,24 +911,32 @@ function setupResizeRefresh() {
 
 function themeSetup() {
 
-    if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        setColorScheme('night', false);
+    if (localStorage.getItem('force-color-scheme')) {
+        setColorScheme(localStorage.getItem('force-color-scheme'), false);
     } else {
-        setColorScheme('day', false);
+        if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            setColorScheme('night', false);
+        } else {
+            setColorScheme('day', false);
+        }
     }
 
     window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (event) => {
-        if (event.matches) {
-            setColorScheme('night');
-        } else {
-            setColorScheme('day');
+        if (!localStorage.getItem('force-color-scheme')) {
+            if (event.matches) {
+                setColorScheme('night');
+            } else {
+                setColorScheme('day');
+            }
         }
     });
 
     document.getElementById('nightday-state').addEventListener('change', (event) => {
         if (event.target.checked) {
+            localStorage.setItem('force-color-scheme', 'day');
             setColorScheme('day');
         } else {
+            localStorage.setItem('force-color-scheme', 'night');
             setColorScheme('night');
         }
     });
@@ -929,6 +956,7 @@ function setupUnitsDropdown() {
 
     dropdown.addEventListener('change', () => {
         refresh();
+        saveToLocalStorage();
     });
 
 }
@@ -943,6 +971,7 @@ function setupDaysInputEvents() {
         } else {
             (event.target.value === 'intervals') ? setDaysAsIntervals() : setDaysAsAbsolute();
         }
+        saveToLocalStorage();
     });
 
 }
@@ -965,10 +994,11 @@ function attachTipjarsEvent() {
 
             navigator.clipboard.writeText(this.innerText);
 
-            document.getElementById(`${crypto}-tipjar-text`).innerHTML = `${crypto} address copied, thank you!`;
+            let tipjarHeader = document.getElementById(`tipjars-header`);
+            tipjarHeader.innerHTML = `tipjars (${crypto} address copied, thank you!)`;
 
             setTimeout(() => {
-                document.getElementById(`${crypto}-tipjar-text`).innerHTML = `${crypto}`;
+                tipjarHeader.innerHTML = 'tipjars';
             }, 350);
 
             changeBackgroundColor(`copy-${crypto}`, softForegroundColor, null, 150);
@@ -988,8 +1018,8 @@ function generateStateString() {
     stateString += unitsMap[document.getElementById('dropdown-units').value];
 
     let customdoseString = '';
-    let [c, u] = customdosesVisibilities();
-    customdoseString += getcustomdoses(true, false).entries.slice(0, -1).map((entry, idx) => (idx == 0 ? (c ? 'c' : '' ) + (u ? 'u' : '') + ',' : '') + dropNaNAndFix(entry.dose) + ',' + dropNaNAndFix(entry.time) + ',' + modelsMap[entry.model]).join('-');
+    let [c, u] = customDosesVisibilities();
+    customdoseString += getCustomDoses(true, false).entries.slice(0, -1).map((entry, idx) => (idx == 0 ? (c ? 'c' : '' ) + (u ? 'u' : '') + ',' : '') + dropNaNAndFix(entry.dose) + ',' + dropNaNAndFix(entry.time) + ',' + modelsMap[entry.model]).join('-');
 
     let steadyStateString = '';
     steadyStateString += getSteadyStates(true, false).entries.slice(0, -1).map(entry => (entry.curveVisible ? 'c' : '') + (entry.uncertaintyVisible ? 'u' : '') + ',' + dropNaNAndFix(entry.dose) + ',' + dropNaNAndFix(entry.time) + ',' + modelsMap[entry.model]).join('-');
@@ -1002,18 +1032,56 @@ function generateSanerShareURL() {
     return window.location.origin + window.location.pathname + '#' + generateStateString();
 }
 
-function saveToLocalStorage() {
-    let stateString = generateStateString();
-    localStorage.setItem('stateString', stateString);
+export function saveToLocalStorage() {
+    
+    localStorage.setItem('data', JSON.stringify(getDataset(true, false)));
+    localStorage.setItem('states', JSON.stringify({
+            menstrualCycleVisible: isButtonOn('menstrual-cycle-button'),
+            targetRangeVisible: isButtonOn('target-range-button'),
+            units: document.getElementById('dropdown-units').value,
+            daysAsIntervals: global_daysAsIntervals
+        }));
+
 }
 
 function loadFromLocalStorage() {
-    let stateString = localStorage.getItem('stateString');
-    if (stateString) {
-        return loadFromStateString(stateString);
-    } else {
-        return false;
+
+    // if element states exists in localStorage
+    // parse it as a JSON and set the states
+    // that are present in the object
+    // otherwise do nothing
+
+    let unitsMap = generateEnum(availableUnits);
+
+    if (localStorage.getItem('states')) {
+        let states = JSON.parse(localStorage.getItem('states'));
+        if (states.menstrualCycleVisible) { turnMenstrualCycleOn(false); } else { turnMenstrualCycleOff(false); }
+        if (states.targetRangeVisible) { turnTargetRangeOn(false); } else { turnTargetRangeOff(false); }
+        if (states.units) { document.getElementById('dropdown-units').value = states.units; }
     }
+
+    // if the element entries exists in localStorage
+    // parse it as a JSON otherwise set it to null
+    if (localStorage.getItem('data')) {
+        let data = JSON.parse(localStorage.getItem('data'));
+        if (data.customdoses) {
+            deleteAllRows('customdose-table');
+            if (data.customdoses.daysAsIntervals) { setDaysAsIntervals(false); } else { setDaysAsAbsolute(false); }
+            data.customdoses.entries.forEach(entry => {
+                addDTMRow('customdose-table', entry.dose, entry.time, entry.model, data.customdoses.curveVisible, data.customdoses.uncertaintyVisible);
+            });
+        }
+
+        if (data.steadystates) {
+            deleteAllRows('steadystate-table');
+            data.steadystates.entries.forEach(entry => {
+                addDTMRow('steadystate-table', entry.dose, entry.time, entry.model, entry.curveVisible, entry.uncertaintyVisible);
+            });
+        };
+        return true;
+    }
+
+    return false
 }
 
 function loadFromURL() {
@@ -1037,7 +1105,6 @@ function loadFromSanerURL() {
     let hashString = window.location.hash.substring(1);
     return loadFromStateString(hashString);
 }
-
 
 function loadFromStateString(stateString) {
 
@@ -1227,5 +1294,5 @@ function applyPreset(presetConfig, refreshAfter = true) {
         addDTMRow('customdose-table');
     }
 
-    refreshAfter && refresh();
+    refreshAfter && (refresh(), saveToLocalStorage());
 }

@@ -85,7 +85,8 @@ function findxMax(dataset, options) {
     if (dataset.customdoses.entries.length > 0 && (dataset.customdoses.curveVisible || dataset.customdoses.uncertaintyVisible)) {
         if (dataset.customdoses.daysAsIntervals) {
             let absoluteTimes = dataset.customdoses.entries.reduce((acc, entry, idx) => {
-                if (idx === 0) { acc.push(entry.time); }
+                // Ignore first entry in interval days
+                if (idx === 0) { acc.push(0); }
                 else { acc.push(acc[idx - 1] + entry.time); }
                 return acc;
             }, []);

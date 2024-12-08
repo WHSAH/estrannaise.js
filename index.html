@@ -30,7 +30,7 @@
 </head>
 
 <body>
-    <div id="dragndrop-zone">
+<div id="dragndrop-zone">
     <div class="container">
 
         <div class="header">
@@ -43,7 +43,7 @@
                 <h1 id="titleh1">estradiol <a href="docs/">pharmacokinetics</a> playground</h1>
             </div>
 
-            <div id="theme-slider">
+            <div id="the-big-light">
                 <div class="slider-box">
                     <label class="switch">
                         <input type="checkbox" id="nightday-state">
@@ -52,7 +52,7 @@
                 </div>
             </div>
 
-        </div> <!-- header -->
+        </div>
 
         <div id="ui-container">
 
@@ -74,15 +74,18 @@
                 <button id="target-range-button" class="flat-button" title="Turn on/off the display of target mean estradiol range">
                     target range
                 </button>
+                <button id="reset-button" class="flat-button" title="Clear local storage of custom doses and steady states">
+                    reset
+                </button>
                 <button id="share-button" class="flat-button" title="Share the current state of the simulator as an arcane URL">
                     share url
                 </button>
-            </div> <!-- options-container -->
+            </div>
 
             <div id="warning-container" class="centered-reflow">
                 <div>
-                    <span class="standout-text">The line is a lie!</span> The cloud a little less so. 
-                    All current models tend to underestimate uncertainty, particularly patch models, 
+                    <span class="standout-text">The line is a lie!</span> The cloud a little less so.
+                    All current models tend to underestimate uncertainty, particularly patch models,
                     which may underestimate it by up to a factor of 10.
                 </div>
             </div>
@@ -154,59 +157,60 @@
 
         <div id="bottom-text">
 
-            <p class="indent">The cloud does not represent data points, it is a visual representation of the uncertainty
-                in the model itself and it underestimates the total uncertainty.
-                It only captures the uncertainty of something akin to a population mean, or more precisely the uncertainty
-                over the parameters of the deterministic estradiol curve. It does not capture the full distribution of outcomes
-                in the population at large. This is bound to change in the future once a better representation of this uncertainty
-                gets implemented (which would include the additional population variability around the deterministic curve).
+            <p class="indent">The cloud does not represent data points, it is a visual representation of the
+                uncertainty in the model itself and it underestimates the total uncertainty.
+                It only captures the uncertainty of something akin to a population mean, or more precisely the
+                uncertainty over the parameters of the deterministic estradiol curve. It does not capture the
+                full distribution of outcomes in the population at large. This is bound to change in the future
+                once a better representation of this uncertainty gets implemented (which would include the
+                additional population variability around the deterministic curve).
             </p>
 
-            <p class="indent">The emerging consensus is that the pharmacokinetics of estradiol ester depots is highly variable
-                and depends on many factors that are not well understood and rarely taken into account.
-                Those factors can lead to vastly different outcomes and are not well represented, if at all,
-                in the current models. Those include, among others, the ester concentration, the type of oil used,
-                the proportion and type of excipients such as benzyl benzoate that are present in the
-                formulation, the injection site, whether the depot is injected intramuscularly or subcutaneously,
-                the injection depth, individual differences in metabolism, and the presence of other drugs.
-                Some of those confounding factors are sometimes captured to an extent in the uncertainty of the models,
-                but only when the data is abundant and spans multiple studies done under different conditions.
-                This is, of course, generally not the case. Several of those factors also apply to transdermal,
-                oral, and sublingual estradiol. I am actively working to improve and generalize the current models
-                in ways that will better capture this variability, but ultimately their accuracy and scope will
-                always be limited by the data available.
+            <p class="indent">The emerging consensus is that the pharmacokinetics of estradiol ester depots
+                is highly variable and depends on many factors that are not well understood and rarely taken
+                into account. Those factors can lead to vastly different outcomes and are not well represented,
+                if at all, in the current models. Those include, among others, the ester concentration, the
+                type of oil used, the proportion and type of excipients such as benzyl benzoate that are present
+                in the formulation, the injection site, whether the depot is injected intramuscularly or
+                subcutaneously, the injection depth, individual differences in metabolism, and the presence
+                of other drugs. Some of those confounding factors are sometimes captured to an extent in the
+                uncertainty of the models, but only when the data is abundant and spans multiple studies done
+                under different conditions. This is, of course, generally not the case. Several of those factors
+                also apply to transdermal, oral, and sublingual estradiol. I am actively working to improve and
+                generalize the current models in ways that will better capture this variability, but ultimately
+                their accuracy and scope will always be limited by the data available.
             </p>
 
-            <p class="indent">Inferences for the estradiol benzoate, valerate, and cypionate intramuscular depot models
+            <p class="indent">All data for estradiol benzoate, valerate, enanthate, and cypionate intramuscular depot models
                 (<span class="standout-text">eb im</span>, <span class="standout-text">ev im</span>, <span class="standout-text">ec im</span>)
-                use part of the data collected and made available by the amazing people behind the
-                <a href="https://transfemscience.org/articles/injectable-e2-meta-analysis/" target="_blank">tfs meta-analysis</a>
-                but will be reprocessed in the future to allow for a better quantification of uncertainty.
+                has been digitized from scratch from the original studies mentioned in the
+                <a href="https://transfemscience.org/articles/injectable-e2-meta-analysis/" target="_blank">tfs meta-analysis</a>.
+                Data was further reprocessed by splitting per-patient data into individual datasets when possible, and
+                by using the uncertainty reported in the studies. Note that the data for estradiol enanthate is unusually
+                sparse and comes entirely from studies of Perlutan from the 80s and 90s. Perlutan is a long-acting
+                injectable contraceptive contraining DHPA + EEn in sunflower oil.
             </p>
 
-            <p class="indent">The data behind the estradiol undecylate model for intramuscular depots using castor oil (<span class="standout-text">eun im</span>)
-                was entirely reprocessed from scratch using the per-patient data found in Geppert 1975 together with the data and uncertainty reported in Vermeulen 1975.
+            <p class="indent">The data behind the estradiol undecylate model for intramuscular depots using castor oil
+                (<span class="standout-text">eun im</span>) was entirely reprocessed from scratch using the per-patient
+                data found in Geppert 1975 together with the data and uncertainty reported in Vermeulen 1975.
                 This data is extremely sparse and incomplete and thus the model is highly uncertain.
             </p>
 
-            <p class="indent">The data behind the estradiol undecylate model for subcutaneous depots using castor oil
-                (<span class="standout-text">eun casubq</span>) was inferred on
-                top of the <span class="standout-text">eun im</span> model by augmenting it with very sparse self-reported community data.
-                Its predictions are also highly uncertain.
+            <p class="indent">The data behind the estradiol undecylate model for subcutaneous depots using
+                castor oil (<span class="standout-text">eun casubq</span>) was inferred on top of the
+                <span class="standout-text">eun im</span>  model by augmenting it with very sparse self-reported
+                community data. Its predictions are also highly uncertain.
             </p>
 
-            <p class="indent">The data behind the estradiol enanthate model for intramuscular depots using sunflower oil (<span class="standout-text">een im</span>)
-                was reprocessed from scratch using studies with Perlutan from the 80s and 90s. This data
-                is also extremely sparse and incomplete and the model highly uncertain.
-            </p>
-
-            <p class="indent">The once-weekly patch model (<span class="standout-text">patch ow</span>) was inferred using data found in drug labels
-                of once-weekly Climara and Menostar patches. The twice-weekly patch model (<span class="standout-text">patch tw</span>) was inferred
-                using data taken from two 2003 studies by Houssain et al. looking at
-                twice-weekly Estradot and Menorest patches, and in the drug label of twice-weekly Mylan patches.
-                In light of knowledge gathered from self-reported community data, please be advised that both models
-                excessively underestimate the uncertainty which should be close to 10 times larger. The models
-                will be improved to better reflect this in the future.
+            <p class="indent">The once-weekly patch model (<span class="standout-text">patch ow</span>) was
+                inferred using data found in drug labels of once-weekly Climara and Menostar patches.
+                The twice-weekly patch model (<span class="standout-text">patch tw</span>) was inferred
+                using data taken from two 2003 studies by Houssain et al. looking at twice-weekly Estradot
+                and Menorest patches, and in the drug label of twice-weekly Mylan patches.
+                In light of knowledge gathered from self-reported community data, please be advised that
+                both models excessively underestimate the uncertainty which should be close to 10 times larger.
+                The models will be improved to better reflect this in the future.
                 Currently there is no way to change the wearing period of the patch in the interface
                 (i.e. they are fixed at 3&frac12; and 7 days) but it is planned for the future.
             </p>
@@ -220,7 +224,7 @@
                 <ol>
                     <li><strong>Problem with recommended 5-30 mg intramuscular injections every 2 weeks:</strong></li>
                     <ul>
-                        <li>The half-life of estradiol valerate and cypionate are approximately 4 and 8 days, respectively. Injecting every 2 weeks requires higher doses and can cause large fluctuations in hormone levels, leading to very high levels shortly after the injection and very 
+                        <li>The half-life of estradiol valerate and cypionate are approximately 4 and 8 days, respectively. Injecting every 2 weeks requires higher doses and can cause large fluctuations in hormone levels, leading to very high levels shortly after the injection and very
                             low levels before the next injection. This can cause mood swings and potentially restart testosterone production in the last few days before the next injection.</li>
                         <li>Using the lower dose limit (5 mg every 2 weeks), hormone levels may drop too low for monotherapy after about 7 days, potentially allowing testosterone production to restart, and further down below 100 pg/mL at odds with WPATH's own recommended levels.</li>
                         <li>Using the upper dose limit (30 mg every 2 weeks), hormone levels could spike dangerously high (upwards of 2,000 pg/mL with EV and 1,000 pg/mL with EC), increasing the risk of blood clots for those predisposed to thrombotic events.</li>
@@ -238,10 +242,11 @@
             <p>
                 <h4 class="standout-text">Acknowledgements</h4>
                 Initial idea and development by alix. Code improvement and refactoring by Meringue.
+                Help with data digitization from Annie.
                 Additional help from Diamond, GearKite, Jess, Xea, and idk2848.
 
-                <br/><br/>Encouragements, entertainment, and memetic pumping from
-                <br/>Torble Lea photino Annie emily Izzy Ashley Sapphira
+                <br/><br/>Encouragements, entertainment, feedback, and memetic pumping from
+                <br/>Torble Lea photino emily Izzy Ashley Sapphira
             </p>
             <br>
             <p>
@@ -256,15 +261,15 @@
             </p>
             <br>
             <p class="standout-text">
-                estrannaise.js is entirely client-side. Your data, whether entered, imported, stashed, 
-                or loaded from a shared url, remains exclusively within your browser and will never be 
+                estrannaise.js is entirely client-side. Your data, whether entered, imported, stashed,
+                or loaded from a shared url, remains exclusively within your browser and will never be
                 transmitted to the developer(s) or any third-party by our application.
             </p>
             <br>
             <p>
                 mit license (c) 2024 alix<br>
                 <a href="javascript_licenses.html" data-jslicense="1">JavaScript license information</a><br>
-                <a href="https://github.com/WHSAH/estrannaise.js" target="_blank">estrannaise.js (v0.3.6)</a>
+                <a href="https://github.com/WHSAH/estrannaise.js" target="_blank">estrannaise.js (v0.4.0)</a>
             </p>
             <br>
             <p>
@@ -272,18 +277,22 @@
                 For feedback, bugs, and feature requests submit an issue on github.
             </p>
             <br>
-            <p>
-                tipjars
-                <br>
-                <span id="xmr-tipjar-text">xmr</span><br><span id="copy-xmr" class="copy-crypto">85Tz3LXEU65h6Lf6tjXLk744FMYW5f4yeTx1pVjsqURQ3YQxtawQJoMAcXDAtEbyFhBLZeEdsXGmpTy5RzzDCWQo6QvcvzE</span><br>
-                <span id="btc-tipjar-text">btc</span><br><span id="copy-btc" class="copy-crypto">1EK9wp876WhA8W3m7a1mR1Aka6LDsoWpCR</span><br>
-                <span id="ltc-tipjar-text">ltc</span><br><span id="copy-ltc" class="copy-crypto">ltc1qz4auzjh0dtfqlu5yjk85tvz83aed60ajmy8src</span><br>
-                <span id="eth-tipjar-text">eth</span><br><span id="copy-eth" class="copy-crypto">0xccC52F9E0CFA1D365A69b5D624dA357192bb3c83</span>
-            </p>
 
-        </div> <!-- bottom-text -->
-    </div> <!-- container -->
-    </div> <!-- dragndrop-zone -->
+        </div>
+
+        <div id="tipjars">
+            <p>
+                <span id="tipjars-header">tipjars</span>
+                <br>
+                <span id="xmr-tipjar-text">xmr</span><span id="copy-xmr" class="copy-crypto">85Tz3LXEU65h6Lf6tjXLk744FMYW5f4yeTx1pVjsqURQ3YQxtawQJoMAcXDAtEbyFhBLZeEdsXGmpTy5RzzDCWQo6QvcvzE</span><br>
+                <span id="btc-tipjar-text">btc</span><span id="copy-btc" class="copy-crypto">1EK9wp876WhA8W3m7a1mR1Aka6LDsoWpCR</span><br>
+                <span id="ltc-tipjar-text">ltc</span><span id="copy-ltc" class="copy-crypto">ltc1qz4auzjh0dtfqlu5yjk85tvz83aed60ajmy8src</span><br>
+                <span id="eth-tipjar-text">eth</span><span id="copy-eth" class="copy-crypto">0xccC52F9E0CFA1D365A69b5D624dA357192bb3c83</span>
+            </p>
+        </div>
+
+    </div>
+</div>
 </body>
 
 </html>

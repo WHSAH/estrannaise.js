@@ -27,15 +27,15 @@ body {
     gap: 0px 0px;
     grid-auto-flow: row;
     grid-template-areas:
-        ". theme-slider";
+        ". the-big-light";
 }
 
 .text-container {
     grid-area: text-container;
 }
 
-.theme-slider {
-    grid-area: theme-slider;
+the-big-light {
+    grid-area: the-big-light;
     align-self: end;
     justify-self: start;
 }
