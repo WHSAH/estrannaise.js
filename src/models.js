@@ -284,9 +284,10 @@ function _logsubexp(x, y) {
     }
 }
 
-// This is an approximation, but it's good enough for our purposes
+// Use the 1C approximation to estimate the terminal elimination time
+// When k1, k2, k3 are close 5x the minimum k might not be enough
 export function terminalEliminationTime3C(model, nbHalfLives = 5) {
-    return nbHalfLives * Math.log(2) / Math.min(...PKParameters[model].slice(1));
+    return nbHalfLives * Math.log(2) * (1 / PKParameters[model][1] + 1 / PKParameters[model][2] + 1 / PKParameters[model][3]);
 }
 
 function goldenSectionSearch(f, a, b, tolerance = 1e-5, maxIterations = 100) {
