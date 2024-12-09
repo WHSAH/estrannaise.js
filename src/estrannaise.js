@@ -121,6 +121,8 @@ export function getCurrentPlottingOptions() {
 
 // Find the first element in list that contains str or is contained in str (case insensitive)
 function findIntersecting(list, str) {
+    str = str || '';
+    console.log('in findIntersecting', list, str);
     return list.find(el => el.toLowerCase().includes(str.toLowerCase()) || str.toLowerCase().includes(el.toLowerCase()));
 }
 
@@ -200,7 +202,7 @@ function loadCSV(files) {
                     deleteAllRows('customdose-table');
                     results.data.forEach(([dose, time, model]) => {
                         let delivtype = findIntersecting(Object.keys(modelList), model);
-                        if (isValidInput(dose, time, delivtype)) {
+                        if (isValidInput(dose, time, delivtype, true)) {
                             addDTMRow('customdose-table', parseFloat(dose), parseFloat(time), delivtype);
                         }
                     });
@@ -236,17 +238,23 @@ function exportCSV() {
     document.body.removeChild(downloadLink);
 }
 
-function isValidInput(dose, time, model) {
-    return (
-        !isNaN(parseFloat(dose))
-     && !isNaN(parseFloat(time))
-     && parseFloat(dose) >= 0   // 0 doses are valid after all
-     && !!findIntersecting(Object.keys(modelList), model)
+function isValidInput(dose, time, model, intersect = false) {
+    dose = dose || '';
+    time = time || '';
+    model = model || '';
+    console.log('in isValid', dose, time, model);
+    let inputValid = (!isNaN(parseFloat(dose)) // 0 doses are valid after all
+                   && !isNaN(parseFloat(time))
+                   && parseFloat(dose) >= 0)
+    if (intersect) {
+        inputValid = inputValid && !!findIntersecting(Object.keys(modelList), model);
         // We need the !! because JS, in its infinite wisdom,
         // is otherwise returning the string returned by findIntersecting
         // instead of the result of the boolean expression.
         // Apparently boolean expressions can return strings now.
-     );
+    }
+
+    return inputValid;
 }
 
 function isValidRow(row) {
