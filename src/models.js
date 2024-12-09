@@ -286,8 +286,8 @@ function _logsubexp(x, y) {
 
 // Use the 1C approximation to estimate the terminal elimination time
 // When k1, k2, k3 are close 5x the minimum k might not be enough
-export function terminalEliminationTime3C(model, nbHalfLives = 5) {
-    return nbHalfLives * Math.log(2) * (1 / PKParameters[model][1] + 1 / PKParameters[model][2] + 1 / PKParameters[model][3]);
+export function terminalEliminationTime3C(_d, k1, k2, k3, nbHalfLives = 5) {
+    return nbHalfLives * Math.log(2) * (1 / k1 + 1 / k2 + 1 / k3);
 }
 
 function goldenSectionSearch(f, a, b, tolerance = 1e-5, maxIterations = 100) {
@@ -312,14 +312,16 @@ function goldenSectionSearch(f, a, b, tolerance = 1e-5, maxIterations = 100) {
     return (b + a) / 2;
 }
 
-export function getPKQuantities3C(d, k1, k2, k3) {
-    let terminalTime = 5 * Math.log(2) / Math.min(k1, k2, k3);
+export function getPKQuantities3C(_d, k1, k2, k3) {
+    let terminalTime = terminalEliminationTime3C(1.0, k1, k2, k3);
     let Tmax = goldenSectionSearch(t => -e2Curve3C(t, 1.0, 1.0, k1, k2, k3), 0, terminalTime);
     let Cmax = e2Curve3C(Tmax, 1.0, 1.0, k1, k2, k3);
     let Chalf = Cmax / 2;
     let Thalf = goldenSectionSearch(t => (e2Curve3C(t, 1.0, 1.0, k1, k2, k3) - Chalf)**2, Tmax, terminalTime);
+    let ThalfAbsorption = goldenSectionSearch(t => (e2Curve3C(t, 1.0, 1.0, k1, k2, k3) - Chalf)**2, 0, Tmax);
     let halfLife = Thalf - Tmax;
-    return { Tmax: Tmax, Cmax: d * Cmax, halfLife: halfLife };
+    let halfLifeAbsorption = ThalfAbsorption;
+    return { Tmax: Tmax, Cmax: d * Cmax, halfLife: halfLife, halfLifeAbsorption: halfLifeAbsorption };
 }
 
 export function getPKQuantities(model) {

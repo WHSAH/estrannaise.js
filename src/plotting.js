@@ -90,9 +90,9 @@ function findxMax(dataset, options) {
                 else { acc.push(acc[idx - 1] + entry.time); }
                 return acc;
             }, []);
-            xMax = Math.max(xMax, ...dataset.customdoses.entries.map((entry, idx) => absoluteTimes[idx] + terminalEliminationTime3C(entry.model)));
+            xMax = Math.max(xMax, ...dataset.customdoses.entries.map((entry, idx) => absoluteTimes[idx] + terminalEliminationTime3C(...PKParameters[entry.model])));
         } else {
-            xMax = Math.max(xMax, ...dataset.customdoses.entries.map(entry => entry.time + terminalEliminationTime3C(entry.model)));
+            xMax = Math.max(xMax, ...dataset.customdoses.entries.map(entry => entry.time + terminalEliminationTime3C(...PKParameters[entry.model])));
         }
     }
 
