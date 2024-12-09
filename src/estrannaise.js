@@ -1093,8 +1093,6 @@ function loadFromLocalStorage() {
     // that are present in the object
     // otherwise do nothing
 
-    let unitsMap = generateEnum(availableUnits);
-
     if (localStorage.getItem('states')) {
         let states = JSON.parse(localStorage.getItem('states'));
         if (states.menstrualCycleVisible) { turnMenstrualCycleOn(false); } else { turnMenstrualCycleOff(false); }
@@ -1323,6 +1321,7 @@ function applyPreset(presetConfig, refreshAfter = true) {
 
     presetConfig.menstrualCycle ? turnMenstrualCycleOn(false) : turnMenstrualCycleOff(false);
     presetConfig.intervalDays ? setDaysAsIntervals(false) : setDaysAsAbsolute(false);
+    presetConfig.fudgeFactor > 0 && (document.getElementById('fudge-factor').value = presetConfig.fudgeFactor);
 
     if (presetConfig.steady.length) {
         presetConfig.steady.forEach(steadyDose => {

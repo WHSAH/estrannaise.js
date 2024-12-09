@@ -13,6 +13,7 @@ export const Presets = {
         'hidden': true,
         'menstrualCycle': false,
         'intervalDays': true,
+        'fudgeFactor': 1.0,
         'steady': [
             [4, 7, 'EEn im'],
             [4, 10, 'EC im', false, true]

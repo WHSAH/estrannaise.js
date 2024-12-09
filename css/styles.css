@@ -303,6 +303,10 @@ select {
     text-align: right;
 }
 
+#dropdown-presets {
+    width: 20rem;
+}
+
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
     -webkit-appearance: none;
