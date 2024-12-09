@@ -310,7 +310,7 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
         marginBottom: 50,
         marginTop: 30,
         x: { domain: [xMin, xMax], label: 'time (days)', ticks: 7 },
-        y: { domain: [0, 1.25 * yMax], label: `serum e₂ (${units})`, ticks: 6 },
+        y: { domain: [0, 1.25 * yMax], label: `serum e₂ (${units})` + (options.fudgeFactor != 1 ? ` (fudge x${options.fudgeFactor})` : ''), ticks: 6 },
         style: { fontFamily: 'monospace', fontSize: options.fontSize },
         marks: [].concat(gridMarks)
          .concat(targetMarks)
