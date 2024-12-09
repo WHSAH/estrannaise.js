@@ -30,24 +30,25 @@ const isMobileOrTablet = (window.matchMedia('(pointer: coarse), (pointer: none)'
 
 window.addEventListener('DOMContentLoaded', () => {
 
+    // Control bar
     setupUnitsDropdown()
     setupDaysInputEvents();
-
     setupPresetsDropdown();
-
     setupMenstrualCycleButtonEvent();
     setupTargetRangeButtonEvent();
     setupResetLocalStorageButtonEvent();
     setupShareURLButtonEvent();
 
+    // Entries
     setupCustomDoseButtonsEvents();
     setupSteadyStateButtonsEvents();
-    
-    attachTipjarsEvent();
-    
+
+    // Window interaction
     setupDragNDropImport();
     setupResizeRefresh();
-    
+
+    attachTipjarsEvent();
+
     themeSetup();
 
     if (!loadFromURL() && !loadFromLocalStorage()) {
@@ -790,7 +791,7 @@ function setupShareURLButtonEvent() {
 
     shareButton.addEventListener('mousedown', (event) => {
         event.preventDefault();
-        
+
         navigator.clipboard.writeText(generateSanerShareURL());
 
         shareButton.classList.add('button-on');
@@ -949,6 +950,18 @@ function themeSetup() {
         }
     });
 
+    document.getElementById('the-big-light').addEventListener('dblclick', (event) => {
+        event.preventDefault();
+        localStorage.removeItem('force-color-scheme');
+
+        if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            setColorScheme('night');
+        } else {
+            setColorScheme('day');
+        }
+
+    });
+
 }
 
 function setupUnitsDropdown() {
@@ -1041,7 +1054,7 @@ function generateSanerShareURL() {
 }
 
 export function saveToLocalStorage() {
-    
+
     localStorage.setItem('data', JSON.stringify(getDataset(true, false)));
     localStorage.setItem('states', JSON.stringify({
             menstrualCycleVisible: isButtonOn('menstrual-cycle-button'),
