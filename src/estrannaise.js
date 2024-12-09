@@ -1320,20 +1320,21 @@ function applyPreset(presetConfig, refreshAfter = true) {
     deleteAllRows('steadystate-table');
 
     presetConfig.menstrualCycle ? turnMenstrualCycleOn(false) : turnMenstrualCycleOff(false);
-    presetConfig.intervalDays ? setDaysAsIntervals(false) : setDaysAsAbsolute(false);
+    presetConfig.customdoses.daysAsIntervals ? setDaysAsIntervals(false) : setDaysAsAbsolute(false);
+    presetConfig.units && (document.getElementById('dropdown-units').value = presetConfig.units);
     presetConfig.fudgeFactor > 0 && (document.getElementById('fudge-factor').value = presetConfig.fudgeFactor);
 
-    if (presetConfig.steady.length) {
-        presetConfig.steady.forEach(steadyDose => {
-            addDTMRow('steadystate-table', ...steadyDose);
+    if (presetConfig.steadystates.entries.length) {
+        presetConfig.steadystates.entries.forEach(entry => {
+            addDTMRow('steadystate-table', entry.dose, entry.time, entry.model, entry.curveVisible, entry.uncertaintyVisible);
         });
     } else {
         addDTMRow('steadystate-table');
     }
 
-    if (presetConfig.multi.length) {
-        presetConfig.multi.forEach(customdose => {
-            addDTMRow('customdose-table', ...customdose, presetConfig.customdosesCurveVisible === true, presetConfig.customdosesUncertaintyVisible === true);
+    if (presetConfig.customdoses.entries.length) {
+        presetConfig.customdoses.entries.forEach(entry => {
+            addDTMRow('customdose-table', entry.dose, entry.time, entry.model, presetConfig.customdoses.curveVisible === true, presetConfig.customdoses.uncertaintyVisible === true);
         });
     } else {
         addDTMRow('customdose-table');
