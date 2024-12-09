@@ -31,7 +31,8 @@ const isMobileOrTablet = (window.matchMedia('(pointer: coarse), (pointer: none)'
 window.addEventListener('DOMContentLoaded', () => {
 
     // Control bar
-    setupUnitsDropdown()
+    setupFudgeFactor();
+    setupUnitsDropdown();
     setupDaysInputEvents();
     setupPresetsDropdown();
     setupMenstrualCycleButtonEvent();
@@ -78,6 +79,7 @@ export function getCurrentPlottingOptions() {
     let menstrualCycleVisible = isButtonOn('menstrual-cycle-button');
     let targetRangeVisible = isButtonOn('target-range-button');
     let units = document.getElementById('dropdown-units').value;
+    let fudgeFactor = document.getElementById('fudge-factor').value;
 
     let numberOfLinePoints = 1000;
     let numberOfCloudPoints = 3500;
@@ -106,6 +108,7 @@ export function getCurrentPlottingOptions() {
         menstrualCycleVisible: menstrualCycleVisible,
         targetRangeVisible: targetRangeVisible,
         units: units,
+        fudgeFactor: fudgeFactor,
         strokeWidth: strokeWidth,
         numberOfLinePoints: numberOfLinePoints,
         numberOfCloudPoints: numberOfCloudPoints,
@@ -123,7 +126,6 @@ export function getCurrentPlottingOptions() {
 // Find the first element in list that contains str or is contained in str (case insensitive)
 function findIntersecting(list, str) {
     str = str || '';
-    console.log('in findIntersecting', list, str);
     return list.find(el => el.toLowerCase().includes(str.toLowerCase()) || str.toLowerCase().includes(el.toLowerCase()));
 }
 
@@ -243,7 +245,6 @@ function isValidInput(dose, time, model, intersect = false) {
     dose = dose || '';
     time = time || '';
     model = model || '';
-    console.log('in isValid', dose, time, model);
     let inputValid = (!isNaN(parseFloat(dose)) // 0 doses are valid after all
                    && !isNaN(parseFloat(time))
                    && parseFloat(dose) >= 0)
@@ -964,6 +965,18 @@ function themeSetup() {
 
 }
 
+function setupFudgeFactor() {
+    let fudgeFactorInput = document.getElementById('fudge-factor');
+
+    fudgeFactorInput.addEventListener('input', () => {
+        if (!isNaN(parseFloat(fudgeFactorInput.value))) {
+            refresh();
+            saveToLocalStorage();
+        }
+
+    });
+}
+
 function setupUnitsDropdown() {
 
     let dropdown = document.getElementById('dropdown-units');
@@ -1028,7 +1041,7 @@ function attachTipjarsEvent() {
 }
 
 
-function generateStateString() {
+function generateShareString() {
 
     let [unitsMap, modelsMap] = [generateEnum(availableUnits), generateEnum(modelList)];
 
@@ -1045,12 +1058,18 @@ function generateStateString() {
     let steadyStateString = '';
     steadyStateString += getSteadyStates(true, false).entries.slice(0, -1).map(entry => (entry.curveVisible ? 'c' : '') + (entry.uncertaintyVisible ? 'u' : '') + ',' + dropNaNAndFix(entry.dose) + ',' + dropNaNAndFix(entry.time) + ',' + modelsMap[entry.model]).join('-');
 
-    return [stateString, customdoseString, steadyStateString].join('_');
+    let shareString = [stateString, customdoseString, steadyStateString].join('_');
+
+    if (!isNaN(parseFloat(document.getElementById('fudge-factor').value)) && parseFloat(document.getElementById('fudge-factor').value) !== 1.0) {
+        shareString += '_' + dropNaNAndFix(parseFloat(document.getElementById('fudge-factor').value));
+    }
+
+    return shareString
 
 }
 
 function generateSanerShareURL() {
-    return window.location.origin + window.location.pathname + '#' + generateStateString();
+    return window.location.origin + window.location.pathname + '#' + generateShareString();
 }
 
 export function saveToLocalStorage() {
@@ -1060,6 +1079,7 @@ export function saveToLocalStorage() {
             menstrualCycleVisible: isButtonOn('menstrual-cycle-button'),
             targetRangeVisible: isButtonOn('target-range-button'),
             units: document.getElementById('dropdown-units').value,
+            fudgeFactor: document.getElementById('fudge-factor').value,
             daysAsIntervals: global_daysAsIntervals
         }));
 
@@ -1079,6 +1099,7 @@ function loadFromLocalStorage() {
         if (states.menstrualCycleVisible) { turnMenstrualCycleOn(false); } else { turnMenstrualCycleOff(false); }
         if (states.targetRangeVisible) { turnTargetRangeOn(false); } else { turnTargetRangeOff(false); }
         if (states.units) { document.getElementById('dropdown-units').value = states.units; }
+        if (states.fudgeFactor) { document.getElementById('fudge-factor').value = states.fudgeFactor; }
     }
 
     // if the element entries exists in localStorage
@@ -1115,7 +1136,7 @@ function loadFromURL() {
 
     if (isValidBase64(hashString)) {
         return loadFromZalgoIncantation()
-    } else if (hashString.split('_').length === 3) {
+    } else if (hashString.split('_').length >= 3) {
         return loadFromSanerURL();
     } else {
         return false
@@ -1131,12 +1152,15 @@ function loadFromStateString(stateString) {
 
     let [unitsMap, modelsMap] = [generateEnum(availableUnits), generateEnum(modelList)];
 
-    let [state, customdose, steadyState] = stateString.split('_');
+    let [state, customdose, steadyState, fudgeFactor] = stateString.split('_');
     state.includes('i') ? setDaysAsIntervals(false) : setDaysAsAbsolute(false);
     state.includes('m') ? turnMenstrualCycleOn(false) : turnMenstrualCycleOff(false);
     state.includes('t') ? turnTargetRangeOn(false) : turnTargetRangeOff(false);
     if (state.slice(-1) in unitsMap) {
         document.getElementById('dropdown-units').value = unitsMap[state.slice(-1)];
+    }
+    if (!isNaN(parseFloat(fudgeFactor))) {
+        document.getElementById('fudge-factor').value = fudgeFactor;
     }
 
     let mdEntries = customdose.split('-');

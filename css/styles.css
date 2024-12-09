@@ -295,6 +295,10 @@ select {
     border-radius: 0.35rem;
 }
 
+#fudge-factor {
+    width: 3rem;
+}
+
 .dropdown-model {
     text-align: right;
 }

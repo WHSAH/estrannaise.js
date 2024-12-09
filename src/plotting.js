@@ -39,6 +39,7 @@ export function generatePlottingOptions({
     menstrualCycleVisible = false,
     targetRangeVisible = false,
     units = 'pg/mL',
+    fudgeFactor = 1.0,
     strokeWidth = 2,
     numberOfLinePoints = 900,
     numberOfCloudPoints = 3500,
@@ -55,6 +56,7 @@ export function generatePlottingOptions({
             menstrualCycleVisible,
             targetRangeVisible,
             units,
+            fudgeFactor,
             strokeWidth,
             numberOfLinePoints,
             numberOfCloudPoints,
@@ -126,7 +128,7 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
     let units = availableUnits[options.units].units;
     let conversionFactor = availableUnits[options.units].conversionFactor;
 
-    let yMax = conversionFactor * 300;
+    let yMax = options.fudgeFactor * conversionFactor * 300;
     let xMin = 0;
     let xMax = Math.max(14.1, findxMax(dataset, options));
 
@@ -205,7 +207,7 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
 
             for (let i = 0; i < options.numberOfCloudPoints; i++) {
                 let randx = Math.random() * (xMax - xMin) + xMin;
-                let y = e2multidose3C(randx, doses, times, models, conversionFactor, true, dataset.customdoses.daysAsIntervals);
+                let y = e2multidose3C(randx, doses, times, models, options.fudgeFactor * conversionFactor, true, dataset.customdoses.daysAsIntervals);
                 customdoseUncertaintyCloud.push({ Time: randx, E2: y });
             }
 
@@ -219,7 +221,7 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
         }
 
         // Always compute the curve to set the y-axis limit
-        let customdoseCurve = fillCurve(t => e2multidose3C(t, doses, times, models, conversionFactor, false, dataset.customdoses.daysAsIntervals), xMin, xMax, options.numberOfLinePoints);
+        let customdoseCurve = fillCurve(t => e2multidose3C(t, doses, times, models, options.fudgeFactor * conversionFactor, false, dataset.customdoses.daysAsIntervals), xMin, xMax, options.numberOfLinePoints);
         yMax = Math.max(yMax, ...customdoseCurve.map(p => p.E2));
 
         if (dataset.customdoses.curveVisible) {
@@ -252,7 +254,7 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
 
             for (let i = 0; i < options.numberOfCloudPoints; i++) {
                 let randx = Math.random() * (xMax - xMin) + xMin;
-                let y = PKRandomFunctions(conversionFactor)[entry.model](randx, entry.dose, true, entry.time)
+                let y = PKRandomFunctions(options.fudgeFactor * conversionFactor)[entry.model](randx, entry.dose, true, entry.time)
                 steadyStateUncertaintyCloud.push({
                     Time: randx,
                     E2: y
@@ -267,7 +269,7 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
             }));
         }
 
-        let steadyStateCurve = fillCurve(t => PKFunctions(conversionFactor)[entry.model](t, entry.dose, true, entry.time), xMin, xMax, options.numberOfLinePoints);
+        let steadyStateCurve = fillCurve(t => PKFunctions(options.fudgeFactor * conversionFactor)[entry.model](t, entry.dose, true, entry.time), xMin, xMax, options.numberOfLinePoints);
         yMax = Math.max(yMax, ...steadyStateCurve.map(p => p.E2));
 
         if (entry.curveVisible) {
@@ -287,8 +289,8 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
                 x: 'Time', y: 'E2',        /* lmao even */
                 title: p => `~~~time: ${numberToDayHour(p.Time)}
                              ~~~~~e₂: ${p.E2.toFixed(precision)} ${units}
-                             average: ${entry.model.includes('patch') ? 'unavailable' : e2ssAverage3C(conversionFactor * entry.dose, entry.time, ...PKParameters[entry.model]).toFixed(precision)} ${entry.model.includes("patch") ? '' : units}
-                             ~trough: ${PKFunctions(conversionFactor)[entry.model](0.0, entry.dose, true, entry.time).toFixed(precision)} ${units}`.replace(/(\n+)(\s*)/g, (_, p, __) => p).replace(/~/g, ' '),
+                             average: ${entry.model.includes('patch') ? 'unavailable' : e2ssAverage3C(options.fudgeFactor * conversionFactor * entry.dose, entry.time, ...PKParameters[entry.model]).toFixed(precision)} ${entry.model.includes("patch") ? '' : units}
+                             ~trough: ${PKFunctions(options.fudgeFactor * conversionFactor)[entry.model](0.0, entry.dose, true, entry.time).toFixed(precision)} ${units}`.replace(/(\n+)(\s*)/g, (_, p, __) => p).replace(/~/g, ' '),
                 fill: options.backgroundColor,
                 fillOpacity: 0.618,                                                                                               /* i mean just look at it */
                 stroke: options.strongForegroundColor
