@@ -4,6 +4,7 @@ estrannaise.js is a small playground for estradiol pharmacokinetics. It can simu
 Under the hood, estrannaise.js uses pharmacokinetic compartments models and MCMC inference using a simple Gaussian model with mixed effects or for more complicated pooled dataset our very own homebrewed hierarchical Bayesian model called Emix.
 
 ### Changelog
+- 2024-12-09: Improved EV/EEn/EC models, added fudge factor
 - 2024-12-08: Save state/data/theme to localStorage
 - 2024-11-15: Switched deps to ESM, minor formatting
 - 2024-11-10: New warning, css tweaks, contact info
@@ -11,7 +12,6 @@ Under the hood, estrannaise.js uses pharmacokinetic compartments models and MCMC
 
 ### TODO
 - Add visual markers for dose times
-- Save/load from localStorage
 - Automatically remove double empty tailing input lines
 - Offer different ways to visualize the uncertainty (parallel sigma lines and cloud ensemble of curves)
 - Deal with customdose visibilities and table differently.
