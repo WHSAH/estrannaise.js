@@ -969,7 +969,8 @@ function setupFudgeFactor() {
     let fudgeFactorInput = document.getElementById('fudge-factor');
 
     fudgeFactorInput.addEventListener('input', () => {
-        if (!isNaN(parseFloat(fudgeFactorInput.value))) {
+        let fudgeFactor = parseFloat(fudgeFactorInput.value)
+        if (!isNaN(fudgeFactor) && fudgeFactor > 0) {
             refresh();
             saveToLocalStorage();
         }
