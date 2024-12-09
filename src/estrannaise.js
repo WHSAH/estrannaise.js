@@ -30,6 +30,8 @@ const isMobileOrTablet = (window.matchMedia('(pointer: coarse), (pointer: none)'
 
 window.addEventListener('DOMContentLoaded', () => {
 
+    setupBanner();
+
     // Control bar
     setupFudgeFactor();
     setupUnitsDropdown();
@@ -778,7 +780,6 @@ function setupResetLocalStorageButtonEvent() {
         resetButton.classList.add('button-on');
         localStorage.removeItem('states');
         localStorage.removeItem('data');
-        localStorage.removeItem('force-color-scheme');
         initializeDefaultPreset();
         refresh()
         setTimeout(() => {
@@ -1041,6 +1042,17 @@ function attachTipjarsEvent() {
     });
 }
 
+function setupBanner() {
+    if (!localStorage.getItem('bannerDismissed')) {
+        document.getElementById('banner').style.display = 'block';
+    }
+
+    // Add event listener to the dismiss button
+    document.getElementById('banner').addEventListener('click', () => {
+        document.getElementById('banner').style.display = 'none';
+        localStorage.setItem('bannerDismissed', 'true');
+    });
+}
 
 function generateShareString() {
 

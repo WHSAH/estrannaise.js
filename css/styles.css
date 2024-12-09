@@ -107,14 +107,6 @@ a:link, a:visited {
     justify-content: center;
 }
 
-#banner-container {
-    grid-area: banner-container;
-    display: flex;
-    position: relative;
-    justify-content: center;
-    width: 100%;
-}
-
 .hidden {
     height: 0;
     overflow: hidden;
@@ -122,13 +114,21 @@ a:link, a:visited {
     margin: 0;
 }
 
+#banner-container {
+    grid-area: banner-container;
+    display: flex;
+    /* position: relative; */
+    justify-content: center;
+    width: 100%;
+}
+
 #banner {
     display: none;
     position: relative;
-    width: 80%;
+    width: auto;
+    text-align: left;
     background-color: var(--soft-foreground);
     color: var(--standout-background-color);
-    text-align: center;
     padding: 1rem;
     margin-top: 1rem;
     z-index: 1000;
@@ -305,6 +305,8 @@ select {
 
 #dropdown-presets {
     width: 20rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 input::-webkit-outer-spin-button,
@@ -420,8 +422,6 @@ button.delete-button {
 
     #dropdown-presets {
         width: 10rem;
-        overflow: hidden;
-        text-overflow: ellipsis;
     }
 
     #title {
