@@ -30,7 +30,12 @@ const isMobileOrTablet = (window.matchMedia('(pointer: coarse), (pointer: none)'
 
 window.addEventListener('DOMContentLoaded', () => {
 
+    setupTheme();
     setupBanner();
+
+    // Window interaction
+    setupDragNDropImport();
+    debounceResizeRefresh();
 
     // Control bar
     setupFudgeFactor();
@@ -46,13 +51,7 @@ window.addEventListener('DOMContentLoaded', () => {
     setupCustomDoseButtonsEvents();
     setupSteadyStateButtonsEvents();
 
-    // Window interaction
-    setupDragNDropImport();
-    setupResizeRefresh();
-
     attachTipjarsEvent();
-
-    themeSetup();
 
     if (!loadFromURL() && !loadFromLocalStorage()) {
         initializeDefaultPreset();
@@ -72,129 +71,365 @@ function refresh() {
     plot.append(graph);
 }
 
-export function getCurrentPlottingOptions() {
-    let rootStyle = getComputedStyle(document.documentElement);
-    let backgroundColor = rootStyle.getPropertyValue('--background-color');
-    let strongForegroundColor = rootStyle.getPropertyValue('--strong-foreground');
-    let softForegroundColor = rootStyle.getPropertyValue('--soft-foreground');
+///////////////////////////////////////////////////////////////
+//////////////// Interface/DOM setup functions ////////////////
+///////////////////////////////////////////////////////////////
 
-    let menstrualCycleVisible = isButtonOn('menstrual-cycle-button');
-    let targetRangeVisible = isButtonOn('target-range-button');
-    let units = document.getElementById('dropdown-units').value;
-    let fudgeFactor = document.getElementById('fudge-factor').value;
+function setupFudgeFactor() {
+    let fudgeFactorInput = document.getElementById('fudge-factor');
 
-    let numberOfLinePoints = 1000;
-    let numberOfCloudPoints = 3500;
-    let pointCloudSize = 1.3;
-    let pointCloudOpacity = 0.4;
-    let fontSize = "0.9rem";
-    let strokeWidth = 2;
-    let aspectRatio = 0.43;
+    fudgeFactorInput.addEventListener('input', () => {
+        let fudgeFactor = parseFloat(fudgeFactorInput.value)
+        if (!isNaN(fudgeFactor) && fudgeFactor > 0) {
+            refresh();
+            saveToLocalStorage();
+        }
 
-    if (isSmallScreen) {
-        fontSize = "1.6rem";
-        aspectRatio = 0.55;
-        strokeWidth = 4;
-        pointCloudSize = 2.1;
-    }
-
-    if (isMobileOrTablet) {
-        pointCloudSize = 3.5;
-        /* And let's ease off a bit on the
-           computational burden when on mobile.
-           It was a bit sluggish on my Pixel 5 */
-        numberOfCloudPoints = 900;
-    }
-
-    return generatePlottingOptions({
-        menstrualCycleVisible: menstrualCycleVisible,
-        targetRangeVisible: targetRangeVisible,
-        units: units,
-        fudgeFactor: fudgeFactor,
-        strokeWidth: strokeWidth,
-        numberOfLinePoints: numberOfLinePoints,
-        numberOfCloudPoints: numberOfCloudPoints,
-        pointCloudSize: pointCloudSize,
-        pointCloudOpacity: pointCloudOpacity,
-        currentColorscheme: global_currentColorScheme,
-        backgroundColor: backgroundColor,
-        strongForegroundColor: strongForegroundColor,
-        softForegroundColor: softForegroundColor,
-        fontSize: fontSize,
-        aspectRatio: aspectRatio
     });
 }
 
-// Find the first element in list that contains str or is contained in str (case insensitive)
-function findIntersecting(list, str) {
-    str = str || '';
-    return list.find(el => el.toLowerCase().includes(str.toLowerCase()) || str.toLowerCase().includes(el.toLowerCase()));
-}
+function setupUnitsDropdown() {
 
-function isValidBase64(str) {
-    const base64Regex = /^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/;
-    return !!str && base64Regex.test(str);
-}
+    let dropdown = document.getElementById('dropdown-units');
 
-function dropNaNAndFix(value, precision = 3) {
-    if (!isNaN(value)) {
-        return parseFloat(value.toFixed(precision));
-    } else {
-        return '';
-    }
-}
-
-function setColorScheme(scheme, refreshAfter = true) {
-    let rootStyle = getComputedStyle(document.documentElement);
-    let s = document.documentElement.style
-
-    if (scheme == 'night') {
-        s.setProperty('--background-color', rootStyle.getPropertyValue('--background-color-night'));
-        s.setProperty('--standout-background-color', rootStyle.getPropertyValue('--standout-background-color-night'));
-        s.setProperty('--soft-foreground', rootStyle.getPropertyValue('--soft-foreground-night'));
-        s.setProperty('--strong-foreground', rootStyle.getPropertyValue('--strong-foreground-night'));
-        global_currentColorScheme = 'night';
-
-        /* This is to make sure the switch is in the right state
-           when it's the OS that triggers the change and not a
-           manual change from the user. */
-        document.getElementById('nightday-state').checked = false;
-
-    } else if (scheme == 'day') {
-        s.setProperty('--background-color', rootStyle.getPropertyValue('--background-color-day'));
-        s.setProperty('--standout-background-color', rootStyle.getPropertyValue('--standout-background-color-day'));
-        s.setProperty('--soft-foreground', rootStyle.getPropertyValue('--soft-foreground-day'));
-        s.setProperty('--strong-foreground', rootStyle.getPropertyValue('--strong-foreground-day'));
-        global_currentColorScheme = 'day';
-        document.getElementById('nightday-state').checked = true;
-    }
-
-    /* You actually need it because the tooltips don't behave */
-    refreshAfter && refresh();
-}
-
-function allUnique(list) {
-    return list.length === new Set(list).size;
-}
-
-function guessDaysAsIntervals() {
-    let mdtimes = getCustomDoses(false, false).entries.map(entry => entry.time);
-    if (allUnique(mdtimes)) {
-        document.getElementById('dropdown-daysinput').value = 'absolute';
-        global_daysAsIntervals = false;
-    } else {
-        document.getElementById('dropdown-daysinput').value = 'intervals';
-        global_daysAsIntervals = true;
-    }
-}
-
-function generateEnum(object) {
-    let enumObject = {};
-    Object.keys(object).forEach((key, idx) => {
-        enumObject[enumObject[idx] = key] = idx;
+    Object.keys(availableUnits).forEach(units => {
+        let option = document.createElement('option');
+        option.value = units;
+        option.text = units;
+        dropdown.appendChild(option);
     });
-    return enumObject
+
+    dropdown.addEventListener('change', () => {
+        refresh();
+        saveToLocalStorage();
+    });
+
 }
+
+function setupDaysInputEvents() {
+
+    let dropdownDaysInput = document.getElementById('dropdown-daysinput');
+
+    dropdownDaysInput.addEventListener('change', (event) => {
+        if (event.target.value === 'convert') {
+            (global_daysAsIntervals) ? convertEntriesToAbsoluteDays() : convertEntriesToInvervalDays();
+        } else {
+            (event.target.value === 'intervals') ? setDaysAsIntervals() : setDaysAsAbsolute();
+        }
+        saveToLocalStorage();
+    });
+
+}
+
+/**
+ * Provide an event handler whenever the user selects a preset
+ */
+function setupPresetsDropdown() {
+    let presetDropdown = document.getElementById('dropdown-presets');
+
+    for (let preset in Presets) {
+        if (!preset.startsWith('_')) {
+            let option = document.createElement('option');
+            option.value = preset;
+            option.innerHTML = '&nbsp;&nbsp;' + Presets[preset].label;
+            presetDropdown.appendChild(option);
+        } else {
+            if (typeof Presets[preset].hidden === 'undefined') {
+                let option = document.createElement('option');
+                option.disabled = true;
+                option.innerHTML = Presets[preset].label;
+                presetDropdown.appendChild(option);
+            };
+        };
+    }
+
+    presetDropdown.addEventListener('change', function(event) {
+        if(!Presets[this.value]) {
+            console.error('Found an unknown preset value!');
+            return;
+        }
+        applyPreset(Presets[this.value]);
+    });
+}
+
+function setupMenstrualCycleButtonEvent() {
+    let button = document.getElementById('menstrual-cycle-button');
+    button.addEventListener('mousedown', () => {
+        if (isButtonOn('menstrual-cycle-button')) {
+            turnMenstrualCycleOff();
+        } else {
+            turnMenstrualCycleOn();
+        }
+    });
+}
+
+function setupTargetRangeButtonEvent() {
+    let button = document.getElementById('target-range-button');
+    button.addEventListener('mousedown', () => {
+        if (isButtonOn('target-range-button')) {
+            turnTargetRangeOff();
+        } else {
+            turnTargetRangeOn();
+        }
+    });
+}
+
+function setupResetLocalStorageButtonEvent() {
+    let resetButton = document.getElementById('reset-button');
+    resetButton.addEventListener('mousedown', (event) => {
+        event.preventDefault();
+        resetButton.classList.add('button-on');
+        localStorage.removeItem('states');
+        localStorage.removeItem('data');
+        initializeDefaultPreset();
+        refresh()
+        setTimeout(() => {
+            resetButton.classList.remove('button-on');
+        }, 200);
+    });
+}
+
+function setupShareURLButtonEvent() {
+    let shareButton = document.getElementById('share-button');
+
+    shareButton.addEventListener('mousedown', (event) => {
+        event.preventDefault();
+
+        navigator.clipboard.writeText(generateShareURL());
+
+        shareButton.classList.add('button-on');
+        shareButton.innerHTML = '&nbsp;copied!&nbsp;';
+
+        setTimeout(() => {
+            shareButton.classList.remove('button-on');
+            shareButton.innerHTML = 'share url';
+        }, 700);
+    });
+}
+
+function setupSteadyStateButtonsEvents() {
+
+    let clearSteadyStateButton = document.getElementById('clear-steadystates-button')
+
+    clearSteadyStateButton.addEventListener('mousedown', (event) => {
+        event.preventDefault();
+        clearSteadyStateButton.classList.add('button-on');
+        deleteAllRows('steadystate-table');
+        addDoseTimeModelRow('steadystate-table');
+        refresh();
+        saveToLocalStorage();
+    });
+
+    clearSteadyStateButton.addEventListener('mouseup', () => {
+        clearSteadyStateButton.classList.remove('button-on');
+    });
+}
+
+function setupCustomDoseButtonsEvents() {
+
+    let guessButton = document.getElementById('guess-button');
+
+    guessButton.addEventListener('mousedown', (event) => {
+        event.preventDefault();
+        let guess = guessNextRow('customdose-table');
+
+        if (guess) {
+            guessButton.classList.add('button-on');
+            setRowParameters('customdose-table', -1, guess.dose, guess.time, guess.model);
+            refresh();
+            saveToLocalStorage();
+        } else {
+            guessButton.innerHTML = '&nbsp;?._.)&nbsp;&nbsp;';
+
+            setTimeout(() => {
+                guessButton.innerHTML = 'autofill';
+                guessButton.classList.remove('button-on');
+            }, 500);
+        }
+    });
+
+    guessButton.addEventListener('mouseup', () => {
+        guessButton.classList.remove('button-on');
+    });
+
+    let clearDoseButton = document.getElementById('clear-doses-button');
+
+    clearDoseButton.addEventListener('mousedown', (event) => {
+        event.preventDefault();
+        clearDoseButton.classList.add('button-on');
+        deleteAllRows('customdose-table');
+        addDoseTimeModelRow('customdose-table');
+        refresh();
+        saveToLocalStorage();
+    });
+    clearDoseButton.addEventListener('mouseup', () => {
+        clearDoseButton.classList.remove('button-on');
+    });
+
+    let exportCSVButton = document.getElementById('export-csv-button');
+
+    exportCSVButton.addEventListener('mousedown', () => {
+        exportCSVButton.classList.add('button-on');
+        exportCSV();
+    });
+    exportCSVButton.addEventListener('mouseup', () => {
+        exportCSVButton.classList.remove('button-on');
+    });
+
+    // No toggle-on/off style. Makes it compatible with safari
+    // and the dialog acts as feedback anyway so it's ok.
+    let importCSVButton = document.getElementById('import-csv-dialog')
+
+    importCSVButton .addEventListener('mousedown', () => {
+        document.getElementById('csv-file').click();
+    });
+
+    document.getElementById('csv-file').addEventListener('change', (e) => {
+        loadCSV(e.target.files);
+    });
+}
+
+function setupDragNDropImport() {
+
+    let dragNDropZone = document.getElementById('dragndrop-zone');
+
+    dragNDropZone.addEventListener('dragenter', () => {
+        dragNDropZone.classList.add('overlay');
+    });
+
+    dragNDropZone.addEventListener('dragleave', (event) => {
+        if (event.relatedTarget === null || !dragNDropZone.contains(event.relatedTarget)) {
+            dragNDropZone.classList.remove('overlay');
+        }
+    });
+
+    dragNDropZone.addEventListener('dragover', (event) => {
+        event.preventDefault();
+    });
+
+    dragNDropZone.addEventListener('drop', (event) => {
+        event.preventDefault();
+        dragNDropZone.classList.remove('overlay');
+        let files = event.dataTransfer.files;
+        loadCSV(files);
+    });
+
+}
+
+function setupBanner() {
+    if (!localStorage.getItem('bannerDismissed')) {
+        document.getElementById('banner').style.display = 'block';
+    }
+
+    // Add event listener to the dismiss button
+    document.getElementById('banner').addEventListener('click', () => {
+        document.getElementById('banner').style.display = 'none';
+        localStorage.setItem('bannerDismissed', 'true');
+    });
+}
+
+function setupTheme() {
+
+    if (localStorage.getItem('force-color-scheme')) {
+        setColorScheme(localStorage.getItem('force-color-scheme'), false);
+    } else {
+        if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            setColorScheme('night', false);
+        } else {
+            setColorScheme('day', false);
+        }
+    }
+
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (event) => {
+        if (!localStorage.getItem('force-color-scheme')) {
+            if (event.matches) {
+                setColorScheme('night');
+            } else {
+                setColorScheme('day');
+            }
+        }
+    });
+
+    document.getElementById('nightday-state').addEventListener('change', (event) => {
+        if (event.target.checked) {
+            localStorage.setItem('force-color-scheme', 'day');
+            setColorScheme('day');
+        } else {
+            localStorage.setItem('force-color-scheme', 'night');
+            setColorScheme('night');
+        }
+    });
+
+    document.getElementById('the-big-light').addEventListener('dblclick', (event) => {
+        event.preventDefault();
+        localStorage.removeItem('force-color-scheme');
+
+        if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            setColorScheme('night');
+        } else {
+            setColorScheme('day');
+        }
+
+    });
+
+}
+
+/*
+ Debounce and refresh on resize so that we send
+ the new set of plotting options with new point size
+ and curve stroke widths when the screen goes
+ from big to small or vis-versa.
+*/
+function debounceResizeRefresh() {
+    window.addEventListener('resize', () => {
+
+        /* catch switch to small screen on desktop/laptop */
+        isSmallScreen = window.matchMedia('(max-width: 768px)').matches;
+
+        /* iOS is weird an will trigger resize
+           events when scrolling. */
+        let currentWindowWidth = window.innerWidth;
+        if (currentWindowWidth === previousWindowWidth) {
+            return;
+        }
+
+        // Doesn't appear to be necessary and I don't
+        // understand how come, but just in case
+        previousWindowWidth = currentWindowWidth;
+
+        if (resizeTimeout) {
+            clearTimeout(resizeTimeout);
+        }
+        resizeTimeout = setTimeout(() => {
+            refresh();
+        }, 100);
+    });
+}
+
+function attachTipjarsEvent() {
+    ['xmr', 'btc', 'ltc', 'eth'].forEach(crypto => {
+        document.getElementById(`copy-${crypto}`).addEventListener('mousedown', function() {
+
+            let rootStyle = getComputedStyle(document.documentElement);
+            let softForegroundColor = rootStyle.getPropertyValue('--strong-foreground');
+
+            navigator.clipboard.writeText(this.innerText);
+
+            let tipjarHeader = document.getElementById(`tipjars-header`);
+            tipjarHeader.innerHTML = `tipjars (${crypto} address copied, thank you!)`;
+
+            setTimeout(() => {
+                tipjarHeader.innerHTML = 'tipjars';
+            }, 350);
+
+            changeBackgroundColor(`copy-${crypto}`, softForegroundColor, null, 150);
+        });
+    });
+}
+
+///////////////////////////////////////////////////////////////
+////////////////////// Generic functions //////////////////////
+///////////////////////////////////////////////////////////////
 
 function loadCSV(files) {
     if (files.length > 0) {
@@ -208,7 +443,7 @@ function loadCSV(files) {
                     results.data.forEach(([dose, time, model]) => {
                         let delivtype = findIntersecting(Object.keys(modelList), model);
                         if (isValidInput(dose, time, delivtype, true)) {
-                            addDTMRow('customdose-table', parseFloat(dose), parseFloat(time), delivtype);
+                            addDoseTimeModelRow('customdose-table', parseFloat(dose), parseFloat(time), delivtype);
                         }
                     });
                     guessDaysAsIntervals();
@@ -243,36 +478,6 @@ function exportCSV() {
     document.body.removeChild(downloadLink);
 }
 
-function isValidInput(dose, time, model, intersect = false) {
-    dose = dose || '';
-    time = time || '';
-    model = model || '';
-    let inputValid = (!isNaN(parseFloat(dose)) // 0 doses are valid after all
-                   && !isNaN(parseFloat(time))
-                   && parseFloat(dose) >= 0)
-    if (intersect) {
-        inputValid = inputValid && !!findIntersecting(Object.keys(modelList), model);
-        // We need the !! because JS, in its infinite wisdom,
-        // is otherwise returning the string returned by findIntersecting
-        // instead of the result of the boolean expression.
-        // Apparently boolean expressions can return strings now.
-    }
-
-    return inputValid;
-}
-
-function isValidRow(row) {
-    let dose = row.cells[2].querySelector('input').value;
-    let time = row.cells[3].querySelector('input').value;
-    let model = row.cells[4].querySelector('select').value;
-    return isValidInput(dose, time, model);
-}
-
-function isButtonOn(buttonID) {
-    let button = document.getElementById(buttonID);
-    return button.classList.contains('button-on');
-}
-
 function readRow(row, keepVisibilities = true, keepInvalid = false) {
 
     let curveVisibleCheckBox = row.cells[0].querySelector('input');
@@ -301,7 +506,7 @@ function convertEntriesToInvervalDays() {
 
     deleteAllRows('customdose-table');
     sortedEntries.forEach(entry => {
-        addDTMRow('customdose-table', entry.dose, entry.time, entry.model);
+        addDoseTimeModelRow('customdose-table', entry.dose, entry.time, entry.model);
     });
 
     let previousTime = null;
@@ -339,7 +544,7 @@ function convertEntriesToAbsoluteDays() {
 
 }
 
-function customDosesVisibilities() {
+function getCustomDosesVisibilities() {
     let customdoseTable = document.getElementById('customdose-table');
     let firstRowEntry = readRow(customdoseTable.rows[1], true, true);
     return [firstRowEntry.curveVisible, firstRowEntry.uncertaintyVisible]
@@ -350,7 +555,7 @@ function getCustomDoses(keepInvalid = false, passColor = true) {
 
     let customdoseTable = document.getElementById('customdose-table');
 
-    [customDoses.curveVisible, customDoses.uncertaintyVisible] = customDosesVisibilities();
+    [customDoses.curveVisible, customDoses.uncertaintyVisible] = getCustomDosesVisibilities();
 
     customDoses.daysAsIntervals = global_daysAsIntervals;
     if (passColor) { customDoses.color = wongPalette(4); }
@@ -418,7 +623,7 @@ function guessNextRow(tableID) {
 }
 
 
-function addDTMRow(tableID, dose = null, time = null, model = null, curveVisible = true, uncertaintyVisible = true) {
+function addDoseTimeModelRow(tableID, dose = null, time = null, model = null, curveVisible = true, uncertaintyVisible = true) {
 
     let table = document.getElementById(tableID);
     let row = table.insertRow(-1);
@@ -637,7 +842,7 @@ function addDTMRow(tableID, dose = null, time = null, model = null, curveVisible
             }
 
             if (myTable.rows.length < 2) {
-                addDTMRow(myTable.id);
+                addDoseTimeModelRow(myTable.id);
             }
 
             addRowIfNeeded(tableID);
@@ -724,294 +929,6 @@ function turnTargetRangeOff(refreshPlot = true) {
     refreshPlot && (refresh(), saveToLocalStorage());
 }
 
-function setupMenstrualCycleButtonEvent() {
-    let button = document.getElementById('menstrual-cycle-button');
-    button.addEventListener('mousedown', () => {
-        if (isButtonOn('menstrual-cycle-button')) {
-            turnMenstrualCycleOff();
-        } else {
-            turnMenstrualCycleOn();
-        }
-    });
-}
-
-function setupTargetRangeButtonEvent() {
-    let button = document.getElementById('target-range-button');
-    button.addEventListener('mousedown', () => {
-        if (isButtonOn('target-range-button')) {
-            turnTargetRangeOff();
-        } else {
-            turnTargetRangeOn();
-        }
-    });
-}
-
-function setupDragNDropImport() {
-
-    let dragNDropZone = document.getElementById('dragndrop-zone');
-
-    dragNDropZone.addEventListener('dragenter', () => {
-        dragNDropZone.classList.add('overlay');
-    });
-
-    dragNDropZone.addEventListener('dragleave', (event) => {
-        if (event.relatedTarget === null || !dragNDropZone.contains(event.relatedTarget)) {
-            dragNDropZone.classList.remove('overlay');
-        }
-    });
-
-    dragNDropZone.addEventListener('dragover', (event) => {
-        event.preventDefault();
-    });
-
-    dragNDropZone.addEventListener('drop', (event) => {
-        event.preventDefault();
-        dragNDropZone.classList.remove('overlay');
-        let files = event.dataTransfer.files;
-        loadCSV(files);
-    });
-
-}
-
-function setupResetLocalStorageButtonEvent() {
-    let resetButton = document.getElementById('reset-button');
-    resetButton.addEventListener('mousedown', (event) => {
-        event.preventDefault();
-        resetButton.classList.add('button-on');
-        localStorage.removeItem('states');
-        localStorage.removeItem('data');
-        initializeDefaultPreset();
-        refresh()
-        setTimeout(() => {
-            resetButton.classList.remove('button-on');
-        }, 200);
-    });
-}
-
-function setupShareURLButtonEvent() {
-    let shareButton = document.getElementById('share-button');
-
-    shareButton.addEventListener('mousedown', (event) => {
-        event.preventDefault();
-
-        navigator.clipboard.writeText(generateSanerShareURL());
-
-        shareButton.classList.add('button-on');
-        shareButton.innerHTML = '&nbsp;copied!&nbsp;';
-
-        setTimeout(() => {
-            shareButton.classList.remove('button-on');
-            shareButton.innerHTML = 'share url';
-        }, 700);
-    });
-}
-
-function setupCustomDoseButtonsEvents() {
-
-    let guessButton = document.getElementById('guess-button');
-
-    guessButton.addEventListener('mousedown', (event) => {
-        event.preventDefault();
-        let guess = guessNextRow('customdose-table');
-
-        if (guess) {
-            guessButton.classList.add('button-on');
-            setRowParameters('customdose-table', -1, guess.dose, guess.time, guess.model);
-            refresh();
-            saveToLocalStorage();
-        } else {
-            guessButton.innerHTML = '&nbsp;?._.)&nbsp;&nbsp;';
-
-            setTimeout(() => {
-                guessButton.innerHTML = 'autofill';
-                guessButton.classList.remove('button-on');
-            }, 500);
-        }
-    });
-
-    guessButton.addEventListener('mouseup', () => {
-        guessButton.classList.remove('button-on');
-    });
-
-    let clearDoseButton = document.getElementById('clear-doses-button');
-
-    clearDoseButton.addEventListener('mousedown', (event) => {
-        event.preventDefault();
-        clearDoseButton.classList.add('button-on');
-        deleteAllRows('customdose-table');
-        addDTMRow('customdose-table');
-        refresh();
-        saveToLocalStorage();
-    });
-    clearDoseButton.addEventListener('mouseup', () => {
-        clearDoseButton.classList.remove('button-on');
-    });
-
-    let exportCSVButton = document.getElementById('export-csv-button');
-
-    exportCSVButton.addEventListener('mousedown', () => {
-        exportCSVButton.classList.add('button-on');
-        exportCSV();
-    });
-    exportCSVButton.addEventListener('mouseup', () => {
-        exportCSVButton.classList.remove('button-on');
-    });
-
-    // No toggle-on/off style. Makes it compatible with safari
-    // and the dialog acts as feedback anyway so it's ok.
-    let importCSVButton = document.getElementById('import-csv-dialog')
-
-    importCSVButton .addEventListener('mousedown', () => {
-        document.getElementById('csv-file').click();
-    });
-
-    document.getElementById('csv-file').addEventListener('change', (e) => {
-        loadCSV(e.target.files);
-    });
-}
-
-function setupSteadyStateButtonsEvents() {
-
-    let clearSteadyStateButton = document.getElementById('clear-steadystates-button')
-
-    clearSteadyStateButton.addEventListener('mousedown', (event) => {
-        event.preventDefault();
-        clearSteadyStateButton.classList.add('button-on');
-        deleteAllRows('steadystate-table');
-        addDTMRow('steadystate-table');
-        refresh();
-        saveToLocalStorage();
-    });
-
-    clearSteadyStateButton.addEventListener('mouseup', () => {
-        clearSteadyStateButton.classList.remove('button-on');
-    });
-}
-
-/*
- Debounce and refresh on resize so that we send
- the new set of plotting options with new point size
- and curve stroke widths when the screen goes
- from big to small or vis-versa.
-*/
-function setupResizeRefresh() {
-    window.addEventListener('resize', () => {
-
-        /* catch switch to small screen on desktop/laptop */
-        isSmallScreen = window.matchMedia('(max-width: 768px)').matches;
-
-        /* iOS is weird an will trigger resize
-           events when scrolling. */
-        let currentWindowWidth = window.innerWidth;
-        if (currentWindowWidth === previousWindowWidth) {
-            return;
-        }
-
-        // Doesn't appear to be necessary and I don't
-        // understand how come, but just in case
-        previousWindowWidth = currentWindowWidth;
-
-        if (resizeTimeout) {
-            clearTimeout(resizeTimeout);
-        }
-        resizeTimeout = setTimeout(() => {
-            refresh();
-        }, 100);
-    });
-}
-
-function themeSetup() {
-
-    if (localStorage.getItem('force-color-scheme')) {
-        setColorScheme(localStorage.getItem('force-color-scheme'), false);
-    } else {
-        if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            setColorScheme('night', false);
-        } else {
-            setColorScheme('day', false);
-        }
-    }
-
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (event) => {
-        if (!localStorage.getItem('force-color-scheme')) {
-            if (event.matches) {
-                setColorScheme('night');
-            } else {
-                setColorScheme('day');
-            }
-        }
-    });
-
-    document.getElementById('nightday-state').addEventListener('change', (event) => {
-        if (event.target.checked) {
-            localStorage.setItem('force-color-scheme', 'day');
-            setColorScheme('day');
-        } else {
-            localStorage.setItem('force-color-scheme', 'night');
-            setColorScheme('night');
-        }
-    });
-
-    document.getElementById('the-big-light').addEventListener('dblclick', (event) => {
-        event.preventDefault();
-        localStorage.removeItem('force-color-scheme');
-
-        if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            setColorScheme('night');
-        } else {
-            setColorScheme('day');
-        }
-
-    });
-
-}
-
-function setupFudgeFactor() {
-    let fudgeFactorInput = document.getElementById('fudge-factor');
-
-    fudgeFactorInput.addEventListener('input', () => {
-        let fudgeFactor = parseFloat(fudgeFactorInput.value)
-        if (!isNaN(fudgeFactor) && fudgeFactor > 0) {
-            refresh();
-            saveToLocalStorage();
-        }
-
-    });
-}
-
-function setupUnitsDropdown() {
-
-    let dropdown = document.getElementById('dropdown-units');
-
-    Object.keys(availableUnits).forEach(units => {
-        let option = document.createElement('option');
-        option.value = units;
-        option.text = units;
-        dropdown.appendChild(option);
-    });
-
-    dropdown.addEventListener('change', () => {
-        refresh();
-        saveToLocalStorage();
-    });
-
-}
-
-function setupDaysInputEvents() {
-
-    let dropdownDaysInput = document.getElementById('dropdown-daysinput');
-
-    dropdownDaysInput.addEventListener('change', (event) => {
-        if (event.target.value === 'convert') {
-            (global_daysAsIntervals) ? convertEntriesToAbsoluteDays() : convertEntriesToInvervalDays();
-        } else {
-            (event.target.value === 'intervals') ? setDaysAsIntervals() : setDaysAsAbsolute();
-        }
-        saveToLocalStorage();
-    });
-
-}
-
 function changeBackgroundColor(elementId, color1, color2, delay = 150) {
     let element = document.getElementById(elementId);
     element.style.backgroundColor = color1;
@@ -1019,39 +936,6 @@ function changeBackgroundColor(elementId, color1, color2, delay = 150) {
     setTimeout(function () {
         element.style.backgroundColor = color2;
     }, delay);
-}
-
-function attachTipjarsEvent() {
-    ['xmr', 'btc', 'ltc', 'eth'].forEach(crypto => {
-        document.getElementById(`copy-${crypto}`).addEventListener('mousedown', function() {
-
-            let rootStyle = getComputedStyle(document.documentElement);
-            let softForegroundColor = rootStyle.getPropertyValue('--strong-foreground');
-
-            navigator.clipboard.writeText(this.innerText);
-
-            let tipjarHeader = document.getElementById(`tipjars-header`);
-            tipjarHeader.innerHTML = `tipjars (${crypto} address copied, thank you!)`;
-
-            setTimeout(() => {
-                tipjarHeader.innerHTML = 'tipjars';
-            }, 350);
-
-            changeBackgroundColor(`copy-${crypto}`, softForegroundColor, null, 150);
-        });
-    });
-}
-
-function setupBanner() {
-    if (!localStorage.getItem('bannerDismissed')) {
-        document.getElementById('banner').style.display = 'block';
-    }
-
-    // Add event listener to the dismiss button
-    document.getElementById('banner').addEventListener('click', () => {
-        document.getElementById('banner').style.display = 'none';
-        localStorage.setItem('bannerDismissed', 'true');
-    });
 }
 
 function generateShareString() {
@@ -1065,7 +949,7 @@ function generateShareString() {
     stateString += unitsMap[document.getElementById('dropdown-units').value];
 
     let customdoseString = '';
-    let [c, u] = customDosesVisibilities();
+    let [c, u] = getCustomDosesVisibilities();
     customdoseString += getCustomDoses(true, false).entries.slice(0, -1).map((entry, idx) => (idx == 0 ? (c ? 'c' : '' ) + (u ? 'u' : '') + ',' : '') + dropNaNAndFix(entry.dose) + ',' + dropNaNAndFix(entry.time) + ',' + modelsMap[entry.model]).join('-');
 
     let steadyStateString = '';
@@ -1081,7 +965,7 @@ function generateShareString() {
 
 }
 
-function generateSanerShareURL() {
+function generateShareURL() {
     return window.location.origin + window.location.pathname + '#' + generateShareString();
 }
 
@@ -1121,14 +1005,14 @@ function loadFromLocalStorage() {
             deleteAllRows('customdose-table');
             if (data.customdoses.daysAsIntervals) { setDaysAsIntervals(false); } else { setDaysAsAbsolute(false); }
             data.customdoses.entries.forEach(entry => {
-                addDTMRow('customdose-table', entry.dose, entry.time, entry.model, data.customdoses.curveVisible, data.customdoses.uncertaintyVisible);
+                addDoseTimeModelRow('customdose-table', entry.dose, entry.time, entry.model, data.customdoses.curveVisible, data.customdoses.uncertaintyVisible);
             });
         }
 
         if (data.steadystates) {
             deleteAllRows('steadystate-table');
             data.steadystates.entries.forEach(entry => {
-                addDTMRow('steadystate-table', entry.dose, entry.time, entry.model, entry.curveVisible, entry.uncertaintyVisible);
+                addDoseTimeModelRow('steadystate-table', entry.dose, entry.time, entry.model, entry.curveVisible, entry.uncertaintyVisible);
             });
         };
         return true;
@@ -1148,15 +1032,10 @@ function loadFromURL() {
     if (isValidBase64(hashString)) {
         return loadFromZalgoIncantation()
     } else if (hashString.split('_').length >= 3) {
-        return loadFromSanerURL();
+        return loadFromStateString(hashString);
     } else {
         return false
     }
-}
-
-function loadFromSanerURL() {
-    let hashString = window.location.hash.substring(1);
-    return loadFromStateString(hashString);
 }
 
 function loadFromStateString(stateString) {
@@ -1177,17 +1056,17 @@ function loadFromStateString(stateString) {
     let mdEntries = customdose.split('-');
     deleteAllRows('customdose-table');
     let [cu, dose, time, model] = mdEntries[0].split(',');
-    addDTMRow('customdose-table', dose, time, modelsMap[model], cu.includes('c') ? true : false, cu.includes('u') ? true : false);
+    addDoseTimeModelRow('customdose-table', dose, time, modelsMap[model], cu.includes('c') ? true : false, cu.includes('u') ? true : false);
     for (let entry of mdEntries.slice(1)) {
         [dose, time, model] = entry.split(',');
-        addDTMRow('customdose-table', dose, time, modelsMap[model]);
+        addDoseTimeModelRow('customdose-table', dose, time, modelsMap[model]);
     }
 
     let ssEntries = steadyState.split('-');
     deleteAllRows('steadystate-table');
     for (let entry of ssEntries) {
         let [ssVisibilities, dose, time, model] = entry.split(',');
-        addDTMRow('steadystate-table', dose, time, modelsMap[model], ssVisibilities.includes('c') ? true : false, ssVisibilities.includes('u') ? true : false);
+        addDoseTimeModelRow('steadystate-table', dose, time, modelsMap[model], ssVisibilities.includes('c') ? true : false, ssVisibilities.includes('u') ? true : false);
     }
 
     return true
@@ -1209,7 +1088,7 @@ function loadFromZalgoIncantation() {
         if (customdoseTable) {
             deleteAllRows('customdose-table');
             for (let i = 0; i < customdoseTable[0].length; i++) {
-                addDTMRow('customdose-table', customdoseTable[1][i], customdoseTable[0][i], customdoseTable[2][i], customdoseTable[3][i], customdoseTable[4][i]);
+                addDoseTimeModelRow('customdose-table', customdoseTable[1][i], customdoseTable[0][i], customdoseTable[2][i], customdoseTable[3][i], customdoseTable[4][i]);
             }
             dataLoaded = true;
         }
@@ -1217,7 +1096,7 @@ function loadFromZalgoIncantation() {
         if (steadyStateTable) {
             deleteAllRows('steadystate-table');
             for (let i = 0; i < steadyStateTable[0].length; i++) {
-                addDTMRow('steadystate-table', steadyStateTable[1][i], steadyStateTable[0][i], steadyStateTable[2][i], steadyStateTable[3][i], steadyStateTable[4][i]);
+                addDoseTimeModelRow('steadystate-table', steadyStateTable[1][i], steadyStateTable[0][i], steadyStateTable[2][i], steadyStateTable[3][i], steadyStateTable[4][i]);
             }
             dataLoaded = true;
         }
@@ -1258,7 +1137,7 @@ function addRowIfNeeded(tableID) {
     let table = document.getElementById(tableID);
     // Add new row if the last row is valid
     if (isValidRow(table.rows[table.rows.length - 1])) {
-        addDTMRow(tableID);
+        addDoseTimeModelRow(tableID);
     }
 }
 
@@ -1285,45 +1164,6 @@ function setRowParameters(tableID, number, dose, time, model) {
 }
 
 /**
- * At startup, apply the "default" preset defined so the user isn't presented
- * with a blank slate and can see what's possible.
- */
-function initializeDefaultPreset() {
-    applyPreset(Presets._default, false);
-}
-
-/**
- * Provide an event handler whenever the user selects a preset
- */
-function setupPresetsDropdown() {
-    let presetDropdown = document.getElementById('dropdown-presets');
-
-    for (let preset in Presets) {
-        if (!preset.startsWith('_')) {
-            let option = document.createElement('option');
-            option.value = preset;
-            option.innerHTML = '&nbsp;&nbsp;' + Presets[preset].label;
-            presetDropdown.appendChild(option);
-        } else {
-            if (typeof Presets[preset].hidden === 'undefined') {
-                let option = document.createElement('option');
-                option.disabled = true;
-                option.innerHTML = Presets[preset].label;
-                presetDropdown.appendChild(option);
-            };
-        };
-    }
-
-    presetDropdown.addEventListener('change', function(event) {
-        if(!Presets[this.value]) {
-            console.error('Found an unknown preset value!');
-            return;
-        }
-        applyPreset(Presets[this.value]);
-    });
-}
-
-/**
  * Apply the preset configuration to the tables, and refresh the graph
  * @param {Object} presetConfig
  */
@@ -1338,19 +1178,185 @@ function applyPreset(presetConfig, refreshAfter = true) {
 
     if (presetConfig.steadystates.entries.length) {
         presetConfig.steadystates.entries.forEach(entry => {
-            addDTMRow('steadystate-table', entry.dose, entry.time, entry.model, entry.curveVisible, entry.uncertaintyVisible);
+            addDoseTimeModelRow('steadystate-table', entry.dose, entry.time, entry.model, entry.curveVisible, entry.uncertaintyVisible);
         });
     } else {
-        addDTMRow('steadystate-table');
+        addDoseTimeModelRow('steadystate-table');
     }
 
     if (presetConfig.customdoses.entries.length) {
         presetConfig.customdoses.entries.forEach(entry => {
-            addDTMRow('customdose-table', entry.dose, entry.time, entry.model, presetConfig.customdoses.curveVisible === true, presetConfig.customdoses.uncertaintyVisible === true);
+            addDoseTimeModelRow('customdose-table', entry.dose, entry.time, entry.model, presetConfig.customdoses.curveVisible === true, presetConfig.customdoses.uncertaintyVisible === true);
         });
     } else {
-        addDTMRow('customdose-table');
+        addDoseTimeModelRow('customdose-table');
     }
 
     refreshAfter && (refresh(), saveToLocalStorage());
+}
+
+/**
+ * At startup, apply the "default" preset defined so the user isn't presented
+ * with a blank slate and can see what's possible.
+ */
+function initializeDefaultPreset() {
+    applyPreset(Presets._default, false);
+}
+
+///////////////////////////////////////////////////////////////
+////////////////////// Helper functions ///////////////////////
+///////////////////////////////////////////////////////////////
+
+function setColorScheme(scheme, refreshAfter = true) {
+    let rootStyle = getComputedStyle(document.documentElement);
+    let s = document.documentElement.style
+
+    if (scheme == 'night') {
+        s.setProperty('--background-color', rootStyle.getPropertyValue('--background-color-night'));
+        s.setProperty('--standout-background-color', rootStyle.getPropertyValue('--standout-background-color-night'));
+        s.setProperty('--soft-foreground', rootStyle.getPropertyValue('--soft-foreground-night'));
+        s.setProperty('--strong-foreground', rootStyle.getPropertyValue('--strong-foreground-night'));
+        global_currentColorScheme = 'night';
+
+        /* This is to make sure the switch is in the right state
+           when it's the OS that triggers the change and not a
+           manual change from the user. */
+        document.getElementById('nightday-state').checked = false;
+
+    } else if (scheme == 'day') {
+        s.setProperty('--background-color', rootStyle.getPropertyValue('--background-color-day'));
+        s.setProperty('--standout-background-color', rootStyle.getPropertyValue('--standout-background-color-day'));
+        s.setProperty('--soft-foreground', rootStyle.getPropertyValue('--soft-foreground-day'));
+        s.setProperty('--strong-foreground', rootStyle.getPropertyValue('--strong-foreground-day'));
+        global_currentColorScheme = 'day';
+        document.getElementById('nightday-state').checked = true;
+    }
+
+    /* You actually need it because the tooltips don't behave */
+    refreshAfter && refresh();
+}
+
+export function getCurrentPlottingOptions() {
+    let rootStyle = getComputedStyle(document.documentElement);
+    let backgroundColor = rootStyle.getPropertyValue('--background-color');
+    let strongForegroundColor = rootStyle.getPropertyValue('--strong-foreground');
+    let softForegroundColor = rootStyle.getPropertyValue('--soft-foreground');
+
+    let menstrualCycleVisible = isButtonOn('menstrual-cycle-button');
+    let targetRangeVisible = isButtonOn('target-range-button');
+    let units = document.getElementById('dropdown-units').value;
+    let fudgeFactor = document.getElementById('fudge-factor').value;
+
+    let numberOfLinePoints = 1000;
+    let numberOfCloudPoints = 3500;
+    let pointCloudSize = 1.3;
+    let pointCloudOpacity = 0.4;
+    let fontSize = "0.9rem";
+    let strokeWidth = 2;
+    let aspectRatio = 0.43;
+
+    if (isSmallScreen) {
+        fontSize = "1.6rem";
+        aspectRatio = 0.55;
+        strokeWidth = 4;
+        pointCloudSize = 2.1;
+    }
+
+    if (isMobileOrTablet) {
+        pointCloudSize = 3.5;
+        /* And let's ease off a bit on the
+           computational burden when on mobile.
+           It was a bit sluggish on my Pixel 5 */
+        numberOfCloudPoints = 900;
+    }
+
+    return generatePlottingOptions({
+        menstrualCycleVisible: menstrualCycleVisible,
+        targetRangeVisible: targetRangeVisible,
+        units: units,
+        fudgeFactor: fudgeFactor,
+        strokeWidth: strokeWidth,
+        numberOfLinePoints: numberOfLinePoints,
+        numberOfCloudPoints: numberOfCloudPoints,
+        pointCloudSize: pointCloudSize,
+        pointCloudOpacity: pointCloudOpacity,
+        currentColorscheme: global_currentColorScheme,
+        backgroundColor: backgroundColor,
+        strongForegroundColor: strongForegroundColor,
+        softForegroundColor: softForegroundColor,
+        fontSize: fontSize,
+        aspectRatio: aspectRatio
+    });
+}
+
+// Find the first element in list that contains str or is contained in str (case insensitive)
+function findIntersecting(list, str) {
+    str = str || '';
+    return list.find(el => el.toLowerCase().includes(str.toLowerCase()) || str.toLowerCase().includes(el.toLowerCase()));
+}
+
+function isValidBase64(str) {
+    const base64Regex = /^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/;
+    return !!str && base64Regex.test(str);
+}
+
+function dropNaNAndFix(value, precision = 3) {
+    if (!isNaN(value)) {
+        return parseFloat(value.toFixed(precision));
+    } else {
+        return '';
+    }
+}
+
+function allUnique(list) {
+    return list.length === new Set(list).size;
+}
+
+function guessDaysAsIntervals() {
+    let mdtimes = getCustomDoses(false, false).entries.map(entry => entry.time);
+    if (allUnique(mdtimes)) {
+        document.getElementById('dropdown-daysinput').value = 'absolute';
+        global_daysAsIntervals = false;
+    } else {
+        document.getElementById('dropdown-daysinput').value = 'intervals';
+        global_daysAsIntervals = true;
+    }
+}
+
+function generateEnum(object) {
+    let enumObject = {};
+    Object.keys(object).forEach((key, idx) => {
+        enumObject[enumObject[idx] = key] = idx;
+    });
+    return enumObject
+}
+
+function isValidInput(dose, time, model, intersect = false) {
+    dose = dose || '';
+    time = time || '';
+    model = model || '';
+    let inputValid = (!isNaN(parseFloat(dose)) // 0 doses are valid after all
+                   && !isNaN(parseFloat(time))
+                   && parseFloat(dose) >= 0)
+    if (intersect) {
+        inputValid = inputValid && !!findIntersecting(Object.keys(modelList), model);
+        // We need the !! because JS, in its infinite wisdom,
+        // is otherwise returning the string returned by findIntersecting
+        // instead of the result of the boolean expression.
+        // Apparently boolean expressions can return strings now.
+    }
+
+    return inputValid;
+}
+
+function isValidRow(row) {
+    let dose = row.cells[2].querySelector('input').value;
+    let time = row.cells[3].querySelector('input').value;
+    let model = row.cells[4].querySelector('select').value;
+    return isValidInput(dose, time, model);
+}
+
+function isButtonOn(buttonID) {
+    let button = document.getElementById(buttonID);
+    return button.classList.contains('button-on');
 }
