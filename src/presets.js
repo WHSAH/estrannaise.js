@@ -601,6 +601,27 @@ export const Presets = {
             ]
         }
     },
+    'peak-ev-brainworms': {
+        label: 'Peak brainworms (EV qim) (access denied)',
+        disabled: true,
+        menstrualCycle: true,
+        steadystates: {entries: []},
+        customdoses: {
+            curveVisible: true,
+            uncertaintyVisible: true,
+            daysAsIntervals: false,
+            entries: [
+                {dose: 0.88, time: 0.0, model: 'EV im'},
+                {dose: 1.36, time: 8.26, model: 'EV im'},
+                {dose: 2.64, time: 11.67, model: 'EV im'},
+                {dose: 2.28, time: 19.86, model: 'EV im'},
+                {dose: 0.78, time: 32.8, model: 'EV im'},
+                {dose: 1.4, time: 37.45, model: 'EV im'},
+                {dose: 2.23, time: 39.89, model: 'EV im'},
+                {dose: 2.24, time: 47.84, model: 'EV im'}
+            ]
+        }
+    },
     'peak-eb-brainworms': {
         label: 'Peak brainworms (EB tid) (access denied)',
         disabled: true,
