@@ -128,23 +128,26 @@ function setupDaysInputEvents() {
 function setupPresetsDropdown() {
     let presetDropdown = document.getElementById('dropdown-presets');
 
-    for (let preset in Presets) {
-        if (!preset.startsWith('_')) {
+    for (const [presetkey, preset] of Object.entries(Presets)) {
+        if (presetkey.startsWith('_')) {
             let option = document.createElement('option');
-            option.value = preset;
-            option.innerHTML = '&nbsp;&nbsp;' + Presets[preset].label;
+            option.disabled = true;
+            option.innerHTML = preset.label;
             presetDropdown.appendChild(option);
         } else {
-            if (typeof Presets[preset].hidden === 'undefined') {
+            if (!preset.hidden) {
+                // console.log(preset.label)
                 let option = document.createElement('option');
-                option.disabled = true;
-                option.innerHTML = Presets[preset].label;
+                option.value = presetkey;
+                if (preset.disabled === true) { option.disabled = true };
+                option.innerHTML = '&nbsp;&nbsp;' + preset.label;
                 presetDropdown.appendChild(option);
-            };
-        };
-    }
+            }
+        }
+    };
 
     presetDropdown.addEventListener('change', function(event) {
+        event.preventDefault();
         if(!Presets[this.value]) {
             console.error('Found an unknown preset value!');
             return;
@@ -595,29 +598,39 @@ export function getDataset(keepInvalid = false, passColor = true) {
 
 function guessNextRow(tableID) {
     let table = document.getElementById(tableID);
+    // 1st row is the header, lasty row is always empty
+    // so >= 4 implies at least 2 rows of data
     if (table.rows.length >= 4 && !global_daysAsIntervals) {
-        let beforeLastRow = readRow(table.rows[table.rows.length - 3]);
+        // -2 to skip the automatic empty row at the end
         let lastRow = readRow(table.rows[table.rows.length - 2]);
+        let beforeLastRow = readRow(table.rows[table.rows.length - 3]);
         if (beforeLastRow && lastRow) {
+            // If in fact there are at least
+            // 3 rows of data, we can try to guess
+            // staggered pattern and fill 
+            // A B A -> A B A B -> A B A B A
+            // and interpolate time differences
             if (table.rows.length >= 5) {
-
                 let beforeBeforeLastRow = readRow(table.rows[table.rows.length - 4]);
                 if (beforeBeforeLastRow
                     && (lastRow.dose === beforeBeforeLastRow.dose)
-                    && (lastRow.dose !== beforeLastRow.dose)) {
+                    && (lastRow.model === beforeBeforeLastRow.model)) {
                     let dose = beforeLastRow.dose;
                     let timeDifference = beforeLastRow.time - beforeBeforeLastRow.time;
                     let model = beforeLastRow.model;
                     return { dose: dose, time: lastRow.time + timeDifference, model: model };
                 }
             }
+            // If we didn't catch an A B A pattern but
+            // the last two models are the same, we simply
+            // interpolate time and stagger the dose
             if (lastRow.model == beforeLastRow.model) {
-                let doseDifference = lastRow.dose - beforeLastRow.dose;
                 let timeDifference = lastRow.time - beforeLastRow.time;
-                let model = lastRow.model;
-                return {dose: lastRow.dose + doseDifference, time: lastRow.time + timeDifference, model: model };
+                return {dose: beforeLastRow.dose, time: lastRow.time + timeDifference, model: lastRow.model };
             }
         }
+    // In case days are given as intervals, the only pattern
+    // we catch is A -> A A -> A A A with the same dose/time/model
     } else if (table.rows.length >= 3 && global_daysAsIntervals) {
         // if days are given as intervals just repeat the last row
         let lastRow = readRow(table.rows[table.rows.length - 2]);
@@ -1205,7 +1218,7 @@ function applyPreset(presetConfig, refreshAfter = true) {
  * with a blank slate and can see what's possible.
  */
 function initializeDefaultPreset() {
-    applyPreset(Presets._default, false);
+    applyPreset(Presets.default, false);
 }
 
 ///////////////////////////////////////////////////////////////
