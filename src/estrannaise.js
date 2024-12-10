@@ -1085,7 +1085,7 @@ function generateSanerShareURL() {
     return window.location.origin + window.location.pathname + '#' + generateShareString();
 }
 
-export function saveToLocalStorage() {
+function saveToLocalStorage() {
 
     localStorage.setItem('data', JSON.stringify(getDataset(true, false)));
     localStorage.setItem('states', JSON.stringify({
