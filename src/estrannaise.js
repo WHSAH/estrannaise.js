@@ -111,6 +111,7 @@ function setupDaysInputEvents() {
     let dropdownDaysInput = document.getElementById('dropdown-daysinput');
 
     dropdownDaysInput.addEventListener('change', (event) => {
+        event.preventDefault();
         if (event.target.value === 'convert') {
             (global_daysAsIntervals) ? convertEntriesToAbsoluteDays() : convertEntriesToInvervalDays();
         } else {
@@ -248,7 +249,8 @@ function setupCustomDoseButtonsEvents() {
         }
     });
 
-    guessButton.addEventListener('mouseup', () => {
+    guessButton.addEventListener('mouseup', (event) => {
+        event.preventDefault();
         guessButton.classList.remove('button-on');
     });
 
@@ -262,13 +264,15 @@ function setupCustomDoseButtonsEvents() {
         refresh();
         saveToLocalStorage();
     });
-    clearDoseButton.addEventListener('mouseup', () => {
+    clearDoseButton.addEventListener('mouseup', (event) => {
+        event.preventDefault();
         clearDoseButton.classList.remove('button-on');
     });
 
     let exportCSVButton = document.getElementById('export-csv-button');
 
-    exportCSVButton.addEventListener('mousedown', () => {
+    exportCSVButton.addEventListener('mousedown', (event) => {
+        event.preventDefault();
         exportCSVButton.classList.add('button-on');
         exportCSV();
     });
@@ -743,7 +747,7 @@ function addDoseTimeModelRow(tableID, dose = null, time = null, model = null, cu
 
     if (tableID == 'customdose-table') {
         timeInput.classList.add('time-input-customdose');
-        timeInput.placeholder = global_daysAsIntervals ? 'since last' : 'since first';
+        timeInput.placeholder = global_daysAsIntervals ? 'since last' : 'since 1st';
     }
     else if (tableID == 'steadystate-table') {
         timeInput.classList.add('time-input-steadystate');
@@ -1172,6 +1176,7 @@ function applyPreset(presetConfig, refreshAfter = true) {
     deleteAllRows('steadystate-table');
 
     presetConfig.menstrualCycle ? turnMenstrualCycleOn(false) : turnMenstrualCycleOff(false);
+    presetConfig.targetRange ? turnTargetRangeOn(false) : turnTargetRangeOff(false);
     presetConfig.customdoses.daysAsIntervals ? setDaysAsIntervals(false) : setDaysAsAbsolute(false);
     presetConfig.units && (document.getElementById('dropdown-units').value = presetConfig.units);
     presetConfig.fudgeFactor > 0 && (document.getElementById('fudge-factor').value = presetConfig.fudgeFactor);

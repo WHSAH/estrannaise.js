@@ -12,6 +12,7 @@ export const Presets = {
     '_default': {
         hidden: true,
         menstrualCycle: false,
+        targetRange: true,
         units: 'pg/mL',
         fudgeFactor: 1.0,
         steadystates: {

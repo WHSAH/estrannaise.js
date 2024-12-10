@@ -299,6 +299,13 @@ select {
     width: 3rem;
 }
 
+#dropdown-daysinput {
+    width: 100%;
+    max-width: 9.61rem;
+    text-align: center;
+    padding: 0;
+}
+
 .dropdown-model {
     text-align: right;
 }

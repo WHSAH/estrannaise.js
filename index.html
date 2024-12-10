@@ -73,11 +73,6 @@
             <div id="options-container" class="centered-reflow">
                 <input id="fudge-factor" class="flat-input" value="1.0" title="Fudge factor">
                 <select id="dropdown-units" title="Change units for the estradiol concentration"></select>
-                <select id="dropdown-daysinput" title="Change the way days are interpreted as inputs in the custom curve">
-                    <option value="intervals">interval days</option>
-                    <option value="absolute">absolute days</option>
-                    <option value="convert">convert</option>
-                </select>
                 <select id="dropdown-presets" title="Load a preset">
                     <option value="" selected disabled>select a preset</option>
                 </select>
@@ -125,7 +120,12 @@
                                 <th title="Turn visibility of curve on/off">c</th>
                                 <th title="Turn visibility of uncertainty cloud on/off">u</th>
                                 <th>dose</th>
-                                <th>days</th>
+                                <th><select id="dropdown-daysinput" title="Change the way days are interpreted as inputs in the custom curve">
+                                        <option value="intervals">interval</option>
+                                        <option value="absolute">absolute</option>
+                                        <option value="convert">convert</option>
+                                    </select>
+                                </th>
                                 <th>model</th>
                                 <th></th>
                             </tr>
