@@ -47,6 +47,10 @@ a:link, a:visited {
     color: var(--strong-foreground);
 }
 
+th {
+    height: 2rem;
+}
+
 .container {
     display: grid;
     grid-template-columns: 1fr auto 1fr;
