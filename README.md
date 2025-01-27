@@ -3,6 +3,15 @@ estrannaise.js is a small playground for estradiol pharmacokinetics. It can simu
 
 Under the hood, estrannaise.js uses pharmacokinetic compartments models and MCMC inference using a simple Gaussian model with mixed effects or for more complicated pooled dataset our very own homebrewed hierarchical Bayesian model called Emix.
 
+### Usage
+
+```
+git clone https://github.com/WHSAH/estrannaise.js
+cd estrannaise.js
+python -m http.server 8000
+```
+and then direct your browser to <http://127.0.0.1:8000>.
+
 ### Changelog
 - 2024-12-20: New EUn im model, added reference section, shorter bottom text
 - 2024-12-09: v0.4.0 improved EV/EEn/EC/EB models, added fudge factor
