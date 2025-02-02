@@ -180,12 +180,25 @@ function setupTargetRangeButtonEvent() {
 
 function setupResetLocalStorageButtonEvent() {
     let resetButton = document.getElementById('reset-button');
-    resetButton.addEventListener('mousedown', (event) => {
+
+    resetButton.addEventListener('dblclick', (event) => {
         event.preventDefault();
         resetButton.classList.add('button-on');
         localStorage.removeItem('states');
         localStorage.removeItem('data');
         initializeDefaultPreset();
+        refresh()
+        setTimeout(() => {
+            resetButton.classList.remove('button-on');
+        }, 200);
+    });
+
+    resetButton.addEventListener('click', (event) => {
+        event.preventDefault();
+        resetButton.classList.add('button-on');
+        localStorage.removeItem('states');
+        localStorage.removeItem('data');
+        applyPreset(Presets.empty, false);
         refresh()
         setTimeout(() => {
             resetButton.classList.remove('button-on');
@@ -277,17 +290,17 @@ function setupCustomDoseButtonsEvents() {
     exportCSVButton.addEventListener('mousedown', (event) => {
         event.preventDefault();
         exportCSVButton.classList.add('button-on');
-        exportCSV();
     });
     exportCSVButton.addEventListener('mouseup', () => {
         exportCSVButton.classList.remove('button-on');
+        exportCSV();
     });
 
     // No toggle-on/off style. Makes it compatible with safari
     // and the dialog acts as feedback anyway so it's ok.
     let importCSVButton = document.getElementById('import-csv-dialog')
 
-    importCSVButton .addEventListener('mousedown', () => {
+    importCSVButton.addEventListener('mousedown', () => {
         document.getElementById('csv-file').click();
     });
 
@@ -472,8 +485,14 @@ function exportCSV() {
         let doseValue = row.cells[2].querySelector('input').value;
         let timeValue = row.cells[3].querySelector('input').value;
         let modelValue = row.cells[4].querySelector('select').value;
-        return [doseValue, timeValue, modelValue];
+        if (isValidInput(doseValue, timeValue, modelValue)) {
+            return [doseValue, timeValue, modelValue];
+        } else {
+            return null;
+        }
     }));
+    data = data.filter(row => row !== null);
+
     let csvContent = Papa.unparse(data);
 
     let downloadLink = document.createElement('a');

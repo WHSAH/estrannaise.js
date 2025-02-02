@@ -8,6 +8,16 @@
  */
 export const Presets = {
 
+    'empty': {
+        hidden: true,
+        menstrualCycle: false,
+        targetRange: false,
+        units: 'pg/mL',
+        fudgeFactor: 1.0,
+        steadystates: {entries: []},
+        customdoses: {entries: []}
+    },
+
     // To display first when loading the page
     'default': {
         hidden: true,
