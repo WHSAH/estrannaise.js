@@ -36,6 +36,8 @@ a {
 }
 
 #titleh1 {
+    font-weight: bold;
+    font-size: 1.5rem;
     margin: 0;
 }
 
@@ -85,14 +87,14 @@ th {
     /* do not the margin! otherwise the
     white of the bottom of the logo doesn't
     align with the title and it looks off */
-    margin-bottom: 0.34rem;
+    margin-bottom: 0;
     justify-content: end;
     align-items: flex-end;
 }
 
 #logo img {
-    width: 48px;
-    height: 48px;
+    width: 52px;
+    height: 52px;
 }
 
 #title {
@@ -416,10 +418,6 @@ button.delete-button {
         justify-content: center;
     }
 
-    #logo {
-        align-items: center;
-    }
-
     #bottom-text {
         margin-left: 0.43rem;
         margin-right: 0.43rem;
@@ -445,12 +443,12 @@ button.delete-button {
     }
 
     #logo {
-        margin-bottom: auto;
+        align-items: center;
     }
 
     #logo img {
-        width: 16px;
-        height: 16px;
+        width: 24px;
+        height: 24px;
     }
 }
 
