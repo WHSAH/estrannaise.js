@@ -37,8 +37,8 @@ a {
 
 #titleh1 {
     font-weight: bold;
-    font-size: 1.5rem;
-    margin: 0;
+    font-size: 1.3rem;
+    margin-bottom: 0;
 }
 
 p.indent {
@@ -93,8 +93,8 @@ th {
 }
 
 #logo img {
-    width: 52px;
-    height: 52px;
+    width: 48px;
+    height: 48px;
 }
 
 #title {
@@ -434,12 +434,12 @@ button.delete-button {
     }
 
     #title {
-        margin-bottom: 0.5rem;
+        /* margin-bottom: 0.5rem; */
         align-items: center;
     }
 
     #titleh1 {
-        font-size: 0.9rem;
+        font-size: 0.8rem;
     }
 
     #logo {
@@ -447,8 +447,8 @@ button.delete-button {
     }
 
     #logo img {
-        width: 24px;
-        height: 24px;
+        width: 32px;
+        height: 32px;
     }
 }
 
