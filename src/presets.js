@@ -15,7 +15,11 @@ export const Presets = {
         units: 'pg/mL',
         fudgeFactor: 1.0,
         steadystates: {entries: []},
-        customdoses: {entries: []}
+        customdoses: {
+            curveVisible: true,
+            uncertaintyVisible: true,
+            daysAsIntervals: true,
+            entries: []}
     },
 
     // To display first when loading the page
