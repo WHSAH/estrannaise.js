@@ -54,7 +54,7 @@ window.addEventListener('DOMContentLoaded', () => {
     attachTipjarsEvent();
 
     if (!loadFromURL() && !loadFromLocalStorage()) {
-        initializeDefaultPreset();
+        applyPreset(Presets.default, false);
     }
 
     refresh();
@@ -186,8 +186,7 @@ function setupResetLocalStorageButtonEvent() {
         resetButton.classList.add('button-on');
         localStorage.removeItem('states');
         localStorage.removeItem('data');
-        initializeDefaultPreset();
-        refresh()
+        applyPreset(Presets.default);
         setTimeout(() => {
             resetButton.classList.remove('button-on');
         }, 200);
@@ -198,8 +197,7 @@ function setupResetLocalStorageButtonEvent() {
         resetButton.classList.add('button-on');
         localStorage.removeItem('states');
         localStorage.removeItem('data');
-        applyPreset(Presets.empty, false);
-        refresh()
+        applyPreset(Presets.empty);
         setTimeout(() => {
             resetButton.classList.remove('button-on');
         }, 200);
@@ -1230,14 +1228,6 @@ function applyPreset(presetConfig, refreshAfter = true) {
     }
 
     refreshAfter && (refresh(), saveToLocalStorage());
-}
-
-/**
- * At startup, apply the "default" preset defined so the user isn't presented
- * with a blank slate and can see what's possible.
- */
-function initializeDefaultPreset() {
-    applyPreset(Presets.default, false);
 }
 
 ///////////////////////////////////////////////////////////////
