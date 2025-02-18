@@ -206,6 +206,19 @@
                 for a comprehensive account of all data sources.
             </p>
 
+            <p class="indent">Additionally, we employ a distinct, process-centric strategy for handling baseline 
+                data. While the TFS simulator applies a global offset to force the first data point to zero 
+                during preprocessing, our approach leaves the data unaltered and incorporates a decaying 
+                contribution to capture baseline dynamics. This contribution is represented by a simple structure
+                that transitions from a constant level before administration to a decaying exponential afterward,
+                which is then combined with the full three-compartment pharmacokinetic model. Together, these 
+                components form the overall estradiol curve, describing the exogenous administration of estradiol
+                esters while seamlessly accounting for uncertainty in the baseline data. This approach provides 
+                a more accurate representation of the elimination process and eventual suppression of endogenous 
+                estradiol production, while naturally resolving the issue of negative levels that can arise with 
+                global offset corrections.
+            </p>
+
             <p class="indent">
                 Note that pharmacokinetic data for estradiol enanthate (<span class="standout-text">een im</span>)
                 and intramuscular estradiol undecylate (<span class="standout-text">eun im</span>) are substantially
