@@ -434,10 +434,10 @@ function attachTipjarsEvent() {
             navigator.clipboard.writeText(this.innerText);
 
             let tipjarHeader = document.getElementById(`tipjars-header`);
-            tipjarHeader.innerHTML = `tipjars (${crypto} address copied, thank you!)`;
+            tipjarHeader.innerHTML = `${crypto} address copied, thank you!`;
 
             setTimeout(() => {
-                tipjarHeader.innerHTML = 'tipjars';
+                tipjarHeader.innerHTML = 'tip me some blockchain estrogen';
             }, 350);
 
             changeBackgroundColor(`copy-${crypto}`, softForegroundColor, null, 150);
