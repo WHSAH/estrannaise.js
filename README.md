@@ -13,6 +13,7 @@ python -m http.server 8000
 and then direct your browser to <http://127.0.0.1:8000>.
 
 ### Changelog
+- 2025-02-18: Reorganized text, clarified differences with TFS sim.
 - 2024-12-20: New EUn im model, added reference section, shorter bottom text
 - 2024-12-09: v0.4.0 improved EV/EEn/EC/EB models, added fudge factor
 - 2024-12-08: Save state/data/theme to localStorage
