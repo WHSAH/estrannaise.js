@@ -128,7 +128,7 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
     let units = availableUnits[options.units].units;
     let conversionFactor = availableUnits[options.units].conversionFactor;
 
-    let yMax = options.fudgeFactor * conversionFactor * 300;
+    let yMax = options.fudgeFactor * conversionFactor / 1.25;
     let xMin = 0;
     let xMax = Math.max(14.1, findxMax(dataset, options));
 
