@@ -23,12 +23,17 @@ and then direct your browser to <http://127.0.0.1:8000>.
 
 ### TODO
 - Add visual markers for dose times
+- Add tutorial
+- Screen-reader accessible
+- Access to traditional PK quantities
 - Automatically remove double empty tailing input lines
-- Offer different ways to visualize the uncertainty (parallel sigma lines and cloud ensemble of curves)
+- Offer different ways to visualize the uncertainty or switch to ±sigma band
 - Deal with customdose visibilities and table differently.
 - Allow possibility of changing patch wear time
 - Oral/sublingual/iv/gel models
 - Re-organize the mess of pk/math notes
+- Template all the things (logo/title, bottom text, banner, plotting labels/axes)
+- Use version as hide-banner flag
 - *bug:* button styles don't reset after mouseleave before mouseup
 
 ### Disclaimer
