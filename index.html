@@ -93,14 +93,6 @@
                 </button>
             </div>
 
-            <div id="warning-container" class="centered-reflow">
-                <div>
-                    <span class="standout-text">The line is a lie!</span> The cloud a little less so.
-                    All current models tend to underestimate uncertainty, particularly patch models,
-                    which may underestimate it by up to a factor of 10.
-                </div>
-            </div>
-
             <div id="steadystate-container">
 
                 <div id="steadystate-title" class="centered-reflow">
@@ -173,6 +165,12 @@
 
         <div id="bottom-text">
 
+            <p>
+                <span class="standout-text">The line is a lie!</span> The cloud a little less so.
+                All current models tend to underestimate uncertainty, particularly patch models,
+                which may underestimate it by up to a factor of 10.
+            </p>
+
             <p class="indent">The cloud visualization does not represent individual data points; rather, it
                 illustrates the uncertainty inherent in the model itself. Importantly, this visualization
                 underestimates the total uncertainty, as it only captures the uncertainty associated with
@@ -206,16 +204,16 @@
                 for a comprehensive account of all data sources.
             </p>
 
-            <p class="indent">Additionally, we employ a distinct, process-centric strategy for handling baseline 
-                data. While the TFS simulator applies a global offset to force the first data point to zero 
-                during preprocessing, our approach leaves the data unaltered and incorporates a decaying 
+            <p class="indent">Additionally, we employ a distinct, process-centric strategy for handling baseline
+                data. While the TFS simulator applies a global offset to force the first data point to zero
+                during preprocessing, our approach leaves the data unaltered and incorporates a decaying
                 contribution to capture baseline dynamics. This contribution is represented by a simple structure
                 that transitions from a constant level before administration to a decaying exponential afterward,
-                which is then combined with the full three-compartment pharmacokinetic model. Together, these 
+                which is then combined with the full three-compartment pharmacokinetic model. Together, these
                 components form the overall estradiol curve, describing the exogenous administration of estradiol
-                esters while seamlessly accounting for uncertainty in the baseline data. This approach provides 
-                a more accurate representation of the elimination process and eventual suppression of endogenous 
-                estradiol production, while naturally resolving the issue of negative levels that can arise with 
+                esters while seamlessly accounting for uncertainty in the baseline data. This approach provides
+                a more accurate representation of the elimination process and eventual suppression of endogenous
+                estradiol production, while naturally resolving the issue of negative levels that can arise with
                 global offset corrections.
             </p>
 
