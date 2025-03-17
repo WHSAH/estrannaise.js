@@ -825,9 +825,9 @@ function addDoseTimeModelRow(tableID, dose = null, time = null, model = null, cu
     if (model !== null) {
         modelSelect.value = model;
     } else {
-        // If no model is specified and there are
-        // more than one row in the table, add
-        // the same model as the one before
+        // If no model is specified as argument and
+        // there are more than one row in the table,
+        // add the same model as the one before
         if (table.rows.length > 2) {
             model = table.rows[table.rows.length - 2].cells[4].querySelector('select').value;
             modelSelect.value = model;
@@ -841,6 +841,19 @@ function addDoseTimeModelRow(tableID, dose = null, time = null, model = null, cu
         let newModel = this.value;
         let newUnits = modelList[newModel].units;
         doseInput.placeholder = newUnits;
+
+        // Set next empty row's model to the new
+        // model to avoid a few annoying clicks.
+        let nextRow = row.nextElementSibling;
+        if (nextRow) {
+            let nextDoseInput = nextRow.querySelector('.dose-input');
+            let nextTimeInput = nextRow.querySelector('.time-input-customdose');
+            let nextModelDropdown = nextRow.querySelector('.dropdown-model');
+            if (!nextDoseInput.value && !nextTimeInput.value && nextModelDropdown.value != newModel) {
+                nextModelDropdown.value = newModel;
+                nextDoseInput.placeholder = newUnits;
+            }
+        }
 
         if (readRow(row)) {
             refresh();
