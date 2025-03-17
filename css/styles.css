@@ -154,13 +154,12 @@ th {
     display: grid;
     grid-area: ui-container;
     grid-template-columns: auto auto auto;
-    grid-template-rows: auto auto auto auto;
+    grid-template-rows: auto auto auto;
     gap: 1rem 0rem;
     grid-auto-flow: row;
     grid-template-areas:
         "plot-region plot-region plot-region"
         "options-container options-container options-container"
-        "warning-container warning-container warning-container"
         "steadystate-container . customdose-container";
 }
 
@@ -169,15 +168,6 @@ th {
     width: 100%;
     margin-left: auto;
     margin-right: auto;
-}
-
-#warning-container {
-    grid-area: warning-container;
-    display: inline-flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    text-align: left;
-    align-items: center;
 }
 
 #options-container {
@@ -404,7 +394,6 @@ button.delete-button {
         grid-template-areas:
             "plot-region"
             "options-container"
-            "warning-container"
             "steadystate-container"
             "customdose-container";
     }
@@ -421,12 +410,6 @@ button.delete-button {
     #bottom-text {
         margin-left: 0.43rem;
         margin-right: 0.43rem;
-    }
-
-    #warning-container {
-        margin-left: 1rem;
-        margin-right: 1rem;
-        font-size: 0.5rem;
     }
 
     #dropdown-presets {
@@ -472,12 +455,6 @@ button.delete-button {
     #options-container {
         justify-content: center;
         margin-left: 1.5rem;
-    }
-
-    #warning-container {
-        margin-left: 3.9rem;
-        margin-right: auto;
-        max-width: 65rem;
     }
 
     #bottom-text {
