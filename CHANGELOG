@@ -1,0 +1,13 @@
+- 2025-02-18: Reorganized text, clarified differences with TFS sim.
+- 2024-12-20: New EUn im model, added reference section, shorter bottom text
+- 2024-12-09: v0.4.0 improved EV/EEn/EC/EB models, added fudge factor
+- 2024-12-08: Save state/data/theme to localStorage
+- 2024-11-15: Switched deps to ESM, minor formatting
+- 2024-11-10: New warning, css tweaks, contact info
+- [lost to history but it went something like this]
+  - [massive redigitization effort, all data now our own]
+  - [better shareurl format]
+  - [refactoring with the help of a sane person]
+  - [patch and commumity eun model]
+  - [nicer accessibility colors]
+  - [birth out of a meme]
