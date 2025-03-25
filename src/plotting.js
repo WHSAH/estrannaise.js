@@ -132,6 +132,8 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
     let xMin = 0;
     let xMax = Math.max(14.1, findxMax(dataset, options));
 
+    let xInterval = 7; // 7 day week for grid and axis
+
     let dotMarks  = [],
         lineMarks = [],
         msMarks   = [],
@@ -298,7 +300,8 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
         }
     });
 
-    gridMarks.push(Plot.gridX({ stroke: 'grey' }), Plot.gridY({ stroke: 'grey' }));
+    gridMarks.push(Plot.gridX({ stroke: 'grey', interval: xInterval}), Plot.gridY({ stroke: 'grey' }));
+    gridMarks.push(Plot.axisX({ interval: xInterval }))
 
     // Vertical and horizontal lines for the y and x axes
     ruleMarks.push(Plot.ruleX([xMin]), Plot.ruleY([0]));
@@ -309,7 +312,7 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
         marginLeft: 80,
         marginBottom: 50,
         marginTop: 30,
-        x: { domain: [xMin, xMax], label: 'time (days)', ticks: 7 },
+        x: { domain: [xMin, xMax], label: 'time (days)'},
         y: { domain: [0, 1.25 * yMax], label: `serum e₂ (${units})` + (options.fudgeFactor != 1 ? ` (fudge x${options.fudgeFactor})` : ''), ticks: 6 },
         style: { fontFamily: 'monospace', fontSize: options.fontSize },
         marks: [].concat(gridMarks)
