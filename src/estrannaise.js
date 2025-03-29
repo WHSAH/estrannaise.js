@@ -776,11 +776,11 @@ function addDoseTimeModelRow(tableID, dose = null, time = null, model = null, cu
     timeInput.type = 'number';
 
     if (tableID == 'customdose-table') {
-        timeInput.classList.add('time-input-customdose');
+        timeInput.classList.add('time-input');
         timeInput.placeholder = global_daysAsIntervals ? 'since last' : 'since 1st';
     }
     else if (tableID == 'steadystate-table') {
-        timeInput.classList.add('time-input-steadystate');
+        timeInput.classList.add('time-input');
         timeInput.placeholder = 'num of days';
     };
 
@@ -847,7 +847,7 @@ function addDoseTimeModelRow(tableID, dose = null, time = null, model = null, cu
         let nextRow = row.nextElementSibling;
         if (nextRow) {
             let nextDoseInput = nextRow.querySelector('.dose-input');
-            let nextTimeInput = nextRow.querySelector('.time-input-customdose');
+            let nextTimeInput = nextRow.querySelector('.time-input');
             let nextModelDropdown = nextRow.querySelector('.dropdown-model');
             if (!nextDoseInput.value && !nextTimeInput.value && nextModelDropdown.value != newModel) {
                 nextModelDropdown.value = newModel;
