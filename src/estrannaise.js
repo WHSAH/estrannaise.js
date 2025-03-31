@@ -44,6 +44,7 @@ window.addEventListener('DOMContentLoaded', () => {
     setupPresetsDropdown();
     setupMenstrualCycleButtonEvent();
     setupTargetRangeButtonEvent();
+    setupdaysShown();
     setupResetLocalStorageButtonEvent();
     setupShareURLButtonEvent();
 
@@ -175,6 +176,22 @@ function setupTargetRangeButtonEvent() {
         } else {
             turnTargetRangeOn();
         }
+    });
+}
+
+function setupdaysShown() {
+    let daysShownInput = document.getElementById('days-input');
+
+    daysShownInput.addEventListener('input', () => {
+
+        let daysShown = parseInt(daysShownInput.value);
+
+        if (isNaN(daysShown) || daysShown <= 0) {
+            daysShownInput.value = null;
+        }
+
+        refresh();
+        saveToLocalStorage();
     });
 }
 
@@ -1004,12 +1021,11 @@ function generateShareString() {
 
     let shareString = [stateString, customdoseString, steadyStateString].join('_');
 
-    if (!isNaN(parseFloat(document.getElementById('fudge-factor').value)) && parseFloat(document.getElementById('fudge-factor').value) !== 1.0) {
-        shareString += '_' + dropNaNAndFix(parseFloat(document.getElementById('fudge-factor').value));
-    }
+    shareString += '_' + dropNaNAndFix(parseFloat(document.getElementById('fudge-factor').value));
+
+    shareString += '_' + dropNaNAndFix(parseInt(document.getElementById('days-input').value));
 
     return shareString
-
 }
 
 function generateShareURL() {
@@ -1024,6 +1040,7 @@ function saveToLocalStorage() {
             targetRangeVisible: isButtonOn('target-range-button'),
             units: document.getElementById('dropdown-units').value,
             fudgeFactor: document.getElementById('fudge-factor').value,
+            daysShown: document.getElementById('days-input').value,
             daysAsIntervals: global_daysAsIntervals
         }));
 
@@ -1042,6 +1059,7 @@ function loadFromLocalStorage() {
         if (states.targetRangeVisible) { turnTargetRangeOn(false); } else { turnTargetRangeOff(false); }
         if (states.units) { document.getElementById('dropdown-units').value = states.units; }
         if (states.fudgeFactor) { document.getElementById('fudge-factor').value = states.fudgeFactor; }
+        if (states.daysShown) { document.getElementById('days-input').value = states.daysShown; }
     }
 
     // if the element entries exists in localStorage
@@ -1089,7 +1107,7 @@ function loadFromStateString(stateString) {
 
     let [unitsMap, modelsMap] = [generateEnum(availableUnits), generateEnum(modelList)];
 
-    let [state, customdose, steadyState, fudgeFactor] = stateString.split('_');
+    let [state, customdose, steadyState, fudgeFactor, daysShown] = stateString.split('_');
     state.includes('i') ? setDaysAsIntervals(false) : setDaysAsAbsolute(false);
     state.includes('m') ? turnMenstrualCycleOn(false) : turnMenstrualCycleOff(false);
     state.includes('t') ? turnTargetRangeOn(false) : turnTargetRangeOff(false);
@@ -1099,6 +1117,7 @@ function loadFromStateString(stateString) {
     if (!isNaN(parseFloat(fudgeFactor))) {
         document.getElementById('fudge-factor').value = fudgeFactor;
     }
+    document.getElementById('days-input').value = (isNaN(parseInt(daysShown)) ? null : parseInt(daysShown));
 
     let mdEntries = customdose.split('-');
     deleteAllRows('customdose-table');
@@ -1223,6 +1242,7 @@ function applyPreset(presetConfig, refreshAfter = true) {
     presetConfig.customdoses.daysAsIntervals ? setDaysAsIntervals(false) : setDaysAsAbsolute(false);
     presetConfig.units && (document.getElementById('dropdown-units').value = presetConfig.units);
     presetConfig.fudgeFactor > 0 && (document.getElementById('fudge-factor').value = presetConfig.fudgeFactor);
+    document.getElementById('days-input').value = presetConfig.daysShown;
 
     if (presetConfig.steadystates.entries.length) {
         presetConfig.steadystates.entries.forEach(entry => {
@@ -1286,6 +1306,7 @@ export function getCurrentPlottingOptions() {
     let targetRangeVisible = isButtonOn('target-range-button');
     let units = document.getElementById('dropdown-units').value;
     let fudgeFactor = document.getElementById('fudge-factor').value;
+    let daysShown = document.getElementById('days-input').value;
 
     let numberOfLinePoints = 1000;
     let numberOfCloudPoints = 3500;
@@ -1315,6 +1336,7 @@ export function getCurrentPlottingOptions() {
         targetRangeVisible: targetRangeVisible,
         units: units,
         fudgeFactor: fudgeFactor,
+        daysShown: daysShown,
         strokeWidth: strokeWidth,
         numberOfLinePoints: numberOfLinePoints,
         numberOfCloudPoints: numberOfCloudPoints,
