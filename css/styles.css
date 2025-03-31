@@ -170,6 +170,11 @@ th {
     margin-right: auto;
 }
 
+.centered-reflow {
+	display: flex;
+	justify-content: center;
+}
+
 #options-container {
     grid-area: options-container;
     display: flex;
@@ -400,11 +405,6 @@ button.delete-button {
 
     #the-big-light {
         align-items: bottom;
-    }
-
-    .centered-reflow {
-        display: flex;
-        justify-content: center;
     }
 
     #bottom-text {

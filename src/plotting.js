@@ -40,6 +40,8 @@ export function generatePlottingOptions({
     targetRangeVisible = false,
     units = 'pg/mL',
     fudgeFactor = 1.0,
+    abscissaWidth = 5,
+    abscissaUnits = 'cycles',
     strokeWidth = 2,
     numberOfLinePoints = 900,
     numberOfCloudPoints = 3500,
@@ -57,6 +59,8 @@ export function generatePlottingOptions({
             targetRangeVisible,
             units,
             fudgeFactor,
+            abscissaWidth,
+            abscissaUnits,
             strokeWidth,
             numberOfLinePoints,
             numberOfCloudPoints,
@@ -75,26 +79,36 @@ export function generatePlottingOptions({
 function findxMax(dataset, options) {
 
     // Initialize absolute minimum for the time axis
-    let xMax = 14.1;
+    let xMax = 1;
 
     // At least one menstrual cycle
     if (options.menstrualCycleVisible) xMax = 28.2;
 
-    // At least 5 injection cycles
-    xMax = Math.max(xMax, ...dataset.steadystates.entries.filter(entry => entry.curveVisible || entry.uncertaintyVisible).map(entry => 5 * entry.time));
+    if (options.abscissaUnits === "days")
+    {
+        xMax = Math.max(xMax, options.abscissaWidth);
+    }
+    else
+    {
+        // Initialize absolute minimum for the time axis
+        xMax = 14.1;
+        
+        // At least 5 injection cycles
+        xMax = Math.max(xMax, ...dataset.steadystates.entries.filter(entry => entry.curveVisible || entry.uncertaintyVisible).map(entry => options.abscissaWidth * entry.time));
 
-    // At least injection time plus 5 approximate terminal half-lives ( 5 x log 2 / smallest k )
-    if (dataset.customdoses.entries.length > 0 && (dataset.customdoses.curveVisible || dataset.customdoses.uncertaintyVisible)) {
-        if (dataset.customdoses.daysAsIntervals) {
-            let absoluteTimes = dataset.customdoses.entries.reduce((acc, entry, idx) => {
-                // Ignore first entry in interval days
-                if (idx === 0) { acc.push(0); }
-                else { acc.push(acc[idx - 1] + entry.time); }
-                return acc;
-            }, []);
-            xMax = Math.max(xMax, ...dataset.customdoses.entries.map((entry, idx) => absoluteTimes[idx] + terminalEliminationTime3C(...PKParameters[entry.model])));
-        } else {
-            xMax = Math.max(xMax, ...dataset.customdoses.entries.map(entry => entry.time + terminalEliminationTime3C(...PKParameters[entry.model])));
+        // At least injection time plus 5 approximate terminal half-lives ( 5 x log 2 / smallest k )
+        if (dataset.customdoses.entries.length > 0 && (dataset.customdoses.curveVisible || dataset.customdoses.uncertaintyVisible)) {
+            if (dataset.customdoses.daysAsIntervals) {
+                let absoluteTimes = dataset.customdoses.entries.reduce((acc, entry, idx) => {
+                    // Ignore first entry in interval days
+                    if (idx === 0) { acc.push(0); }
+                    else { acc.push(acc[idx - 1] + entry.time); }
+                    return acc;
+                }, []);
+                xMax = Math.max(xMax, ...dataset.customdoses.entries.map((entry, idx) => absoluteTimes[idx] + terminalEliminationTime3C(...[...PKParameters[entry.model], options.abscissaWidth])));
+            } else {
+                xMax = Math.max(xMax, ...dataset.customdoses.entries.map(entry => entry.time + terminalEliminationTime3C(...[...PKParameters[entry.model], options.abscissaWidth])));
+            }
         }
     }
 
@@ -130,7 +144,7 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
 
     let yMax = options.fudgeFactor * conversionFactor / 1.25;
     let xMin = 0;
-    let xMax = Math.max(14.1, findxMax(dataset, options));
+    let xMax = Math.max(1, findxMax(dataset, options));
 
     let dotMarks  = [],
         lineMarks = [],

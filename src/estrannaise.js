@@ -44,6 +44,8 @@ window.addEventListener('DOMContentLoaded', () => {
     setupPresetsDropdown();
     setupMenstrualCycleButtonEvent();
     setupTargetRangeButtonEvent();
+    setupAbscissaWidth();
+    setupAbscissaUnitsDropdown();
     setupResetLocalStorageButtonEvent();
     setupShareURLButtonEvent();
 
@@ -176,6 +178,30 @@ function setupTargetRangeButtonEvent() {
             turnTargetRangeOn();
         }
     });
+}
+
+function setupAbscissaWidth() {
+    let abscissaWidthInput = document.getElementById('abscissa-width');
+
+    abscissaWidthInput.addEventListener('input', () => {
+        let abscissaWidth = parseInt(abscissaWidthInput.value);
+        if (!isNaN(abscissaWidth) && abscissaWidth > 0) {
+            refresh();
+            saveToLocalStorage();
+        }
+
+    });
+}
+
+function setupAbscissaUnitsDropdown() {
+
+    let dropdown = document.getElementById('abscissa-units');
+
+    dropdown.addEventListener('change', () => {
+        refresh();
+        saveToLocalStorage();
+    });
+
 }
 
 function setupResetLocalStorageButtonEvent() {
@@ -1024,6 +1050,8 @@ function saveToLocalStorage() {
             targetRangeVisible: isButtonOn('target-range-button'),
             units: document.getElementById('dropdown-units').value,
             fudgeFactor: document.getElementById('fudge-factor').value,
+            abscissaWidth: document.getElementById('abscissa-width').value,
+            abscissaUnits: document.getElementById('abscissa-units').value,
             daysAsIntervals: global_daysAsIntervals
         }));
 
@@ -1042,6 +1070,8 @@ function loadFromLocalStorage() {
         if (states.targetRangeVisible) { turnTargetRangeOn(false); } else { turnTargetRangeOff(false); }
         if (states.units) { document.getElementById('dropdown-units').value = states.units; }
         if (states.fudgeFactor) { document.getElementById('fudge-factor').value = states.fudgeFactor; }
+        if (states.abscissaWidth) { document.getElementById('abscissa-width').value = states.abscissaWidth; }
+        if (states.abscissaUnits) { document.getElementById('abscissa-units').value = states.abscissaUnits; }
     }
 
     // if the element entries exists in localStorage
@@ -1223,6 +1253,8 @@ function applyPreset(presetConfig, refreshAfter = true) {
     presetConfig.customdoses.daysAsIntervals ? setDaysAsIntervals(false) : setDaysAsAbsolute(false);
     presetConfig.units && (document.getElementById('dropdown-units').value = presetConfig.units);
     presetConfig.fudgeFactor > 0 && (document.getElementById('fudge-factor').value = presetConfig.fudgeFactor);
+    presetConfig.abscissaUnits && (document.getElementById('abscissa-units').value = presetConfig.abscissaUnits);
+    presetConfig.abscissaWidth > 0 && (document.getElementById('abscissa-width').value = presetConfig.abscissaWidth);
 
     if (presetConfig.steadystates.entries.length) {
         presetConfig.steadystates.entries.forEach(entry => {
@@ -1286,6 +1318,8 @@ export function getCurrentPlottingOptions() {
     let targetRangeVisible = isButtonOn('target-range-button');
     let units = document.getElementById('dropdown-units').value;
     let fudgeFactor = document.getElementById('fudge-factor').value;
+    let abscissaUnits = document.getElementById('abscissa-units').value;
+    let abscissaWidth = document.getElementById('abscissa-width').value;
 
     let numberOfLinePoints = 1000;
     let numberOfCloudPoints = 3500;
@@ -1315,6 +1349,8 @@ export function getCurrentPlottingOptions() {
         targetRangeVisible: targetRangeVisible,
         units: units,
         fudgeFactor: fudgeFactor,
+        abscissaWidth: abscissaWidth,
+        abscissaUnits: abscissaUnits,
         strokeWidth: strokeWidth,
         numberOfLinePoints: numberOfLinePoints,
         numberOfCloudPoints: numberOfCloudPoints,

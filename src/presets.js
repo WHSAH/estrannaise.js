@@ -14,6 +14,8 @@ export const Presets = {
         targetRange: false,
         units: 'pg/mL',
         fudgeFactor: 1.0,
+        abscissaWidth: 5,
+        abscissaUnits: 'cycles',
         steadystates: {entries: []},
         customdoses: {
             curveVisible: true,
@@ -29,6 +31,8 @@ export const Presets = {
         targetRange: true,
         units: 'pg/mL',
         fudgeFactor: 1.0,
+        abscissaWidth: 5,
+        abscissaUnits: 'cycles',
         steadystates: {
             entries: [
                 {dose: 4, time: 7, model: 'EEn im', curveVisible: true, uncertaintyVisible: true},
