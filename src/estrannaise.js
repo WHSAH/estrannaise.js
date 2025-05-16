@@ -425,6 +425,8 @@ function debounceResizeRefresh() {
 }
 
 function attachTipjarsEvent() {
+    let tipjarHeader = document.getElementById(`tipjars-header`);
+    let origText = tipjarHeader.innerHTML;
     ['xmr', 'btc', 'ltc', 'eth'].forEach(crypto => {
         document.getElementById(`copy-${crypto}`).addEventListener('mousedown', function() {
 
@@ -433,11 +435,10 @@ function attachTipjarsEvent() {
 
             navigator.clipboard.writeText(this.innerText);
 
-            let tipjarHeader = document.getElementById(`tipjars-header`);
-            tipjarHeader.innerHTML = `${crypto} address copied, thank you!`;
+            tipjarHeader.innerHTML = `${crypto} address copied`;
 
             setTimeout(() => {
-                tipjarHeader.innerHTML = 'tip me some blockchain estrogen';
+                tipjarHeader.innerHTML = origText;
             }, 350);
 
             changeBackgroundColor(`copy-${crypto}`, softForegroundColor, null, 150);
@@ -536,9 +537,10 @@ function convertEntriesToInvervalDays() {
     let previousTime = null;
     Array.from(document.getElementById('customdose-table').rows).slice(1).forEach(row => {
         if (isValidRow(row)) {
-            let time = parseFloat(row.cells[3].querySelector('input').value);
+            let timeInput = row.cells[3].querySelector('input')
+            let time = parseFloat(timeInput.value);
             if (previousTime !== null) {
-                row.cells[3].querySelector('input').value = time - previousTime;
+                timeInput.value = time - previousTime;
             }
             previousTime = time;
         }
@@ -553,12 +555,15 @@ function convertEntriesToAbsoluteDays() {
     let previousTime = null;
     Array.from(document.getElementById('customdose-table').rows).slice(1).forEach(row => {
         if (isValidRow(row)) {
-            let time = parseFloat(row.cells[3].querySelector('input').value);
+            let timeInput = row.cells[3].querySelector('input')
+            let time = parseFloat(timeInput.value);
             if (previousTime !== null) {
-                row.cells[3].querySelector('input').value = time + previousTime;
+                timeInput.value = time + previousTime;
                 previousTime = time + previousTime;
             } else {
-                previousTime = time;
+                // previousTime = time;
+                previousTime = 0;
+                timeInput.value = 0;
             }
         }
     });
@@ -777,6 +782,7 @@ function addDoseTimeModelRow(tableID, dose = null, time = null, model = null, cu
 
     if (tableID == 'customdose-table') {
         timeInput.classList.add('time-input');
+        timeInput.classList.add('time-input-customdose');
         timeInput.placeholder = global_daysAsIntervals ? 'since last' : 'since 1st';
     }
     else if (tableID == 'steadystate-table') {
@@ -946,7 +952,7 @@ function setDaysAsAbsolute(refreshPlot = true) {
 
     let timeInputs = document.querySelectorAll('.time-input-customdose');
     timeInputs.forEach(input => {
-        input.placeholder = 'since first';
+        input.placeholder = 'since 1st';
     });
 
     refreshPlot && (refresh(), saveToLocalStorage());
