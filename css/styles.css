@@ -389,6 +389,34 @@ button.delete-button {
     margin-right: auto;
 }
 
+#days-shown {
+	padding: 0 0.8rem;
+	background-color: var(--standout-background-color);
+	color: var(--strong-foreground);
+	font-size: var(--font-size-for-dummies-like-safari);
+	border-radius: 0.35rem;
+}
+
+#days-input {
+	display: inline-block;
+	box-sizing: border-box;
+	appearance: textfield;
+	background-color: var(--standout-background-color);
+	color: var(--strong-foreground);
+	font-size: var(--font-size-for-dummies-like-safari);
+	border: 0;
+	width: 3em;
+	height: var(--element-height);
+	outline: 0;
+	text-align: center;
+}
+
+#days-tag {
+	display: inline-block;
+	height: var(--element-height);
+	line-height: var(--element-height);
+}
+
 @media (max-width: 768px) {
     #ui-container {
         grid-template-areas:
