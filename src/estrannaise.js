@@ -250,7 +250,7 @@ function setupCustomDoseButtonsEvents() {
 
         if (guess) {
             guessButton.classList.add('button-on');
-            setRowParameters('customdose-table', -1, guess.dose, guess.time, guess.model);
+            setRowParameters('customdose-table', -1, guess.dose, guess.time, guess.model, guess.wornfor);
             refresh();
             saveToLocalStorage();
         } else {
@@ -513,9 +513,10 @@ function readRow(row, keepVisibilities = true, keepInvalid = false) {
     let dose = row.cells[2].querySelector('input').value;
     let time = row.cells[3].querySelector('input').value;
     let model = row.cells[4].querySelector('select').value;
+    let wornfor = row.cells[5].querySelector('input').value;
 
-    if (isValidInput(dose, time, model) || keepInvalid) {
-        let rowEntry = { dose: parseFloat(dose) , time: parseFloat(time), model: model };
+    if (isValidInput(dose, time, model, wornfor) || keepInvalid) {
+        let rowEntry = { dose: parseFloat(dose) , time: parseFloat(time), model: model, wornfor: parseFloat(wornfor) };
         if (curveVisible !== null && keepVisibilities) { rowEntry.curveVisible = curveVisible; };
         if (uncertaintyVisible !== null && keepVisibilities) { rowEntry.uncertaintyVisible = uncertaintyVisible; };
         return rowEntry;
@@ -531,7 +532,7 @@ function convertEntriesToInvervalDays() {
 
     deleteAllRows('customdose-table');
     sortedEntries.forEach(entry => {
-        addDoseTimeModelRow('customdose-table', entry.dose, entry.time, entry.model);
+        addDoseTimeModelRow('customdose-table', entry.dose, entry.time, entry.model, entry.wornfor);
     });
 
     let previousTime = null;
@@ -640,7 +641,8 @@ function guessNextRow(tableID) {
                     let dose = beforeLastRow.dose;
                     let timeDifference = beforeLastRow.time - beforeBeforeLastRow.time;
                     let model = beforeLastRow.model;
-                    return { dose: dose, time: lastRow.time + timeDifference, model: model };
+                    let wornfor = beforeLastRow.wornfor;
+                    return { dose: dose, time: lastRow.time + timeDifference, model: model, wornfor: wornfor };
                 }
             }
             // If we didn't catch an A B A pattern but
@@ -648,7 +650,7 @@ function guessNextRow(tableID) {
             // interpolate time and stagger the dose
             if (lastRow.model == beforeLastRow.model) {
                 let timeDifference = lastRow.time - beforeLastRow.time;
-                return {dose: beforeLastRow.dose, time: lastRow.time + timeDifference, model: lastRow.model };
+                return {dose: beforeLastRow.dose, time: lastRow.time + timeDifference, model: lastRow.model, wornfor: wornfor };
             }
         }
     // In case days are given as intervals, the only pattern
@@ -662,7 +664,7 @@ function guessNextRow(tableID) {
 }
 
 
-function addDoseTimeModelRow(tableID, dose = null, time = null, model = null, curveVisible = true, uncertaintyVisible = true) {
+function addDoseTimeModelRow(tableID, dose = null, time = null, model = null, wornfor = null, curveVisible = true, uncertaintyVisible = true) {
 
     let table = document.getElementById(tableID);
     let row = table.insertRow(-1);
@@ -848,6 +850,13 @@ function addDoseTimeModelRow(tableID, dose = null, time = null, model = null, cu
         let newUnits = modelList[newModel].units;
         doseInput.placeholder = newUnits;
 
+        // Autofill 'worn for' field to avoid annoying typing
+        if (newModel.includes('patch')) {
+            wornforInput.value = modelList[newModel].wornfor;
+        } else {
+            wornforInput.value = null;
+        }
+
         // Set next empty row's model to the new
         // model to avoid a few annoying clicks.
         let nextRow = row.nextElementSibling;
@@ -855,7 +864,9 @@ function addDoseTimeModelRow(tableID, dose = null, time = null, model = null, cu
             let nextDoseInput = nextRow.querySelector('.dose-input');
             let nextTimeInput = nextRow.querySelector('.time-input');
             let nextModelDropdown = nextRow.querySelector('.dropdown-model');
-            if (!nextDoseInput.value && !nextTimeInput.value && nextModelDropdown.value != newModel) {
+            let nextWornforInput = nextRow.querySelector('.wornfor-input');
+            nextWornforInput.value = modelList[newModel].wornfor;
+            if (!nextDoseInput.value && !nextTimeInput.value && nextModelDropdown.value && nextWornforInput.value != newModel) {
                 nextModelDropdown.value = newModel;
                 nextDoseInput.placeholder = newUnits;
             }
@@ -866,12 +877,48 @@ function addDoseTimeModelRow(tableID, dose = null, time = null, model = null, cu
             saveToLocalStorage();
         }
     });
+
+    //////////////////////////////
+    ////// Worn for input ////////
+    //////////////////////////////
+    let wornforCell = row.insertCell(5);
+    let wornforInput = document.createElement('input');
+    wornforInput.classList.add('flat-input')
+    wornforInput.setAttribute('type', 'text');
+    wornforInput.type = 'number';
+
+    wornforInput.classList.add('wornfor-input');
+    wornforInput.placeholder = 'only for patches';
+
+    if (tableID == 'customdose-table') {
+        wornforInput.classList.add('wornfor-input-customdose');
+    }
+
+    wornforCell.appendChild(wornforInput);
+
+    if (wornfor !== null) {
+        wornforInput.value = wornfor;
+    }
+
+    wornforInput.addEventListener('input', function() {
+        let myRow = this.parentElement.parentElement;
+        let previousValidity = rowValidity.get(myRow);
+        let currentValidity = Boolean(readRow(myRow, false));
+
+        if ((currentValidity !== previousValidity) || currentValidity) {
+            rowValidity.set(myRow, currentValidity);
+            refresh();
+            saveToLocalStorage();
+        }
+
+        addRowIfNeeded(tableID);
+    });
     //////////////////////////
 
     //////////////////////////
     ///// Delete button //////
     //////////////////////////
-    let deleteCell = row.insertCell(5);
+    let deleteCell = row.insertCell(6);
     // if (tableID == 'steadystate-table' || (tableID == 'customdose-table' && table.rows.length > 2)) {
 
         let deleteButton = document.createElement('button');
@@ -1003,10 +1050,10 @@ function generateShareString() {
 
     let customdoseString = '';
     let [c, u] = getCustomDosesVisibilities();
-    customdoseString += getCustomDoses(true, false).entries.slice(0, -1).map((entry, idx) => (idx == 0 ? (c ? 'c' : '' ) + (u ? 'u' : '') + ',' : '') + dropNaNAndFix(entry.dose) + ',' + dropNaNAndFix(entry.time) + ',' + modelsMap[entry.model]).join('-');
+    customdoseString += getCustomDoses(true, false).entries.slice(0, -1).map((entry, idx) => (idx == 0 ? (c ? 'c' : '' ) + (u ? 'u' : '') + ',' : '') + dropNaNAndFix(entry.dose) + ',' + dropNaNAndFix(entry.time) + ',' + modelsMap[entry.model] + ',' + dropNaNAndFix(entry.wornfor)).join('-');
 
     let steadyStateString = '';
-    steadyStateString += getSteadyStates(true, false).entries.slice(0, -1).map(entry => (entry.curveVisible ? 'c' : '') + (entry.uncertaintyVisible ? 'u' : '') + ',' + dropNaNAndFix(entry.dose) + ',' + dropNaNAndFix(entry.time) + ',' + modelsMap[entry.model]).join('-');
+    steadyStateString += getSteadyStates(true, false).entries.slice(0, -1).map(entry => (entry.curveVisible ? 'c' : '') + (entry.uncertaintyVisible ? 'u' : '') + ',' + dropNaNAndFix(entry.dose) + ',' + dropNaNAndFix(entry.time) + ',' + modelsMap[entry.model] + ',' + dropNaNAndFix(entry.wornfor)).join('-');
 
     let shareString = [stateString, customdoseString, steadyStateString].join('_');
 
@@ -1058,14 +1105,14 @@ function loadFromLocalStorage() {
             deleteAllRows('customdose-table');
             if (data.customdoses.daysAsIntervals) { setDaysAsIntervals(false); } else { setDaysAsAbsolute(false); }
             data.customdoses.entries.forEach(entry => {
-                addDoseTimeModelRow('customdose-table', entry.dose, entry.time, entry.model, data.customdoses.curveVisible, data.customdoses.uncertaintyVisible);
+                addDoseTimeModelRow('customdose-table', entry.dose, entry.time, entry.model, entry.wornfor, data.customdoses.curveVisible, data.customdoses.uncertaintyVisible);
             });
         }
 
         if (data.steadystates) {
             deleteAllRows('steadystate-table');
             data.steadystates.entries.forEach(entry => {
-                addDoseTimeModelRow('steadystate-table', entry.dose, entry.time, entry.model, entry.curveVisible, entry.uncertaintyVisible);
+                addDoseTimeModelRow('steadystate-table', entry.dose, entry.time, entry.model, entry.wornfor, entry.curveVisible, entry.uncertaintyVisible);
             });
         };
         return true;
@@ -1109,17 +1156,17 @@ function loadFromStateString(stateString) {
     let mdEntries = customdose.split('-');
     deleteAllRows('customdose-table');
     let [cu, dose, time, model] = mdEntries[0].split(',');
-    addDoseTimeModelRow('customdose-table', dose, time, modelsMap[model], cu.includes('c') ? true : false, cu.includes('u') ? true : false);
+    addDoseTimeModelRow('customdose-table', dose, time, modelsMap[model], wornfor, cu.includes('c') ? true : false, cu.includes('u') ? true : false);
     for (let entry of mdEntries.slice(1)) {
         [dose, time, model] = entry.split(',');
-        addDoseTimeModelRow('customdose-table', dose, time, modelsMap[model]);
+        addDoseTimeModelRow('customdose-table', dose, time, modelsMap[model], wornfor);
     }
 
     let ssEntries = steadyState.split('-');
     deleteAllRows('steadystate-table');
     for (let entry of ssEntries) {
-        let [ssVisibilities, dose, time, model] = entry.split(',');
-        addDoseTimeModelRow('steadystate-table', dose, time, modelsMap[model], ssVisibilities.includes('c') ? true : false, ssVisibilities.includes('u') ? true : false);
+        let [ssVisibilities, dose, time, model, wornfor] = entry.split(',');
+        addDoseTimeModelRow('steadystate-table', dose, time, modelsMap[model], wornfor, ssVisibilities.includes('c') ? true : false, ssVisibilities.includes('u') ? true : false);
     }
 
     return true
@@ -1194,7 +1241,7 @@ function addRowIfNeeded(tableID) {
     }
 }
 
-function setRowParameters(tableID, number, dose, time, model) {
+function setRowParameters(tableID, number, dose, time, model, wornfor) {
     let table = document.getElementById(tableID);
 
     // Treat negative numbers as reverse order
@@ -1208,10 +1255,12 @@ function setRowParameters(tableID, number, dose, time, model) {
     let doseInput = row.cells[2].querySelector('input');
     let timeInput = row.cells[3].querySelector('input');
     let modelInput = row.cells[4].querySelector('select');
+    let wornforInput = row.cells[5].querySelector('input');
 
     doseInput.value = dose;
     timeInput.value = time;
     modelInput.value = model;
+    wornforInput.value = wornfor;
 
     addRowIfNeeded(tableID);
 }
@@ -1232,7 +1281,7 @@ function applyPreset(presetConfig, refreshAfter = true) {
 
     if (presetConfig.steadystates.entries.length) {
         presetConfig.steadystates.entries.forEach(entry => {
-            addDoseTimeModelRow('steadystate-table', entry.dose, entry.time, entry.model, entry.curveVisible, entry.uncertaintyVisible);
+            addDoseTimeModelRow('steadystate-table', entry.dose, entry.time, entry.model, entry.wornfor, entry.curveVisible, entry.uncertaintyVisible);
         });
     } else {
         addDoseTimeModelRow('steadystate-table');
@@ -1240,7 +1289,7 @@ function applyPreset(presetConfig, refreshAfter = true) {
 
     if (presetConfig.customdoses.entries.length) {
         presetConfig.customdoses.entries.forEach(entry => {
-            addDoseTimeModelRow('customdose-table', entry.dose, entry.time, entry.model, presetConfig.customdoses.curveVisible === true, presetConfig.customdoses.uncertaintyVisible === true);
+            addDoseTimeModelRow('customdose-table', entry.dose, entry.time, entry.model, entry.wornfor, presetConfig.customdoses.curveVisible === true, presetConfig.customdoses.uncertaintyVisible === true);
         });
     } else {
         addDoseTimeModelRow('customdose-table');

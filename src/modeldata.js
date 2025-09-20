@@ -48,8 +48,8 @@ export const modelList = {
     'EC im': {units: 'mg', description: 'Estradiol Cypionate, Intramuscular'},
     'EUn im': {units: 'mg', description: 'Estradiol Undecylate, Intramuscular'},
     'EUn casubq': {units: 'mg', description: 'Estradiol Undecylate in Castor oil, Subcutaneous'},
-    'patch tw': {units: 'mcg/day', description: 'Patch, twice weekly application'},
-    'patch ow': {units: 'mcg/day', description: 'Patch, once weekly application'}
+    'patch tw': {units: 'mcg/day', description: 'Patch, made for twice weekly application', wornfor: 3.5},
+    'patch ow': {units: 'mcg/day', description: 'Patch, made for once weekly application', wornfor: 7.0}
 };
 
 /**
