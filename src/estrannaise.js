@@ -888,7 +888,7 @@ function addDoseTimeModelRow(tableID, dose = null, time = null, model = null, wo
     wornforInput.type = 'number';
 
     wornforInput.classList.add('wornfor-input');
-    wornforInput.placeholder = 'only for patches';
+    wornforInput.placeholder = 'patches only';
 
     if (tableID == 'customdose-table') {
         wornforInput.classList.add('wornfor-input-customdose');
