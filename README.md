@@ -5,6 +5,11 @@ Under the hood, estrannaise.js uses 3-compartments pharmacokinetic models with d
 
 [changelog](CHANGELOG) | [todo](TODO)
 
+### Contributing
+
+> [!NOTE]
+> We are currently working on a major overhaul of the codebase and as a result will not be accepting pull requests at this time.
+
 ### Usage
 
 ```
