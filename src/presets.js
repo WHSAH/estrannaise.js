@@ -42,7 +42,7 @@ export const Presets = {
             entries: [
                 {dose: 4, time: 0, model: 'EV im'},
                 {dose: 4, time: 20, model: 'EEn im'},
-                {dose: 100, time: 30, model: 'patch ow'}
+                {dose: 100, time: 30, model: 'patch ow', wornfor: 7.0}
                 ]
             }
     },
@@ -208,8 +208,8 @@ export const Presets = {
         label: 'Patch monotherapies (once/twice weekly)',
         menstrualCycle: false,
         steadystates: {entries: [
-            {dose: 400, time: 3.5, model: 'patch tw', curveVisible: true, uncertaintyVisible: true},
-            {dose: 300, time: 7, model: 'patch ow', curveVisible: true, uncertaintyVisible: true}
+            {dose: 400, time: 3.5, model: 'patch tw', wornfor: 3.5, curveVisible: true, uncertaintyVisible: true},
+            {dose: 300, time: 7, model: 'patch ow', wornfor: 7.0, curveVisible: true, uncertaintyVisible: true}
         ]},
         customdoses: {
             curveVisible: true,

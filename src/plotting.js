@@ -201,13 +201,14 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
         let doses = dataset.customdoses.entries.map(entry => entry.dose);
         let times = dataset.customdoses.entries.map(entry => entry.time);
         let models = dataset.customdoses.entries.map(entry => entry.model);
+        let wearperiods = dataset.customdoses.entries.map(entry => entry.wornfor);
 
         if (dataset.customdoses.uncertaintyVisible) {
             let customdoseUncertaintyCloud = [];
 
             for (let i = 0; i < options.numberOfCloudPoints; i++) {
                 let randx = Math.random() * (xMax - xMin) + xMin;
-                let y = e2multidose3C(randx, doses, times, models, options.fudgeFactor * conversionFactor, true, dataset.customdoses.daysAsIntervals);
+                let y = e2multidose3C(randx, doses, times, models, wearperiods, options.fudgeFactor * conversionFactor, true, dataset.customdoses.daysAsIntervals);
                 customdoseUncertaintyCloud.push({ Time: randx, E2: y });
             }
 
@@ -221,7 +222,7 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
         }
 
         // Always compute the curve to set the y-axis limit
-        let customdoseCurve = fillCurve(t => e2multidose3C(t, doses, times, models, options.fudgeFactor * conversionFactor, false, dataset.customdoses.daysAsIntervals), xMin, xMax, options.numberOfLinePoints);
+        let customdoseCurve = fillCurve(t => e2multidose3C(t, doses, times, models, wearperiods, options.fudgeFactor * conversionFactor, false, dataset.customdoses.daysAsIntervals), xMin, xMax, options.numberOfLinePoints);
         yMax = Math.max(yMax, ...customdoseCurve.map(p => p.E2));
 
         if (dataset.customdoses.curveVisible) {
@@ -254,7 +255,7 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
 
             for (let i = 0; i < options.numberOfCloudPoints; i++) {
                 let randx = Math.random() * (xMax - xMin) + xMin;
-                let y = PKRandomFunctions(options.fudgeFactor * conversionFactor)[entry.model](randx, entry.dose, true, entry.time)
+                let y = PKRandomFunctions(options.fudgeFactor * conversionFactor)[entry.model](randx, entry.dose, true, entry.time, null, entry.wornfor)
                 steadyStateUncertaintyCloud.push({
                     Time: randx,
                     E2: y
@@ -269,7 +270,7 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
             }));
         }
 
-        let steadyStateCurve = fillCurve(t => PKFunctions(options.fudgeFactor * conversionFactor)[entry.model](t, entry.dose, true, entry.time), xMin, xMax, options.numberOfLinePoints);
+        let steadyStateCurve = fillCurve(t => PKFunctions(options.fudgeFactor * conversionFactor)[entry.model](t, entry.dose, true, entry.time, entry.wornfor), xMin, xMax, options.numberOfLinePoints);
         yMax = Math.max(yMax, ...steadyStateCurve.map(p => p.E2));
 
         if (entry.curveVisible) {
@@ -311,7 +312,7 @@ export function plotCurves(dataset, options = generatePlottingOptions(), returnS
         marginTop: 30,
         x: { domain: [xMin, xMax], label: 'time (days)', ticks: 7 },
         y: { domain: [0, 1.25 * yMax], label: `serum e₂ (${units})` + (options.fudgeFactor != 1 ? ` (fudge x${options.fudgeFactor})` : ''), ticks: 6 },
-        style: { fontFamily: 'monospace', fontSize: options.fontSize },
+        style: { fontFamily: 'monospace', fontSize: options.fontSize, margin: '0 auto' },
         marks: [].concat(gridMarks)
          .concat(targetMarks)
          .concat(msMarks)

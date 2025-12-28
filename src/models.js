@@ -90,8 +90,8 @@ export function PKFunctions(conversionFactor = 1.0) {
         'EUn im': (t, dose, steadystate=false, T=0.0) => { return e2Curve3C(t, conversionFactor * dose, ...PKParameters['EUn im'], 0.0, 0.0, steadystate, T); },
         'EUn casubq': (t, dose, steadystate=false, T=0.0) => { return e2Curve3C(t, conversionFactor * dose, ...PKParameters['EUn casubq'], 0.0, 0.0, steadystate, T); },
         'EB im': (t, dose, steadystate=false, T=0.0) => { return e2Curve3C(t, conversionFactor * dose, ...PKParameters['EB im'], 0.0, 0.0, steadystate, T); },
-        'patch tw': (t, dose, steadystate=false, T=0.0) => { return e2Patch3C(t, conversionFactor * dose, ...PKParameters['patch tw'], 3.5, steadystate, T); },
-        'patch ow': (t, dose, steadystate=false, T=0.0) => { return e2Patch3C(t, conversionFactor * dose, ...PKParameters['patch ow'], 7.0, steadystate, T); }
+        'patch tw': (t, dose, steadystate=false, T=0.0, wornfor=3.5) => { return e2Patch3C(t, conversionFactor * dose, ...PKParameters['patch tw'], wornfor, steadystate, T); },
+        'patch ow': (t, dose, steadystate=false, T=0.0, wornfor=7.0) => { return e2Patch3C(t, conversionFactor * dose, ...PKParameters['patch ow'], wornfor, steadystate, T); }
     };
 }
 
@@ -107,8 +107,8 @@ export function PKRandomFunctions(conversionFactor = 1.0) {
         'EUn im': (t, dose, steadystate=false, T=0.0, idx=null) => { return e2Curve3C(t, conversionFactor * dose, ...randomMCMCSample('EUn im', idx), 0.0, 0.0, steadystate, T); },
         'EUn casubq': (t, dose, steadystate=false, T=0.0, idx=null) => { return e2Curve3C(t, conversionFactor * dose, ...randomMCMCSample('EUn casubq', idx), 0.0, 0.0, steadystate, T); },
         'EB im': (t, dose, steadystate=false, T=0.0, idx=null) => { return e2Curve3C(t, conversionFactor * dose, ...randomMCMCSample('EB im', idx), 0.0, 0.0, steadystate, T); },
-        'patch tw': (t, dose, steadystate=false, T=0.0, idx=null) => { return e2Patch3C(t, conversionFactor * dose, ...randomMCMCSample('patch tw', idx), 3.5, steadystate, T); },
-        'patch ow': (t, dose, steadystate=false, T=0.0, idx=null) => { return e2Patch3C(t, conversionFactor * dose, ...randomMCMCSample('patch ow', idx), 7.0, steadystate, T); }
+        'patch tw': (t, dose, steadystate=false, T=0.0, idx=null, wornfor=3.5) => { return e2Patch3C(t, conversionFactor * dose, ...randomMCMCSample('patch tw', idx), wornfor, steadystate, T); },
+        'patch ow': (t, dose, steadystate=false, T=0.0, idx=null, wornfor=7.0) => { return e2Patch3C(t, conversionFactor * dose, ...randomMCMCSample('patch ow', idx), wornfor, steadystate, T); }
     };
 }
 
@@ -119,11 +119,12 @@ export function PKRandomFunctions(conversionFactor = 1.0) {
  * @param {Array} doses Dose amounts, in mg
  * @param {Array} times Dosing intervals, in days
  * @param {Array} types Ester/types, see `methodList` for values
+ * @param {Array} wearperiods Time period each patch was worn, in days
  * @param {number} cf conversion factor for conversion from pg/mL to other
  * @param {boolean} random if values need uncertainty applied
  * @param {boolean} intervals true if days are set as interval
  */
-export function e2multidose3C(t, doses = [1.0], times = [0.0], models = ['EV im'], cf = 1.0, random = false, intervals = false) {
+export function e2multidose3C(t, doses = [1.0], times = [0.0], models = ['EV im'], wearperiods = null, cf = 1.0, random = false, intervals = false) {
 
     if (intervals) {
         // Some Chad wrote this code, I don't know who.
@@ -134,13 +135,24 @@ export function e2multidose3C(t, doses = [1.0], times = [0.0], models = ['EV im'
 
     let sum = 0;
     for (let i = 0; i < doses.length; i++) {
-        if (random === false) {
-            sum += PKFunctions(cf)[models[i]](t - times[i], doses[i]);
-        } else if (random === true) {
-            sum += PKRandomFunctions(cf)[models[i]](t - times[i], doses[i]);
-        } else if (random >= 0) {
-            sum += PKRandomFunctions(cf)[models[i]](t - times[i], doses[i], random);
+        if (models[i].includes('patch')) {
+            if (random === false) {
+                sum += PKFunctions(cf)[models[i]](t - times[i], doses[i], false, 0.0, wearperiods[i]);
+            } else if (random === true) {
+                sum += PKRandomFunctions(cf)[models[i]](t - times[i], doses[i], false, 0.0, null, wearperiods[i]);
+            } else if (random >= 0) {
+                sum += PKRandomFunctions(cf)[models[i]](t - times[i], doses[i], false, 0.0, null, wearperiods[i]);
+            }
+        } else {
+            if (random === false) {
+                sum += PKFunctions(cf)[models[i]](t - times[i], doses[i]);
+            } else if (random === true) {
+                sum += PKRandomFunctions(cf)[models[i]](t - times[i], doses[i]);
+            } else if (random >= 0) {
+                sum += PKRandomFunctions(cf)[models[i]](t - times[i], doses[i], random);
+            }
         }
+
     }
     return sum;
 }
